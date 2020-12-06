@@ -1,6 +1,6 @@
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { FontAwesome5, MaterialCommunityIcons, Ionicons, Feather } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, TouchableHighlight, TouchableNativeFeedback, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { gStyles } from '../../global.style';
 
 export default function CategoryCard(props){
@@ -8,12 +8,21 @@ export default function CategoryCard(props){
     return(
         <TouchableNativeFeedback>
             <View style={styles.container}>
-                <FontAwesomeIcon style={styles.icon} size={50} icon={details.icon} />   
+                {returnIconType(details)}
                 <Text style={styles.title}>{details.name}</Text>
             </View>
         </TouchableNativeFeedback>
     )
 };
+
+const returnIconType = (details) => {
+    switch(details.type){
+        case 'ionicons': return <Ionicons name={details.iconName} style={styles.icon} size={50} />;
+        case 'material': return <MaterialCommunityIcons name={details.iconName} style={styles.icon} size={50} />;
+        case 'feather': return <Feather name={details.iconName} style={styles.icon} size={50} />;
+        case 'fontawesome5': return <FontAwesome5 name={details.iconName} style={styles.icon} size={50} />;
+    }
+}
 
 const styles = StyleSheet.create({
     container: {

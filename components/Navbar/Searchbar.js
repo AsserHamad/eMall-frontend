@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 function Searchbar(){
     const [text, setText] = useState('');
     return(
         <View style={styles.searchBar}>
             <View style={styles.icon}>
-                <FontAwesomeIcon icon={faSearch} color='#a3a3a3' size={ 15 } />
+                <Ionicons name="md-search" color='#a3a3a3' size={ 15 } />
             </View>
             <TextInput placeholder={'Search for anything...'} value={text} onChangeText={text => setText(text)} style={styles.input} />
         </View>

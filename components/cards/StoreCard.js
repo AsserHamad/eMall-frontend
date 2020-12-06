@@ -1,6 +1,4 @@
-import { faBlackTie } from '@fortawesome/free-brands-svg-icons';
-import { faChild, faFemale } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { FontAwesome5, MaterialCommunityIcons, Ionicons, Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { gStyles } from '../../global.style';
@@ -9,6 +7,43 @@ import { gStyles } from '../../global.style';
 //    0: Men's Clothes      - #E74A5F (primary)    - faTie
 //    1: Women's Clothes    - #005071 (secondary)  - faFemale
 //    2: Children's Clothes - #48C6DC              - faChild
+
+
+const categories = [{
+    id: 0,
+    name: `Men's Clothes`,
+    iconName: `md-male`,
+    type: `ionicons`,
+    color: '#E74A5F',
+},{
+    id: 1,
+    name: `Women's Clothes`,
+    iconName: `md-female`,
+    type: 'ionicons',
+    color: '#005071',
+},{
+    id: 2,
+    name: `Children's Clothes`,
+    iconName: `md-shirt`,
+    type: 'ionicons',
+    color: '#48DC5C',
+},{
+    id: 3,
+    name: `Shoes`,
+    iconName: `shoe-formal`,
+    type: 'material',
+},{
+    id: 4,
+    name: `Watches`,
+    iconName: `watch`,
+    type: 'feather',
+},{
+    id: 5,
+    name: `Accessories`,
+    iconName: `gem`,
+    type: 'fontawesome5',
+},];
+
 
 function StoreCard(props){
     const store = props.store;
@@ -19,7 +54,7 @@ function StoreCard(props){
             <View style={styles.categories}>
                 {store.categories.map(category => (
                     <View style={{...styles.categoryContainer, backgroundColor: getCategoryInfo(category).color}} key={category}>
-                        <FontAwesomeIcon size={14} style={styles.icon} icon={getCategoryInfo(category).icon} />
+                        {returnIconType(getCategoryInfo(category))}
                     </View>
                 ))}
             </View>
@@ -27,16 +62,16 @@ function StoreCard(props){
     )
 }
 
-const getCategoryInfo = category => category === 0 ? {
-    color: '#E74A5F',
-    icon: faBlackTie
-} : category === 1 ? {
-    color: '#005071',
-    icon: faFemale
-} : {
-    color: '#48DC5C',
-    icon: faChild
-};
+const returnIconType = (details) => {
+    switch(details.type){
+        case 'ionicons': return <Ionicons name={details.iconName} style={styles.icon} size={14} />;
+        case 'material': return <MaterialCommunityIcons name={details.iconName} style={styles.icon} size={14} />;
+        case 'feather': return <Feather name={details.iconName} style={styles.icon} size={14} />;
+        case 'fontawesome5': return <FontAwesome5 name={details.iconName} style={styles.icon} size={14} />;
+    }
+}
+
+const getCategoryInfo = category => categories[category];
 
 const styles = StyleSheet.create({
     container: {

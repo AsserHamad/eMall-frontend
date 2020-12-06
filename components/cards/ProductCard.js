@@ -1,7 +1,7 @@
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableNativeFeedback, TouchableWithoutFeedback, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { gStyles } from '../../global.style';
 
 function ProductCard(props){
@@ -27,7 +27,7 @@ function ProductCard(props){
             }
             <TouchableNativeFeedback>
                 <View style={styles.cartContainer}>
-                    <FontAwesomeIcon color="white" size={20} icon={faCartPlus} />
+                    <FontAwesome5 color="white" size={20} name="cart-plus" />
                 </View>
             </TouchableNativeFeedback>
         </View>

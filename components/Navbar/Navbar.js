@@ -1,9 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Image, Text, Button, Touchable, TouchableWithoutFeedbackComponent, TouchableHighlight, TouchableNativeFeedback, TouchableWithoutFeedback } from 'react-native';
-// import { useFonts } from 'expo-font';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import Searchbar from './Searchbar';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
 
 function Navbar(props){
@@ -18,9 +16,9 @@ function Navbar(props){
             <Searchbar />
 
             {/* Burger */}
-            <TouchableWithoutFeedback onPress={() => props.setMenu(true)} style={styles.burgerContainer}>
-                <FontAwesomeIcon style={{marginLeft: 15}} color={gStyles.secondary} size={ 27 } icon={ faBars }/>
-            </TouchableWithoutFeedback>
+            <TouchableOpacity style={styles.burgerContainer}>
+                <FontAwesome5 name="bars" color={gStyles.secondary} size={ 27 }/>
+            </TouchableOpacity>
         </View>
     )
 }

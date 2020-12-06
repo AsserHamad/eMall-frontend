@@ -1,7 +1,5 @@
-import { faBlackTie } from '@fortawesome/free-brands-svg-icons';
-import { faChild, faFemale, faGem, faShoePrints, faStopwatch } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { gStyles } from '../../../../global.style';
 import CategoryCard from '../../../cards/CategoryCard';
 
@@ -10,27 +8,33 @@ function Categories(){
     const categories = [{
         id: 0,
         name: `Men's Clothes`,
-        icon: faBlackTie
+        iconName: `md-male`,
+        type: `ionicons`,
     },{
         id: 1,
         name: `Women's Clothes`,
-        icon: faFemale 
+        iconName: `md-female`,
+        type: 'ionicons',
     },{
         id: 2,
         name: `Children's Clothes`,
-        icon: faChild 
+        iconName: `md-shirt`,
+        type: 'ionicons',
     },{
         id: 3,
         name: `Shoes`,
-        icon: faShoePrints 
+        iconName: `shoe-formal`,
+        type: 'material',
     },{
         id: 4,
         name: `Watches`,
-        icon: faStopwatch 
+        iconName: `watch`,
+        type: 'feather',
     },{
         id: 5,
         name: `Accessories`,
-        icon: faGem 
+        iconName: `gem`,
+        type: 'fontawesome5',
     },];
     return(
     <View style={styles.container}>

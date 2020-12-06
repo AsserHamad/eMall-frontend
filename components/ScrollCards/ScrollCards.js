@@ -1,5 +1,5 @@
 import { faStopwatch } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
 import { gStyles } from '../../global.style';
@@ -22,7 +22,7 @@ function ScrollCards(props){
                 <Text style={styles.title}>{title}</Text>
                 {countdown && 
                 <View style={styles.countDownContainer}>
-                    <FontAwesomeIcon size={20} icon={faStopwatch} style={{color: gStyles.primary, marginRight: 6}} />
+                    <MaterialIcons size={18} name="watch-later" style={{color: gStyles.primary, marginRight: 4}} />
                     <Text
                     style={{
                         color: gStyles.primary,

@@ -11,7 +11,7 @@ function Home(props){
 
     return(
         <View style={styles.container}>
-            <Navbar setMenu={props.setMenu} />
+            <Navbar />
             <ScrollView style={{height: Dimensions.get('window').height - 60}}>
                 <MainHomeView />
             </ScrollView>
