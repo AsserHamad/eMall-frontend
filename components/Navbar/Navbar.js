@@ -7,18 +7,19 @@ import { gStyles } from '../../global.style';
 function Navbar(props){
     return(
         <View style={styles.container}>
-            {/* Logo */}
-            <View style={styles.logoContainer}>
-                <Image source={require('../../assets/logo.png')} style={styles.logo} />
-            </View>
-
-            {/* Search Bar */}
-            <Searchbar />
-
             {/* Burger */}
             <TouchableOpacity onPress={props.navigation.openDrawer} style={styles.burgerContainer}>
                 <FontAwesome5 name="bars" color={gStyles.secondary} size={ 27 }/>
             </TouchableOpacity>
+
+            {/* Logo */}
+            <View style={styles.logoContainer}>
+                <Image source={require('../../assets/logo.png')} style={styles.logo} />
+            </View>
+            
+            {/* Search Bar */}
+            {/* <Searchbar /> */}
+
         </View>
     )
 }
