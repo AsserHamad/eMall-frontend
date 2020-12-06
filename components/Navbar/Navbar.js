@@ -16,7 +16,7 @@ function Navbar(props){
             <Searchbar />
 
             {/* Burger */}
-            <TouchableOpacity style={styles.burgerContainer}>
+            <TouchableOpacity onPress={props.navigation.openDrawer} style={styles.burgerContainer}>
                 <FontAwesome5 name="bars" color={gStyles.secondary} size={ 27 }/>
             </TouchableOpacity>
         </View>

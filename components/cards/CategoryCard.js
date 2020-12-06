@@ -1,12 +1,12 @@
 import { FontAwesome5, MaterialCommunityIcons, Ionicons, Feather } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { gStyles } from '../../global.style';
 
 export default function CategoryCard(props){
     const details = props.details;
     return(
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback style={{borderWidth: 0}}>
             <View style={styles.container}>
                 {returnIconType(details)}
                 <Text style={styles.title}>{details.name}</Text>
@@ -27,10 +27,11 @@ const returnIconType = (details) => {
 const styles = StyleSheet.create({
     container: {
         height: 120,
-        width: '30%',
+        width: Dimensions.get('window').width/3.2,
         backgroundColor: gStyles.primary,
-        margin: 4,
+        margin: 2,
         borderRadius: 5,
+        borderWidth: 0,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

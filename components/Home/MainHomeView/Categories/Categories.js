@@ -4,7 +4,6 @@ import { gStyles } from '../../../../global.style';
 import CategoryCard from '../../../cards/CategoryCard';
 
 function Categories(){
-
     const categories = [{
         id: 0,
         name: `Men's Clothes`,
@@ -38,7 +37,6 @@ function Categories(){
     },];
     return(
     <View style={styles.container}>
-        {/* <Text style={styles.title}>Product Categories</Text> */}
         <View style={styles.categoriesContainer}>
             {categories.map(category => (
                 <CategoryCard key={Math.random()} details={category} />
@@ -50,8 +48,6 @@ function Categories(){
 const styles = StyleSheet.create({
     container: {
         marginTop: 30,
-        marginLeft: 10,
-        marginRight: 10,
     },
     title: {
         fontSize: gStyles.fontSizeL,
@@ -63,7 +59,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         width: '100%',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderWidth: 0
     }
 });
 

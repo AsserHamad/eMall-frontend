@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     },
     categories: {
         height: 30,
-        width: '100%',
+        width: 120,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 2
+        margin: 2,
     },
     icon: {
         color: 'white'

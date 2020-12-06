@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         backgroundColor: gStyles.primary,
         fontSize: 23,
-        marginBottom: -30,
+        marginBottom: -20,
         color: 'white',
         borderRadius: 10,
         padding: 5,
@@ -89,13 +89,14 @@ const styles = StyleSheet.create({
         textDecorationLine: 'line-through',
         fontWeight: 'bold',
         color: gStyles.secondary,
-        fontSize: 17
+        fontSize: 15,
+        textAlign: 'right'
     },
     discountedPrice: {
         fontWeight: 'bold',
         color: gStyles.primary,
         marginLeft: 4,
-        fontSize: 17
+        fontSize: 15
     },
     cartContainer: {
         backgroundColor: gStyles.primary,

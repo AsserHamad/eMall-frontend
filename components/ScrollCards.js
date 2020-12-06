@@ -1,8 +1,7 @@
-import { faStopwatch } from '@fortawesome/free-solid-svg-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, Text } from 'react-native';
-import { gStyles } from '../../global.style';
+import { gStyles } from '../global.style';
 
 function ScrollCards(props){
     const title = props.title;
