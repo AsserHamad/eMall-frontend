@@ -1,21 +1,33 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import Home from './components/Home/Home';
+import Constants from 'expo-constants';
+import { gStyles } from './global.style';
+import SideMenu from 'react-native-side-menu'
+import Menu from './components/Menu/Menu';
 
 export default function App() {
+  const [menu, setMenu] = useState(false);
+  // TODO:// Remove this
+  // LogBox.ignoreAllLogs()
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SideMenu 
+      disableGestures
+      menu={<Menu />}
+      onChange={(e) => setMenu(e)}
+      menuPosition="right"
+      isOpen={menu} >
+      <View style={styles.container}>
+        <Home setMenu={setMenu} />
+      </View>
+    </SideMenu>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    backgroundColor: gStyles.background,
+    paddingTop: Constants.statusBarHeight
+  }
 });
