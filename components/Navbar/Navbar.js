@@ -21,7 +21,7 @@ function Navbar(props){
                 </View>
                 
                 {/* Cart */}
-                <TouchableOpacity onPress={props.navigation.openDrawer} style={styles.burgerContainer}>
+                <TouchableOpacity onPress={() => props.navigation.push('Cart', {text: 'yo'})} style={styles.burgerContainer}>
                     <View style={styles.cartNumberContainer}>
                         <Text>0</Text>
                     </View>

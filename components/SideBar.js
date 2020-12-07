@@ -1,11 +1,13 @@
+import { DrawerContentScrollView , DrawerItemList } from '@react-navigation/drawer';
 import React from 'react';
 import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { DrawerNavigatorItems } from 'react-navigation-drawer';
+// import { DrawerNavigatorItems } from 'react-navigation-drawer';
 import { gStyles } from '../global.style';
 
 
 function SideBar(props) {
+    console.log('props', props)
     return (
         <ScrollView>
             <View style={styles.topView}>
@@ -16,7 +18,9 @@ function SideBar(props) {
                 </ImageBackground>
             </View>
             <View style={styles.container}>
-                <DrawerNavigatorItems {...props} />
+                <DrawerContentScrollView {...props}>
+                    <DrawerItemList {...props} />
+                </DrawerContentScrollView>
             </View>
         </ScrollView>
     )
