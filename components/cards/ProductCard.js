@@ -1,4 +1,3 @@
-import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';

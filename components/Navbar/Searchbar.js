@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
+const width = Dimensions.get('window').width;
 
 function Searchbar(){
     const [text, setText] = useState('');
@@ -16,18 +18,17 @@ function Searchbar(){
 
 const styles = StyleSheet.create({
     searchBar: {
-        width: '60%',
+        width: width * 0.97,
         height: 40,
         backgroundColor: '#FFCECE',
         borderRadius: 100,
-        // justifyContent: 'center',
         alignItems: 'center',
-        // textAlign: 'center',
+        marginTop: 3,
         display: 'flex',
         flexDirection: 'row',
     },
     icon: {
-        width: '14%',
+        width: '10%',
         alignItems: 'center'
     },
     input: {

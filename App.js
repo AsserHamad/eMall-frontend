@@ -1,5 +1,6 @@
 import React from 'react';
 import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {FontAwesome5, Fontisto, Feather} from '@expo/vector-icons';
 
@@ -8,7 +9,7 @@ import SideBar from './components/SideBar';
 import { Dimensions } from 'react-native';
 import { gStyles } from './global.style';
 
-const DrawerNavigator = createDrawerNavigator({
+const details = {
   HomeScreen: {
     screen: HomeScreen,
     navigationOptions: {
@@ -30,7 +31,13 @@ const DrawerNavigator = createDrawerNavigator({
       drawerIcon: ({tintColor}) => <Fontisto name="shopping-sale" size={16} color={tintColor} />
     }
   },
-}, {
+}
+
+// const StackNavigator = createStackNavigator(details);
+
+const DrawerNavigator = createDrawerNavigator(
+  details,
+  {
   contentComponent: props => <SideBar {...props} />,
   hideStatusBar: true,
   drawerWidth: Dimensions.get('window').width * 0.65,
