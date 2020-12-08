@@ -5,14 +5,16 @@ import { gStyles } from '../../../../global.style';
 
 function TopAds(){
     const ads = [
-        'https://i.pinimg.com/originals/ca/73/52/ca73521c35fd5cd8759c87cd6273586a.png',
-        'https://i.pinimg.com/originals/c4/2e/9c/c42e9c214d488352ac48fd8b48d0c39f.jpg',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTxWEGWisD5ItW8iwnr9hdVTwAEEJe-AZXcw&usqp=CAU'
+        'https://img.freepik.com/free-vector/new-season-banner-template_1361-1221.jpg?size=626&ext=jpg',
+        'https://cdn.dribbble.com/users/1779799/screenshots/6548351/lady.jpg?compress=1&resize=400x300',
+        'https://i.pinimg.com/originals/73/a8/2e/73a82ecce46cb3f5a8f0ab7fb1b79e08.jpg',
+        'https://img.freepik.com/free-vector/promotion-fashion-banner_1188-223.jpg?size=626&ext=jpg'
     ]
     return(
         <Swiper 
         style={styles.swiper}
         autoplay
+        autoplayTimeout={5}
         dot={<View style={styles.swiperDot} />}
         activeDot={<View style={styles.swiperActiveDot} />}
         showsPagination

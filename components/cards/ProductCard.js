@@ -1,4 +1,4 @@
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, MaterialCommunityIcons  } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { gStyles } from '../../global.style';
@@ -13,24 +13,36 @@ function ProductCard(props){
             }
             <Image style={styles.image} source={{uri: product.image}} />
             <View style={styles.seller}>
-                <Image style={styles.sellerLogo} source={{uri: product.seller.logo}} />
+                <Image style={{width: product.seller.width, height: product.seller.height}} source={{uri: product.seller.logo}} />
             </View>
             <Text style={styles.name}>{product.shortName}</Text>
             {product.discount ? 
             <View style={styles.discountBlock}>
                 <Text style={styles.originalPrice}>{product.price}</Text>
-                <Text style={styles.discountedPrice}>{product.price * (1 - product.discount)} EGP</Text>
+                <Text style={styles.discountedPrice}>{Math.ceil(product.price * (1 - product.discount))} EGP</Text>
             </View>
             :
             <Text style={styles.discountedPrice}>{product.price}</Text>
             }
-            <TouchableNativeFeedback>
-                <View style={styles.cartContainer}>
-                    <FontAwesome5 color="white" size={20} name="cart-plus" />
-                </View>
-            </TouchableNativeFeedback>
+            {!cartContainsItem(props.cart, props.product) ? 
+                <TouchableNativeFeedback onPress={() => props.setCart(cart => cart.concat({...props.product, quantity: 1}))}>
+                    <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary}}}>
+                        <FontAwesome5 color="white" size={20} name="cart-plus" />
+                    </View>
+                </TouchableNativeFeedback>
+            :
+                <TouchableNativeFeedback onPress={() => props.setCart(cart => cart.filter(prod => prod.id !== props.product.id))}>
+                    <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
+                        <MaterialCommunityIcons  color="white" size={23} name="cart-remove" />
+                    </View>
+                </TouchableNativeFeedback>
+            }
         </View>
     )
+}
+
+const cartContainsItem = (cart, product) => {
+    return cart.filter(prod => prod.id === product.id).length;
 }
 
 const styles = StyleSheet.create({
@@ -50,13 +62,13 @@ const styles = StyleSheet.create({
         width: 120,
         height: 200,
         borderRadius: 5,
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',
         marginRight: 7,
         marginLeft: 7,
-        marginTop: 28,
-        marginBottom: 28
+        marginTop: 25,
+        marginBottom: 25
     },
     image: {
         width: 100,
@@ -73,11 +85,12 @@ const styles = StyleSheet.create({
         marginBottom: -25
     },
     sellerLogo: {
-        width: 35,
-        height: 35
+        width: 30,
+        height: 20
     },
     name: {
-        textAlign: 'center'
+        textAlign: 'center',
+        height: 30
     },
     discountBlock: {
         display: 'flex',
@@ -98,7 +111,6 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     cartContainer: {
-        backgroundColor: gStyles.primary,
         borderRadius: 100,
         width: 40,
         height: 40,

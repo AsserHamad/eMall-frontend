@@ -17,13 +17,13 @@ function Navbar(props){
 
                 {/* Logo */}
                 <View style={styles.logoContainer}>
-                    <Image source={require('../../assets/logo.png')} style={styles.logo} />
+                    <Image source={require('../../assets/logoM.png')} style={styles.logo} />
                 </View>
                 
                 {/* Cart */}
-                <TouchableOpacity onPress={() => props.navigation.push('Cart', {text: 'yo'})} style={styles.burgerContainer}>
+                <TouchableOpacity onPress={() => props.navigation.push('Cart', {cart: props.cart})} style={styles.burgerContainer}>
                     <View style={styles.cartNumberContainer}>
-                        <Text>0</Text>
+                        <Text>{props.cart.length}</Text>
                     </View>
                     <FontAwesome5 name="shopping-cart" color={gStyles.secondary} size={ 27 }/>
                 </TouchableOpacity>
@@ -46,7 +46,8 @@ const styles = StyleSheet.create({
     topContainer: {
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: 45
     },
     logoContainer: {
         width: width * 0.7,
@@ -56,9 +57,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     logo: {
-        width: 100,
+        width: 50,
         height: 50,
-        aspectRatio: 1875/870,
+        // aspectRatio: 1875/870,
         zIndex: 1
     },
     cartNumberContainer: {

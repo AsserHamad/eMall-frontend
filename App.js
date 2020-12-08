@@ -1,13 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // import {createAppContainer} from 'react-navigation';
 // import {createStackNavigator} from 'react-navigation-stack';
 // import {createDrawerNavigator} from 'react-navigation-drawer';
 import {FontAwesome5, Fontisto, Feather} from '@expo/vector-icons';
-
-// import {HomeScreen, DealsScreen, RegisterLoginScreen} from './screens';
-// import SideBar from './components/SideBar';
-// import { Dimensions } from 'react-native';
-// import { gStyles } from './global.style';
+import AnimatedSplash from "react-native-animated-splash-screen";
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,10 +12,11 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from './screens/Home';
 import Cart from './screens/Cart';
 import SideBar from './components/SideBar';
+import { gStyles } from './global.style';
+
 
 const Drawers = createDrawerNavigator();
 const HomeStack = createStackNavigator();
-const CartStack = createStackNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
@@ -35,17 +32,39 @@ const CartStackScreen = () => (
 )
 
 
-export default () => (
-  <NavigationContainer>
-    <Drawers.Navigator initialRouteName="Home" drawerContent={SideBar} hideStatusBar>
-      <Drawers.Screen headerShown="false" name="Home" component={HomeStackScreen} options={{
-        title: 'Home',
-        drawerIcon: ({tintColor}) => <FontAwesome5 name="home" size={16} color={tintColor} />
-      }} />
-      <Drawers.Screen name="Cart" component={CartStackScreen} />
-    </Drawers.Navigator>
-  </NavigationContainer>
-)
+export default () => {
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setTimeout(() => setLoading(true), 1000);
+  }, []);
+  
+  return (
+    <AnimatedSplash
+        translucent={true}
+        isLoaded={loading}
+        logoImage={require("./assets/logoM.png")}
+        backgroundColor={gStyles.primary}
+        logoHeight={150}
+        logoWidth={150}
+    >
+    <NavigationContainer>
+      <Drawers.Navigator initialRouteName="Home" drawerContent={SideBar}>
+        <Drawers.Screen headerShown="false" options={{
+          title: 'Home',
+          drawerIcon: ({tintColor}) => <Feather name="log-in" size={16} color={tintColor} />
+        }} name="Home" component={HomeStackScreen} />
+        <Drawers.Screen headerShown="false" options={{
+          title: 'Register/Login',
+          drawerIcon: ({tintColor}) => <FontAwesome5 name="home" size={16} color={tintColor} />
+        }} name="Register/Login" component={HomeStackScreen} />
+        <Drawers.Screen headerShown="false" options={{
+          title: 'Deals',
+          drawerIcon: ({tintColor}) => <Fontisto name="shopping-sale" size={16} color={tintColor} />
+        }} name="Deals" component={HomeStackScreen} />
+      </Drawers.Navigator>
+    </NavigationContainer>
+  </AnimatedSplash>
+)};
 
 // const details = {
 //   HomeScreen: {

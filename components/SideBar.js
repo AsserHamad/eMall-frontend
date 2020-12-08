@@ -7,7 +7,6 @@ import { gStyles } from '../global.style';
 
 
 function SideBar(props) {
-    console.log('props', props)
     return (
         <ScrollView>
             <View style={styles.topView}>
