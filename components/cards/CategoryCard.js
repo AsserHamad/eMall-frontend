@@ -9,18 +9,18 @@ export default function CategoryCard(props){
         <TouchableNativeFeedback style={{borderWidth: 0}}>
             <View style={styles.container}>
                 {returnIconType(details)}
-                <Text style={styles.title}>{details.name}</Text>
+                <Text style={styles.title}>{details.name.en}</Text>
             </View>
         </TouchableNativeFeedback>
     )
 };
 
 const returnIconType = (details) => {
-    switch(details.type){
-        case 'ionicons': return <Ionicons name={details.iconName} style={styles.icon} size={50} />;
-        case 'material': return <MaterialCommunityIcons name={details.iconName} style={styles.icon} size={50} />;
-        case 'feather': return <Feather name={details.iconName} style={styles.icon} size={50} />;
-        case 'fontawesome5': return <FontAwesome5 name={details.iconName} style={styles.icon} size={50} />;
+    switch(details.iconType){
+        case 'Ionicons': return <Ionicons name={"md-shirt"} style={styles.icon} size={50} />;
+        case 'MaterialCommunityIcons': return <MaterialCommunityIcons name={details.icon} style={styles.icon} size={50} />;
+        case 'Feather': return <Feather name={details.iconNaiconme} style={styles.icon} size={50} />;
+        case 'FontAwesome5': return <FontAwesome5 name={details.icon} style={styles.icon} size={50} />;
     }
 }
 

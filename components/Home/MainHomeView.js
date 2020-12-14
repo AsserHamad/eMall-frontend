@@ -1,10 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import ProductCard from '../../cards/ProductCard';
-import StoreCard from '../../cards/StoreCard';
-import ScrollCards from '../../ScrollCards';
-import Categories from './Categories/Categories';
-import TopAds from './TopAds/TopAds';
+import ProductCard from '../cards/ProductCard';
+import StoreCard from '../cards/StoreCard';
+import ScrollCards from '../ScrollCards';
+import Categories from './Categories';
+import TopAds from './TopAds';
 
 function MainHomeView(props){
     return(

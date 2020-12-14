@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, Dimensions, StyleSheet, View, Text, Image } from 'react-native';
 import Swiper from 'react-native-swiper/src';
-import { gStyles } from '../../../../global.style';
+import { gStyles } from '../../global.style';
 
 function TopAds(){
     const ads = [
