@@ -9,7 +9,7 @@ function Categories(){
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/categories`)
         .then(res => res.json())
-        .then(res => setCategories(res))
+        .then(res => {console.log(res);setCategories(res)})
     }, []);
     return(
     <View style={styles.container}>

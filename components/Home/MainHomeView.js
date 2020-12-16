@@ -53,7 +53,7 @@ const getMostPopularStores = () => {
 
 const getDealsOfTheDay = (props) => {
     const products = [{
-        id: 0,
+        _id: 0,
         shortName: 'Adidas Running Shoes X23',
         image: 'https://www.pngkit.com/png/full/3-31523_adidas-shoes-clipart-adidas-logo-adidas-shoes-png.png',
         price: 1000,
@@ -63,15 +63,9 @@ const getDealsOfTheDay = (props) => {
             logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/1280px-Adidas_Logo.svg.png',
             width: 30,
             height: 20
-        },
-        // seller: {
-        //     name: 'The Body Shop',
-        //     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/The-Body-Shop-Logo.svg/480px-The-Body-Shop-Logo.svg.png',
-        //     width: 30,
-        //     height: 30
-        // }
+        }
     }, {
-        id: 1,
+        _id: 1,
         shortName: 'Jubilee Air Jordans',
         image: 'https://static.nike.com/a/images/t_prod_ss/w_640,c_limit,f_auto/588807a7-e33e-4b9b-af57-6688d33daf33/air-jordan-11-jubilee-release-date.jpg',
         price: 5900,
@@ -84,7 +78,7 @@ const getDealsOfTheDay = (props) => {
         },
 
     }, {
-        id: 2,
+        _id: 2,
         shortName: 'Nike Sportswear Down-Fill Windrunner',
         image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/4f3a666c-b4cb-4ab6-b92a-3da6d69ba32e/sportswear-down-fill-windrunner-jacket-hHNjxL.jpg',
         price: 4500,
@@ -99,13 +93,13 @@ const getDealsOfTheDay = (props) => {
     }];
 
     return [
-        <ProductCard cart={props.cart} setCart={props.setCart} key={Math.random()} product={products[0]} />,
-        <ProductCard cart={props.cart} setCart={props.setCart} key={Math.random()} product={products[1]} />,
-        <ProductCard cart={props.cart} setCart={props.setCart} key={Math.random()} product={products[2]} />,
-        <ProductCard cart={props.cart} setCart={props.setCart} key={Math.random()} product={products[0]} />,
-        <ProductCard cart={props.cart} setCart={props.setCart} key={Math.random()} product={products[0]} />,
-        <ProductCard cart={props.cart} setCart={props.setCart} key={Math.random()} product={products[1]} />,
-        <ProductCard cart={props.cart} setCart={props.setCart} key={Math.random()} product={products[2]} />,
-        <ProductCard cart={props.cart} setCart={props.setCart} key={Math.random()} product={products[0]} />
+        <ProductCard key={Math.random()} product={products[0]} />,
+        <ProductCard key={Math.random()} product={products[1]} />,
+        <ProductCard key={Math.random()} product={products[2]} />,
+        <ProductCard key={Math.random()} product={products[0]} />,
+        <ProductCard key={Math.random()} product={products[0]} />,
+        <ProductCard key={Math.random()} product={products[1]} />,
+        <ProductCard key={Math.random()} product={products[2]} />,
+        <ProductCard key={Math.random()} product={products[0]} />
     ]
 }

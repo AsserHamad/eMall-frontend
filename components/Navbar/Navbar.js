@@ -3,6 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity, Dimensions, Text } from 'rea
 import Searchbar from './Searchbar';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
+import { connect } from 'react-redux';
 
 const width = Dimensions.get('window').width;
 
@@ -81,4 +82,10 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Navbar;
+const mapStateToProps = (state) => {
+    return {
+        cart: state.cartReducer.cart
+    }
+}
+
+export default connect(mapStateToProps)(Navbar);

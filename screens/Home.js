@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Dimensions, Text } from 'react-native';
+import React from 'react';
+import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
 import { useFonts } from 'expo-font';
 
 import Navbar from '../components/Navbar/Navbar';
@@ -15,16 +15,11 @@ function Home(props){
     const [fontsLoaded] = useFonts({
       'Lato': require('../assets/fonts/Lato-Regular.ttf')
     });
-    const [cart, setCart] = useState([]);
-    useEffect(() => {
-        console.log(props)
-    }, [])
     return(
         <View style={styles.container}>
-            <Navbar navigation={props.navigation} cart={cart} />
-            <Text>{props.loggedIn? 'hey': 'hi'}</Text>
+            <Navbar navigation={props.navigation} />
             <ScrollView style={{height: Dimensions.get('window').height - 60}}>
-                <MainHomeView cart={cart} setCart={setCart} />
+                <MainHomeView />
             </ScrollView>
         </View>
     )

@@ -2,6 +2,8 @@ import { FontAwesome5, MaterialCommunityIcons  } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { gStyles } from '../../global.style';
+import { connect } from 'react-redux';
+import { addToCart, removeFromCart } from '../../src/actions/cart';
 
 function ProductCard(props){
     const product = props.product;
@@ -25,13 +27,13 @@ function ProductCard(props){
             <Text style={styles.discountedPrice}>{product.price}</Text>
             }
             {!cartContainsItem(props.cart, props.product) ? 
-                <TouchableNativeFeedback onPress={() => props.setCart(cart => cart.concat({...props.product, quantity: 1}))}>
+                <TouchableNativeFeedback onPress={() => props.addToCart({product: props.product, quantity: 1})}>
                     <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary}}}>
                         <FontAwesome5 color="white" size={20} name="cart-plus" />
                     </View>
                 </TouchableNativeFeedback>
             :
-                <TouchableNativeFeedback onPress={() => props.setCart(cart => cart.filter(prod => prod.id !== props.product.id))}>
+                <TouchableNativeFeedback onPress={() => props.removeFromCart(props.product)}>
                     <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
                         <MaterialCommunityIcons  color="white" size={23} name="cart-remove" />
                     </View>
@@ -42,7 +44,7 @@ function ProductCard(props){
 }
 
 const cartContainsItem = (cart, product) => {
-    return cart.filter(prod => prod.id === product.id).length;
+    return cart.filter(prod => prod.product._id === product._id).length;
 }
 
 const styles = StyleSheet.create({
@@ -54,12 +56,12 @@ const styles = StyleSheet.create({
         color: 'white',
         borderRadius: 10,
         padding: 5,
-        transform: [{translateX: 42}, {translateY: -10}],
+        transform: [{translateX: 55}, {translateY: -15}],
         zIndex: 10
     },
     container: {
         backgroundColor: 'white',
-        width: 120,
+        width: 150,
         height: 200,
         borderRadius: 5,
         // justifyContent: 'center',
@@ -67,8 +69,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginRight: 7,
         marginLeft: 7,
-        marginTop: 25,
-        marginBottom: 25
+        marginTop: 20,
+        marginBottom: 30
     },
     image: {
         width: 100,
@@ -121,4 +123,17 @@ const styles = StyleSheet.create({
     },
 })
 
-export default ProductCard;
+const mapStateToProps = (state) => {
+    return {
+        cart: state.cartReducer.cart
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addToCart: (product) => dispatch(addToCart(product)),
+        removeFromCart: (product) => dispatch(removeFromCart(product))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductCard);

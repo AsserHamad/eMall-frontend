@@ -16,10 +16,11 @@ export default function CategoryCard(props){
 };
 
 const returnIconType = (details) => {
+    console.log(details)
     switch(details.iconType){
-        case 'Ionicons': return <Ionicons name={"md-shirt"} style={styles.icon} size={50} />;
+        case 'Ionicons': return <Ionicons name={details.icon} style={styles.icon} size={50} />;
         case 'MaterialCommunityIcons': return <MaterialCommunityIcons name={details.icon} style={styles.icon} size={50} />;
-        case 'Feather': return <Feather name={details.iconNaiconme} style={styles.icon} size={50} />;
+        case 'Feather': return <Feather name={details.icon} style={styles.icon} size={50} />;
         case 'FontAwesome5': return <FontAwesome5 name={details.icon} style={styles.icon} size={50} />;
     }
 }
