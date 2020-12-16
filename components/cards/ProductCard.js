@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-na
 import { gStyles } from '../../global.style';
 import { connect } from 'react-redux';
 import { addToCart, removeFromCart } from '../../src/actions/cart';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function ProductCard(props){
     const product = props.product;
@@ -27,17 +28,17 @@ function ProductCard(props){
             <Text style={styles.discountedPrice}>{product.price}</Text>
             }
             {!cartContainsItem(props.cart, props.product) ? 
-                <TouchableNativeFeedback onPress={() => props.addToCart({product: props.product, quantity: 1})}>
+                <TouchableOpacity onPress={() => props.addToCart({product: props.product, quantity: 1})}>
                     <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary}}}>
                         <FontAwesome5 color="white" size={20} name="cart-plus" />
                     </View>
-                </TouchableNativeFeedback>
+                </TouchableOpacity>
             :
-                <TouchableNativeFeedback onPress={() => props.removeFromCart(props.product)}>
+                <TouchableOpacity onPress={() => props.removeFromCart(props.product)}>
                     <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
                         <MaterialCommunityIcons  color="white" size={23} name="cart-remove" />
                     </View>
-                </TouchableNativeFeedback>
+                </TouchableOpacity>
             }
         </View>
     )
@@ -118,8 +119,8 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: -20,
-        transform: [{translateY: 20}]
+        // marginTop: -20,
+        // transform: [{translateY: 20}]
     },
 })
 

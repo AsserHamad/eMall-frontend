@@ -6,7 +6,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 const width = Dimensions.get('window').width;
 import { connect } from 'react-redux';
-import { addToCart, removeFromCart } from '../../src/actions/cart';
+import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } from '../../src/actions/cart';
 
 function CartCard(props){
     const item = props.item.product;
@@ -25,12 +25,12 @@ function CartCard(props){
                 </View>
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <Text>Quantity:</Text>
-                    <TouchableOpacity>
-                        <AntDesign color={gStyles.primary} style={{marginLeft: 10, marginRight: 5}} name="minuscircle" />
+                    <TouchableOpacity onPress={() => props.decreaseQuantity(props.item)}>
+                        <AntDesign color={gStyles.primary} style={{marginLeft: 10, marginRight: 5}} size={20} name="minuscircle" />
                     </TouchableOpacity>
-                    <Text style={{fontWeight: 'bold', color: gStyles.secondary}}>{quantity}</Text>
-                    <TouchableOpacity>
-                        <AntDesign color={gStyles.primary} style={{marginLeft: 5}} name="pluscircle" />
+                    <Text style={{fontWeight: 'bold', color: gStyles.secondary, fontSize: 20}}>{quantity}</Text>
+                    <TouchableOpacity onPress={() => props.increaseQuantity(props.item)}>
+                        <AntDesign color={gStyles.primary} style={{marginLeft: 5}} size={20} name="pluscircle" />
                     </TouchableOpacity>
                 </View>
                 <View style={{marginTop: 40, display: 'flex', flexDirection: 'row'}}>
@@ -94,7 +94,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         addToCart: (product) => dispatch(addToCart(product)),
-        removeFromCart: (product) => dispatch(removeFromCart(product))
+        removeFromCart: (product) => dispatch(removeFromCart(product)),
+        increaseQuantity: (product) => dispatch(increaseQuantity(product)),
+        decreaseQuantity: (product) => dispatch(decreaseQuantity(product))
     }
 }
 

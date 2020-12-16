@@ -21,7 +21,7 @@ const returnIconType = (details) => {
         case 'Ionicons': return <Ionicons name={details.icon} style={styles.icon} size={50} />;
         case 'MaterialCommunityIcons': return <MaterialCommunityIcons name={details.icon} style={styles.icon} size={50} />;
         case 'Feather': return <Feather name={details.icon} style={styles.icon} size={50} />;
-        case 'FontAwesome5': return <FontAwesome5 name={details.icon} style={styles.icon} size={50} />;
+        case 'FontAwesome5': return <FontAwesome5 name={"tv"} style={styles.icon} size={50} />;
     }
 }
 

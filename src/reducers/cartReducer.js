@@ -1,4 +1,4 @@
-import { ADD_TO_CART, REMOVE_FROM_CART } from '../actions/types';
+import { ADD_TO_CART, REMOVE_FROM_CART, QUANTITY_INCREASE, QUANTITY_DECREASE } from '../actions/types';
 
 const initialState = {
     cart: []
@@ -16,6 +16,26 @@ const cartReducer = (state = initialState, action) => {
                 ...state,
                 cart: state.cart.filter(prod => prod.product._id !== action.product._id)
             };
+        case QUANTITY_INCREASE:
+            return {
+                ...state,
+                cart: state.cart.map(prod => {
+                    if(prod.product._id === action.product.product._id){
+                        prod.quantity++;
+                    }
+                    return prod;
+                })
+            }
+        case QUANTITY_DECREASE:
+            return {
+                ...state,
+                cart: state.cart.map(prod => {
+                    if(prod.product._id === action.product.product._id && prod.quantity > 1){
+                        prod.quantity--;
+                    }
+                    return prod;
+                })
+            }
         default:
             return state;
     }

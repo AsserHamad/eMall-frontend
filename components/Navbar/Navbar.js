@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Dimensions, Text } from 'react-native';
 import Searchbar from './Searchbar';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -8,6 +8,13 @@ import { connect } from 'react-redux';
 const width = Dimensions.get('window').width;
 
 function Navbar(props){
+    const [disabled, setDisabled] = useState(false);
+
+    useEffect(() => {
+        console.log('hi');
+        const timer = setTimeout(() => setDisabled(false), 1000);
+        return () => clearTimeout(timer);
+    }, [disabled])
     return(
         <View style={styles.container}>
             <View style={styles.topContainer}>
@@ -22,7 +29,14 @@ function Navbar(props){
                 </View>
                 
                 {/* Cart */}
-                <TouchableOpacity onPress={() => props.navigation.push('Cart', {cart: props.cart})} style={styles.burgerContainer}>
+                <TouchableOpacity 
+                    disabled={disabled}
+                    onPress={() => {
+                        setDisabled(true);
+                        props.navigation.push('Cart', {cart: props.cart})}
+                    }
+                    style={styles.burgerContainer}
+                >
                     <View style={styles.cartNumberContainer}>
                         <Text>{props.cart.length}</Text>
                     </View>

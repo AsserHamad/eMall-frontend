@@ -13,18 +13,26 @@ import { gStyles } from './global.style';
 
 import { Provider } from 'react-redux';
 import configureStore from './src/store';
+import ClientLogin from './screens/Authentication/ClientLogin';
 
 const store = configureStore();
 
 
 const Drawers = createDrawerNavigator();
 const HomeStack = createStackNavigator();
+const ClientLoginStack = createStackNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
     <HomeStack.Screen name="Home" component={Home} options={{headerShown: false}} />
     <HomeStack.Screen name="Cart" component={Cart} />
   </HomeStack.Navigator>
+)
+
+const ClientLoginStackScreen = () => (
+  <ClientLoginStack.Navigator>
+    <ClientLoginStack.Screen name="ClientLogin" component={ClientLogin} options={{headerShown: false}} />
+  </ClientLoginStack.Navigator>
 )
 
 const CartStackScreen = () => (
@@ -37,7 +45,7 @@ const CartStackScreen = () => (
 export default () => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    setTimeout(() => setLoading(true), 1000);
+    setTimeout(() => setLoading(true), 0);
   }, []);
   
   return (
@@ -51,7 +59,7 @@ export default () => {
           logoWidth={150}
       >
       <NavigationContainer>
-        <Drawers.Navigator initialRouteName="Home" drawerContent={SideBar}>
+        <Drawers.Navigator initialRouteName="Register/Login" drawerContent={SideBar}>
           <Drawers.Screen headerShown="false" options={{
             title: 'Home',
             drawerIcon: ({tintColor}) => <Feather name="log-in" size={16} color={tintColor} />
@@ -59,7 +67,7 @@ export default () => {
           <Drawers.Screen headerShown="false" options={{
             title: 'Register/Login',
             drawerIcon: ({tintColor}) => <FontAwesome5 name="home" size={16} color={tintColor} />
-          }} name="Register/Login" component={HomeStackScreen} />
+          }} name="Register/Login" component={ClientLoginStackScreen} />
           <Drawers.Screen headerShown="false" options={{
             title: 'Deals',
             drawerIcon: ({tintColor}) => <Fontisto name="shopping-sale" size={16} color={tintColor} />
@@ -69,49 +77,3 @@ export default () => {
     </AnimatedSplash>
   </Provider>
 )};
-
-// const details = {
-//   HomeScreen: {
-//     screen: HomeScreen,
-//     navigationOptions: {
-//       title: "Home",
-//       drawerIcon: ({tintColor}) => <FontAwesome5 name="home" size={16} color={tintColor} />
-//     }
-//   },
-//   RegisterLoginScreen: {
-//     screen: RegisterLoginScreen,
-//     navigationOptions: {
-//       title: "Register/Login",
-//       drawerIcon: ({tintColor}) => <Feather name="log-in" size={16} color={tintColor} />
-//     }
-//   },
-//   DealsScreen: {
-//     screen: DealsScreen,
-//     navigationOptions: {
-//       title: "Deals",
-//       drawerIcon: ({tintColor}) => <Fontisto name="shopping-sale" size={16} color={tintColor} />
-//     }
-//   },
-// }
-
-// // const StackNavigator = createStackNavigator(details);
-
-// const DrawerNavigator = createDrawerNavigator(
-//   details,
-//   {
-//   contentComponent: props => <SideBar {...props} />,
-//   hideStatusBar: true,
-//   drawerWidth: Dimensions.get('window').width * 0.65,
-//   contentOptions: {
-//     activeBackgroundColor: gStyles.tint,
-//     activeTintColor: 'black',
-//     itemsContainerStyle: {
-//       marginTop: 16,
-//     },
-//     itemStyle: {
-//       borderRadius: 4
-//     }
-//   }
-// });
-
-// export default createAppContainer(DrawerNavigator);
