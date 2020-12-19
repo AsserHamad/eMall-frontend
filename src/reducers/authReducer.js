@@ -11,13 +11,15 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loggedIn: true,
-                account: action.data
+                account: action.data.client,
+                token: action.data.token
             }
         case LOGOUT:
             return {
                 ...state,
                 loggedIn: false,
-                account: null
+                account: null,
+                token: null
             };
         default:
             return state;

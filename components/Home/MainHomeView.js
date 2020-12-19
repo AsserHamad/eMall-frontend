@@ -1,20 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import ProductCard from '../cards/ProductCard';
 import StoreCard from '../cards/StoreCard';
 import ScrollCards from '../ScrollCards';
 import Categories from './Categories';
 import TopAds from './TopAds';
+import { gStyles } from '../../global.style';
+import { useState } from 'react';
 
 function MainHomeView(props){
     return(
-        <ScrollView>
-            <TopAds />
-            <Categories />
-            
-            <ScrollCards cards={getMostPopularStores(props)} title="Most Popular Stores" />
-            <ScrollCards countdown cards={getDealsOfTheDay(props)} title="Deals Of The Day" />
-        </ScrollView>
+            <ScrollView>
+                <TopAds />
+                <Categories />
+                
+                <ScrollCards cards={getMostPopularStores(props)} title="Most Popular Stores" />
+                <ScrollCards countdown cards={getDealsOfTheDay(props)} title="Deals Of The Day" />
+            </ScrollView>
     )
 }
 

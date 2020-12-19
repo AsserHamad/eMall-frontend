@@ -11,7 +11,6 @@ function Navbar(props){
     const [disabled, setDisabled] = useState(false);
 
     useEffect(() => {
-        console.log('hi');
         const timer = setTimeout(() => setDisabled(false), 1000);
         return () => clearTimeout(timer);
     }, [disabled])
@@ -74,7 +73,6 @@ const styles = StyleSheet.create({
     logo: {
         width: 50,
         height: 50,
-        // aspectRatio: 1875/870,
         zIndex: 1
     },
     cartNumberContainer: {

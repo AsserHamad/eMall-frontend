@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
 import { useFonts } from 'expo-font';
+import AnimatedSplash from "react-native-animated-splash-screen";
 
 import Navbar from '../components/Navbar/Navbar';
 
@@ -15,13 +16,24 @@ function Home(props){
     const [fontsLoaded] = useFonts({
       'Lato': require('../assets/fonts/Lato-Regular.ttf')
     });
+    const scrollRef = useRef(); 
+    useEffect(() =>  {
+        const unsubscribe = props.navigation.addListener('blur', () => {
+            scrollRef.current.scrollTo({
+                y: 0,
+                animated: true,
+            });
+        });
+        return unsubscribe;
+    }, [props.navigation])
     return(
-        <View style={styles.container}>
-            <Navbar navigation={props.navigation} />
-            <ScrollView style={{height: Dimensions.get('window').height - 60}}>
-                <MainHomeView />
-            </ScrollView>
-        </View>
+            <View style={styles.container}>
+                <StatusBar backgroundColor={gStyles.background} style="dark" />
+                <Navbar navigation={props.navigation} />
+                <ScrollView ref={scrollRef} style={{height: Dimensions.get('window').height - 60}}>
+                    <MainHomeView />
+                </ScrollView>
+            </View>
     )
 }
 

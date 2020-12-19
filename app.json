@@ -6,9 +6,11 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logoM.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "height": "150",
+      "width": "150",
+      "backgroundColor": "#E74A5F"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

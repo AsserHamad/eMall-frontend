@@ -28,13 +28,13 @@ function ProductCard(props){
             <Text style={styles.discountedPrice}>{product.price}</Text>
             }
             {!cartContainsItem(props.cart, props.product) ? 
-                <TouchableOpacity onPress={() => props.addToCart({product: props.product, quantity: 1})}>
+                <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToCart({product: props.product, quantity: 1})}>
                     <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary}}}>
                         <FontAwesome5 color="white" size={20} name="cart-plus" />
                     </View>
                 </TouchableOpacity>
             :
-                <TouchableOpacity onPress={() => props.removeFromCart(props.product)}>
+                <TouchableOpacity activeOpacity={0.4} onPress={() => props.removeFromCart(props.product)}>
                     <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
                         <MaterialCommunityIcons  color="white" size={23} name="cart-remove" />
                     </View>

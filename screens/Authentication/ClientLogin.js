@@ -3,35 +3,50 @@ import { Button, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { TextInput, TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 import Constants from 'expo-constants';
+import { Feather, AntDesign } from '@expo/vector-icons';
+
+// Redux
+import { connect } from 'react-redux';
+import { login } from '../../src/actions/auth';
+import ClientLoginSuccess from './ClientLoginSuccess';
+import { useEffect } from 'react';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('asserhamad96@gmail.com');
+    const [errors, setErrors] = useState([]);
+    const [password, setPassword] = useState('Abcd1234');
     const login = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/login`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email, password})
         })
+        .then(res => res.json())
         .then(res => {
-            if(res.ok) return res.json();
-            else console.log(res.json());
-        })
-        .then(res => setEmail(res.token))
-        .catch(err => console.log(err))
+            if(!res.status){
+                setErrors([]);
+                props.login(res);
+            }
+            else {
+                setErrors(res.message ? [res.message] : res.errors)
+            }
+        });
     }
-    return (
+    return <View>
         <View style={styles.container}>
             <View style={styles.backContainer}>
                 <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
-                    <Text>Back</Text>
+                    <Feather name="arrow-left" size={30} color={gStyles.secondary} />
                 </TouchableOpacity>
             </View>
             <Image style={styles.image} source={require('../../assets/logo.png')} />
             <View style={styles.headerContainer}>
                 <Text style={{color: gStyles.secondary, fontSize: 23}}>Welcome Back!</Text>
                 <Text style={{color: gStyles.secondary, fontSize: 13}}>Please login to continue shopping</Text>
+            </View>
+            <View style={styles.errorContainer}>
+                {errors.map(err => <Text style={{color: gStyles.primary}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
@@ -74,10 +89,21 @@ const ClientLogin = (props) => {
             </View>
                 {/* Other Logins */}
                 <View style={styles.alternativeLogins}>
-
+                    <TouchableOpacity>
+                        <View style={styles.alternativeLoginButtonF}>
+                            <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={30} color="white" />
+                            <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Sign in with Facebook</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <View style={styles.alternativeLoginButtonG}>
+                            <AntDesign style={{marginRight: width * 0.2}} name="google" size={30} color="white" />
+                            <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Sign in with Google</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
         </View>
-    )
+        </View>
 }
 
 const styles = StyleSheet.create({
@@ -91,8 +117,8 @@ const styles = StyleSheet.create({
     },
     backContainer: {
         width,
-        marginTop: 20,
-        paddingHorizontal: 20
+        marginTop: 10,
+        paddingHorizontal: 13
     },
     imageContainer: {
         width: '100%',
@@ -102,19 +128,22 @@ const styles = StyleSheet.create({
     },
     image: {
         height: 90,
-        aspectRatio: 1875/870
+        aspectRatio: gStyles.logoAspectRatio
     },
     headerContainer: {
         width: width * 0.9,
         paddingTop: 30,
-        // paddingHorizontal: 20,
         marginBottom: 30
+    },
+    errorContainer: {
+        width: width * 0.9,
+        height: 50,
+        textAlign: 'left'
     },
     formContainer: {
         width: width * 0.9
     },
     input: {
-        // width: width * 0.85,
         fontSize: 18,
         marginVertical: 10,
         height: 40,
@@ -137,9 +166,47 @@ const styles = StyleSheet.create({
     alternativeLogins: {
         backgroundColor: gStyles.secondary,
         width,
-        height: 500,
-        marginTop: 20
+        height: 300,
+        marginTop: 20,
+        alignItems: 'center'
+    },
+    alternativeLoginButtonF: {
+        marginTop: 30,
+        width: width * 0.9,
+        backgroundColor: '#3b5998',
+        height: 50,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        flexDirection: 'row'
+    },
+    alternativeLoginButtonG: {
+        marginTop: 30,
+        width: width * 0.9,
+        backgroundColor: '#EA4335',
+        height: 50,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        flexDirection: 'row'
     }
 })
 
-export default ClientLogin;
+
+const mapStateToProps = (state) => {
+    return {
+        loggedIn: state.authReducer.loggedIn,
+        account: state.authReducer.account,
+        token: state.authReducer.token
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        login: (account) => dispatch(login(account))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientLogin);
