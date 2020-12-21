@@ -9,11 +9,12 @@ import Home from '../screens/Home';
 import Cart from '../screens/Cart';
 import SideBar from '../components/SideBar';
 import { gStyles } from '../global.style';
-import ClientLogin from '../screens/Authentication/ClientLogin';
-import ClientLoginSuccess from '../screens/Authentication/ClientLoginSuccess';
+import ClientLogin from '../screens/Authentication/Client/ClientLogin';
+import ClientLoginSuccess from '../screens/Authentication/Client/ClientLoginSuccess';
 
 import { connect } from 'react-redux';
 import { login } from './actions/auth';
+import ClientRegister from '../screens/Authentication/Client/ClientRegister';
 
 
 const Drawers = createDrawerNavigator();
@@ -30,6 +31,11 @@ const HomeStackScreen = () => (
 const ClientLoginStackScreen = () => (
   <ClientLoginStack.Navigator>
     <ClientLoginStack.Screen name="ClientLogin" component={ClientLogin} options={{headerShown: false}} />
+    <ClientLoginStack.Screen 
+        name="ClientRegister"
+        component={ClientRegister} 
+        options={{title: '', headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}} 
+    />
     <ClientLoginStack.Screen name="ClientLoginSuccess" component={ClientLoginSuccess} options={{headerShown: false}} />
   </ClientLoginStack.Navigator>
 )
@@ -37,21 +43,37 @@ const ClientLoginStackScreen = () => (
 const Navigation = (props) => {
   return (
     <NavigationContainer>
-    <Drawers.Navigator drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Register/Login" drawerContent={SideBar}>
-        <Drawers.Screen headerShown="false" options={{
-        title: 'Home',
-        drawerIcon: ({tintColor}) => <Feather name="log-in" size={16} color={tintColor} />
-        }} name="Home" component={HomeStackScreen} />
+    <Drawers.Navigator drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Register/Login" drawerContent={props => <SideBar {...props} />}>
+        <Drawers.Screen 
+            headerShown="false"
+            options={{
+              title: 'Home',
+              drawerIcon: ({tintColor}) => <Feather name="log-in" size={16} color={tintColor} />
+            }}
+            name="Home"
+            component={HomeStackScreen}
+        />
         {!props.loggedIn ? 
-        <Drawers.Screen headerShown="false" options={{
-        title: 'Register/Login',
-        drawerIcon: ({tintColor}) => <FontAwesome5 name="home" size={16} color={tintColor} />
-        }} name="Register/Login" component={ClientLoginStackScreen} />
+          <Drawers.Screen
+              headerShown="false"
+              options={{
+                title: 'Register/Login',
+                drawerIcon: ({tintColor}) => <FontAwesome5 name="home" size={16} color={tintColor} />
+              }} 
+              name="Register/Login" component={ClientLoginStackScreen}
+          />
         :
-        <Drawers.Screen headerShown="false" options={{
-        title: 'Deals',
-        drawerIcon: ({tintColor}) => <Fontisto name="shopping-sale" size={16} color={tintColor} />
-        }} name="Deals" component={HomeStackScreen} />}
+          [<Drawers.Screen
+              key="deals"
+              headerShown="false"
+              options={{
+                title: 'Deals',
+                drawerIcon: ({tintColor}) => <Fontisto name="shopping-sale" size={16} color={tintColor} />
+              }}
+              name="Deals"
+              component={HomeStackScreen}
+          />]
+        }
     </Drawers.Navigator>
     </NavigationContainer>
 )};

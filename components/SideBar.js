@@ -4,6 +4,8 @@ import Constants from 'expo-constants';
 import { Image, ImageBackground, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { gStyles } from '../global.style';
+import { connect } from 'react-redux';
+import { logout } from '../src/actions/auth';
 
 
 function SideBar(props) {
@@ -12,7 +14,8 @@ function SideBar(props) {
             <View style={styles.topView}>
                 <ImageBackground style={styles.topDots} imageStyle={{borderRadius:100}} source={{uri: 'https://cdn.hipwallpaper.com/i/29/69/M5kWUT.png'}}>
                     <View style={styles.logoContainer}>
-                        <Image source={require('../assets/logoM.png')} style={styles.logo} />
+                        {props.loggedIn ? <Image source={require('../assets/logoM.png')} style={styles.logo} /> : 
+                        <Image source={require('../assets/logo.png')} style={styles.logo} />} 
                     </View>
                 </ImageBackground>
             </View>
@@ -61,4 +64,17 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SideBar;
+const mapStateToProps = (state) => {
+    return {
+        loggedIn: state.authReducer.loggedIn,
+        account: state.authReducer.account
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        logout: (account) => dispatch(logout(account))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SideBar);
