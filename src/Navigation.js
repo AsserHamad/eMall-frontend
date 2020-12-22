@@ -15,11 +15,13 @@ import ClientLoginSuccess from '../screens/Authentication/Client/ClientLoginSucc
 import { connect } from 'react-redux';
 import { login } from './actions/auth';
 import ClientRegister from '../screens/Authentication/Client/ClientRegister';
+import SellerLogin from '../screens/Authentication/Seller/SellerLogin';
+import SellerLoginSuccess from '../screens/Authentication/Seller/SellerLoginSuccess';
 
 
 const Drawers = createDrawerNavigator();
 const HomeStack = createStackNavigator();
-const ClientLoginStack = createStackNavigator();
+const AuthStack = createStackNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
@@ -28,16 +30,18 @@ const HomeStackScreen = () => (
   </HomeStack.Navigator>
 )
 
-const ClientLoginStackScreen = () => (
-  <ClientLoginStack.Navigator>
-    <ClientLoginStack.Screen name="ClientLogin" component={ClientLogin} options={{headerShown: false}} />
-    <ClientLoginStack.Screen 
+const AuthStackScreen = () => (
+  <AuthStack.Navigator>
+    <AuthStack.Screen name="ClientLogin" component={ClientLogin} options={{headerShown: false}} />
+    <AuthStack.Screen 
         name="ClientRegister"
         component={ClientRegister} 
         options={{title: '', headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}} 
     />
-    <ClientLoginStack.Screen name="ClientLoginSuccess" component={ClientLoginSuccess} options={{headerShown: false}} />
-  </ClientLoginStack.Navigator>
+    <AuthStack.Screen name="ClientLoginSuccess" component={ClientLoginSuccess} options={{headerShown: false}} />
+    <AuthStack.Screen name="SellerLogin" component={SellerLogin} options={{headerShown: false}} />
+    <AuthStack.Screen name="SellerLoginSuccess" component={SellerLoginSuccess} options={{headerShown: false}} />
+  </AuthStack.Navigator>
 )
 
 const Navigation = (props) => {
@@ -60,7 +64,7 @@ const Navigation = (props) => {
                 title: 'Register/Login',
                 drawerIcon: ({tintColor}) => <FontAwesome5 name="home" size={16} color={tintColor} />
               }} 
-              name="Register/Login" component={ClientLoginStackScreen}
+              name="Register/Login" component={AuthStackScreen}
           />
         :
           [<Drawers.Screen

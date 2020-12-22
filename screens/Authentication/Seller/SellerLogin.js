@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Dimensions, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Dimensions, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
 import { AntDesign } from '@expo/vector-icons';
 import * as Facebook from 'expo-facebook';
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+import { RFValue } from "react-native-responsive-fontsize";
 import { useFonts } from 'expo-font';
 
 // Redux
@@ -13,15 +13,15 @@ import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
-const ClientLogin = (props) => {
-    const [email, setEmail] = useState('');
+const SellerLogin = (props) => {
+    const [email, setEmail] = useState('asserhamad96@gmail.com');
     const [errors, setErrors] = useState([]);
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('Abcd1234');
     const [fontsLoaded] = useFonts({
       'Lato': require('../../../assets/fonts/Lato-Regular.ttf')
     });
     const login = () => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/login`, {
+        fetch(`${Constants.manifest.extra.apiUrl}/seller/login`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({email, password})
@@ -30,7 +30,7 @@ const ClientLogin = (props) => {
         .then(res => {
             if(!res.status){
                 setErrors([]);
-                res.client.verified? props.login(res) : props.navigation.replace('ClientLoginSuccess', {account: res.client})
+                res.store.approved? console.log(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
             }
             else {
                 setErrors(res.message ? [res.message] : res.errors)
@@ -77,14 +77,13 @@ const ClientLogin = (props) => {
         {fontsLoaded ? 
         <View style={styles.container}>
             <View style={styles.backContainer}>
-                <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
-                    <AntDesign name="home" size={RFValue(25)} color={gStyles.secondary} />
+                <TouchableOpacity onPress={() => props.navigation.pop()}>
+                    <AntDesign name="arrowleft" size={RFValue(25)} color={gStyles.secondary} />
                 </TouchableOpacity>
             </View>
-            <Image style={styles.image} source={require('../../../assets/logo.png')} />
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Welcome Back!</Text>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to continue shopping</Text>
+                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Dashboard</Text>
+                <Text style={{color: gStyles.secondary, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to access your dashboard</Text>
             </View>
             <View style={styles.errorContainer}>
                 {errors.map(err => <Text style={{color: gStyles.primary, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
@@ -126,26 +125,19 @@ const ClientLogin = (props) => {
                         <Text style={{marginLeft: 5, color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
                     </TouchableOpacity>
                 </View>
-                {/* Seller Account */}
-                <View style={{display:'flex', flexDirection: 'row', marginTop: 5}}>
-                    <Text style={{color: gStyles.secondary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Are you a seller?</Text>
-                    <TouchableOpacity onPress={() => props.navigation.push('SellerLogin')}>
-                        <Text style={{marginLeft: 5, color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Login Here</Text>
-                    </TouchableOpacity>
-                </View>
                 </View>
                 {/* Other Logins */}
                 <SafeAreaView style={styles.alternativeLogins}>
                     <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButtonF}>
                             <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFPercentage(1.5), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</Text>
+                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <View style={styles.alternativeLoginButtonG}>
                             <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFPercentage(1.5), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</Text>
+                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</Text>
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>
@@ -176,7 +168,7 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         width: width * 0.9,
-        paddingTop: height * 0.02,
+        marginTop: height * 0.05,
         marginBottom: height * 0.02
     },
     errorContainer: {
@@ -206,7 +198,7 @@ const styles = StyleSheet.create({
     },
     bottomContainer: {
         position: 'absolute',
-        bottom: RFPercentage(-1)
+        bottom: -5
     },
     others: {
         paddingHorizontal: height * 0.025,
@@ -214,12 +206,13 @@ const styles = StyleSheet.create({
     alternativeLogins: {
         backgroundColor: gStyles.secondary,
         width,
-        height: height * 0.23,
-        marginTop: height * 0.02,
+        height: height * 0.2,
+        marginTop: 20,
         alignItems: 'center',
         justifyContent: 'center'
     },
     alternativeLoginButtonF: {
+        // marginTop: height * 0.05,
         width: width * 0.9,
         backgroundColor: '#3b5998',
         height: height * 0.06,
@@ -230,7 +223,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     alternativeLoginButtonG: {
-        marginTop: height * 0.01,
+        marginTop: height * 0.03,
         width: width * 0.9,
         backgroundColor: '#EA4335',
         height: height * 0.06,
@@ -257,4 +250,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(SellerLogin);

@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
     },
     logo: {
         width: 100,
-        height: 100
+        height: 100,
+        borderRadius: 100
     },
     container: {
         right: 0,
