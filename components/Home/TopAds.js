@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         marginBottom: 1,
     },
     swiperActiveDot: {
-        backgroundColor:gStyles.primary, 
+        backgroundColor:gStyles.primary_light, 
         width: 14, 
         height: 3,
         marginLeft: 3, 

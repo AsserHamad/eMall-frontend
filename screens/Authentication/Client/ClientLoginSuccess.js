@@ -26,7 +26,6 @@ function ClientLoginSuccess(props) {
             body: JSON.stringify({...props.route.params.account, otp: `${input0}${input1}${input2}${input3}${input4}`})
         })
         .then(res => {
-            console.log(res);
             if(res.ok){
                 props.login(res);
                 props.navigation.navigate('Home');

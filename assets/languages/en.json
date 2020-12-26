@@ -1,0 +1,16 @@
+{
+    "sidebar": {
+        "home": "Home",
+        "deals": "Deals",
+        "auth": "Register/Login",
+        "logout": "Logout",
+        "changeLanguage": "العربية"
+    },
+    "mainHomeView": {
+        "titlePop": "Most Popular Stores",
+        "titleDealsOfTheDay": "Deals of the Day"
+    },
+    "navbar": {
+        "search": "Search for anything..."
+    }
+}

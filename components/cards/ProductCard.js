@@ -29,7 +29,7 @@ function ProductCard(props){
             }
             {!cartContainsItem(props.cart, props.product) ? 
                 <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToCart({product: props.product, quantity: 1})}>
-                    <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary}}}>
+                    <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}}>
                         <FontAwesome5 color="white" size={20} name="cart-plus" />
                     </View>
                 </TouchableOpacity>
@@ -51,7 +51,7 @@ const cartContainsItem = (cart, product) => {
 const styles = StyleSheet.create({
     discountBubble: {
         fontWeight: 'bold',
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_medium,
         fontSize: 23,
         marginBottom: -20,
         color: 'white',
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     },
     discountedPrice: {
         fontWeight: 'bold',
-        color: gStyles.primary,
+        color: gStyles.primary_medium,
         marginLeft: 4,
         fontSize: 15
     },

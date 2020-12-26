@@ -17,6 +17,9 @@ import { login } from './actions/auth';
 import ClientRegister from '../screens/Authentication/Client/ClientRegister';
 import SellerLogin from '../screens/Authentication/Seller/SellerLogin';
 import SellerLoginSuccess from '../screens/Authentication/Seller/SellerLoginSuccess';
+import SellerRegister from '../screens/Authentication/Seller/SellerRegister';
+import SellerStoreRegister from '../screens/Authentication/Seller/SellerStoreRegister';
+import useLanguage from '../hooks/language';
 
 
 const Drawers = createDrawerNavigator();
@@ -39,15 +42,24 @@ const AuthStackScreen = () => (
         options={{title: '', headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}} 
     />
     <AuthStack.Screen name="ClientLoginSuccess" component={ClientLoginSuccess} options={{headerShown: false}} />
-    <AuthStack.Screen name="SellerLogin" component={SellerLogin} options={{headerShown: false}} />
+    <AuthStack.Screen name="SellerLogin" component={SellerLogin} options={{title: '', headerBackTitleVisible: false, headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}} />
+    <AuthStack.Screen name="SellerRegister" 
+        component={SellerRegister}
+        options={{title: '', headerBackTitleVisible: false, headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}}
+    />
+    <AuthStack.Screen name="SellerStoreRegister" 
+        component={SellerStoreRegister}
+        options={{title: '', headerBackTitleVisible: false, headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}}
+    />
     <AuthStack.Screen name="SellerLoginSuccess" component={SellerLoginSuccess} options={{headerShown: false}} />
   </AuthStack.Navigator>
 )
 
 const Navigation = (props) => {
+  const [language, languageState] = useLanguage('navigation');
   return (
     <NavigationContainer>
-    <Drawers.Navigator drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Register/Login" drawerContent={props => <SideBar {...props} />}>
+    <Drawers.Navigator drawerPosition={languageState ? 'right' : 'left'} drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home" drawerContent={props => <SideBar {...props} />}>
         <Drawers.Screen 
             headerShown="false"
             options={{

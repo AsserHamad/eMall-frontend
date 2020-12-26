@@ -11,7 +11,6 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 function SellerLoginSuccess(props) {
     const store = props.route.params.store;
     const seller = props.route.params.seller;
-    console.log(props)
     return (
     <View style={styles.container}>
         <Entypo name="hour-glass" size={RFValue(130)} color={gStyles.secondary} />

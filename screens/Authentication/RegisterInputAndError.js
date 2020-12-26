@@ -40,14 +40,25 @@ const types = {
             }
         }
     },
+    name: {
+        textContentType: 'name',
+        autoCompleteType: 'name',
+        placeholder: 'Name',
+        validate: (text) => {
+            const regexp = /^[a-zA-Z ]{2,30}$$/;
+            if(!regexp.test(text)){
+                return 'Name should be between 2 and 30 characters'
+            }
+        }
+    },
     firstName: {
         textContentType: 'name',
         autoCompleteType: 'name',
         placeholder: 'First Name',
         validate: (text) => {
-            const regexp = /^[a-zA-Z]{3,20}$$/;
+            const regexp = /^[a-zA-Z]{2,20}$$/;
             if(!regexp.test(text)){
-                return 'First names should be between 3 and 20 characters'
+                return 'First names should be between 2 and 20 characters'
             }
         }
     },
@@ -56,12 +67,45 @@ const types = {
         autoCompleteType: 'name',
         placeholder: 'Last Name',
         validate: (text) => {
-            const regexp = /^[a-zA-Z]{3,20}$/;
+            const regexp = /^[a-zA-Z]{2,20}$/;
             if(!regexp.test(text)){
-                return 'Last names should be between 3 and 20 characters'
+                return 'Last names should be between 2 and 20 characters'
             }
         }
-    }
+    },
+    title: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        placeholder: 'Job Title',
+        validate: (text) => {
+            const regexp = /^[a-zA-Z0-9 ]{2,40}$/;
+            if(!regexp.test(text)){
+                return 'Titles should be between 2 and 40 characters long'
+            }
+        }
+    },
+    storeTitle: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        placeholder: 'Store Title',
+        validate: (text) => {
+            const regexp = /^[a-zA-Z0-9 ]{1,30}$/;
+            if(!regexp.test(text)){
+                return 'Store Titles should be between 1 and 30 characters long'
+            }
+        }
+    },
+    storeDescription: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        placeholder: 'Store Description',
+        validate: (text) => {
+            const regexp = /^[a-zA-Z0-9 ]{2,40}$/;
+            if(!regexp.test(text)){
+                return 'Titles should be between 2 and 40 characters long'
+            }
+        }
+    },
 }
 
 const RegisterInputAndError = (props) => {
@@ -69,7 +113,6 @@ const RegisterInputAndError = (props) => {
 
     const checkErrors = () => {
         const err = props.errors.filter(err => err.param === props.type);
-        console.log(props.errors, props.type, err)
         if(err.length){
             return err[0].msg;
         }
@@ -89,16 +132,21 @@ const RegisterInputAndError = (props) => {
                 onChangeText={(val) => props.set(val)}
                 style={{...styles.input, ...props.inputStyle}}
             />
-            {(validate || props.errors.length > 0) && <Text style={{...styles.error, ...props.inputStyle}}>
-                {checkErrors(props.errors, props.type) ? checkErrors(props.errors, props.type) : types[props.type].validate(props.value)}
-            </Text>}
+            <Text style={{...styles.error, ...props.inputStyle}}>
+                {(validate || props.errors.length > 0) ?
+                     checkErrors(props.errors, props.type) ? 
+                        checkErrors(props.errors, props.type) 
+                        : types[props.type].validate(props.value)
+                    : ''
+                }
+            </Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     inputContainer: {
-        marginVertical: 10,
+        marginVertical: 2,
     },
     input: {
         fontSize: RFValue(15),
@@ -109,7 +157,7 @@ const styles = StyleSheet.create({
     },
     error: {
         color: gStyles.primary,
-        fontSize: RFValue(10)
+        fontSize: RFValue(10),
     }
 })
 

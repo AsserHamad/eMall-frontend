@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Dimensions, Image, Platform, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Dimensions, KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
 import { AntDesign } from '@expo/vector-icons';
@@ -13,17 +13,18 @@ import * as ImagePicker from 'expo-image-picker';
 import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
 import { useFonts } from 'expo-font';
-import { useEffect } from 'react';
 import RegisterInputAndError from '../RegisterInputAndError';
+import DisabledButton from '../DisabledButton';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerRegister = (props) => {
     const [errors, setErrors] = useState([]);
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('+20');
+    const [title, setTitle] = useState('');
+    const [facebookId, setFacebookId] = useState(undefined);
     const [image, setImage] = useState('https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-400x284.jpg');
     const headerHeight = useHeaderHeight();
     const [fontsLoaded] = useFonts({
@@ -51,29 +52,40 @@ const SellerRegister = (props) => {
     //       quality: 1,
     //     })
     //     .then(res => {
-    //         console.log(res);
     //         if(!res.cancelled) {
     //             setImage(res.uri);
     //         }
     //     })
     // }
     
-    const register = () => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/register`, {
+    function registerSeller() {
+        fetch(`${Constants.manifest.extra.apiUrl}/seller/verify`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email, password, firstName, lastName, phone: `+20${phone}`})
+            body: JSON.stringify({name, email, password, phone})
         })
         .then(res => res.json())
         .then(res => {
-            if(!res.status){
-                setErrors([]);
-                props.navigation.replace('ClientLoginSuccess', {account: res})
+            if(res.status){
+                setErrors(res.errors);
             }
             else {
-                setErrors(res.message ? [res.message] : res.errors)
+                setErrors([]);
+                const seller = {
+                    name,
+                    phone,
+                    email,
+                    title,
+                    password
+                }
+                if(facebookId)
+                    seller.facebookId = facebookId;
+                props.navigation.push('SellerStoreRegister', {seller});
             }
-        });
+        })
+        .catch(err => {
+            setErrors(err.errors);
+        })
     }
 
     const facebookRegister = async () => {
@@ -95,13 +107,9 @@ const SellerRegister = (props) => {
                 fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`)
                 .then(res => res.json())
                 .then(data => {
-                    fetch(`${Constants.manifest.extra.apiUrl}/client/login/facebook`, {
-                        method: 'post',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(data)
-                    })
-                    .then(res => res.json())
-                    .then(res => props.login(res))
+                    setEmail(data.email);
+                    setName(data.name);
+                    setFacebookId(data.id);
                 })
                 .catch(e => console.log(e))
             }
@@ -116,46 +124,42 @@ const SellerRegister = (props) => {
         {fontsLoaded ? 
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Sign Up</Text>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form to complete your registration process</Text>
+                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Data</Text>
+                <Text style={{color: gStyles.secondary, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form with your personal information</Text>
             </View>
-            <View style={styles.formContainer}>
+            <KeyboardAvoidingView style={styles.formContainer}>
                     {/* <View style={styles.profilePictureContainer}>
                         <TouchableOpacity onPress={pickImage}>
                             <Image source={{ uri: image }} style={{ width: width * 0.3, height: width * 0.3, borderRadius: 10 }} />
 
                         </TouchableOpacity>
                     </View> */}
-                
-                <View style={{display: 'flex', flexDirection: 'row', width}}>
-                    <RegisterInputAndError errors={errors} value={firstName} type={'firstName'} set={setFirstName} inputStyle={{width: width * 0.42, marginRight: width * 0.06}} />
-                    <RegisterInputAndError errors={errors} value={lastName} type={'lastName'} set={setLastName} inputStyle={{width: width * 0.42}} />
-                </View>
+                <RegisterInputAndError errors={errors} value={name} type={'name'} set={setName} />
+                <RegisterInputAndError errors={errors} value={title} type={'title'} set={setTitle} />
                 <RegisterInputAndError errors={errors} value={phone} type={'phone'} set={setPhone} numeric keyboardType={'numeric'} />
                 <RegisterInputAndError errors={errors} value={email} type={'email'} set={setEmail} keyboardType={'email-address'} />
                 <RegisterInputAndError errors={errors} value={password} secureTextEntry type={'password'} set={setPassword} />
-            </View>
-            <TouchableOpacity onPress={() => register()}>
-                <View style={styles.submitButton}>
-                    <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>REGISTER</Text>
-                </View>
-            </TouchableOpacity>
+            </KeyboardAvoidingView>
+            <DisabledButton onPressIfActive={registerSeller} array={[name, phone, email, password]} errors={errors}>
+                    <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12), marginRight: RFValue(6)}}>NEXT</Text>
+                    <AntDesign size={RFValue(12)} color="white" name="arrowright" />
+            </DisabledButton>
             <View style={{ position: 'absolute', bottom: headerHeight - 10}}>
                 {/* Other Logins */}
-                <SafeAreaView style={styles.alternativeLogins}>
+                {!facebookId && <SafeAreaView style={styles.alternativeLogins}>
                     <TouchableOpacity onPress={facebookRegister}>
                         <View style={styles.alternativeLoginButtonF}>
                             <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign up with Facebook</Text>
+                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.45, fontFamily: gStyles.fontFamily}}>Fetch Data From Facebook</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <View style={styles.alternativeLoginButtonG}>
                             <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign up with Google</Text>
+                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.45, fontFamily: gStyles.fontFamily}}>Fetch Data From Google</Text>
                         </View>
                     </TouchableOpacity>
-                </SafeAreaView>
+                </SafeAreaView>}
             </View>
         </View>
         : <Text>Loading</Text>}
@@ -188,15 +192,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'center',
         marginTop: height * 0.02
-    },
-    submitButton: {
-        backgroundColor: gStyles.primary,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: width * 0.9,
-        height: height * 0.05,
-        borderRadius: 2,
-        marginTop: height * 0.03
     },
     others: {
         paddingHorizontal: height * 0.025,

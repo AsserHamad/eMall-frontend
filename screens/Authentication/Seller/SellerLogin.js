@@ -7,16 +7,19 @@ import { AntDesign } from '@expo/vector-icons';
 import * as Facebook from 'expo-facebook';
 import { RFValue } from "react-native-responsive-fontsize";
 import { useFonts } from 'expo-font';
+import { useHeaderHeight } from '@react-navigation/stack';
 
 // Redux
 import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
+import DisabledButton from '../DisabledButton';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const SellerLogin = (props) => {
-    const [email, setEmail] = useState('asserhamad96@gmail.com');
+    const headerHeight = useHeaderHeight();
+    const [email, setEmail] = useState('');
     const [errors, setErrors] = useState([]);
-    const [password, setPassword] = useState('Abcd1234');
+    const [password, setPassword] = useState('');
     const [fontsLoaded] = useFonts({
       'Lato': require('../../../assets/fonts/Lato-Regular.ttf')
     });
@@ -57,13 +60,21 @@ const SellerLogin = (props) => {
                 fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`)
                 .then(res => res.json())
                 .then(data => {
-                    fetch(`${Constants.manifest.extra.apiUrl}/client/login/facebook`, {
+                    fetch(`${Constants.manifest.extra.apiUrl}/seller/login/facebook`, {
                         method: 'post',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify(data)
                     })
                     .then(res => res.json())
-                    .then(res => props.login(res))
+                    .then(res => {
+                        console.log(res)
+                        if(!res.status){
+                            setErrors([]);
+                            res.approved ? console.log(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
+                        } else {
+                            setErrors(res.message ? [res.message] : res.errors)
+                        }
+                    })
                 })
                 .catch(e => console.log(e))
             }
@@ -76,11 +87,6 @@ const SellerLogin = (props) => {
         <View>
         {fontsLoaded ? 
         <View style={styles.container}>
-            <View style={styles.backContainer}>
-                <TouchableOpacity onPress={() => props.navigation.pop()}>
-                    <AntDesign name="arrowleft" size={RFValue(25)} color={gStyles.secondary} />
-                </TouchableOpacity>
-            </View>
             <View style={styles.headerContainer}>
                 <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Dashboard</Text>
                 <Text style={{color: gStyles.secondary, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to access your dashboard</Text>
@@ -110,18 +116,16 @@ const SellerLogin = (props) => {
                     <Text style={{color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => login()}>
-                <View style={styles.submitButton}>
+            <DisabledButton onPressIfActive={login} array={[email, password]} errors={errors}>
                     <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>SUBMIT</Text>
-                </View>
-            </TouchableOpacity>
-            <View style={styles.bottomContainer}>
+            </DisabledButton>
+            <View style={{ position: 'absolute', bottom: headerHeight * 1 - 6}}>
 
             <View style={styles.others}>
                 {/* Register Now */}
                 <View style={{display:'flex', flexDirection: 'row'}}>
                     <Text style={{color: gStyles.secondary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Don't have an account?</Text>
-                    <TouchableOpacity onPress={() => props.navigation.push('ClientRegister')}>
+                    <TouchableOpacity onPress={() => props.navigation.push('SellerRegister')}>
                         <Text style={{marginLeft: 5, color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
                     </TouchableOpacity>
                 </View>
@@ -168,7 +172,7 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         width: width * 0.9,
-        marginTop: height * 0.05,
+        // marginTop: height * 0.05,
         marginBottom: height * 0.02
     },
     errorContainer: {
@@ -195,10 +199,6 @@ const styles = StyleSheet.create({
         height: height * 0.05,
         borderRadius: 2,
         marginTop: height * 0.03
-    },
-    bottomContainer: {
-        position: 'absolute',
-        bottom: -5
     },
     others: {
         paddingHorizontal: height * 0.025,

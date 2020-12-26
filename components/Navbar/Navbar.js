@@ -4,11 +4,13 @@ import Searchbar from './Searchbar';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
 import { connect } from 'react-redux';
+import useLanguage from '../../hooks/language';
 
 const width = Dimensions.get('window').width;
 
 function Navbar(props){
     const [disabled, setDisabled] = useState(false);
+    const [language, languageState] = useLanguage('navbar');
 
     useEffect(() => {
         const timer = setTimeout(() => setDisabled(false), 1000);
@@ -16,10 +18,10 @@ function Navbar(props){
     }, [disabled])
     return(
         <View style={styles.container}>
-            <View style={styles.topContainer}>
+            <View style={getLanguageStyle(languageState, 'topContainer')}>
                 {/* Burger */}
                 <TouchableOpacity onPress={props.navigation.openDrawer} style={styles.burgerContainer}>
-                    <FontAwesome5 name="bars" color={gStyles.secondary} size={ 27 }/>
+                    <FontAwesome5 name="bars" color={gStyles.secondary_dark} size={ 27 }/>
                 </TouchableOpacity>
 
                 {/* Logo */}
@@ -39,7 +41,7 @@ function Navbar(props){
                     <View style={styles.cartNumberContainer}>
                         <Text>{props.cart.length}</Text>
                     </View>
-                    <FontAwesome5 name="shopping-cart" color={gStyles.secondary} size={ 27 }/>
+                    <FontAwesome5 name="shopping-cart" color={gStyles.secondary_dark} size={ 27 }/>
                 </TouchableOpacity>
             </View>
             {/* Search Bar */}
@@ -48,6 +50,8 @@ function Navbar(props){
         </View>
     )
 }
+
+const getLanguageStyle = (lang, style) => lang ? styles[`${style}_ar`] : styles[style];
 
 const styles = StyleSheet.create({
     container: {
@@ -60,6 +64,12 @@ const styles = StyleSheet.create({
     topContainer: {
         display: 'flex',
         flexDirection: 'row',
+        alignItems: 'center',
+        height: 45
+    },
+    topContainer_ar: {
+        display: 'flex',
+        flexDirection: 'row-reverse',
         alignItems: 'center',
         height: 45
     },
@@ -76,7 +86,7 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     cartNumberContainer: {
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_medium,
         width: 18,
         height: 18,
         borderRadius: 50,

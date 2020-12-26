@@ -11,6 +11,7 @@ import { useFonts } from 'expo-font';
 // Redux
 import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
+import DisabledButton from '../DisabledButton';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
@@ -111,11 +112,9 @@ const ClientLogin = (props) => {
                     <Text style={{color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => login()}>
-                <View style={styles.submitButton}>
+            <DisabledButton onPressIfActive={login} array={[email, password]}>
                     <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>SUBMIT</Text>
-                </View>
-            </TouchableOpacity>
+            </DisabledButton>
             <View style={styles.bottomContainer}>
 
             <View style={styles.others}>

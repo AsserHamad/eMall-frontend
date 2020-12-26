@@ -1,0 +1,16 @@
+{
+    "sidebar": {
+        "home": "المنزل",
+        "deals": "العروض",
+        "auth": "انشاء حساب/دخول",
+        "logout": "خروج",
+        "changeLanguage": "English"
+    },
+    "mainHomeView": {
+        "titlePop": "المتاجر الأكثر شهرة",
+        "titleDealsOfTheDay": "عروض اليوم " 
+    },
+    "navbar": {
+        "search": "ابحث عن أي شيء..."
+    }
+}

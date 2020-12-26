@@ -1,6 +1,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
 import { gStyles } from '../global.style';
 
 function ScrollCards(props){
@@ -15,7 +15,7 @@ function ScrollCards(props){
         }, 1000)
     }, []);
     return (
-        <View>
+        <View style={styles.container}>
         <View style={styles.topContainer}>
             <View style={styles.topLeftContainer}>
                 <Text style={styles.title}>{title}</Text>
@@ -36,7 +36,7 @@ function ScrollCards(props){
                 <Text style={styles.topRightViewMore}>View More</Text>
             </View>
         </View>
-            <ScrollView style={styles.container} contentContainerStyle={styles.containerContent} horizontal>
+            <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.containerContent} horizontal>
                 {cards}
             </ScrollView>
         </View>
@@ -45,10 +45,7 @@ function ScrollCards(props){
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
-        // paddingTop: 20,
-        // paddingBottom: 20,
-        backgroundColor: gStyles.secondary,
+        marginVertical: Dimensions.get('window').width * 0.03
     },
     containerContent: {
         justifyContent: 'center',
@@ -56,13 +53,12 @@ const styles = StyleSheet.create({
     },
     topContainer: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     topLeftContainer: {
         width: '50%',
         marginLeft: 10,
-        marginTop: 30,
-        marginBottom: 10
+        marginBottom: 5
     },
     title: {
         fontSize: gStyles.fontSizeL
@@ -71,7 +67,7 @@ const styles = StyleSheet.create({
         marginTop: 7,
         display: 'flex',
         flexDirection: 'row',
-        color: gStyles.primary,
+        color: gStyles.primary_light,
         alignItems: 'center'
     },
     topRightContainer: {
@@ -82,12 +78,17 @@ const styles = StyleSheet.create({
     },
     topRightViewMore: {
         color: gStyles.background,
-        backgroundColor: gStyles.secondary,
+        backgroundColor: gStyles.secondary_dark,
         padding: 6,
-        fontSize: 10,
-        marginBottom: 10,
-        borderRadius: 4
-    }
+        fontSize: 13,
+        // marginBottom: 10,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
+    },
+    scrollContainer: {
+        width: '100%',
+        backgroundColor: gStyles.secondary_dark,
+    },
 })
 
 const addZero = (number) => number <= 9 ? `0${number}`: number;

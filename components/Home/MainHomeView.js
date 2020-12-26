@@ -1,28 +1,28 @@
-import React, { useEffect } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import React from 'react';
+import { ScrollView } from 'react-native';
 import ProductCard from '../cards/ProductCard';
 import StoreCard from '../cards/StoreCard';
 import ScrollCards from '../ScrollCards';
 import Categories from './Categories';
 import TopAds from './TopAds';
-import { gStyles } from '../../global.style';
-import { useState } from 'react';
+import Footer from './Footer';
+import useLanguage from '../../hooks/language';
+import Ad from './Ad';
 
 function MainHomeView(props){
+    const [language] = useLanguage('mainHomeView');
     return(
             <ScrollView>
                 <TopAds />
                 <Categories />
-                
-                <ScrollCards cards={getMostPopularStores(props)} title="Most Popular Stores" />
-                <ScrollCards countdown cards={getDealsOfTheDay(props)} title="Deals Of The Day" />
+                <ScrollCards cards={getMostPopularStores(props)} title={language && language.titlePop} />
+                <Ad uri={'https://i.pinimg.com/originals/9c/9f/0c/9c9f0c5221ef90c7d05ba151671bf482.png'} aspectRatio={1920/1080} />
+                <ScrollCards countdown cards={getDealsOfTheDay(props)} title={language && language.titleDealsOfTheDay} />
+                <Ad uri={'https://storage.googleapis.com/adforum-media/34476558/00000000_34476558_1340887777.orig.jpg'} aspectRatio={768/512} />
+                <Footer />
             </ScrollView>
     )
 }
-
-const styles = StyleSheet.create({
-
-});
 
 export default MainHomeView;
 
