@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         fontFamily: gStyles.fontFamily
     },
     submitButton: {
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_medium,
         alignItems: 'center',
         justifyContent: 'center',
         width: width * 0.9,

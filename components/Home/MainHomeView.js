@@ -14,7 +14,7 @@ function MainHomeView(props){
     return(
             <ScrollView>
                 <TopAds />
-                <Categories />
+                <Categories navigation={props.navigation} />
                 <ScrollCards cards={getMostPopularStores(props)} title={language && language.titlePop} />
                 <Ad uri={'https://i.pinimg.com/originals/9c/9f/0c/9c9f0c5221ef90c7d05ba151671bf482.png'} aspectRatio={1920/1080} />
                 <ScrollCards countdown cards={getDealsOfTheDay(props)} title={language && language.titleDealsOfTheDay} />

@@ -20,16 +20,20 @@ import SellerLoginSuccess from '../screens/Authentication/Seller/SellerLoginSucc
 import SellerRegister from '../screens/Authentication/Seller/SellerRegister';
 import SellerStoreRegister from '../screens/Authentication/Seller/SellerStoreRegister';
 import useLanguage from '../hooks/language';
+import CategoryPage from '../screens/CategoryPage';
+import Wishlist from '../screens/Wishlist';
 
 
 const Drawers = createDrawerNavigator();
 const HomeStack = createStackNavigator();
 const AuthStack = createStackNavigator();
+const WishlistStack = createStackNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
     <HomeStack.Screen name="Home" component={Home} options={{headerShown: false}} />
     <HomeStack.Screen name="Cart" component={Cart} />
+    <HomeStack.Screen name="Category" component={CategoryPage} options={({ route }) => ({title: route.params.name.en, headerShown: false})} />
   </HomeStack.Navigator>
 )
 
@@ -55,6 +59,14 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 )
 
+const WishlistStackScreen = () => (
+  <WishlistStack.Navigator>
+    <WishlistStack.Screen name="Wishlist" component={Wishlist} options={{headerShown: false}} />
+    <WishlistStack.Screen name="Cart" component={Cart} />
+  </WishlistStack.Navigator>
+
+)
+
 const Navigation = (props) => {
   const [language, languageState] = useLanguage('navigation');
   return (
@@ -69,6 +81,15 @@ const Navigation = (props) => {
             name="Home"
             component={HomeStackScreen}
         />
+        <Drawers.Screen 
+            options={{
+              title: 'Wishlist',
+              drawerIcon: ({tintColor}) => <Feather name="heart" size={16} color={tintColor} />
+            }}
+            name="Wishlist"
+            component={WishlistStackScreen}
+        />
+        
         {!props.loggedIn ? 
           <Drawers.Screen
               headerShown="false"

@@ -1,9 +1,10 @@
 import { FontAwesome5, MaterialCommunityIcons  } from '@expo/vector-icons';
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { gStyles } from '../../global.style';
 import { connect } from 'react-redux';
 import { addToCart, removeFromCart } from '../../src/actions/cart';
+import { addToWishlist, removeFromWishlist } from '../../src/actions/wishlist';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function ProductCard(props){
@@ -27,25 +28,42 @@ function ProductCard(props){
             :
             <Text style={styles.discountedPrice}>{product.price}</Text>
             }
-            {!cartContainsItem(props.cart, props.product) ? 
-                <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToCart({product: props.product, quantity: 1})}>
-                    <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}}>
-                        <FontAwesome5 color="white" size={20} name="cart-plus" />
-                    </View>
-                </TouchableOpacity>
-            :
-                <TouchableOpacity activeOpacity={0.4} onPress={() => props.removeFromCart(props.product)}>
-                    <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
-                        <MaterialCommunityIcons  color="white" size={23} name="cart-remove" />
-                    </View>
-                </TouchableOpacity>
-            }
+            <View style={styles.bottomButtonsContainer}>
+                {/* Cart */}
+                {!containsItem(props.cart, props.product) ? 
+                    <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToCart({product: props.product, quantity: 1})}>
+                        <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}}>
+                            <FontAwesome5 color="white" size={20} name="cart-plus" />
+                        </View>
+                    </TouchableOpacity>
+                :
+                    <TouchableOpacity activeOpacity={0.4} onPress={() => props.removeFromCart(props.product)}>
+                        <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
+                            <MaterialCommunityIcons  color="white" size={23} name="cart-remove" />
+                        </View>
+                    </TouchableOpacity>
+                }
+                {/* Wishlist */}
+                {!containsItem(props.wishlist, props.product) ? 
+                    <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToWishlist({product: props.product, quantity: 1})}>
+                        <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}}>
+                            <FontAwesome5 color="white" size={20} name="heart" />
+                        </View>
+                    </TouchableOpacity>
+                :
+                    <TouchableOpacity activeOpacity={0.4} onPress={() => props.removeFromWishlist(props.product)}>
+                        <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
+                            <MaterialCommunityIcons  color="white" size={23} name="heart" />
+                        </View>
+                    </TouchableOpacity>
+                }
+            </View>
         </View>
     )
 }
 
-const cartContainsItem = (cart, product) => {
-    return cart.filter(prod => prod.product._id === product._id).length;
+const containsItem = (arr, product) => {
+    return arr.filter(prod => prod.product._id === product._id).length;
 }
 
 const styles = StyleSheet.create({
@@ -113,12 +131,20 @@ const styles = StyleSheet.create({
         marginLeft: 4,
         fontSize: 15
     },
+    bottomButtonsContainer: {
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row'
+    },
     cartContainer: {
         borderRadius: 100,
         width: 40,
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
+        marginHorizontal: Dimensions.get('window').width * 0.01
         // marginTop: -20,
         // transform: [{translateY: 20}]
     },
@@ -126,14 +152,17 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => {
     return {
-        cart: state.cartReducer.cart
+        cart: state.cartReducer.cart,
+        wishlist: state.wishlistReducer.wishlist
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         addToCart: (product) => dispatch(addToCart(product)),
-        removeFromCart: (product) => dispatch(removeFromCart(product))
+        removeFromCart: (product) => dispatch(removeFromCart(product)),
+        addToWishlist: (product) => dispatch(addToWishlist(product)),
+        removeFromWishlist: (product) => dispatch(removeFromWishlist(product))
     }
 }
 

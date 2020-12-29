@@ -29,9 +29,9 @@ function Home(props){
     return(
             <View style={styles.container}>
                 <StatusBar backgroundColor={gStyles.background} style="dark" />
-                <Navbar navigation={props.navigation} />
+                <Navbar searchbar navigation={props.navigation} />
                 <ScrollView ref={scrollRef} style={{height: Dimensions.get('window').height - 60}}>
-                    <MainHomeView />
+                    <MainHomeView navigation={props.navigation} />
                 </ScrollView>
             </View>
     )
@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     container: {
         fontFamily: 'Lato',
         backgroundColor: gStyles.background,
-        paddingTop: Constants.statusBarHeight+ 5,
         flex: 1
     },
 });

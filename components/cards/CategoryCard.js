@@ -1,17 +1,18 @@
 import { FontAwesome5, MaterialCommunityIcons, Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 
 export default function CategoryCard(props){
     const details = props.details;
     return(
-        <TouchableNativeFeedback style={{borderWidth: 0}}>
+        <TouchableOpacity onPress={() => props.navigation.push('Category', details)} style={{borderWidth: 0}}>
             <View style={styles.container}>
                 {returnIconType(details)}
                 <Text style={styles.title}>{details.name.en}</Text>
             </View>
-        </TouchableNativeFeedback>
+        </TouchableOpacity>
     )
 };
 

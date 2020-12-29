@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Dimensions, Text } from 'react-native';
 import Searchbar from './Searchbar';
+import Constants from 'expo-constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
 import { connect } from 'react-redux';
@@ -32,6 +33,7 @@ function Navbar(props){
                 {/* Cart */}
                 <TouchableOpacity 
                     disabled={disabled}
+                    activeOpacity={0.8}
                     onPress={() => {
                         setDisabled(true);
                         props.navigation.push('Cart', {cart: props.cart})}
@@ -45,7 +47,7 @@ function Navbar(props){
                 </TouchableOpacity>
             </View>
             {/* Search Bar */}
-            <Searchbar />
+            {props.searchbar && <Searchbar />}
 
         </View>
     )
@@ -56,7 +58,9 @@ const getLanguageStyle = (lang, style) => lang ? styles[`${style}_ar`] : styles[
 const styles = StyleSheet.create({
     container: {
         width,
-        height: 100,
+        paddingTop: Constants.statusBarHeight+ 5,
+        paddingBottom: 10,
+        // height: 100,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
@@ -81,8 +85,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     logo: {
-        width: 50,
-        height: 50,
+        width: 40,
+        height: 40,
         zIndex: 1
     },
     cartNumberContainer: {

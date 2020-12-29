@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { gStyles } from '../../global.style';
 import CategoryCard from '../cards/CategoryCard';
 
-function Categories(){
+function Categories(props){
     const [categories, setCategories] = useState([]);
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/categories`)
@@ -15,7 +15,7 @@ function Categories(){
     <View style={styles.container}>
         <View style={styles.categoriesContainer}>
             {categories.map(category => (
-                <CategoryCard key={Math.random()} details={category} />
+                <CategoryCard navigation={props.navigation} key={Math.random()} details={category} />
             ))}
         </View>
     </View>)

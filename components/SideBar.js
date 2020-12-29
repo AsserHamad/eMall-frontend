@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         marginTop: Constants.statusBarHeight,
         width: '100%',
         height: 180,
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_medium,
         alignItems: 'center',
         justifyContent: 'center'
     },
