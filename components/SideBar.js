@@ -7,12 +7,14 @@ import { gStyles } from '../global.style';
 import { connect } from 'react-redux';
 import { logout } from '../src/actions/auth';
 import { changeLanguage } from '../src/actions/general';
-import useLanguage from '../hooks/language';
+import { useLanguageText, useLanguage } from '../hooks/language';
+import TextLato from './utils/TextLato';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height, ]
 
 function SideBar(props) {
-    const [language, languageState] = useLanguage('sidebar');
+    const language = useLanguage();
+    const languageText = useLanguageText('sidebar');
     return (
         <View style={{...styles.container}}>
             <View style={styles.topView}>
@@ -25,17 +27,17 @@ function SideBar(props) {
             </View>
             <ScrollView>
                 <DrawerContentScrollView {...props}>
-                    <DrawerItemList {...props} />
+                    <DrawerItemList labelStyle={{fontFamily: language === 'en' ? 'Lato' : 'Cairo'}} {...props} />
                 </DrawerContentScrollView>
             </ScrollView>
             <View style={styles.logoutContainer}>
             {props.loggedIn && 
                     <TouchableOpacity onPress={() => {props.logout(); props.navigation.closeDrawer()}}>
-                        <Text>{language.logout}</Text>
+                        <TextLato>{language.logout}</TextLato>
                     </TouchableOpacity>
             }
-            <TouchableOpacity onPress={() => {props.changeLanguage(languageState === 0 ? 1 : 0); props.navigation.closeDrawer()}}>
-                <Text>{language && language.changeLanguage}</Text>
+            <TouchableOpacity onPress={() => {props.changeLanguage(languageState ^ 1); props.navigation.closeDrawer()}}>
+                <TextLato reverse>{languageText && languageText.changeLanguage}</TextLato>
             </TouchableOpacity>
             </View>
         </View>

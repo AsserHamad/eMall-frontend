@@ -8,7 +8,7 @@ const Ad = (props) => {
     })
     return (
         <View style={styles.container}>
-            <Image style={{width: width * 0.95, aspectRatio: image.aspectRatio, borderRadius: 10}} source={{uri: image.uri}} />
+            <Image style={{width: width * 0.95, aspectRatio: image.aspectRatio, borderRadius: 5}} source={{uri: image.uri}} />
         </View>
     )
 }
@@ -16,7 +16,7 @@ const Ad = (props) => {
 const styles = StyleSheet.create({
     container: {
         width,
-        marginVertical: height * 0.02,
+        marginVertical: height * 0.01,
         justifyContent: 'center',
         alignItems: 'center'
     }

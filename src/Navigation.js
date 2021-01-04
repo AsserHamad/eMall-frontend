@@ -19,9 +19,10 @@ import SellerLogin from '../screens/Authentication/Seller/SellerLogin';
 import SellerLoginSuccess from '../screens/Authentication/Seller/SellerLoginSuccess';
 import SellerRegister from '../screens/Authentication/Seller/SellerRegister';
 import SellerStoreRegister from '../screens/Authentication/Seller/SellerStoreRegister';
-import useLanguage from '../hooks/language';
+import { useLanguageText, useLanguage } from '../hooks/language';
 import CategoryPage from '../screens/CategoryPage';
 import Wishlist from '../screens/Wishlist';
+import SubcategoryPage from '../screens/SubcategoryPage';
 
 
 const Drawers = createDrawerNavigator();
@@ -34,6 +35,7 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Home" component={Home} options={{headerShown: false}} />
     <HomeStack.Screen name="Cart" component={Cart} />
     <HomeStack.Screen name="Category" component={CategoryPage} options={({ route }) => ({title: route.params.name.en, headerShown: false})} />
+    <HomeStack.Screen name="Subcategory" component={SubcategoryPage} options={({ route }) => ({ headerShown: false})} />
   </HomeStack.Navigator>
 )
 
@@ -68,10 +70,11 @@ const WishlistStackScreen = () => (
 )
 
 const Navigation = (props) => {
-  const [language, languageState] = useLanguage('navigation');
+  const languageText = useLanguageText('navigation');
+  const language = useLanguage();
   return (
     <NavigationContainer>
-    <Drawers.Navigator drawerPosition={languageState ? 'right' : 'left'} drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home" drawerContent={props => <SideBar {...props} />}>
+    <Drawers.Navigator drawerPosition={language === 'ar' ? 'right' : 'left'} drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home" drawerContent={props => <SideBar {...props} />}>
         <Drawers.Screen 
             headerShown="false"
             options={{

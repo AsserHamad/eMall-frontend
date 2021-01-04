@@ -5,13 +5,14 @@ import Constants from 'expo-constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
 import { connect } from 'react-redux';
-import useLanguage from '../../hooks/language';
+import { useLanguageText, useLanguage } from '../../hooks/language';
 
 const width = Dimensions.get('window').width;
 
 function Navbar(props){
     const [disabled, setDisabled] = useState(false);
-    const [language, languageState] = useLanguage('navbar');
+    const language = useLanguage();
+    const languageText = useLanguageText('navbar');
 
     useEffect(() => {
         const timer = setTimeout(() => setDisabled(false), 1000);
@@ -19,7 +20,7 @@ function Navbar(props){
     }, [disabled])
     return(
         <View style={styles.container}>
-            <View style={getLanguageStyle(languageState, 'topContainer')}>
+            <View style={getLanguageStyle(language, 'topContainer')}>
                 {/* Burger */}
                 <TouchableOpacity onPress={props.navigation.openDrawer} style={styles.burgerContainer}>
                     <FontAwesome5 name="bars" color={gStyles.secondary_dark} size={ 27 }/>
@@ -36,7 +37,7 @@ function Navbar(props){
                     activeOpacity={0.8}
                     onPress={() => {
                         setDisabled(true);
-                        props.navigation.push('Cart', {cart: props.cart})}
+                        props.navigation.push('Cart')}
                     }
                     style={styles.burgerContainer}
                 >
@@ -53,7 +54,7 @@ function Navbar(props){
     )
 }
 
-const getLanguageStyle = (lang, style) => lang ? styles[`${style}_ar`] : styles[style];
+const getLanguageStyle = (lang, style) => lang === 'ar' ? styles[`${style}_ar`] : styles[style];
 
 const styles = StyleSheet.create({
     container: {
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     },
     cartNumberContainer: {
         backgroundColor: gStyles.primary_medium,
-        width: 18,
+        minWidth: 18,
         height: 18,
         borderRadius: 50,
         justifyContent: 'center',

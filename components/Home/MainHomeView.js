@@ -6,11 +6,11 @@ import ScrollCards from '../ScrollCards';
 import Categories from './Categories';
 import TopAds from './TopAds';
 import Footer from './Footer';
-import useLanguage from '../../hooks/language';
+import {useLanguageText} from '../../hooks/language';
 import Ad from './Ad';
 
 function MainHomeView(props){
-    const [language] = useLanguage('mainHomeView');
+    const language = useLanguageText('mainHomeView');
     return(
             <ScrollView>
                 <TopAds />

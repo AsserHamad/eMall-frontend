@@ -3,14 +3,17 @@ import React from 'react';
 import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
+import TextLato from '../utils/TextLato';
+import { useLanguage } from '../../hooks/language';
 
 export default function CategoryCard(props){
     const details = props.details;
+    const language = useLanguage();
     return(
         <TouchableOpacity onPress={() => props.navigation.push('Category', details)} style={{borderWidth: 0}}>
             <View style={styles.container}>
                 {returnIconType(details)}
-                <Text style={styles.title}>{details.name.en}</Text>
+                <TextLato style={styles.title}>{details.name[language]}</TextLato>
             </View>
         </TouchableOpacity>
     )
