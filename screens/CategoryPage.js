@@ -29,7 +29,7 @@ const CategoryPage = (props) => {
         })
         .then(res => res.json())
         .then(res => {
-            setSellers([...res, ...res, ...res, ...res, ...res, ...res, ...res]);
+            setSellers(res);
             setProds(res.products);
         });
     }, []);

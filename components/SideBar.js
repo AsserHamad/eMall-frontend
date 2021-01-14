@@ -9,12 +9,22 @@ import { logout } from '../src/actions/auth';
 import { changeLanguage } from '../src/actions/general';
 import { useLanguageText, useLanguage } from '../hooks/language';
 import TextLato from './utils/TextLato';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Updates from 'expo-updates';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height, ]
 
 function SideBar(props) {
     const language = useLanguage();
     const languageText = useLanguageText('sidebar');
+    const changeLanguage = () => {
+        const newLang = `${language === 'en' ? 1 : 0}`;
+        console.log('language', language, 'newLang', newLang);
+        AsyncStorage.setItem('@language', newLang)
+        .then(() => {
+            Updates.reloadAsync()
+        })
+    }
     return (
         <View style={{...styles.container}}>
             <View style={styles.topView}>
@@ -36,7 +46,7 @@ function SideBar(props) {
                         <TextLato>{language.logout}</TextLato>
                     </TouchableOpacity>
             }
-            <TouchableOpacity onPress={() => {props.changeLanguage(languageState ^ 1); props.navigation.closeDrawer()}}>
+            <TouchableOpacity onPress={() => {changeLanguage()}}>
                 <TextLato reverse>{languageText && languageText.changeLanguage}</TextLato>
             </TouchableOpacity>
             </View>

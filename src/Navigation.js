@@ -25,6 +25,7 @@ import Wishlist from '../screens/Wishlist';
 import SubcategoryPage from '../screens/SubcategoryPage';
 import Product from '../screens/Product';
 import Payment from '../screens/Payment';
+import Store from '../screens/Store';
 
 
 const Drawers = createDrawerNavigator();
@@ -40,6 +41,7 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Subcategory" component={SubcategoryPage} options={({ route }) => ({ headerShown: false})} />
     <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Payment" component={Payment} />
+    <HomeStack.Screen name="Store" component={Store} options={({ route }) => ({ headerShown: false })} />
   </HomeStack.Navigator>
 )
 
