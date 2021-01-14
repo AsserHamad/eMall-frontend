@@ -25,7 +25,7 @@ import Wishlist from '../screens/Wishlist';
 import SubcategoryPage from '../screens/SubcategoryPage';
 import Product from '../screens/Product';
 import Payment from '../screens/Payment';
-import Store from '../screens/Store';
+import Store from '../screens/Store/Store';
 
 
 const Drawers = createDrawerNavigator();

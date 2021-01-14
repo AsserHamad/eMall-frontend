@@ -10,7 +10,6 @@ exports.gStyles =  {
   background: '#EBEBEB',
   starColor: '#FCC201',
   lightPrimary: '#FF9E9E',
-  fontFamily: 'Lato',
   tint: 'rgba(231, 74, 95, 0.4)',
   logoAspectRatio: 1875/870,
   fontSizeL: 16,

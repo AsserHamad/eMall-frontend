@@ -19,7 +19,7 @@ const SellerCardProduct = (props) => {
         <TouchableOpacity activeOpacity={1} onPress={() => navigation.push('Product', {product: props.product})}>
             <View style={styles.container}>
                 <View>
-                    {props.product.discount && <Text style={styles.discountContainer}>{Math.floor(props.product.discount * 100)}% Off</Text>}
+                    {props.product.discount && <TextLato style={styles.discountContainer}>{Math.floor(props.product.discount * 100)}% Off</TextLato>}
                     <Image style={styles.image} source={{uri: props.product.images[0]}} />
                 </View>
 
@@ -119,7 +119,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: gStyles.primary_light,
         color: 'white',
-        fontFamily: 'Lato',
         fontSize: RFPercentage(1.5),
     },
     cartContainer: {

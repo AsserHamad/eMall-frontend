@@ -110,7 +110,7 @@ const Product = (props) => {
                         
                         {/* STORE */}
                         <View style={mainStyles.storeContainer}>
-                            <TextLato style={mainStyles.soldBy}>Sold by</TextLato>
+                            <TextLato bold style={mainStyles.soldBy}>Sold by</TextLato>
                             <View style={mainStyles.storeViewContainer}>
                                 <TextLato style={mainStyles.storeTitle}>{product.store.title}</TextLato>
                                 <Image style={{...mainStyles.storeLogo, aspectRatio: logoAspectRatio }} source={{uri: product.store.logo}} />
@@ -314,7 +314,6 @@ const mainStyles = StyleSheet.create({
     },
     soldBy: {
         fontSize: RFPercentage(1.7),
-        fontFamily: 'Lato Bold',
         marginRight: width * 0.02
     },
     storeViewContainer: {
