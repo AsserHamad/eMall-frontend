@@ -98,11 +98,12 @@ const types = {
     storeDescription: {
         textContextType: 'none',
         autoCompleteType: 'off',
+        multiline: 'true',
         placeholder: 'Store Description',
         validate: (text) => {
-            const regexp = /^[a-zA-Z0-9 ]{2,40}$/;
+            const regexp = /^.{10,300}$/;
             if(!regexp.test(text)){
-                return 'Titles should be between 2 and 40 characters long'
+                return 'Titles should be between 10 and 300 characters long'
             }
         }
     },

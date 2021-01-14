@@ -12,52 +12,29 @@ import { useLanguage } from '../../../hooks/language';
 import { useNavigation } from '@react-navigation/native';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const SellerCardProduct = (props) => {
+const SimilarProductCard = (props) => {
     const language = useLanguage();
+    const product = props.product;
     const navigation = useNavigation();
     return (
-        <TouchableOpacity activeOpacity={1} onPress={() => navigation.push('Product', {product: props.product})}>
+        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.push('Product', {product})}>
             <View style={styles.container}>
                 <View>
-                    {props.product.discount && <Text style={styles.discountContainer}>{Math.floor(props.product.discount * 100)}% Off</Text>}
-                    <Image style={styles.image} source={{uri: props.product.images[0]}} />
+                    {product.discount && <Text style={styles.discountContainer}>{Math.floor(product.discount * 100)}% Off</Text>}
+                    <Image style={styles.image} source={{uri: product.images[0]}} />
                 </View>
 
                 {/* Details */}
                 <View style={styles.details}>
-                    <TextLato bold style={styles.title}>{props.product.title[language]}</TextLato>
-                    <TextLato style={styles.description}>{props.product.description[language].substr(0, 100)}...</TextLato>
-                    {props.product.discount ? 
+                    <TextLato bold style={styles.title}>{product.title[language]}</TextLato>
+                    <TextLato style={styles.description}>{product.description[language].substr(0, 50)}...</TextLato>
+                    {product.discount ? 
                         <View key={Math.random()} style={{display: 'flex', flexDirection: 'row', marginTop: height * 0.02}}>
-                            <TextLato style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.primary_light}}>{props.product.price}</TextLato>
-                            <TextLato style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.primary_light}}>{Math.floor(props.product.price * (1-props.product.discount))} EGP</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.primary_light}}>{product.price}</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.primary_light}}>{Math.floor(product.price * (1-product.discount))} EGP</TextLato>
                         </View>
                         :
-                        <TextLato style={{fontSize: RFPercentage(1.7), color: gStyles.primary_light, marginTop: height * 0.02}}>{props.product.price} EGP</TextLato>
-                    }
-                </View>
-
-                {/* Buttons */}
-                <View style={styles.buttons}>
-                    {/* Cart */}
-                    {!containsItem(props.cart, props.product) ? 
-                        <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToCart({product: props.product, quantity: 1})}>
-                            <Icon style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}} type="FontAwesome5" color="white" size={20} name="cart-plus" />
-                        </TouchableOpacity>
-                    :
-                        <TouchableOpacity activeOpacity={0.4} onPress={() => props.removeFromCart(props.product)}>
-                            <Icon style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}} type="MaterialIcons" color="white" size={23} name="remove-shopping-cart" />
-                        </TouchableOpacity>
-                    }
-                    {/* Wishlist */}
-                    {!containsItem(props.wishlist, props.product) ? 
-                        <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToWishlist({product: props.product, quantity: 1})}>
-                            <Icon style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}} type="FontAwesome5" color="white" size={20} name="heart" />
-                        </TouchableOpacity>
-                    :
-                        <TouchableOpacity activeOpacity={0.4} onPress={() => props.removeFromWishlist(props.product)}>
-                            <Icon style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}} type="MaterialCommunityIcons" color="white" size={23} name="heart" />
-                        </TouchableOpacity>
+                        <TextLato style={{fontSize: RFPercentage(1.7), color: gStyles.primary_light, marginTop: height * 0.02}}>{product.price} EGP</TextLato>
                     }
                 </View>
             </View>  
@@ -97,7 +74,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1
     },
     details: {
-        width: width * 0.4,
+        width: width * 0.3,
         marginHorizontal: width * 0.03
     },
     title: {
@@ -151,4 +128,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SellerCardProduct);
+export default connect(mapStateToProps, mapDispatchToProps)(SimilarProductCard);

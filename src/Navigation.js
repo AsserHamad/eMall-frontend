@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {FontAwesome5, Fontisto, Feather} from '@expo/vector-icons';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -23,6 +23,8 @@ import { useLanguageText, useLanguage } from '../hooks/language';
 import CategoryPage from '../screens/CategoryPage';
 import Wishlist from '../screens/Wishlist';
 import SubcategoryPage from '../screens/SubcategoryPage';
+import Product from '../screens/Product';
+import Payment from '../screens/Payment';
 
 
 const Drawers = createDrawerNavigator();
@@ -36,6 +38,8 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Cart" component={Cart} />
     <HomeStack.Screen name="Category" component={CategoryPage} options={({ route }) => ({title: route.params.name.en, headerShown: false})} />
     <HomeStack.Screen name="Subcategory" component={SubcategoryPage} options={({ route }) => ({ headerShown: false})} />
+    <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="Payment" component={Payment} />
   </HomeStack.Navigator>
 )
 

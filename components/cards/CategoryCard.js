@@ -1,33 +1,26 @@
-import { FontAwesome5, MaterialCommunityIcons, Ionicons, Feather, AntDesign } from '@expo/vector-icons';
 import React from 'react';
-import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 import TextLato from '../utils/TextLato';
 import { useLanguage } from '../../hooks/language';
+import Icon from '../utils/Icon';
+import { useNavigation } from '@react-navigation/native';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
 export default function CategoryCard(props){
     const details = props.details;
     const language = useLanguage();
+    const navigation = useNavigation();
     return(
-        <TouchableOpacity onPress={() => props.navigation.push('Category', details)} style={{borderWidth: 0}}>
+        <TouchableOpacity onPress={() => navigation.push('Category', details)} style={{borderWidth: 0}}>
             <View style={styles.container}>
-                {returnIconType(details)}
+                <Icon type={details.iconType} size={40} color={'white'} name={details.icon} style={styles.icon} />
                 <TextLato style={styles.title}>{details.name[language]}</TextLato>
             </View>
         </TouchableOpacity>
     )
 };
-
-const returnIconType = (details) => {
-    switch(details.iconType){
-        case 'Ionicons': return <Ionicons name={details.icon} style={styles.icon} size={50} />;
-        case 'MaterialCommunityIcons': return <MaterialCommunityIcons name={details.icon} style={styles.icon} size={50} />;
-        case 'Feather': return <Feather name={details.icon} style={styles.icon} size={50} />;
-        case 'FontAwesome5': return <FontAwesome5 name={"tv"} style={styles.icon} size={50} />;
-        case 'AntDesign': return <AntDesign name={details.icon} style={styles.icon} size={50} />;
-    }
-}
 
 const styles = StyleSheet.create({
     container: {
@@ -43,11 +36,11 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     icon: {
-        color: 'white',
         margin: 14
     },
     title: {
         color: 'white',
-        fontSize: gStyles.fontSizeS
+        fontSize: RFPercentage(1.5),
+        textAlign: 'center',
     }
 })

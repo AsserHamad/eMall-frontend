@@ -4,8 +4,9 @@ import Searchbar from './Searchbar';
 import Constants from 'expo-constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { useLanguageText, useLanguage } from '../../hooks/language';
+import { useNavigation } from '@react-navigation/native';
 
 const width = Dimensions.get('window').width;
 
@@ -13,6 +14,8 @@ function Navbar(props){
     const [disabled, setDisabled] = useState(false);
     const language = useLanguage();
     const languageText = useLanguageText('navbar');
+    const navigation = useNavigation();
+    const cart = useSelector(state => state.cartReducer.cart);
 
     useEffect(() => {
         const timer = setTimeout(() => setDisabled(false), 1000);
@@ -22,7 +25,7 @@ function Navbar(props){
         <View style={styles.container}>
             <View style={getLanguageStyle(language, 'topContainer')}>
                 {/* Burger */}
-                <TouchableOpacity onPress={props.navigation.openDrawer} style={styles.burgerContainer}>
+                <TouchableOpacity onPress={navigation.openDrawer} style={styles.burgerContainer}>
                     <FontAwesome5 name="bars" color={gStyles.secondary_dark} size={ 27 }/>
                 </TouchableOpacity>
 
@@ -37,12 +40,12 @@ function Navbar(props){
                     activeOpacity={0.8}
                     onPress={() => {
                         setDisabled(true);
-                        props.navigation.push('Cart')}
+                        navigation.push('Cart')}
                     }
                     style={styles.burgerContainer}
                 >
                     <View style={styles.cartNumberContainer}>
-                        <Text>{props.cart.length}</Text>
+                        <Text style={{color: 'black'}}>{cart.length}</Text>
                     </View>
                     <FontAwesome5 name="shopping-cart" color={gStyles.secondary_dark} size={ 27 }/>
                 </TouchableOpacity>
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     cartNumberContainer: {
-        backgroundColor: gStyles.primary_medium,
+        backgroundColor: gStyles.primary_light,
         minWidth: 18,
         height: 18,
         borderRadius: 50,
@@ -109,10 +112,4 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = (state) => {
-    return {
-        cart: state.cartReducer.cart
-    }
-}
-
-export default connect(mapStateToProps)(Navbar);
+export default Navbar;

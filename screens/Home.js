@@ -19,19 +19,19 @@ function Home(props){
     const scrollRef = useRef(); 
     useEffect(() =>  {
         const unsubscribe = props.navigation.addListener('blur', () => {
-            scrollRef.current.scrollTo({
+            setTimeout(() => scrollRef.current.scrollTo({
                 y: 0,
                 animated: true,
-            });
+            }), 500);
         });
         return unsubscribe;
     }, [props.navigation])
     return(
             <View style={styles.container}>
                 <StatusBar backgroundColor={gStyles.background} style="dark" />
-                <Navbar searchbar navigation={props.navigation} />
+                <Navbar searchbar />
                 <ScrollView ref={scrollRef} style={{height: Dimensions.get('window').height - 60}}>
-                    <MainHomeView navigation={props.navigation} />
+                    <MainHomeView />
                 </ScrollView>
             </View>
     )

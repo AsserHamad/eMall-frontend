@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
 import { AntDesign, Ionicons, FontAwesome5, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -15,7 +15,7 @@ import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import RegisterInputAndError from '../RegisterInputAndError';
 import DisabledButton from '../DisabledButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerStoreRegister = (props) => {
@@ -32,7 +32,7 @@ const SellerStoreRegister = (props) => {
     });
 
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/categories`)
+        fetch(`${Constants.manifest.extra.apiUrl}/category`)
         .then(res => res.json())
         .then(res => setCategories(res));
     },[]);
@@ -123,9 +123,9 @@ const SellerStoreRegister = (props) => {
     }
 
     return (
-        <View>
+        <ScrollView>
         {fontsLoaded ? 
-        <View style={styles.container}>
+        <KeyboardAvoidingView keyboardVerticalOffset={headerHeight} behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles.container}>
             <View style={styles.headerContainer}>
                 <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Store Data</Text>
                 <Text style={{color: gStyles.secondary, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form with your store's information</Text>
@@ -160,31 +160,22 @@ const SellerStoreRegister = (props) => {
                         </TouchableOpacity>
                     )
                 })}
-                <View style={styles.categoryButton}>
-                    <Text style={styles.categoryTitle}>Accessories</Text>
-                    <AntDesign name="mobile1" size={35} style={styles.icon} />
-                </View>
-                <View style={styles.categoryButton}>
-                    <Text style={styles.categoryTitle}>Accessories</Text>
-                    <Feather name="home" size={35} style={styles.icon} />
-                </View>
             </View>
             </View>
             <DisabledButton onPressIfActive={register} array={[title, description]} errors={errors}>
                     <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>REGISTER</Text>
             </DisabledButton>
-        </View>
+        </KeyboardAvoidingView>
         : <Text>Loading</Text>}
-        </View>
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: gStyles.background,
-        height: height + Constants.statusBarHeight,
+        flex: 1,
         alignItems: 'center',
-        display: 'flex',
         flexDirection: 'column',
     },
     headerContainer: {
@@ -208,10 +199,10 @@ const styles = StyleSheet.create({
     },
     categoryButton: {
         width: width * 0.28,
-        height: width * 0.2,
-        borderColor: gStyles.primary,
+        aspectRatio: 1,
+        borderColor: gStyles.secondary_medium,
         borderWidth: 2,
-        borderRadius: 4,
+        borderRadius: 100,
         marginHorizontal: width * 0.01,
         marginVertical: width * 0.02,
         justifyContent: 'center',
@@ -219,24 +210,22 @@ const styles = StyleSheet.create({
     },
     selectedCategoryButton: {
         width: width * 0.28,
-        height: width * 0.2,
-        borderColor: gStyles.primary,
-        backgroundColor: gStyles.primary,
-        borderWidth: 2,
-        borderRadius: 4,
+        aspectRatio: 1,
+        backgroundColor: gStyles.secondary_medium,
+        borderRadius: 100,
         marginHorizontal: width * 0.01,
         marginVertical: width * 0.02,
         justifyContent: 'center',
         alignItems: 'center'
     },
     categoryTitle: {
-        color: gStyles.primary,
+        color: gStyles.secondary_medium,
         fontFamily: 'Lato-Bold',
         marginBottom: RFPercentage(1),
         fontSize: RFPercentage(1.2)
     },
     icon: {
-        color: gStyles.primary,
+        color: gStyles.secondary_medium,
     },
     selectedCategoryTitle: {
         color: 'white',

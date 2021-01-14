@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const loadLanguage = async () => 
     AsyncStorage.getItem('language')
     .then(val => {
-        console.log('val is', val)
         if(val !== null){
             return Number(val);
         } else {

@@ -1,7 +1,7 @@
-import { MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
 import { gStyles } from '../global.style';
+import Icon from './utils/Icon';
 
 function ScrollCards(props){
     const title = props.title;
@@ -15,13 +15,13 @@ function ScrollCards(props){
         }, 1000)
     }, []);
     return (
-        <View style={styles.container}>
+        <View style={{...styles.container, ...props.style}}>
         <View style={styles.topContainer}>
             <View style={styles.topLeftContainer}>
                 <Text style={styles.title}>{title}</Text>
                 {countdown && 
                 <View style={styles.countDownContainer}>
-                    <MaterialIcons size={18} name="watch-later" style={{color: gStyles.primary, marginRight: 4}} />
+                    <Icon type="MaterialIcons" size={18} name="watch-later" style={{color: gStyles.primary, marginRight: 4}} />
                     <Text
                     style={{
                         color: gStyles.primary,
@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
     },
     containerContent: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        paddingHorizontal: '1%'
     },
     topContainer: {
         display: 'flex',

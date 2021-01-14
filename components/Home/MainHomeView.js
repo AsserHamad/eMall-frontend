@@ -8,17 +8,26 @@ import TopAds from './TopAds';
 import Footer from './Footer';
 import {useLanguageText} from '../../hooks/language';
 import Ad from './Ad';
+import Constants from 'expo-constants';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 function MainHomeView(props){
     const language = useLanguageText('mainHomeView');
+    const [ads, setAds] = useState([]);
+    useEffect(() => {
+        fetch(`${Constants.manifest.extra.apiUrl}/advertisement/main`)
+        .then(res => res.json())
+        .then(res => setAds(res));
+    }, [])
     return(
             <ScrollView>
                 <TopAds />
-                <Categories navigation={props.navigation} />
+                <Categories />
+                {ads[0] && <Ad ad={ads[0]} />}
                 <ScrollCards cards={getMostPopularStores(props)} title={language && language.titlePop} />
-                <Ad uri={'https://i.pinimg.com/originals/9c/9f/0c/9c9f0c5221ef90c7d05ba151671bf482.png'} aspectRatio={1920/1080} />
-                <ScrollCards countdown cards={getDealsOfTheDay(props)} title={language && language.titleDealsOfTheDay} />
-                <Ad uri={'https://storage.googleapis.com/adforum-media/34476558/00000000_34476558_1340887777.orig.jpg'} aspectRatio={768/512} />
+                {/* <ScrollCards countdown cards={getDealsOfTheDay(props)} title={language && language.titleDealsOfTheDay} /> */}
+                {ads[1] && <Ad ad={ads[1]} />}
                 <Footer />
             </ScrollView>
     )
@@ -28,29 +37,13 @@ export default MainHomeView;
 
 // Returns an array of StoreCards
 const getMostPopularStores = () => {
-    const stores = [{
-        logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/The-Body-Shop-Logo.svg/480px-The-Body-Shop-Logo.svg.png',
-        name: 'The Body Shop',
-        categories: [0, 1, 2]
-    }, {
-        logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/1280px-Adidas_Logo.svg.png',
-        name: 'Adidas',
-        categories: [0, 1]
-    }, {
-        logo: 'https://i.pinimg.com/originals/9c/d1/bf/9cd1bf6c2d1a88e8ac473f62a2898c62.png',
-        name: 'Nike',
-        categories: [1, 2]
-    }];
-    return [
-        <StoreCard key={Math.random()} store={stores[0]} />,
-        <StoreCard key={Math.random()} store={stores[1]} />,
-        <StoreCard key={Math.random()} store={stores[2]} />,
-        <StoreCard key={Math.random()} store={stores[0]} />,
-        <StoreCard key={Math.random()} store={stores[0]} />,
-        <StoreCard key={Math.random()} store={stores[1]} />,
-        <StoreCard key={Math.random()} store={stores[2]} />,
-        <StoreCard key={Math.random()} store={stores[0]} />
-    ]
+    const [stores, setStores] = useState([]);
+    useEffect(() => {
+        fetch(`${Constants.manifest.extra.apiUrl}/store/most-popular`)
+        .then(res => res.json())
+        .then(res => setStores([...res, ...res, ...res, ...res, ...res, ...res, ...res, ...res, ...res, ...res, ]))
+    }, [])
+    return stores.map(store => <StoreCard key={Math.random()} store={store} />);
 };
 
 const getDealsOfTheDay = (props) => {

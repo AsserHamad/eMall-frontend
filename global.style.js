@@ -8,6 +8,7 @@ exports.gStyles =  {
   secondary_medium: '#4A4D4E',
   secondary_dark: '#000000',
   background: '#EBEBEB',
+  starColor: '#FCC201',
   lightPrimary: '#FF9E9E',
   fontFamily: 'Lato',
   tint: 'rgba(231, 74, 95, 0.4)',

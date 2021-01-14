@@ -7,6 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import * as Facebook from 'expo-facebook';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useFonts } from 'expo-font';
+import * as Google from 'expo-google-app-auth';
 
 // Redux
 import { connect } from 'react-redux';
@@ -71,6 +72,18 @@ const ClientLogin = (props) => {
         }
         catch ({ message }) {
             alert(`facebook login error: ${message}`)
+        }
+    }
+
+    const GoogleLogin = async () => {
+        const config = {
+            androidClientId: "202581872046-r45t047pgp795ur78o6tmeqvi9hn0dih.apps.googleusercontent.com",
+            scopes: ['profile', 'email'],
+        }
+        const { type, accessToken, user } = await Google.logInAsync(config);
+
+        if(type === 'success') {
+            console.log(accessToken, user)
         }
     }
     return (
@@ -141,7 +154,7 @@ const ClientLogin = (props) => {
                             <Text style={{color: 'white', fontSize: RFPercentage(1.5), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButtonG}>
                             <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
                             <Text style={{color: 'white', fontSize: RFPercentage(1.5), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</Text>

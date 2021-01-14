@@ -16,14 +16,14 @@ function Wishlist(props){
     });
     return (
     <View style={styles.container}>
-        <Navbar navigation={props.navigation} />
+        <Navbar />
         <View style={styles.headerContainer}>
             <MaterialCommunityIcons  color={gStyles.secondary_dark} size={RFPercentage(3.5)} name="heart" />
             <Text style={styles.headerText}>MY WISHLIST</Text>
         </View>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             {props.wishlist.map(item => {
-                return <WishlistCard navigation={props.navigation} key={item.product._id} item={item} />
+                return <WishlistCard key={item.product._id} item={item} />
             })}
         </ScrollView>
     </View>

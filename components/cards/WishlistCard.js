@@ -11,6 +11,7 @@ import { addToCart, removeFromCart } from '../../src/actions/cart';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import AwesomeAlert from 'react-native-awesome-alerts';
 import { useState } from 'react';
+import Icon from '../utils/Icon';
 
 function WishlistCard(props){
     const item = props.item.product;
@@ -40,11 +41,11 @@ function WishlistCard(props){
                         {/* Add to Cart */}
                         {!containsItem(props.cart, item) ? 
                             <TouchableOpacity onPress={() => props.addToCart(props.item)}>
-                                <AntDesign name="shoppingcart" size={24} style={styles.button} color={'white'} />
+                                <Icon type="AntDesign" name="shoppingcart" size={24} style={styles.button} color={'white'} />
                             </TouchableOpacity>
                         :
                             <TouchableOpacity onPress={() => props.removeFromCart(props.item.product)}>
-                                <AntDesign name="shoppingcart" size={24} style={{...styles.button, backgroundColor: gStyles.secondary_light }} color={'red'} />
+                                <Icon type="MaterialIcons" name="remove-shopping-cart" size={24} style={{...styles.button, backgroundColor: gStyles.secondary_light }} color={'red'} />
                             </TouchableOpacity>
                         }
                         {/* Delete Item */}

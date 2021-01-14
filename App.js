@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import configureStore from './src/store';
 import Navigation from './src/Navigation';
 import { useFonts } from 'expo-font';
+import { AppLoading } from 'expo';
 
 const store = configureStore();
 
@@ -18,9 +19,10 @@ export default () => {
       'Cairo Thin': require('./assets/fonts/Cairo-Light.ttf'),
   });
   if(!fontsLoaded)
-    return null;
-  return (
-  <Provider store={store}>
-    <Navigation />
-  </Provider>
+    return <AppLoading autoHideSplash />;
+  else
+    return (
+      <Provider store={store}>
+        <Navigation />
+      </Provider>
 )};

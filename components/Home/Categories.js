@@ -3,11 +3,12 @@ import Constants from 'expo-constants';
 import { StyleSheet, View } from 'react-native';
 import { gStyles } from '../../global.style';
 import CategoryCard from '../cards/CategoryCard';
+import Icon from '../utils/Icon';
 
-function Categories(props){
+function Categories(){
     const [categories, setCategories] = useState([]);
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/categories`)
+        fetch(`${Constants.manifest.extra.apiUrl}/category`)
         .then(res => res.json())
         .then(res => setCategories(res))
     }, []);
@@ -15,7 +16,7 @@ function Categories(props){
     <View style={styles.container}>
         <View style={styles.categoriesContainer}>
             {categories.map(category => (
-                <CategoryCard navigation={props.navigation} key={Math.random()} details={category} />
+                <CategoryCard key={Math.random()} details={category} />
             ))}
         </View>
     </View>)

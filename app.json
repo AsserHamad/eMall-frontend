@@ -7,7 +7,7 @@
     "icon": "./assets/icon.png",
     "facebookScheme": "fb1213603305321250",
     "splash": {
-      "image": "./assets/logoM.png",
+      "image": "./assets/_logoM.png",
       "resizeMode": "contain",
       "height": "150",
       "width": "150",
@@ -20,9 +20,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.emall.emall"
     },
     "android": {
+      "package": "com.emall.emall",
+      "config": {
+        "apiKey": "AIzaSyCMfNLV-6uQXUMsOksI4mmL9x9eoskRskI",
+        "certificateHash": "E76292DE846C02812027782B5FF65EB3304A1D98"
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

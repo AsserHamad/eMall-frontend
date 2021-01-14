@@ -67,7 +67,6 @@ const SellerLogin = (props) => {
                     })
                     .then(res => res.json())
                     .then(res => {
-                        console.log(res)
                         if(!res.status){
                             setErrors([]);
                             res.approved ? console.log(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})

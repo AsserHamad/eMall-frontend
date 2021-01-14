@@ -1,11 +1,11 @@
-import { FontAwesome5, MaterialCommunityIcons  } from '@expo/vector-icons';
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { gStyles } from '../../global.style';
 import { connect } from 'react-redux';
 import { addToCart, removeFromCart } from '../../src/actions/cart';
 import { addToWishlist, removeFromWishlist } from '../../src/actions/wishlist';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Icon from '../utils/Icon';
 
 function ProductCard(props){
     const product = props.product;
@@ -33,13 +33,13 @@ function ProductCard(props){
                 {!containsItem(props.cart, props.product) ? 
                     <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToCart({product: props.product, quantity: 1})}>
                         <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}}>
-                            <FontAwesome5 color="white" size={20} name="cart-plus" />
+                            <Icon type="FontAwesome5" color="white" size={20} name="cart-plus" />
                         </View>
                     </TouchableOpacity>
                 :
                     <TouchableOpacity activeOpacity={0.4} onPress={() => props.removeFromCart(props.product)}>
                         <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
-                            <MaterialCommunityIcons  color="white" size={23} name="cart-remove" />
+                            <Icon type="MaterialIcons" color="white" size={23} name="remove-shopping-cart" />
                         </View>
                     </TouchableOpacity>
                 }
@@ -47,13 +47,13 @@ function ProductCard(props){
                 {!containsItem(props.wishlist, props.product) ? 
                     <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToWishlist({product: props.product, quantity: 1})}>
                         <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}}>
-                            <FontAwesome5 color="white" size={20} name="heart" />
+                            <Icon type="FontAwesome5" color="white" size={20} name="heart" />
                         </View>
                     </TouchableOpacity>
                 :
                     <TouchableOpacity activeOpacity={0.4} onPress={() => props.removeFromWishlist(props.product)}>
                         <View style={{...styles.cartContainer, ...{backgroundColor: '#20B2AA'}}}>
-                            <MaterialCommunityIcons  color="white" size={23} name="heart" />
+                            <Icon type="MaterialCommunityIcons" color="white" size={23} name="heart" />
                         </View>
                     </TouchableOpacity>
                 }

@@ -4,7 +4,6 @@ import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
-import { Entypo } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
 
 const Footer = () => {
@@ -30,7 +29,6 @@ const styles = StyleSheet.create({
         borderTopColor: 'rgba(0,0,0,0.1)',
         borderTopWidth: 1,
         marginTop: height * 0.05,
-        height: height * 0.25,
         alignItems: 'center',
     },
     secondaryContainer: {
@@ -53,9 +51,9 @@ const styles = StyleSheet.create({
         marginVertical: height * 0.01,
     },
     bottomText: {
-        position: 'absolute',
-        bottom: height * 0.02,
-        color: gStyles.lightPrimary
+        color: gStyles.lightPrimary,
+        marginBottom: height * 0.02,
+        marginTop: height * 0.05
     }
 })
 
