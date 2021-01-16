@@ -27,7 +27,6 @@ const Product = (props) => {
     const [similarProducts, setSimilarProducts] = useState([]);
     const [logoAspectRatio, setLogoAspectRatio] = useState(4/3);
     const language = useLanguage();
-    const navigation = useNavigation();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -99,9 +98,6 @@ const Product = (props) => {
                     ))}
                 </Swiper>
                     <View style={mainStyles.detailsContainer}>
-                        
-
-
                         {/* TITLE */}
                         <TextLato bold style={mainStyles.title}>{product.title[language]}</TextLato>
                         
@@ -170,14 +166,12 @@ const Product = (props) => {
                             </View>
                         </View>
 
-
                         {/* PRICE */}
                         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: height * 0.03}}>
                             <TextLato style={mainStyles.currency}>{product.currency.toUpperCase()}</TextLato>
                             <TextLato bold style={mainStyles.price}>{(product.price + addedPrice).toFixed(2)}</TextLato>
                         </View>
                         
-
                         {/* CART */}
                         <TouchableOpacity onPress={() => dispatch(addToCart({product, picks, quantity: 1}))}>
                             <View style={mainStyles.addToCartButton}>
@@ -186,13 +180,11 @@ const Product = (props) => {
                             </View>
                         </TouchableOpacity>
 
-
                         {/* DESCRIPTION */}
                         <View style={mainStyles.descriptionContainer}>
                             <TextLato bold style={mainStyles.descriptionTitle}>Overview</TextLato>
                             <TextLato style={{fontSize: RFPercentage(1.7)}}>{product.description[language]}</TextLato>
                         </View>
-
 
                         {/* SPECIFICATIONS */}
                         <View style={mainStyles.specificationsContainer}>
@@ -215,7 +207,6 @@ const Product = (props) => {
                             </View>
                         </View>
 
-
                         {/* REVIEWS */}
                         <View style={mainStyles.reviewsContainer}>
                             <TextLato bold style={mainStyles.reviewsTitle}>Customer Reviews</TextLato>
@@ -223,7 +214,6 @@ const Product = (props) => {
                                 {product.reviews.map(review => <ProductReviewCard key={Math.random()} review={review} />)}
                             </ScrollView>
                         </View>
-                        
                     </View>
                         {/* MORE FROM STORE */}
                         <ScrollCards 
@@ -238,6 +228,14 @@ const Product = (props) => {
             }
         </View>
     )
+}
+
+const SwiperImage = (image) => {
+    const [aspectRatio, setAspectRatio] = useState(1);
+    useEffect(() => {
+        Image.getSize(image, (width, height) => setAspectRatio(width/height))
+    }, []);
+    return <Image style={{...styles.swiperImage, aspectRatio}} source={{uri: image}} key={Math.random()} />
 }
 
 const styles = StyleSheet.create({

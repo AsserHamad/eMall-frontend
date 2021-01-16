@@ -24,7 +24,7 @@ function Categories(){
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 30,
+        marginTop: 7,
     },
     title: {
         fontSize: gStyles.fontSizeL,

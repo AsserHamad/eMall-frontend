@@ -7,11 +7,16 @@ import { gStyles } from '../../global.style';
 import Icon from '../../components/utils/Icon';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Reviews from '../../components/utils/Reviews';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import HomeComponent from '../../components/Store/HomeComponent';
+import BrowseComponent from '../../components/Store/BrowseComponent';
+import ReviewsComponent from '../../components/Store/ReviewsComponent';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 const Store = (props) => {
     const [store, setStore] = useState(null);
+    const [viewState, setViewState] = useState(0);
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/${props.route.params.store._id}`)
         .then(res => res.json())
@@ -20,7 +25,7 @@ const Store = (props) => {
     return store ? (
         <View style={styles.container}>
             <Header details={{title: store.title}} />
-            <View style={styles.headerContainer}>
+            <ScrollView style={styles.headerContainer}>
                 <Image source={{uri: store.page.coverImage}} style={styles.cover} />
                 <View style={styles.header}>
                     <View style={styles.logoContainer}>
@@ -34,9 +39,37 @@ const Store = (props) => {
                 ))}
             </View>
                 </View>
+                {/* STORE TITLE */}
                 <TextLato bold style={styles.title}>{store.title}</TextLato>
+                
+                {/* REVIEWS */}
                 <Reviews style={styles.reviews} size={RFPercentage(1.5)} reviews={store.reviewAverage} />
-            </View>
+                
+                {/* MENU */}
+                <View style={styles.menuContainer}>
+                    <TouchableOpacity onPress={() => setViewState(state => state === 0 ? state : 0)}>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 0 ? gStyles.primary_light : 'transparent' }}>
+                            <TextLato style={{color: viewState !== 0 ? gStyles.primary_light : 'white'}}>Home</TextLato>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setViewState(state => state === 1 ? state : 1)}>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 1 ? gStyles.primary_light : 'transparent' }}>
+                            <TextLato style={{color: viewState !== 1 ? gStyles.primary_light : 'white'}}>Browse</TextLato>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setViewState(state => state === 2 ? state : 2)}>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 2 ? gStyles.primary_light : 'transparent' }}>
+                            <TextLato style={{color: viewState !== 2 ? gStyles.primary_light : 'white'}}>Reviews</TextLato>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                
+                {/* HOME BODY */}
+                {viewState === 0 ? 
+                <HomeComponent homeAds={store.page.homeAds} /> : viewState === 1 ?
+                <BrowseComponent id={store._id} /> : 
+                <ReviewsComponent reviews={store.reviews} />}
+            </ScrollView>
         </View>
     ) : <TextLato>Loading...</TextLato>
 }
@@ -95,7 +128,20 @@ const styles = StyleSheet.create({
     },
     reviews: {
         marginTop: height * 0.01,
-        marginLeft: width * 0.05
+        marginLeft: width * 0.05,
+        marginBottom: height * 0.03
+    },
+    menuContainer: {
+        flexDirection: 'row',
+        marginLeft: width * 0.02,
+        marginBottom: height * 0.015
+    },
+    menuItem: {
+        padding: RFPercentage(1),
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: gStyles.primary_light,
+        marginHorizontal: 5
     }
 })
 

@@ -16,9 +16,11 @@ function MainHomeView(props){
     const language = useLanguageText('mainHomeView');
     const [ads, setAds] = useState([]);
     useEffect(() => {
+        console.log('api', Constants.manifest.extra.apiUrl)
         fetch(`${Constants.manifest.extra.apiUrl}/advertisement/main`)
         .then(res => res.json())
-        .then(res => setAds(res));
+        .then(res => setAds(res))
+        .catch(err => console.log('yo', err));
     }, [])
     return(
             <ScrollView>

@@ -23,12 +23,14 @@ export default () => {
   });
   const [languageLoaded, setLanguageLoaded] = useState(false);
   useEffect(() => {
+    console.log('a')
     AsyncStorage.getItem('@language')
     .then(value => {
       store.dispatch(changeLanguage(Number(value)));
       setLanguageLoaded(true);
     })
     .catch(err => {
+      console.log(err);
       setLanguageLoaded(true);
     })
   }, []);
