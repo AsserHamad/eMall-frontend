@@ -3,6 +3,7 @@ import {
     Feather,
     FontAwesome,
     FontAwesome5,
+    Fontisto,
     MaterialCommunityIcons,
     Ionicons,
     AntDesign,
@@ -39,6 +40,10 @@ export default ({type, name, color, size, style}) => {
         case 'MaterialIcons': 
             return <View style={{...style}}>
                         <MaterialIcons name={name} color={color} size={size} />
+                    </View>;
+        case 'Fontisto': 
+            return <View style={{...style}}>
+                        <Fontisto name={name} color={color} size={size} />
                     </View>;
     }
 }

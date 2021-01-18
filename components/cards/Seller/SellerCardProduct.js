@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         width: width * 0.09,
         height: width * 0.09,
         borderRadius: 100,
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_light,
         marginVertical: RFPercentage(0.5),
         justifyContent: 'center',
         alignItems: 'center',

@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     container: {
         height: Dimensions.get('window').height + 40,
         width: Dimensions.get('window').width,
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_light,
         justifyContent: 'center',
         alignItems: 'center'
     },

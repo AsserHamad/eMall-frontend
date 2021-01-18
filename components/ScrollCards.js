@@ -21,10 +21,10 @@ function ScrollCards(props){
                 <Text style={styles.title}>{title}</Text>
                 {countdown && 
                 <View style={styles.countDownContainer}>
-                    <Icon type="MaterialIcons" size={18} name="watch-later" style={{color: gStyles.primary, marginRight: 4}} />
+                    <Icon type="MaterialIcons" size={18} name="watch-later" style={{color: gStyles.primary_light, marginRight: 4}} />
                     <Text
                     style={{
-                        color: gStyles.primary,
+                        color: gStyles.primary_light,
                         fontWeight: 'bold',
                         fontSize: 20
                     }}>

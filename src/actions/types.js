@@ -2,6 +2,7 @@ export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
+export const LOGIN_SELLER = 'LOGIN_SELLER';
 
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';

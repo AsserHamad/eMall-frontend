@@ -51,11 +51,11 @@ function ClientLoginSuccess(props) {
     }
     return (
     <View style={styles.container}>
-        <Feather name="check-circle" size={RFValue(130)} color={gStyles.primary} />
+        <Feather name="check-circle" size={RFValue(130)} color={gStyles.primary_light} />
         <Text style={styles.welcomeText}>Greetings, {account.firstName}</Text>
         <View style={styles.subtitle}>
             <Text style={{fontSize: RFPercentage(1.6)}}>An email has been sent to your email account</Text>
-            <Text  style={{fontSize: RFPercentage(1.6), fontWeight: 'bold', color: gStyles.primary}}>{account.email}</Text>
+            <Text  style={{fontSize: RFPercentage(1.6), fontWeight: 'bold', color: gStyles.primary_light}}>{account.email}</Text>
             <Text style={{fontSize: RFPercentage(1.6)}}>Please enter the code that was provided in the email</Text>
         </View>
         <InputOneCharacter
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'white',
         fontSize: RFPercentage(2),
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_light,
         borderRadius: 4
     }
 })

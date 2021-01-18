@@ -16,15 +16,23 @@ function SellerLoginSuccess(props) {
         <Entypo name="hour-glass" size={RFValue(130)} color={gStyles.secondary} />
         <Text style={styles.welcomeText}>Greetings, {seller.name}</Text>
         <View style={styles.subtitle}>
-            <Text style={{fontSize: RFPercentage(2.5), fontWeight: 'bold', color: gStyles.primary}}>{store.title}</Text>
+            <Text style={{fontSize: RFPercentage(2.5), fontWeight: 'bold', color: gStyles.primary_light}}>{store.title}</Text>
             <Text style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center'}}>Is still pending approval from our administrators, please regularly check your email for any updates.</Text>
             <Text style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center', marginTop: height * 0.02}}>In the meantime, you can check out our selection of shops and browse the app to your content.</Text>
         </View>
-        <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.navigate('Home')}>
-            <View style={styles.homeContainer}>
-                <AntDesign name="home" size={RFPercentage(4)} color={gStyles.secondary} />
-            </View>
+        <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.popToTop()}>
+                <View style={styles.homeContainer}>
+                    <AntDesign name="arrowleft" size={RFPercentage(4)} color={gStyles.secondary} />
+                </View>
             </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.navigate('Home')}>
+                <View style={styles.homeContainer}>
+                    <AntDesign name="home" size={RFPercentage(4)} color={gStyles.secondary} />
+                </View>
+            </TouchableOpacity>
+
+        </View>
     </View>
     )
 }
@@ -58,17 +66,18 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'white',
         fontSize: RFPercentage(2),
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_light,
         borderRadius: 4
     },
     homeContainer: {
         marginTop: height * 0.1,
+        marginHorizontal: width * 0.04,
         width: width * 0.2,
         height: width * 0.2,
         borderRadius: 200,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: gStyles.primary
+        backgroundColor: gStyles.primary_light
     }
 })
 

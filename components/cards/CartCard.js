@@ -31,11 +31,11 @@ function CartCard(props){
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <Text>Quantity:</Text>
                     <TouchableOpacity onPress={() => props.decreaseQuantity(props.item)}>
-                        <Icon type="AntDesign" color={gStyles.primary} style={{marginLeft: 10, marginRight: 5}} size={15} name="minuscircle" />
+                        <Icon type="AntDesign" color={gStyles.primary_light} style={{marginLeft: 10, marginRight: 5}} size={15} name="minuscircle" />
                     </TouchableOpacity>
                     <Text style={{fontWeight: 'bold', color: gStyles.secondary, fontSize: 20}}>{quantity}</Text>
                     <TouchableOpacity onPress={() => props.increaseQuantity(props.item)}>
-                        <Icon type="AntDesign" color={gStyles.primary} style={{marginLeft: 5}} size={15} name="pluscircle" />
+                        <Icon type="AntDesign" color={gStyles.primary_light} style={{marginLeft: 5}} size={15} name="pluscircle" />
                     </TouchableOpacity>
                 </View>
                 <View style={{marginTop: 40, display: 'flex', flexDirection: 'row'}}>
@@ -49,7 +49,7 @@ function CartCard(props){
                     }
                     <View>
                         <TouchableOpacity onPress={() => props.removeFromCart(item)}>
-                            <Icon type="AntDesign" name="delete" size={24} style={{alignItems: 'center', justifyContent: 'center'}} color={gStyles.primary} />
+                            <Icon type="AntDesign" name="delete" size={24} style={{alignItems: 'center', justifyContent: 'center'}} color={gStyles.primary_light} />
                         </TouchableOpacity>
                     </View>
                 </View>

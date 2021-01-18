@@ -131,7 +131,7 @@ const Product = (props) => {
                                                             if(!picked)fetchProduct(variant.product);
                                                         }}>
                                                             <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.primary_light : '#aaa'}}>
-                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.primary : '#aaa'}}>{variant.variant[language]}</TextLato>
+                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.primary_light : '#aaa'}}>{variant.variant[language]}</TextLato>
                                                             </View>
                                                         </TouchableOpacity>
                                                     )
@@ -153,7 +153,7 @@ const Product = (props) => {
                                                             changePick(option, optionPick)
                                                         }}>
                                                             <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.primary_light : '#aaa'}}>
-                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.primary : '#aaa'}}>{optionPick.title[language]}</TextLato>
+                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.primary_light : '#aaa'}}>{optionPick.title[language]}</TextLato>
                                                             </View>
                                                         </TouchableOpacity>
                                                     )
@@ -285,7 +285,7 @@ const mainStyles = StyleSheet.create({
         marginBottom: height * 0.01
     },
     price: {
-        color: gStyles.primary,
+        color: gStyles.primary_light,
         fontSize: RFPercentage(2.4),
     },
     currency: {

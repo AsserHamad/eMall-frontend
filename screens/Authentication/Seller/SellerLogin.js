@@ -11,15 +11,15 @@ import { useHeaderHeight } from '@react-navigation/stack';
 
 // Redux
 import { connect } from 'react-redux';
-import { login } from '../../../src/actions/auth';
+import { loginSeller } from '../../../src/actions/auth';
 import DisabledButton from '../DisabledButton';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const SellerLogin = (props) => {
     const headerHeight = useHeaderHeight();
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState('asserhamad96@gmail.com');
     const [errors, setErrors] = useState([]);
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('Abcd1234');
     const [fontsLoaded] = useFonts({
       'Lato': require('../../../assets/fonts/Lato-Regular.ttf')
     });
@@ -31,9 +31,10 @@ const SellerLogin = (props) => {
         })
         .then(res => res.json())
         .then(res => {
-            if(!res.status){
+            if(res && !res.status){
                 setErrors([]);
-                res.store.approved? console.log(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
+                console.log('res is', res);
+                res.store.approved? props.loginSeller(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
             }
             else {
                 setErrors(res.message ? [res.message] : res.errors)
@@ -69,7 +70,7 @@ const SellerLogin = (props) => {
                     .then(res => {
                         if(!res.status){
                             setErrors([]);
-                            res.approved ? console.log(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
+                            res.store.approved ? props.login(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
                         } else {
                             setErrors(res.message ? [res.message] : res.errors)
                         }
@@ -91,7 +92,7 @@ const SellerLogin = (props) => {
                 <Text style={{color: gStyles.secondary, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to access your dashboard</Text>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <Text style={{color: gStyles.primary, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
+                {errors.map(err => <Text style={{color: gStyles.primary_light, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
@@ -112,7 +113,7 @@ const SellerLogin = (props) => {
                     onChangeText={(val) => setPassword(val)}
                     style={styles.input} />
                 <TouchableOpacity>
-                    <Text style={{color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
+                    <Text style={{color: gStyles.primary_light, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
                 </TouchableOpacity>
             </View>
             <DisabledButton onPressIfActive={login} array={[email, password]} errors={errors}>
@@ -125,7 +126,7 @@ const SellerLogin = (props) => {
                 <View style={{display:'flex', flexDirection: 'row'}}>
                     <Text style={{color: gStyles.secondary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Don't have an account?</Text>
                     <TouchableOpacity onPress={() => props.navigation.push('SellerRegister')}>
-                        <Text style={{marginLeft: 5, color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
+                        <Text style={{marginLeft: 5, color: gStyles.primary_light, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
                     </TouchableOpacity>
                 </View>
                 </View>
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
         fontFamily: gStyles.fontFamily
     },
     submitButton: {
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_light,
         alignItems: 'center',
         justifyContent: 'center',
         width: width * 0.9,
@@ -245,7 +246,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        login: (account) => dispatch(login(account))
+        loginSeller: (account) => dispatch(loginSeller(account))
     }
 }
 

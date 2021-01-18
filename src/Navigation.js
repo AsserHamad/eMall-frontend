@@ -12,7 +12,7 @@ import { gStyles } from '../global.style';
 import ClientLogin from '../screens/Authentication/Client/ClientLogin';
 import ClientLoginSuccess from '../screens/Authentication/Client/ClientLoginSuccess';
 
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { login } from './actions/auth';
 import ClientRegister from '../screens/Authentication/Client/ClientRegister';
 import SellerLogin from '../screens/Authentication/Seller/SellerLogin';
@@ -26,10 +26,14 @@ import SubcategoryPage from '../screens/SubcategoryPage';
 import Product from '../screens/Product';
 import Payment from '../screens/Payment';
 import Store from '../screens/Store/Store';
+import Icon from '../components/utils/Icon';
+import Profile from '../screens/Client/Profile';
+import StoreHome from '../screens/Store/StoreHome';
 
 
 const Drawers = createDrawerNavigator();
 const HomeStack = createStackNavigator();
+const StoreStack = createStackNavigator();
 const AuthStack = createStackNavigator();
 const WishlistStack = createStackNavigator();
 
@@ -42,7 +46,14 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Payment" component={Payment} />
     <HomeStack.Screen name="Store" component={Store} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="Profile" component={Profile} options={({ route }) => ({ headerShown: false })} />
   </HomeStack.Navigator>
+)
+
+const StoreStackScreen = () => (
+  <StoreStack.Navigator>
+    <StoreStack.Screen name="Home" component={StoreHome} options={{headerShown: false}} />
+  </StoreStack.Navigator>
 )
 
 const AuthStackScreen = () => (
@@ -72,20 +83,19 @@ const WishlistStackScreen = () => (
     <WishlistStack.Screen name="Wishlist" component={Wishlist} options={{headerShown: false}} />
     <WishlistStack.Screen name="Cart" component={Cart} />
   </WishlistStack.Navigator>
-
 )
 
-const Navigation = (props) => {
+const ClientDrawer = () => {
   const languageText = useLanguageText('navigation');
   const language = useLanguage();
-  return (
-    <NavigationContainer>
+  const loggedIn = useSelector(state => state.authReducer.loggedIn);
+  return(
     <Drawers.Navigator drawerPosition={language === 'ar' ? 'right' : 'left'} drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home" drawerContent={props => <SideBar {...props} />}>
         <Drawers.Screen 
             headerShown="false"
             options={{
               title: 'Home',
-              drawerIcon: ({tintColor}) => <Feather name="log-in" size={16} color={tintColor} />
+              drawerIcon: ({tintColor}) => <Icon type="Feather" name="log-in" size={16} color={tintColor} />
             }}
             name="Home"
             component={HomeStackScreen}
@@ -93,18 +103,18 @@ const Navigation = (props) => {
         <Drawers.Screen 
             options={{
               title: 'Wishlist',
-              drawerIcon: ({tintColor}) => <Feather name="heart" size={16} color={tintColor} />
+              drawerIcon: ({tintColor}) => <Icon type="Feather" name="heart" size={16} color={tintColor} />
             }}
             name="Wishlist"
             component={WishlistStackScreen}
         />
         
-        {!props.loggedIn ? 
+        {!loggedIn ? 
           <Drawers.Screen
               headerShown="false"
               options={{
                 title: 'Register/Login',
-                drawerIcon: ({tintColor}) => <FontAwesome5 name="home" size={16} color={tintColor} />
+                drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="home" size={16} color={tintColor} />
               }} 
               name="Register/Login" component={AuthStackScreen}
           />
@@ -114,28 +124,41 @@ const Navigation = (props) => {
               headerShown="false"
               options={{
                 title: 'Deals',
-                drawerIcon: ({tintColor}) => <Fontisto name="shopping-sale" size={16} color={tintColor} />
+                drawerIcon: ({tintColor}) => <Icon type="Fontisto" name="shopping-sale" size={16} color={tintColor} />
               }}
               name="Deals"
               component={HomeStackScreen}
           />]
         }
     </Drawers.Navigator>
+  )
+}
+
+const StoreDrawer = () => {
+  const languageText = useLanguageText('navigation');
+  const language = useLanguage();
+  const loggedIn = useSelector(state => state.authReducer.loggedIn);
+  return (
+  <Drawers.Navigator drawerPosition={language === 'ar' ? 'right' : 'left'} drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home">
+      <Drawers.Screen 
+          headerShown="false"
+          options={{
+            title: 'Home',
+            drawerIcon: ({tintColor}) => <Icon type="Feather" name="log-in" size={16} color={tintColor} />
+          }}
+          name="Home"
+          component={StoreStackScreen}
+      />
+  </Drawers.Navigator>
+  )
+}
+
+const Navigation = () => {
+  const type = useSelector(state => state.authReducer.type);
+  return (
+    <NavigationContainer>
+      {(!type || type === 'client') ? <ClientDrawer /> : <StoreDrawer />}
     </NavigationContainer>
 )};
 
-const mapStateToProps = (state) => {
-    return {
-        loggedIn: state.authReducer.loggedIn,
-        account: state.authReducer.account,
-        token: state.authReducer.token
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        login: (account) => dispatch(login(account))
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
+export default Navigation;

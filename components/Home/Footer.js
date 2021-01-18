@@ -10,7 +10,7 @@ const Footer = () => {
 
     return(
         <View style={styles.container}>
-            <Image source={require('../../assets/logo.png')} style={styles.logo} />
+            <Image source={require('../../assets/_logoM.png')} style={styles.logo} />
             <View style={styles.secondaryContainer}>
                 <Text style={styles.footerText}>Contact Us</Text>
                 <Text style={styles.footerText}>Terms and Conditions</Text>
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     logo: {
-        width: width * 0.3,
+        width: width * 0.2,
         height: (width * 0.3) * (width/height),
         marginBottom: 20
     },

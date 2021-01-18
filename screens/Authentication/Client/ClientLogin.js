@@ -16,9 +16,9 @@ import DisabledButton from '../DisabledButton';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState('asserhamad96@gmail.com');
     const [errors, setErrors] = useState([]);
-    const [password, setPassword] = useState('');
+    const [password, setPassword] = useState('Abcd1234');
     const [fontsLoaded] = useFonts({
       'Lato': require('../../../assets/fonts/Lato-Regular.ttf')
     });
@@ -101,7 +101,7 @@ const ClientLogin = (props) => {
                 <Text style={{color: gStyles.secondary, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to continue shopping</Text>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <Text style={{color: gStyles.primary, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
+                {errors.map(err => <Text style={{color: gStyles.primary_light, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
@@ -122,7 +122,7 @@ const ClientLogin = (props) => {
                     onChangeText={(val) => setPassword(val)}
                     style={styles.input} />
                 <TouchableOpacity>
-                    <Text style={{color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
+                    <Text style={{color: gStyles.primary_light, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
                 </TouchableOpacity>
             </View>
             <DisabledButton onPressIfActive={login} array={[email, password]}>
@@ -135,14 +135,14 @@ const ClientLogin = (props) => {
                 <View style={{display:'flex', flexDirection: 'row'}}>
                     <Text style={{color: gStyles.secondary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Don't have an account?</Text>
                     <TouchableOpacity onPress={() => props.navigation.push('ClientRegister')}>
-                        <Text style={{marginLeft: 5, color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
+                        <Text style={{marginLeft: 5, color: gStyles.primary_light, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
                     </TouchableOpacity>
                 </View>
                 {/* Seller Account */}
                 <View style={{display:'flex', flexDirection: 'row', marginTop: 5}}>
                     <Text style={{color: gStyles.secondary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Are you a seller?</Text>
                     <TouchableOpacity onPress={() => props.navigation.push('SellerLogin')}>
-                        <Text style={{marginLeft: 5, color: gStyles.primary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Login Here</Text>
+                        <Text style={{marginLeft: 5, color: gStyles.primary_light, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Login Here</Text>
                     </TouchableOpacity>
                 </View>
                 </View>

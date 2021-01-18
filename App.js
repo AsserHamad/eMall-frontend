@@ -17,20 +17,19 @@ export default () => {
       'Lato': require('./assets/fonts/Lato-Regular.ttf'),
       'Lato Bold': require('./assets/fonts/Lato-Bold.ttf'),
       'Lato Thin': require('./assets/fonts/Lato-Thin.ttf'),
+      'Lato Italic': require('./assets/fonts/Lato-Italic.ttf'),
       'Cairo': require('./assets/fonts/Cairo-Regular.ttf'),
       'Cairo Bold': require('./assets/fonts/Cairo-Bold.ttf'),
       'Cairo Thin': require('./assets/fonts/Cairo-Light.ttf'),
   });
   const [languageLoaded, setLanguageLoaded] = useState(false);
   useEffect(() => {
-    console.log('a')
     AsyncStorage.getItem('@language')
     .then(value => {
       store.dispatch(changeLanguage(Number(value)));
       setLanguageLoaded(true);
     })
     .catch(err => {
-      console.log(err);
       setLanguageLoaded(true);
     })
   }, []);

@@ -1,5 +1,4 @@
 exports.gStyles =  {
-  primary: '#FA1B1C',
   primary_light: '#FA1B1C',
   primary_medium: '#C40001',
   primary_dark: '#A40001',

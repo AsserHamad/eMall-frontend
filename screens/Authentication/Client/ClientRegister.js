@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         marginTop: height * 0.02
     },
     submitButton: {
-        backgroundColor: gStyles.primary,
+        backgroundColor: gStyles.primary_light,
         alignItems: 'center',
         justifyContent: 'center',
         width: width * 0.9,
