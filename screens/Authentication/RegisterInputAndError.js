@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
         fontFamily: gStyles.fontFamily
     },
     error: {
-        color: gStyles.primary_light,
+        color: gStyles.color_0,
         fontSize: RFValue(10),
     }
 })

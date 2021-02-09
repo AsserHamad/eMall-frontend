@@ -1,74 +1,88 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Dimensions, StyleSheet, Image } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { useSelector } from 'react-redux';
+import { Constants } from 'react-native-unimodules';
+import { useDispatch, useSelector } from 'react-redux';
 import TextLato from '../components/utils/TextLato';
 import { gStyles } from '../global.style';
 import { useLanguage } from '../hooks/language';
+import { setCart } from '../src/actions/cart';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const Payment = (props) => {
-    const cart = useSelector(state => state.cartReducer.cart);
+    const cart = useSelector(state => state.cartReducer.cart.products);
+    const account = useSelector(state => state.authReducer.account);
+    const address = account.addresses.filter(address => address.active)[0];
     const [subtotal, setSubtotal] = useState(0);
     const [shipping, setShipping] = useState(0);
     const [total, setTotal] = useState(0);
     const [disabled, setDisabled] = useState(true);
     const language = useLanguage();
+    const token = useSelector(state => state.authReducer.token);
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
     useEffect(() => {
         if(cart.length){
-                const st = cart.reduce((itemA, itemB) => {
-                    const price = itemB.product.price;
-                    const quantity = itemB.quantity;
-                    const extraPrice = itemB.picks.reduce((itemA, itemB) => {
-                        return itemA + itemB.extraPrice;
-                    }, 0)
-                    return itemA + (price + extraPrice) * quantity
-                }
-                ,0)
-            setSubtotal(st);
-            setShipping(st * 0.05);
-            setTotal(st * 1.05)
-            setDisabled(false);
+            fetch(`${Constants.manifest.extra.apiUrl}/client/total`, {
+                headers: {token}
+            })
+            .then(res => res.json())
+            .then(res => {
+                setSubtotal(res.subtotal);
+                setShipping(res.shipping);
+                setTotal(res.total)
+                setDisabled(false);
+            })
         } else setDisabled(true);
     }, [cart])
-    const address = {
-        governate: 'Cairo',
-        city: 'Maadi',
-        street: 'Zahraa Al Maadi, Cairo Governate',
-        building: 'A 82 - Section 12',
-        floor: '1',
-        apartment: '102',
-        number: '01140008042'
+
+    const order = () => {
+        fetch(`${Constants.manifest.extra.apiUrl}/client/place-order`, {headers: {token}})
+        .then(res => res.json())
+        .then(res => {
+            console.log(res)
+            dispatch(setCart(res.cart))
+            props.navigation.popToTop();
+            props.navigation.push('Order', res.order);
+        })
     }
     return (
         <View style={styles.container}>
             <View>
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{paddingTop: height * 0.05}}>
+                    
                 <TextLato style={styles.deliveringTo}>Delivering To</TextLato>
                 <View style={styles.addressContainer}>
                     <TextLato bold style={{fontSize: RFPercentage(2.5)}}>{address.governate}, {address.city}</TextLato>
                     <TextLato style={styles.addressDetails}>{address.street}</TextLato>
-                    <TextLato style={styles.addressDetails}>Floor Number: {address.floor}</TextLato>
+                    <TextLato style={styles.addressDetails}>Building: {address.building}</TextLato>
                     <TextLato style={styles.addressDetails}>Apartment Number: {address.apartment}</TextLato>
-                    <TextLato bold style={{fontSize: RFPercentage(2.5), marginTop: height * 0.05}}>{address.number}</TextLato>
-                    <TextLato style={{color: gStyles.primary_light, marginTop: height * 0.005}}>Change Address</TextLato>
+                    <TextLato style={styles.addressDetails} italic>{address.extra}</TextLato>
+                    <TextLato bold style={{fontSize: RFPercentage(2.5), marginTop: height * 0.05}}>+201140008042</TextLato>
+                    <TouchableOpacity onPress={() => navigation.push('Addresses')}>
+                        <TextLato style={{color: gStyles.color_0, marginTop: height * 0.005}}>Change Address</TextLato>
+                    </TouchableOpacity>
                 </View>
                 <TextLato style={{marginTop: height * 0.03, fontSize: RFPercentage(1.7)}}>Review</TextLato>
-                <ScrollView style={styles.addressContainer}>
+                <View style={styles.addressContainer}>
                     {cart.map(item => {
+                        console.log(item)
                         return (
                             <View style={{width: '100%', flexDirection: 'row', paddingVertical: 20, marginVertical: 5, borderBottomColor: '#eee', borderBottomWidth: 1}}>
                                 <Image style={{width: '25%', aspectRatio: 1, borderRadius: 4, marginRight: width * 0.05}} source={{uri: item.product.images[0]}} />
                             <View>
                                 <TextLato bold>{item.product.title[language]}</TextLato>
-                                <TextLato style={{}}>{item.picks.map(option => option.title[language]).toString()}</TextLato>
+                                {/* <TextLato style={{}}>{item.options.map(option => option.title[language]).toString()}</TextLato> */}
                                 <TextLato>Quantity: {item.quantity}</TextLato>
-                                <TextLato>Price: {(item.picks.reduce((pickA, pickB) => pickA + pickB.extraPrice ,0) + item.product.price) * item.quantity}</TextLato>
+                                {/* <TextLato>Price: {(item.options.reduce((pickA, pickB) => pickA + pickB.extraPrice ,0) + item.product.price) * item.quantity}</TextLato> */}
                             </View>
                             </View>
                         )
                     })}
+                </View>
                 </ScrollView>
             <View style={styles.bottomContainer}>
                 <View style={{flexDirection: 'row', alignItems: 'center', marginTop: height * 0.008}}>
@@ -81,11 +95,14 @@ const Payment = (props) => {
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', marginTop: height * 0.008}}>
                     <TextLato style={{fontSize: RFPercentage(1.8), width : width * 0.2}}>Total:</TextLato>
-                    <TextLato style={{fontSize: RFPercentage(1.8), width: width * 0.4, textAlign: 'center', color: gStyles.primary_light}}>{total.toFixed(2)} EGP</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(1.8), width: width * 0.4, textAlign: 'center', color: gStyles.color_0}}>{total.toFixed(2)} EGP</TextLato>
                 </View>
-                <TouchableOpacity onPress={() => !disabled ? props.navigation.push('Payment') : null}>
-                    <View style={{...styles.buttonContainer, backgroundColor: disabled ? '#777' : gStyles.primary_light}}>
-                        <TextLato bold style={{color: 'white', fontSize: RFPercentage(2), width: width * 0.4, textAlign: 'center'}}>PAYMENT OPTIONS</TextLato>
+                <TouchableOpacity onPress={() => {
+                    if(!disabled){
+                        order()
+                    }}}>
+                    <View style={{...styles.buttonContainer, backgroundColor: disabled ? '#777' : gStyles.color_0}}>
+                        <TextLato bold style={{color: 'white', fontSize: RFPercentage(2), width: width * 0.4, textAlign: 'center'}}>CONFIRM PURCHASE</TextLato>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -98,7 +115,6 @@ const styles=StyleSheet.create({
     container: {
         paddingHorizontal: width * 0.05,
         flex: 1,
-        paddingTop: height * 0.05,
         alignItems: 'center'
     },
     deliveringTo: {
@@ -116,14 +132,22 @@ const styles=StyleSheet.create({
         marginTop: height * 0.002
     },
     bottomContainer: {
-        height: height * 0.16,
+        height: height * 0.2,
         padding: width * 0.03,
         backgroundColor: 'white',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     buttonContainer: {
-        backgroundColor: gStyles.primary_light,
+        backgroundColor: gStyles.color_0,
         justifyContent: 'center',
         alignItems: 'center',
         padding: height * 0.01,

@@ -1,11 +1,18 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, QUANTITY_INCREASE, QUANTITY_DECREASE } from '../actions/types';
+import { ADD_TO_CART, REMOVE_FROM_CART, QUANTITY_INCREASE, QUANTITY_DECREASE, SET_CART } from '../actions/types';
 
 const initialState = {
-    cart: []
+    cart: {
+        products: []
+    }
 }
 
 const cartReducer = (state = initialState, action) => {
     switch(action.type){
+        case SET_CART:
+            return {
+                ...state,
+                cart: action.cart
+            }
         case ADD_TO_CART:
             return {
                 ...state,

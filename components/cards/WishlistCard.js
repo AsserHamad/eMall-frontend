@@ -9,23 +9,19 @@ import { connect } from 'react-redux';
 import { addToWishlist, removeFromWishlist } from '../../src/actions/wishlist';
 import { addToCart, removeFromCart } from '../../src/actions/cart';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import AwesomeAlert from 'react-native-awesome-alerts';
-import { useState } from 'react';
-import Icon from '../utils/Icon';
 
 function WishlistCard(props){
-    const item = props.item.product;
-    const [showAlert, setShowAlert] = useState(false);
+    const item = props.item;
     return (
         <View style={styles.itemContainer}>
             <View style={styles.imageContainer}>
-                <Image style={styles.itemImage} source={{uri: item.image}} />
+                <Image style={styles.itemImage} source={{uri: item.images[0]}} />
             </View>
             <View style={styles.itemDetails}>
-                <Text style={styles.itemTitle} >{item.shortName}</Text>
+                <Text style={styles.itemTitle} >{item.title.en}</Text>
                 <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                     <Text>Seller:</Text>
-                    <Text style={{paddingLeft: 5, fontWeight: 'bold', color: gStyles.secondary}}>{item.seller.name}</Text>
+                    <Text style={{paddingLeft: 5, fontWeight: 'bold', color: gStyles.secondary}}>{item.store && item.store.title}</Text>
                     {/* <Image style={{width: 50, height: 20}} source={{uri: item.seller.logo}} /> */}
                 </View>
                 <View style={{marginTop: 40, display: 'flex', flexDirection: 'row'}}>
@@ -35,49 +31,26 @@ function WishlistCard(props){
                         <Text style={{fontSize: 14, fontWeight: 'bold'}}>{item.price * (1 - item.discount)} EGP</Text>
                     </View> 
                     :
-                    <Text style={{fontSize: 20, fontWeight: 'bold', width: '70%'}}>{item.price} EGP</Text>
+                    <Text style={{fontSize: RFPercentage(2.5), fontWeight: 'bold', width: '65%'}}>{item.price} EGP</Text>
                     }
                     <View style={styles.buttonsContainer}>
                         {/* Add to Cart */}
-                        {!containsItem(props.cart, item) ? 
+                        {/* {!containsItem(wishlist, item) ? 
                             <TouchableOpacity onPress={() => props.addToCart(props.item)}>
                                 <Icon type="AntDesign" name="shoppingcart" size={24} style={styles.button} color={'white'} />
                             </TouchableOpacity>
                         :
                             <TouchableOpacity onPress={() => props.removeFromCart(props.item.product)}>
-                                <Icon type="MaterialIcons" name="remove-shopping-cart" size={24} style={{...styles.button, backgroundColor: gStyles.secondary_light }} color={'red'} />
+                                <Icon type="MaterialIcons" name="remove-shopping-cart" size={24} style={{...styles.button, backgroundColor: gStyles.background }} color={'red'} />
                             </TouchableOpacity>
-                        }
+                        } */}
                         {/* Delete Item */}
                         <TouchableOpacity onPress={() => setShowAlert(true)}>
-                            <AntDesign name="delete" size={24} style={styles.button} color={'white'} />
+                            <AntDesign name="delete" size={RFPercentage(3)} style={styles.button} color={'white'} />
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
-            <AwesomeAlert
-                show={showAlert}
-                showProgress={false}
-                title="Removing Item"
-                message="Are you sure you want to remove this item from your wishlist?"
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={false}
-                showCancelButton={true}
-                showConfirmButton={true}
-                cancelText="Cancel"
-                confirmText="Remove"
-                confirmButtonColor="#DD6B55"
-                onCancelPressed={() => {
-                    setShowAlert(false);
-                }}
-                onConfirmPressed={() => {
-                    props.removeFromWishlist(item)
-                    setShowAlert(false);
-                }}
-                onDismiss={() => {
-                    setShowAlert(false);
-                }}
-            />
         </View>
     )
 
@@ -117,7 +90,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         // marginRight: width * 0.1,
-        backgroundColor: gStyles.primary_light,
+        backgroundColor: gStyles.color_0,
         padding: RFPercentage(1),
         borderRadius: 100,
         marginHorizontal: RFPercentage(0.5)
@@ -125,7 +98,7 @@ const styles = StyleSheet.create({
 })
 
 const containsItem = (arr, product) => {
-    return arr.filter(prod => prod.product._id === product._id).length;
+    return arr.filter(prod => prod._id === product._id).length;
 }
 
 const mapStateToProps = (state) => {

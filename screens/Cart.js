@@ -1,47 +1,76 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import { Constants } from 'react-native-unimodules';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import CartCard from '../components/cards/CartCard';
+import Icon from '../components/utils/Icon';
 import TextLato from '../components/utils/TextLato';
 import { gStyles } from '../global.style';
 
-function Cart(props){
-    const cart = useSelector(state => state.cartReducer.cart);
+function Cart(){
+    const loggedIn = useSelector(state => state.authReducer.loggedIn);
+    const navigation = useNavigation();
+    const token = useSelector(state => state.authReducer.token);
+    if(!loggedIn)
+        return (
+            <ImageBackground
+                source={{uri: 'https://st2.depositphotos.com/3764539/8227/v/950/depositphotos_82275896-stock-illustration-vector-funny-seamless-pattern-in.jpg'}}
+                imageStyle={{opacity: 0.3}}
+                style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
+                <Icon type="FontAwesome5" name="sad-cry" color={gStyles.color_3} size={RFPercentage(20)} style={{marginBottom: height * 0.05}} />
+                <TextLato style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>You are not logged in!</TextLato>
+                <TouchableOpacity 
+                    style={{backgroundColor: gStyles.color_0, padding: width * 0.03, alignItems: 'center'}}
+                    onPress={() => {navigation.goBack();navigation.navigate('Register/Login')}}>
+                    <TextLato style={{color: 'white'}}>Login to access your cart</TextLato>
+                </TouchableOpacity>
+            </ImageBackground>
+        )
+    const products = useSelector(state => state.cartReducer.cart.products);
     const [subtotal, setSubtotal] = useState(0);
     const [disabled, setDisabled] = useState(true);
     useEffect(() => {
-        if(cart.length){
-                const st = cart.reduce((itemA, itemB) => {
-                    const price = itemB.product.price;
-                    const quantity = itemB.quantity;
-                    const extraPrice = itemB.picks.reduce((itemA, itemB) => {
-                        return itemA + itemB.extraPrice;
-                    }, 0)
-                    return itemA + (price + extraPrice) * quantity
-                }
-                ,0)
-            setSubtotal(st);
-            setDisabled(false);
+        if(products.length){
+            fetch(`${Constants.manifest.extra.apiUrl}/client/subtotal`, {
+                headers: {token}
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+                setSubtotal(res.subtotal);
+                setDisabled(false);
+            })
         } else setDisabled(true);
-    }, [cart])
+    }, [products])
+    if(products.length === 0)
+            return (
+                <ImageBackground
+                    source={{uri: 'https://image.freepik.com/free-vector/hand-drawn-fruits-seamless-pattern_2253-172.jpg'}}
+                    imageStyle={{opacity: 0.3}}
+                    style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
+                    <Icon type="AntDesign" name="shoppingcart" color={gStyles.color_0} size={RFPercentage(20)} style={{marginBottom: height * 0.05}} />
+                    <TextLato style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>Your cart is currently empty</TextLato>
+                </ImageBackground>
+            )
     return (
         <View style={styles.container}>
             <ScrollView>
-                {props.cart.map(item => {
+                {products.map(item => {
                     return <CartCard key={Math.random()} item={item} />
                 })}
             </ScrollView>
             <View style={styles.bottomContainer}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TextLato style={{fontSize: RFPercentage(2), width : '20%'}}>Subtotal:</TextLato>
-                    <TextLato style={{fontSize: RFPercentage(3.5)}}>{subtotal.toFixed(2)} EGP</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(3.5)}}>{subtotal ? subtotal.toFixed(2) : '-'} EGP</TextLato>
                 </View>
-                <TouchableOpacity onPress={() => !disabled ? props.navigation.push('Payment') : null}>
-                    <View style={{...styles.buttonContainer, backgroundColor: disabled ? '#777' : gStyles.primary_light}}>
+                <TouchableOpacity onPress={() => !disabled ? navigation.push('Payment') : null}>
+                    <View style={{...styles.buttonContainer, backgroundColor: disabled ? '#777' : gStyles.color_0}}>
                         <TextLato bold style={{color: 'white', fontSize: RFPercentage(2.3)}}>CHECKOUT</TextLato>
                     </View>
                 </TouchableOpacity>
@@ -65,7 +94,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: height * 0.01,
-        backgroundColor: gStyles.primary_light,
+        backgroundColor: gStyles.color_0,
         width: width * 0.9,
         justifyContent: 'center',
         alignItems: 'center',
@@ -73,10 +102,4 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = (state) => {
-    return {
-        cart: state.cartReducer.cart
-    }
-}
-
-export default connect(mapStateToProps)(Cart);
+export default Cart;

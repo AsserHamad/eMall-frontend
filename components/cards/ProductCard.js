@@ -32,7 +32,7 @@ function ProductCard(props){
                 {/* Cart */}
                 {!containsItem(props.cart, props.product) ? 
                     <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToCart({product: props.product, quantity: 1})}>
-                        <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}}>
+                        <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.color_1}}}>
                             <Icon type="FontAwesome5" color="white" size={20} name="cart-plus" />
                         </View>
                     </TouchableOpacity>
@@ -46,7 +46,7 @@ function ProductCard(props){
                 {/* Wishlist */}
                 {!containsItem(props.wishlist, props.product) ? 
                     <TouchableOpacity activeOpacity={0.4} onPress={() => props.addToWishlist({product: props.product, quantity: 1})}>
-                        <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.primary_medium}}}>
+                        <View style={{...styles.cartContainer, ...{backgroundColor: gStyles.color_1}}}>
                             <Icon type="FontAwesome5" color="white" size={20} name="heart" />
                         </View>
                     </TouchableOpacity>
@@ -69,7 +69,7 @@ const containsItem = (arr, product) => {
 const styles = StyleSheet.create({
     discountBubble: {
         fontWeight: 'bold',
-        backgroundColor: gStyles.primary_medium,
+        backgroundColor: gStyles.color_1,
         fontSize: 23,
         marginBottom: -20,
         color: 'white',
@@ -121,13 +121,13 @@ const styles = StyleSheet.create({
     originalPrice: {
         textDecorationLine: 'line-through',
         fontWeight: 'bold',
-        color: gStyles.secondary,
+        color: gStyles.color_1,
         fontSize: 15,
         textAlign: 'right'
     },
     discountedPrice: {
         fontWeight: 'bold',
-        color: gStyles.primary_medium,
+        color: gStyles.color_1,
         marginLeft: 4,
         fontSize: 15
     },

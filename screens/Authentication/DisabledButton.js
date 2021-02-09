@@ -22,7 +22,7 @@ const DisabledButton = (props) => {
 
     return(
         <TouchableOpacity onPress={() => disabled ? null : props.onPressIfActive()} activeOpacity={disabled ? 1 : 0.8}>
-            <View style={{...styles.submitButton, backgroundColor: disabled ? 'grey' : gStyles.primary_light}}>
+            <View style={{...styles.submitButton, backgroundColor: disabled ? 'grey' : gStyles.color_0}}>
                 {props.children}
             </View>
         </TouchableOpacity>
@@ -31,7 +31,7 @@ const DisabledButton = (props) => {
 
 const styles = StyleSheet.create({
     submitButton: {
-        backgroundColor: gStyles.primary_medium,
+        backgroundColor: gStyles.color_1,
         alignItems: 'center',
         justifyContent: 'center',
         width: width * 0.9,

@@ -11,7 +11,6 @@ const HomeComponent = ({ homeAds }) => {
     return (
         <View>
             {homeAds.map(ad => {
-                console.log(ad)
                 switch(ad.adType){
                     case 0:
                         return <HomeAdType_0 key={Math.random()} ad={ad} />

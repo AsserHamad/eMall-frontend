@@ -5,18 +5,16 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import TextLato from '../utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { useLanguage, useLanguageText } from '../../hooks/language';
+import { useLanguage } from '../../hooks/language';
 import { useEffect } from 'react';
 import { useRef } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { gStyles } from '../../global.style';
-import Icon from '../utils/Icon';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-function Searchbar(){
+function StoreSearchbar(){
     const language = useLanguage();
-    const languageText = useLanguageText('navbar');
     const navigation = useNavigation();
     const [text, setText] = useState('');
     const [show, setShow] = useState(false);
@@ -26,7 +24,6 @@ function Searchbar(){
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
     const inputRef = useRef();
-    const en = language === 'en';
 
     useEffect(() => {
         if(!text.length)
@@ -54,7 +51,7 @@ function Searchbar(){
     }
     return(
         <View>
-            <View style={{...styles.searchBar, flexDirection: en ? 'row' : 'row-reverse'}}>
+            <View style={styles.searchBar}>
                 <View style={styles.searchIcon}>
                     <Ionicons name="md-search" color='#a3a3a3' size={ 15 } />
                 </View>
@@ -62,14 +59,14 @@ function Searchbar(){
                     ref={inputRef}
                     onFocus={() => setShow(true)}
                     onBlur={() => setShow(false)}
-                    placeholder={languageText.search}
+                    placeholder={'Search for anything...'}
                     value={text}
                     onChangeText={text => {setText(text);searchInput(text)}}
-                    style={{...styles.input, fontFamily: en ? 'Lato' : 'Cairo', textAlign: en ? 'left' : 'right'}}
+                    style={styles.input}
                 />
                     <View style={styles.closeIcon}>
                         <TouchableOpacity onPress={() => {inputRef.current.blur();setText("")}}>
-                            <Icon type="Ionicons" name="md-close-circle" color='#a3a3a3' size={ RFPercentage(2.2) } />
+                        <Ionicons name="md-close-circle" color='#a3a3a3' size={ RFPercentage(2.2) } />
                         </TouchableOpacity>
                     </View>
             </View>
@@ -88,9 +85,7 @@ function Searchbar(){
                                     <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{product.title[language]}</TextLato>
                                 </TouchableOpacity>
                     })}
-                    <TouchableOpacity key={Math.random()} onPress={() => navigation.push('ProductsList', {criteria: text})}>
-                        <TextLato style={searchStyles.etcText}>Search for more products...</TextLato>
-                    </TouchableOpacity>
+                    <TextLato style={searchStyles.etcText}>Search for more products...</TextLato>
                 </View>
                 <View style={searchStyles.subContainer}>
                     <TextLato style={searchStyles.title}>Categories</TextLato>
@@ -123,6 +118,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 3,
         display: 'flex',
+        flexDirection: 'row',
     },
     searchIcon: {
         width: '10%',
@@ -134,8 +130,9 @@ const styles = StyleSheet.create({
     },
     input: {
         height: '100%',
-        width: '80%',
-        paddingHorizontal: '1%',
+        width: '77%',
+        paddingRight: '5%',
+        marginRight: 20
     },
 
 })
@@ -162,4 +159,4 @@ const searchStyles = StyleSheet.create({
     }
 })
 
-export default Searchbar;
+export default StoreSearchbar;

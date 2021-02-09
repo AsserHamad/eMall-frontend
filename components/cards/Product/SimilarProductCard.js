@@ -30,11 +30,11 @@ const SimilarProductCard = (props) => {
                     <TextLato style={styles.description}>{product.description[language].substr(0, 50)}...</TextLato>
                     {product.discount ? 
                         <View key={Math.random()} style={{display: 'flex', flexDirection: 'row', marginTop: height * 0.02}}>
-                            <TextLato style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.primary_light}}>{product.price}</TextLato>
-                            <TextLato style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.primary_light}}>{Math.floor(product.price * (1-product.discount))} EGP</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.color_0}}>{product.price}</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.color_0}}>{Math.floor(product.price * (1-product.discount))} EGP</TextLato>
                         </View>
                         :
-                        <TextLato style={{fontSize: RFPercentage(1.7), color: gStyles.primary_light, marginTop: height * 0.02}}>{product.price} EGP</TextLato>
+                        <TextLato style={{fontSize: RFPercentage(1.7), color: gStyles.color_0, marginTop: height * 0.02}}>{product.price} EGP</TextLato>
                     }
                 </View>
             </View>  
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: gStyles.primary_light,
+        backgroundColor: gStyles.color_0,
         color: 'white',
         fontFamily: 'Lato',
         fontSize: RFPercentage(1.5),
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         width: width * 0.09,
         height: width * 0.09,
         borderRadius: 100,
-        backgroundColor: gStyles.primary_light,
+        backgroundColor: gStyles.color_0,
         marginVertical: RFPercentage(0.5),
         justifyContent: 'center',
         alignItems: 'center',

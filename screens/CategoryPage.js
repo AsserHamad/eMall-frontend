@@ -21,6 +21,7 @@ const CategoryPage = (props) => {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const details = props.route.params;
+    const language = useLanguage();
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/find-by-category`, {
             method: 'post',
@@ -35,14 +36,14 @@ const CategoryPage = (props) => {
     }, []);
     return (
         <View style={styles.container}>
-            <Header search details={{title: details.name.en}} />
+            <Header search details={{title: details.name[language]}} />
             {/* <HeaderSearchbar text={search} setText={setSearch} /> */}
             <SubcategoriesScroll details={details} />
             <View>
 
             </View>
             {/* <Image source={{uri: details.banner}} style={styles.banner} /> */}
-            {!sellers.length ? <View style={{flex: 1, justifyContent: 'center'}}><ActivityIndicator size={height * 0.1} color={gStyles.primary_light} /></View> :
+            {!sellers.length ? <View style={{flex: 1, justifyContent: 'center'}}><ActivityIndicator size={height * 0.1} color={gStyles.color_0} /></View> :
             <FlatList
                 data={sellers}
                 showsVerticalScrollIndicator={false}
@@ -52,8 +53,10 @@ const CategoryPage = (props) => {
                 // onEndReached={() => {
                 //     setLoading(true);
                 //     setTimeout(() => {
-                //         setProds(prods => prods.concat(products));
-                //     }, 1000)
+                //         console.log('prods', prods);
+                //         setLoading(false);
+                //         setSellers(sellers => sellers.concat(sellers));
+                //     }, 200)
                 // }}
                 // getItem={(products, index) => {
                 //     const product = products[index];
@@ -63,7 +66,7 @@ const CategoryPage = (props) => {
                 //     }
                 // }}
             />}
-            {loading && <Text style={{position: 'absolute', bottom: 0}}>LOADING</Text>}
+            {loading && <Text><ActivityIndicator size={RFPercentage(10)} color={gStyles.color_0} /></Text>}
         </View>
     )
 }
@@ -166,6 +169,7 @@ const SubcategoriesScroll = ({details}) => {
     const navigation = useNavigation();
     const [subcategories, setSubcategories] = useState([]);
     const language = useLanguage();
+    const en = language === 'en';
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/subcategory/find-by-category/${details._id}`)
         .then(res => res.json())
@@ -199,7 +203,7 @@ const subcategoryStyles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: 3,
         borderWidth: 2,
-        borderColor: gStyles.secondary_medium
+        borderColor: gStyles.color_3
     },
     scrollView: {
         

@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import { StyleSheet, View } from 'react-native';
 import { gStyles } from '../../global.style';
 import CategoryCard from '../cards/CategoryCard';
-import Icon from '../utils/Icon';
+import { ScrollView } from 'react-native-gesture-handler';
 
 function Categories(){
     const [categories, setCategories] = useState([]);
@@ -13,18 +13,19 @@ function Categories(){
         .then(res => setCategories(res))
     }, []);
     return(
-    <View style={styles.container}>
-        <View style={styles.categoriesContainer}>
-            {categories.map(category => (
-                <CategoryCard key={Math.random()} details={category} />
-            ))}
-        </View>
-    </View>)
+        <ScrollView horizontal style={styles.container} showsHorizontalScrollIndicator={false}>
+            <View style={styles.categoriesContainer}>
+                {categories.map(category => (
+                    <CategoryCard key={Math.random()} details={category} />
+                ))}
+            </View>
+        </ScrollView>
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 7,
+        marginVertical: 18,
     },
     title: {
         fontSize: gStyles.fontSizeL,
@@ -34,8 +35,8 @@ const styles = StyleSheet.create({
     categoriesContainer: {
         display: 'flex',
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        width: '100%',
+        // flexWrap: 'wrap',
+        // width: '100%',
         justifyContent: 'center',
         borderWidth: 0
     }

@@ -7,7 +7,8 @@ import {
     MaterialCommunityIcons,
     Ionicons,
     AntDesign,
-    MaterialIcons
+    MaterialIcons,
+    Entypo
 } from '@expo/vector-icons';
 import { View } from 'react-native';
 
@@ -44,6 +45,10 @@ export default ({type, name, color, size, style}) => {
         case 'Fontisto': 
             return <View style={{...style}}>
                         <Fontisto name={name} color={color} size={size} />
+                    </View>;
+        case 'Entypo': 
+            return <View style={{...style}}>
+                        <Entypo name={name} color={color} size={size} />
                     </View>;
     }
 }

@@ -30,8 +30,8 @@ const ProductReviewCard = (props) => {
             <View style={{position: 'absolute', bottom: 0, width: '100%',alignItems: 'center', paddingBottom: height * 0.01}}>
                 {loggedIn && 
                 <View style={{flexDirection: 'row', width: '100%', justifyContent: 'center',alignItems: 'center'}}>
-                    <View style={styles.helpfulButton}><Icon size={RFPercentage(2)} color={gStyles.primary_light} type="Feather" name="thumbs-up" /></View>
-                    <View style={styles.helpfulButton}><Icon size={RFPercentage(2)} color={gStyles.primary_light} type="Feather" name="thumbs-down" /></View>
+                    <View style={styles.helpfulButton}><Icon size={RFPercentage(2)} color={gStyles.color_0} type="Feather" name="thumbs-up" /></View>
+                    <View style={styles.helpfulButton}><Icon size={RFPercentage(2)} color={gStyles.color_0} type="Feather" name="thumbs-down" /></View>
                 </View>}
                 <TextLato style={styles.helpfulText}>{review.helpful.length - review.notHelpful.length} People found this review helpful</TextLato>
             </View>

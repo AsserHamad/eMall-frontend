@@ -10,28 +10,34 @@ import Icon from './utils/Icon';
 import TextLato from './utils/TextLato';
 import HeaderSearchbar from './HeaderSearchbar';
 import { useNavigation } from '@react-navigation/native';
+import { useLanguage } from '../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
+
 export default ({ details, search }) => {
-    const cart = useSelector(state => state.cartReducer.cart);
+    const cartProducts = useSelector(state => state.cartReducer.cart.products);
+    const language = useLanguage();
     const navigation = useNavigation();
+    
+    const en = language === 'en';
+    
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.topContainer}>
+            <View style={{...styles.topContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
             <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-                <Icon type="Feather" name="arrow-left" size={RFPercentage(3)} color="black" />
+                <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(3)} color="black" />
             </TouchableOpacity>
-            <Text style={styles.title}>{details.title}</Text>
+            <TextLato style={styles.title}>{details.title}</TextLato>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => navigation.push('Cart')}
                     style={styles.burgerContainer}
                 >
                     <View style={styles.cartNumberContainer}>
-                        <TextLato style={{fontSize: RFPercentage(1.25)}}>{cart.length}</TextLato>
+                        <TextLato>{cartProducts.length}</TextLato>
                     </View>
-                    <Icon type="FontAwesome5" name="shopping-cart" color={gStyles.secondary_dark} size={ 27 }/>
+                    <Icon type="FontAwesome5" name="shopping-cart" color={gStyles.color_3} size={ 27 }/>
                 </TouchableOpacity>
             </View>
             {search && 
@@ -72,13 +78,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     cartNumberContainer: {
-        backgroundColor: gStyles.primary_light,
-        height: 19,
-        paddingHorizontal: 6,
+        backgroundColor: gStyles.color_0,
+        minWidth: 18,
+        height: 18,
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center',
         transform: [{translateX: -9}, {translateY: 0}],
         zIndex: 2,
         position: "absolute"

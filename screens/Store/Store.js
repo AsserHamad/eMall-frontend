@@ -33,7 +33,7 @@ const Store = (props) => {
                     </View>
             <View style={styles.categories}>
                 {store.categories.map(category => (
-                    <View style={{...styles.categoryContainer, backgroundColor: gStyles.secondary_medium}} key={Math.random()}>
+                    <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={Math.random()}>
                         <Icon type={category.iconType} color="white" name={category.icon} size={12} style={styles.icon} />
                     </View>
                 ))}
@@ -48,18 +48,18 @@ const Store = (props) => {
                 {/* MENU */}
                 <View style={styles.menuContainer}>
                     <TouchableOpacity onPress={() => setViewState(state => state === 0 ? state : 0)}>
-                        <View style={{...styles.menuItem, backgroundColor: viewState === 0 ? gStyles.primary_light : 'transparent' }}>
-                            <TextLato style={{color: viewState !== 0 ? gStyles.primary_light : 'white'}}>Home</TextLato>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 0 ? gStyles.color_0 : 'transparent' }}>
+                            <TextLato style={{color: viewState !== 0 ? gStyles.color_0 : 'white'}}>Home</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setViewState(state => state === 1 ? state : 1)}>
-                        <View style={{...styles.menuItem, backgroundColor: viewState === 1 ? gStyles.primary_light : 'transparent' }}>
-                            <TextLato style={{color: viewState !== 1 ? gStyles.primary_light : 'white'}}>Browse</TextLato>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 1 ? gStyles.color_0 : 'transparent' }}>
+                            <TextLato style={{color: viewState !== 1 ? gStyles.color_0 : 'white'}}>Browse</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setViewState(state => state === 2 ? state : 2)}>
-                        <View style={{...styles.menuItem, backgroundColor: viewState === 2 ? gStyles.primary_light : 'transparent' }}>
-                            <TextLato style={{color: viewState !== 2 ? gStyles.primary_light : 'white'}}>Reviews</TextLato>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 2 ? gStyles.color_0 : 'transparent' }}>
+                            <TextLato style={{color: viewState !== 2 ? gStyles.color_0 : 'white'}}>Reviews</TextLato>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         padding: RFPercentage(1),
         borderRadius: 10,
         borderWidth: 2,
-        borderColor: gStyles.primary_light,
+        borderColor: gStyles.color_0,
         marginHorizontal: 5
     }
 })

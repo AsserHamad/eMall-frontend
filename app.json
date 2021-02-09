@@ -34,7 +34,11 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "apiUrl": "http://192.168.8.177:5000/api"
+      "apiUrl": "http://192.168.8.177:5000/api",
+      "home": "192.168.8.177",
+      "mobile": "192.168.43.69",
+      "clubhouse": "192.168.0.131",
+      "yaraIphone": "172.20.10.4"
     }
   }
 }

@@ -1,4 +1,9 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, QUANTITY_INCREASE, QUANTITY_DECREASE } from './types';
+import { ADD_TO_CART, REMOVE_FROM_CART, QUANTITY_INCREASE, QUANTITY_DECREASE, SET_CART } from './types';
+
+export const setCart = (cart) => ({
+    type: SET_CART,
+    cart
+})
 
 export const addToCart = (product) => ({
     type: ADD_TO_CART,

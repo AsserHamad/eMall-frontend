@@ -7,6 +7,7 @@ import * as Facebook from 'expo-facebook';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useHeaderHeight } from '@react-navigation/stack';
 import * as ImagePicker from 'expo-image-picker';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 // Redux
 import { connect } from 'react-redux';
@@ -26,6 +27,8 @@ const SellerStoreRegister = (props) => {
     const headerHeight = useHeaderHeight();
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [otherCategory, setOtherCategory] = useState('');
+    const [showAlert, setShowAlert] = useState(true);
     const [fontsLoaded] = useFonts({
       'Lato': require('../../../assets/fonts/Lato-Regular.ttf'),
       'Lato-Bold': require('../../../assets/fonts/Lato-Bold.ttf')
@@ -122,13 +125,42 @@ const SellerStoreRegister = (props) => {
         }
     }
 
+    const Alert = () => (
+        <AwesomeAlert
+        show={showAlert}
+        showProgress={false}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        confirmButtonColor="#DD6B55"
+        contentContainerStyle={{backgroundColor: gStyles.color_0}}
+        customView={(
+            <View style={{justifyContent: 'center', alignItems: 'center', backgroundColor: gStyles.color_0}}>
+                <Icon type="Feather" name="check" size={RFValue(60)} color={'white'} />
+                <TextLato bold style={{fontSize: RFPercentage(3), marginTop: height * 0.02, color: 'white'}}>Success</TextLato>
+                <TextLato style={{fontSize: RFPercentage(2), marginTop: height * 0.04, textAlign: 'center', color: 'white'}}>You have successfully added a new product!</TextLato>
+            </View>
+        )}
+        onCancelPressed={() => {
+            setShowAlert(false);
+        }}
+        onConfirmPressed={() => {
+            props.removeFromWishlist(item)
+            setShowAlert(false);
+        }}
+        onDismiss={() => {
+            setShowAlert(false);
+            navigation.goBack();
+        }}
+    />
+    )
+
     return (
         <ScrollView>
         {fontsLoaded ? 
         <KeyboardAvoidingView keyboardVerticalOffset={headerHeight} behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Store Data</Text>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form with your store's information</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Store Data</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form with your store's information</Text>
             </View>
             <View style={styles.formContainer}>
                     {/* <View style={styles.profilePictureContainer}>
@@ -139,7 +171,7 @@ const SellerStoreRegister = (props) => {
                     </View> */}
                 <RegisterInputAndError errors={errors} value={title} type={'storeTitle'} set={setTitle} />
                 <RegisterInputAndError multiline={true} errors={errors} value={description} type={'storeDescription'} set={setDescription} />
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Categories</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Categories</Text>
                 <Text style={{color: 'black', fontSize: RFValue(11), fontFamily: gStyles.fontFamily, marginVertical: height * 0.01}}>Please select the most appropriate categories regarding your store's products</Text>
             <View style={styles.categoryContainer}>
                 {categories.map(category => {
@@ -160,11 +192,21 @@ const SellerStoreRegister = (props) => {
                         </TouchableOpacity>
                     )
                 })}
+                <TouchableOpacity
+                activeOpacity={0.9}
+                    onPress
+                >
+                    <View style={otherCategory === '' ? styles.categoryButton : styles.selectedCategoryButton} 
+                        >
+                        <Text style={otherCategory === '' ? styles.categoryTitle : styles.selectedCategoryTitle}>Other</Text>
+                    </View>
+                </TouchableOpacity>
             </View>
             </View>
             <DisabledButton onPressIfActive={register} array={[title, description]} errors={errors}>
                     <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>REGISTER</Text>
             </DisabledButton>
+            {Alert}
         </KeyboardAvoidingView>
         : <Text>Loading</Text>}
         </ScrollView>
@@ -200,7 +242,7 @@ const styles = StyleSheet.create({
     categoryButton: {
         width: width * 0.28,
         aspectRatio: 1,
-        borderColor: gStyles.secondary_medium,
+        borderColor: gStyles.color_3,
         borderWidth: 2,
         borderRadius: 100,
         marginHorizontal: width * 0.01,
@@ -211,7 +253,7 @@ const styles = StyleSheet.create({
     selectedCategoryButton: {
         width: width * 0.28,
         aspectRatio: 1,
-        backgroundColor: gStyles.secondary_medium,
+        backgroundColor: gStyles.color_3,
         borderRadius: 100,
         marginHorizontal: width * 0.01,
         marginVertical: width * 0.02,
@@ -219,13 +261,13 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     categoryTitle: {
-        color: gStyles.secondary_medium,
+        color: gStyles.color_3,
         fontFamily: 'Lato-Bold',
         marginBottom: RFPercentage(1),
         fontSize: RFPercentage(1.2)
     },
     icon: {
-        color: gStyles.secondary_medium,
+        color: gStyles.color_3,
     },
     selectedCategoryTitle: {
         color: 'white',

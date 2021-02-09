@@ -18,12 +18,12 @@ function Wishlist(props){
     <View style={styles.container}>
         <Navbar />
         <View style={styles.headerContainer}>
-            <MaterialCommunityIcons  color={gStyles.secondary_dark} size={RFPercentage(3.5)} name="heart" />
+            <MaterialCommunityIcons  color={gStyles.color_3} size={RFPercentage(3.5)} name="heart" />
             <Text style={styles.headerText}>MY WISHLIST</Text>
         </View>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-            {props.wishlist.map(item => {
-                return <WishlistCard key={item.product._id} item={item} />
+            {props.wishlist.products.map(item => {
+                return <WishlistCard key={item._id} item={item} />
             })}
         </ScrollView>
     </View>
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         marginTop: height * 0.01,
-        color: gStyles.secondary_dark,
+        color: gStyles.color_3,
         fontSize: RFPercentage(3),
         letterSpacing: RFPercentage(0.6),
         fontFamily: 'Lato',

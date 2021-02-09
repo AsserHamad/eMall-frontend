@@ -1,4 +1,4 @@
-import { LOGIN, LOGIN_SELLER, LOGOUT } from './types';
+import { LOGIN, LOGIN_SELLER, LOGOUT, UPDATE_ACCOUNT } from './types';
 
 export const login = (account) => ({
     type: LOGIN,
@@ -13,4 +13,9 @@ export const loginSeller = (account) => ({
 
 export const logout = () => ({
     type: LOGOUT
+})
+
+export const updateAccount = (account) => ({
+    type: UPDATE_ACCOUNT,
+    account
 })

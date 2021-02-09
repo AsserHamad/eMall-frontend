@@ -1,4 +1,4 @@
-import { ADD_TO_WISHLIST, REMOVE_FROM_WISHLIST, QUANTITY_INCREASE_WISHLIST, QUANTITY_DECREASE_WISHLIST } from './types';
+import { ADD_TO_WISHLIST, REMOVE_FROM_WISHLIST, SET_WISHLIST } from './types';
 
 export const addToWishlist = (product) => ({
     type: ADD_TO_WISHLIST,
@@ -10,12 +10,7 @@ export const removeFromWishlist = (product) => ({
     product
 })
 
-export const wishlistIncreaseQuantity = (product) => ({
-    type: QUANTITY_INCREASE_WISHLIST,
-    product
-})
-
-export const wishlistDecreaseQuantity = (product) => ({
-    type: QUANTITY_DECREASE_WISHLIST,
-    product
+export const setWishlist = (wishlist) => ({
+    type: SET_WISHLIST,
+    wishlist
 })

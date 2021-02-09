@@ -1,11 +1,19 @@
-import { ADD_TO_WISHLIST, REMOVE_FROM_WISHLIST, QUANTITY_INCREASE_WISHLIST, QUANTITY_DECREASE_WISHLIST } from '../actions/types';
+import { ADD_TO_WISHLIST, REMOVE_FROM_WISHLIST, SET_WISHLIST } from '../actions/types';
 
 const initialState = {
-    wishlist: []
+    wishlist: {
+        products: []
+    }
 }
 
 const wishlistReducer = (state = initialState, action) => {
+    if(action.type === SET_WISHLIST)console.log('SETTING WISHLIST', action)
     switch(action.type){
+        case SET_WISHLIST: 
+            return {
+                ...state,
+                wishlist: action.wishlist
+            }
         case ADD_TO_WISHLIST:
             return {
                 ...state,
@@ -16,26 +24,6 @@ const wishlistReducer = (state = initialState, action) => {
                 ...state,
                 wishlist: state.wishlist.filter(prod => prod.product._id !== action.product._id)
             };
-        case QUANTITY_INCREASE_WISHLIST:
-            return {
-                ...state,
-                wishlist: state.wishlist.map(prod => {
-                    if(prod.product._id === action.product.product._id){
-                        prod.quantity++;
-                    }
-                    return prod;
-                })
-            }
-        case QUANTITY_DECREASE_WISHLIST:
-            return {
-                ...state,
-                wishlist: state.wishlist.map(prod => {
-                    if(prod.product._id === action.product.product._id && prod.quantity > 1){
-                        prod.quantity--;
-                    }
-                    return prod;
-                })
-            }
         default:
             return state;
     }

@@ -24,16 +24,24 @@ import CategoryPage from '../screens/CategoryPage';
 import Wishlist from '../screens/Wishlist';
 import SubcategoryPage from '../screens/SubcategoryPage';
 import Product from '../screens/Product';
+import ProductsListPage from '../screens/ProductsListPage';
 import Payment from '../screens/Payment';
 import Store from '../screens/Store/Store';
 import Icon from '../components/utils/Icon';
 import Profile from '../screens/Client/Profile';
 import StoreHome from '../screens/Store/StoreHome';
+import StoreSidebar from '../components/StoreSidebar';
+import StoreProducts from '../screens/Store/StoreProducts';
+import StoreProductsAdd from '../screens/Store/StoreProductAdd';
+import StorePageDashboard from '../screens/Store/StorePageDashboard.';
+import StoreOrders from '../screens/Store/StoreOrders';
+import MyAddresses from '../screens/Client/MyAddresses';
+import ConfirmPurchase from '../screens/Client/ConfirmPurchase';
+import MyOrders from '../screens/Client/MyOrders';
 
 
 const Drawers = createDrawerNavigator();
 const HomeStack = createStackNavigator();
-const StoreStack = createStackNavigator();
 const AuthStack = createStackNavigator();
 const WishlistStack = createStackNavigator();
 
@@ -44,16 +52,14 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Category" component={CategoryPage} options={({ route }) => ({title: route.params.name.en, headerShown: false})} />
     <HomeStack.Screen name="Subcategory" component={SubcategoryPage} options={({ route }) => ({ headerShown: false})} />
     <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
-    <HomeStack.Screen name="Payment" component={Payment} />
+    <HomeStack.Screen name="ProductsList" component={ProductsListPage} options={({ route }) => ({headerShown: false})} />
+    <HomeStack.Screen name="Payment" component={Payment}/>
+    <HomeStack.Screen name="Order" component={ConfirmPurchase} options={({ route }) => ({title: 'Order Complete'})} />
     <HomeStack.Screen name="Store" component={Store} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Profile" component={Profile} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="Addresses" component={MyAddresses} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="Orders" component={MyOrders} options={({ route }) => ({ headerShown: false })} />
   </HomeStack.Navigator>
-)
-
-const StoreStackScreen = () => (
-  <StoreStack.Navigator>
-    <StoreStack.Screen name="Home" component={StoreHome} options={{headerShown: false}} />
-  </StoreStack.Navigator>
 )
 
 const AuthStackScreen = () => (
@@ -90,11 +96,11 @@ const ClientDrawer = () => {
   const language = useLanguage();
   const loggedIn = useSelector(state => state.authReducer.loggedIn);
   return(
-    <Drawers.Navigator drawerPosition={language === 'ar' ? 'right' : 'left'} drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home" drawerContent={props => <SideBar {...props} />}>
+    <Drawers.Navigator drawerPosition={language === 'ar' ? 'right' : 'left'} statusBarAnimation drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home" drawerContent={props => <SideBar {...props} />}>
         <Drawers.Screen 
             headerShown="false"
             options={{
-              title: 'Home',
+              title: language === 'en' ? 'Home' : 'الرئيسية',
               drawerIcon: ({tintColor}) => <Icon type="Feather" name="log-in" size={16} color={tintColor} />
             }}
             name="Home"
@@ -102,8 +108,8 @@ const ClientDrawer = () => {
         />
         <Drawers.Screen 
             options={{
-              title: 'Wishlist',
-              drawerIcon: ({tintColor}) => <Icon type="Feather" name="heart" size={16} color={tintColor} />
+              title: language === 'en' ? 'Wishlist' : 'قائمة الرغبات',
+              drawerIcon: ({tintColor}) => <Icon type="Feather" name="heart" size={16} color={tintColor} />,
             }}
             name="Wishlist"
             component={WishlistStackScreen}
@@ -113,7 +119,7 @@ const ClientDrawer = () => {
           <Drawers.Screen
               headerShown="false"
               options={{
-                title: 'Register/Login',
+                title: language === 'en' ? 'Register/Login' : 'تسجيل الدخول',
                 drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="home" size={16} color={tintColor} />
               }} 
               name="Register/Login" component={AuthStackScreen}
@@ -134,20 +140,82 @@ const ClientDrawer = () => {
   )
 }
 
+const StoreStack = createStackNavigator();
+const ProductsStack = createStackNavigator();
+const StorePageStack = createStackNavigator();
+const StoreOrdersStack = createStackNavigator();
+
+const StoreStackScreen = () => (
+  <StoreStack.Navigator>
+    <StoreStack.Screen name="Home" component={StoreHome} options={{headerShown: false}} />
+  </StoreStack.Navigator>
+)
+
+const ProductsStackScreen = () => (
+  <ProductsStack.Navigator>
+    <ProductsStack.Screen name="Products" component={StoreProducts} options={{headerShown: false}} />
+    <ProductsStack.Screen name="Add Product" component={StoreProductsAdd} options={{headerShown: false}} />
+  </ProductsStack.Navigator>
+)
+
+const StorePageStackScreen = () => (
+  <StorePageStack.Navigator>
+    <StorePageStack.Screen name="Page" component={StorePageDashboard} options={{headerShown: false}} />
+  </StorePageStack.Navigator>
+)
+
+const StoreOrdersStackScreen = () => (
+  <StoreOrdersStack.Navigator>
+    <StoreOrdersStack.Screen name="Orders" component={StoreOrders} options={{headerShown: false}} />
+  </StoreOrdersStack.Navigator>
+)
+
 const StoreDrawer = () => {
   const languageText = useLanguageText('navigation');
   const language = useLanguage();
   const loggedIn = useSelector(state => state.authReducer.loggedIn);
   return (
-  <Drawers.Navigator drawerPosition={language === 'ar' ? 'right' : 'left'} drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home">
+  <Drawers.Navigator
+    edgeWidth={0}
+    drawerPosition={language === 'ar' ? 'right' : 'left'}
+    drawerStyle={{backgroundColor: gStyles.background}}
+    initialRouteName="Orders"
+    drawerContent={props => <StoreSidebar {...props} />}>
       <Drawers.Screen 
           headerShown="false"
           options={{
-            title: 'Home',
+            title: 'Dashboard',
             drawerIcon: ({tintColor}) => <Icon type="Feather" name="log-in" size={16} color={tintColor} />
           }}
           name="Home"
           component={StoreStackScreen}
+      />
+      <Drawers.Screen 
+          headerShown="false"
+          options={{
+            title: 'Products',
+            drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="box" size={16} color={tintColor} />
+          }}
+          name="Products"
+          component={ProductsStackScreen}
+      />
+      <Drawers.Screen 
+          headerShown="false"
+          options={{
+            title: 'Orders',
+            drawerIcon: ({tintColor}) => <Icon type="AntDesign" name="layout" size={16} color={tintColor} />
+          }}
+          name="Orders"
+          component={StoreOrdersStackScreen}
+      />
+      <Drawers.Screen 
+          headerShown="false"
+          options={{
+            title: 'Page Layout',
+            drawerIcon: ({tintColor}) => <Icon type="AntDesign" name="layout" size={16} color={tintColor} />
+          }}
+          name="Page"
+          component={StorePageStackScreen}
       />
   </Drawers.Navigator>
   )

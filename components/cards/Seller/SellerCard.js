@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import SellerCardProduct from './SellerCardProduct';
 import TextLato from '../../utils/TextLato';
@@ -9,9 +9,14 @@ import Icon from '../../utils/Icon';
 import { gStyles } from '../../../global.style';
 import { useEffect } from 'react';
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { useLanguage } from '../../../hooks/language';
 
 const SellerCard = ({ seller }) => {
     const [aspectRatio, setAspectRatio] = useState(4/3);
+    const navigation = useNavigation();
+    const language = useLanguage();
+    const en = language === 'en';
     useEffect(() => {
         Image.getSize(seller.logo, (width, height) => setAspectRatio(width/height));
     }, []);
@@ -21,10 +26,12 @@ const SellerCard = ({ seller }) => {
     };
     return (
             <View style={styles.container}>
-                <View style={styles.logoContainer}>
-                    <Image source={{uri: seller.logo}} style={{...styles.logo, aspectRatio}} />
+                <View style={{...styles.logoContainer, left: en ? width * 0.02 : null, right: en ? null : width * 0.02}}>
+                    <TouchableOpacity onPress={() => navigation.push('Store', {store: seller})} >
+                            <Image source={{uri: seller.logo}} style={{...styles.logo, aspectRatio}} />
+                    </TouchableOpacity>
                 </View>
-                <View style={headerStyles.container}>
+                <View style={{...headerStyles.container, alignItems: en ? 'flex-start' : 'flex-end', paddingRight: en ? 0 : width * 0.28}}>
                     <TextLato style={headerStyles.title}>{seller.title}</TextLato>
                     <View style={styles.categoriesContainer}>
                         {seller.categories.map(details => {
@@ -111,7 +118,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,
-        backgroundColor: gStyles.secondary_medium,
+        backgroundColor: gStyles.color_3,
         marginRight: width * 0.01
     }
 });
@@ -119,7 +126,7 @@ const styles = StyleSheet.create({
 const headerStyles = StyleSheet.create({
     container: {
         marginLeft: width * 0.28,
-        marginTop: height * 0.01
+        marginTop: height * 0.01,
     },
     title: {
         fontSize: RFPercentage(2.2)

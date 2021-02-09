@@ -9,6 +9,7 @@ import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
 import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const Profile = ({navigation, route}) => {
     const account = useSelector(state => state.authReducer.account);
@@ -38,24 +39,27 @@ const Profile = ({navigation, route}) => {
                 {/* LIST */}
                 <View style={{paddingHorizontal: width * 0.1}}>
                     <ListItem type="MaterialCommunityIcons" name="face-profile" text="my profile" />
-                    <ListItem type="FontAwesome5" name="truck-moving" text="my orders" />
+                    <ListItem type="FontAwesome5" name="truck-moving" text="my orders" destination="Orders" />
+                    <ListItem type="Entypo" name="address" text="my addresses" destination="Addresses" />
                     <ListItem type="FontAwesome" name="dollar" text="my payments" />
                     
                 </View>
             </View>
-            <Footer />
         </View>
     )
 }
 
-const ListItem = ({type, name, text}) => (
-    <View style={{alignItems: 'center', flexDirection: 'row', height: 60}}>
-        <Icon style={{marginLeft: width * 0.15, fontSize: 20, width: width * 0.13, alignItems: 'center'}} type={type} name={name} size={width * 0.08} />
-        <View>
-            <TextLato style={{textTransform: 'uppercase', marginLeft: width * 0.15}}>{text}</TextLato>
-        </View>
-    </View>
-)
+const ListItem = ({type, name, text, destination}) => {
+    const navigation = useNavigation();
+    return (
+        <TouchableOpacity activeOpacity={0.7} style={{alignItems: 'center', flexDirection: 'row', marginVertical: 13}} onPress={() => navigation.push(destination)}>
+            <Icon style={{marginLeft: width * 0.1, fontSize: 20, width: width * 0.13, alignItems: 'center'}} type={type} name={name} size={width * 0.08} />
+            <View>
+                <TextLato style={{textTransform: 'uppercase', marginLeft: width * 0.11}}>{text}</TextLato>
+            </View>
+        </TouchableOpacity>
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -70,7 +74,7 @@ const styles = StyleSheet.create({
     topContainer: {
         width: '100%',
         height: height * 0.4,
-        backgroundColor: gStyles.primary_light
+        backgroundColor: gStyles.color_0
     },
     profileContainer: {
         backgroundColor: gStyles.background,
@@ -84,7 +88,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1
     },
     titleContainer: {
-        backgroundColor: gStyles.secondary_medium,
+        backgroundColor: gStyles.color_3,
         borderRadius: 100,
         padding: 8,
         borderWidth: 3,

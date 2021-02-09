@@ -11,84 +11,6 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 import { MaterialIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 
-const products = [
-    {
-    _id: 0,
-    shortName: 'Adidas Running Shoes X23',
-    image: 'https://www.pngkit.com/png/full/3-31523_adidas-shoes-clipart-adidas-logo-adidas-shoes-png.png',
-    price: 1000,
-    discount: 0.4,
-    seller: {
-        name: 'Adidas',
-        logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/1280px-Adidas_Logo.svg.png',
-        width: 30,
-        height: 20
-    }
-    }, {
-        _id: 1,
-        shortName: 'Jubilee Air Jordans',
-        image: 'https://static.nike.com/a/images/t_prod_ss/w_640,c_limit,f_auto/588807a7-e33e-4b9b-af57-6688d33daf33/air-jordan-11-jubilee-release-date.jpg',
-        price: 5900,
-        discount: 0.2,
-        seller: {
-            name: 'Nike',
-            logo: 'https://i.pinimg.com/originals/9c/d1/bf/9cd1bf6c2d1a88e8ac473f62a2898c62.png',
-            width: 30,
-            height: 30
-        },
-
-    }, {
-        _id: 2,
-        shortName: 'Nike Sportswear Down-Fill Windrunner',
-        image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/4f3a666c-b4cb-4ab6-b92a-3da6d69ba32e/sportswear-down-fill-windrunner-jacket-hHNjxL.jpg',
-        price: 4500,
-        discount: 0.3,
-        seller: {
-            name: 'Nike',
-            logo: 'https://i.pinimg.com/originals/9c/d1/bf/9cd1bf6c2d1a88e8ac473f62a2898c62.png',
-            width: 30,
-            height: 30
-        },
-
-    }, {
-        _id: 0,
-        shortName: 'Adidas Running Shoes X23',
-        image: 'https://www.pngkit.com/png/full/3-31523_adidas-shoes-clipart-adidas-logo-adidas-shoes-png.png',
-        price: 1000,
-        discount: 0.4,
-        seller: {
-            name: 'Adidas',
-            logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/1280px-Adidas_Logo.svg.png',
-            width: 30,
-            height: 20
-        }
-    }, {
-        _id: 1,
-        shortName: 'Jubilee Air Jordans',
-        image: 'https://static.nike.com/a/images/t_prod_ss/w_640,c_limit,f_auto/588807a7-e33e-4b9b-af57-6688d33daf33/air-jordan-11-jubilee-release-date.jpg',
-        price: 5900,
-        discount: 0.2,
-        seller: {
-            name: 'Nike',
-            logo: 'https://i.pinimg.com/originals/9c/d1/bf/9cd1bf6c2d1a88e8ac473f62a2898c62.png',
-            width: 30,
-            height: 30
-        },
-
-    }, {
-    _id: 2,
-    shortName: 'Nike Sportswear Down-Fill Windrunner',
-    image: 'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/4f3a666c-b4cb-4ab6-b92a-3da6d69ba32e/sportswear-down-fill-windrunner-jacket-hHNjxL.jpg',
-    price: 4500,
-    discount: 0.3,
-    seller: {
-        name: 'Nike',
-        logo: 'https://i.pinimg.com/originals/9c/d1/bf/9cd1bf6c2d1a88e8ac473f62a2898c62.png',
-        width: 30,
-        height: 30
-    },
-
-}];
 
 const SubcategoryPage = (props) => {
     const [prods, setProds] = useState([]);
@@ -112,10 +34,10 @@ const SubcategoryPage = (props) => {
         <View style={styles.container}>
             <Header details={{title: details.name.en}} />
             <View style={styles.sortButton}>
-                <MaterialIcons name="sort" size={40} color={gStyles.primary_light} />
+                <MaterialIcons name="sort" size={40} color={gStyles.color_0} />
             </View>
             <Image source={{uri: "https://img.freepik.com/free-psd/new-style-sale-promotion-banner-template_85212-146.jpg?size=626&ext=jpg&ga=GA1.2.356975455.1604448000"}} style={styles.banner} />
-            {!sellers.length ? <View style={{flex: 1, justifyContent: 'center'}}><ActivityIndicator size={height * 0.1} color={gStyles.primary_light} /></View> :
+            {!sellers.length ? <View style={{flex: 1, justifyContent: 'center'}}><ActivityIndicator size={height * 0.1} color={gStyles.color_0} /></View> :
             <FlatList
                 data={sellers}
                 showsVerticalScrollIndicator={false}

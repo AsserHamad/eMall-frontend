@@ -3,18 +3,17 @@ import TextLato from '../../utils/TextLato';
 import { LineChart } from "react-native-chart-kit";
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { gStyles } from '../../../global.style';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const SalesGraph = (props) => {
     return(
         <View style={styles.container}>
-            <TextLato>Sales Per Month</TextLato>
-            <View style={{alignItems: 'center'}}>
-                
+            <TextLato style={styles.title} bold>Monthly Sales</TextLato>
             <LineChart
                 data={{
-                labels: ["January", "February", "March", "April"],
+                labels: ["Jan", "Feb", "Mar", "Apr"],
                 datasets: [
                     {
                     data: [
@@ -26,41 +25,46 @@ const SalesGraph = (props) => {
                     }
                 ]
                 }}
-                width={width * 0.9} // from react-native
+                width={width} // from react-native
                 height={220}
+                // transparent
                 withHorizontalLabels={false}
-                transparent
                 withHorizontalLines={false}
                 withVerticalLines={false}
                 withShadow={false}
-                withVerticalLabels={false}
-                yAxisLabel="$"
+                // withVerticalLabels={false}
+                // yAxisLabel="$"
                 yAxisSuffix="k"
                 yAxisInterval={1} // optional, defaults to 1
+                
                 chartConfig={{
-                    backgroundColor: gStyles.secondary_dark,
-                    backgroundGradientFrom: gStyles.primary_medium,
-                    backgroundGradientTo: gStyles.secondary_dark,
-                    decimalPlaces: 2, // optional, defaults to 2dp
-                    color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`,
+                    backgroundColor: gStyles.color_3,
+                    backgroundGradientFrom: "#2C62FF",
+                    backgroundGradientTo: "#2C62FF",
+                    decimalPlaces: 1, // optional, defaults to 2dp
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    propsForLabels: {
+                        fontSize: RFPercentage(1.5),
+                        fontFamily: 'Lato'
+                    },
                     style: {
-                        borderRadius: 6,
-                        alignItems: 'center'
+                        paddingTop: 20
+                        // borderRadius: 6,
                     },
                     propsForDots: {
-                        r: "3",
+                        r: "2",
                         strokeWidth: "2",
                         stroke: "white"
                     }
                 }}
                 bezier
                 style={{
-                marginVertical: 8,
-                borderRadius: 6
+                    marginVertical: 8,
+                    alignItems: 'center',
+                    borderRadius: 6,
                 }}
             />
-            </View>
             </View>
             )
 
@@ -68,8 +72,15 @@ const SalesGraph = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        width: width * 0.9,
+        backgroundColor: '#2C62FF',
+        width: width,
         marginTop: height * 0.05
+    },
+    title: {
+        color: 'white',
+        marginTop: height * 0.02,
+        marginLeft: width * 0.03,
+        fontSize: RFPercentage(2.3)
     }
 })
 

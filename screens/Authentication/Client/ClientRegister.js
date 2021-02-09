@@ -110,14 +110,14 @@ const ClientRegister = (props) => {
             alert(`facebook login error: ${message}`)
         }
     }
+    if(!fontsLoaded)
+        return <Text>Loading</Text>;
 
     return (
-        <View>
-        {fontsLoaded ? 
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Sign Up</Text>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form to complete your registration process</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Sign Up</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form to complete your registration process</Text>
             </View>
             <View style={styles.formContainer}>
                     {/* <View style={styles.profilePictureContainer}>
@@ -140,25 +140,21 @@ const ClientRegister = (props) => {
                     <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>REGISTER</Text>
                 </View>
             </TouchableOpacity>
-            <View style={{ position: 'absolute', bottom: headerHeight - 10}}>
-                {/* Other Logins */}
-                <SafeAreaView style={styles.alternativeLogins}>
-                    <TouchableOpacity onPress={facebookRegister}>
-                        <View style={styles.alternativeLoginButtonF}>
-                            <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign up with Facebook</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <View style={styles.alternativeLoginButtonG}>
-                            <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign up with Google</Text>
-                        </View>
-                    </TouchableOpacity>
-                </SafeAreaView>
-            </View>
-        </View>
-        : <Text>Loading</Text>}
+            {/* Other Logins */}
+            <SafeAreaView style={styles.alternativeLogins}>
+                <TouchableOpacity onPress={facebookRegister}>
+                    <View style={styles.alternativeLoginButtonF}>
+                        <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
+                        <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign up with Facebook</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View style={styles.alternativeLoginButtonG}>
+                        <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
+                        <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign up with Google</Text>
+                    </View>
+                </TouchableOpacity>
+            </SafeAreaView>
         </View>
     )
 }
@@ -168,8 +164,7 @@ const styles = StyleSheet.create({
         backgroundColor: gStyles.background,
         height: height + Constants.statusBarHeight,
         alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'column',
+        flex: 1
     },
     headerContainer: {
         width: width * 0.9,
@@ -190,7 +185,7 @@ const styles = StyleSheet.create({
         marginTop: height * 0.02
     },
     submitButton: {
-        backgroundColor: gStyles.primary_light,
+        backgroundColor: gStyles.color_0,
         alignItems: 'center',
         justifyContent: 'center',
         width: width * 0.9,
@@ -202,12 +197,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: height * 0.025,
     },
     alternativeLogins: {
-        backgroundColor: gStyles.secondary,
+        backgroundColor: gStyles.color_1,
         width,
         height: height * 0.2,
         marginTop: 20,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 0
     },
     alternativeLoginButtonF: {
         width: width * 0.9,

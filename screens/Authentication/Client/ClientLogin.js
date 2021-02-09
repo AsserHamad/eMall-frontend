@@ -12,7 +12,10 @@ import * as Google from 'expo-google-app-auth';
 // Redux
 import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
+import { setCart } from '../../../src/actions/cart';
 import DisabledButton from '../DisabledButton';
+import Icon from '../../../components/utils/Icon';
+import { setWishlist } from '../../../src/actions/wishlist';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
@@ -32,7 +35,13 @@ const ClientLogin = (props) => {
         .then(res => {
             if(!res.status){
                 setErrors([]);
-                res.client.verified? props.login(res) : props.navigation.replace('ClientLoginSuccess', {account: res.client})
+                if(res.client.verified){
+                    console.log(`CART: I have logged in, this is my cart`, res.client)
+                    props.setCart(res.client.cart);
+                    props.setWishlist(res.client.wishlist)
+                    props.login(res)
+                 }
+                 else props.navigation.replace('ClientLoginSuccess', {account: res.client})
             }
             else {
                 setErrors(res.message ? [res.message] : res.errors)
@@ -65,7 +74,10 @@ const ClientLogin = (props) => {
                         body: JSON.stringify(data)
                     })
                     .then(res => res.json())
-                    .then(res => props.login(res))
+                    .then(res => {
+                        setCart(res.client.cart);
+                        props.login(res)
+                    })
                 })
                 .catch(e => console.log(e))
             }
@@ -86,22 +98,22 @@ const ClientLogin = (props) => {
             console.log(accessToken, user)
         }
     }
+    if(!fontsLoaded)
+        return <Text>Loading</Text>
     return (
-        <View>
-        {fontsLoaded ? 
         <View style={styles.container}>
             <View style={styles.backContainer}>
-                <TouchableOpacity onPress={() => props.navigation.navigate('Home')}>
-                    <AntDesign name="home" size={RFValue(25)} color={gStyles.secondary} />
+                <TouchableOpacity onPress={() => props.navigation.openDrawer()}>
+                    <Icon type="FontAwesome5" name="bars" size={RFValue(25)} color={gStyles.secondary} />
                 </TouchableOpacity>
             </View>
             <Image style={styles.image} source={require('../../../assets/logo.png')} />
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Welcome Back!</Text>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to continue shopping</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Welcome Back!</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to continue shopping</Text>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <Text style={{color: gStyles.primary_light, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
+                {errors.map(err => <Text style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
@@ -122,7 +134,7 @@ const ClientLogin = (props) => {
                     onChangeText={(val) => setPassword(val)}
                     style={styles.input} />
                 <TouchableOpacity>
-                    <Text style={{color: gStyles.primary_light, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
+                    <Text style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
                 </TouchableOpacity>
             </View>
             <DisabledButton onPressIfActive={login} array={[email, password]}>
@@ -133,16 +145,16 @@ const ClientLogin = (props) => {
             <View style={styles.others}>
                 {/* Register Now */}
                 <View style={{display:'flex', flexDirection: 'row'}}>
-                    <Text style={{color: gStyles.secondary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Don't have an account?</Text>
+                    <Text style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Don't have an account?</Text>
                     <TouchableOpacity onPress={() => props.navigation.push('ClientRegister')}>
-                        <Text style={{marginLeft: 5, color: gStyles.primary_light, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
+                        <Text style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
                     </TouchableOpacity>
                 </View>
                 {/* Seller Account */}
                 <View style={{display:'flex', flexDirection: 'row', marginTop: 5}}>
-                    <Text style={{color: gStyles.secondary, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Are you a seller?</Text>
+                    <Text style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Are you a seller?</Text>
                     <TouchableOpacity onPress={() => props.navigation.push('SellerLogin')}>
-                        <Text style={{marginLeft: 5, color: gStyles.primary_light, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Login Here</Text>
+                        <Text style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Login Here</Text>
                     </TouchableOpacity>
                 </View>
                 </View>
@@ -151,19 +163,17 @@ const ClientLogin = (props) => {
                     <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButtonF}>
                             <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFPercentage(1.5), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</Text>
+                            <Text style={{color: 'white', fontSize: RFPercentage(1.2), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</Text>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButtonG}>
                             <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFPercentage(1.5), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</Text>
+                            <Text style={{color: 'white', fontSize: RFPercentage(1.2), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</Text>
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>
             </View>
-        </View>
-        : <Text>Loading</Text>}
         </View>
     )
 }
@@ -171,11 +181,12 @@ const ClientLogin = (props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: gStyles.background,
-        height: height + Constants.statusBarHeight,
+        height: height,
         alignItems: 'center',
         paddingTop: Constants.statusBarHeight,
         display: 'flex',
         flexDirection: 'column',
+        flex: 1
     },
     backContainer: {
         width,
@@ -208,7 +219,7 @@ const styles = StyleSheet.create({
         fontFamily: gStyles.fontFamily
     },
     submitButton: {
-        backgroundColor: gStyles.primary_medium,
+        backgroundColor: gStyles.color_1,
         alignItems: 'center',
         justifyContent: 'center',
         width: width * 0.9,
@@ -218,20 +229,21 @@ const styles = StyleSheet.create({
     },
     bottomContainer: {
         position: 'absolute',
-        bottom: RFPercentage(-1)
+        bottom: RFPercentage(0)
     },
     others: {
         paddingHorizontal: height * 0.025,
     },
     alternativeLogins: {
-        backgroundColor: gStyles.secondary,
+        backgroundColor: gStyles.color_1,
         width,
-        height: height * 0.23,
+        // height: height * 0.23,
         marginTop: height * 0.02,
         alignItems: 'center',
         justifyContent: 'center'
     },
     alternativeLoginButtonF: {
+        marginTop: height * 0.02,
         width: width * 0.9,
         backgroundColor: '#3b5998',
         height: height * 0.06,
@@ -242,7 +254,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     alternativeLoginButtonG: {
-        marginTop: height * 0.01,
+        marginVertical: height * 0.02,
         width: width * 0.9,
         backgroundColor: '#EA4335',
         height: height * 0.06,
@@ -265,7 +277,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        login: (account) => dispatch(login(account))
+        login: (account) => dispatch(login(account)),
+        setCart: (cart) => dispatch(setCart(cart)),
+        setWishlist: (wishlist) => dispatch(setWishlist(wishlist))
     }
 }
 

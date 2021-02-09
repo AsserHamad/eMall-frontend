@@ -13,10 +13,12 @@ import Icon from '../components/utils/Icon';
 import ScrollCards from '../components/ScrollCards';
 import StoreCard from '../components/cards/StoreCard';
 import SimilarProductCard from '../components/cards/Product/SimilarProductCard';
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../src/actions/cart';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCart } from '../src/actions/cart';
 import ProductReviewCard from '../components/cards/Product/ProductReviewCard';
 import { useNavigation } from '@react-navigation/native';
+import { useRef } from 'react';
+import Toast from 'react-native-easy-toast';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const Product = (props) => {
@@ -26,8 +28,13 @@ const Product = (props) => {
     const [similarStores, setSimilarStores] = useState([]);
     const [similarProducts, setSimilarProducts] = useState([]);
     const [logoAspectRatio, setLogoAspectRatio] = useState(4/3);
+    const [cartLoading, setCartLoading] = useState(false);
     const language = useLanguage();
     const dispatch = useDispatch();
+    const cartProducts = useSelector(state => state.cartReducer.cart.products);
+    const inCart = () => cartProducts.filter(cartProd => cartProd._id === product._id).length > 0;
+    const token = useSelector(state => state.authReducer.token);
+    const toast = useRef();
 
     useEffect(() => {
         fetchProduct(props.route.params.product._id);
@@ -37,11 +44,16 @@ const Product = (props) => {
         setAddedPrice(picks.reduce((pickA, pickB) => pickA + pickB.extraPrice ,0));
     }, [picks])
 
+    const showToast = message => {
+        toast.current.show(message);
+    }
+
     const changePick = (option, newPick) => {
+        // console.log(option, newPick)
         setPicks(picks => {
             return picks.map(pick => {
-                if(pick._id === option._id){
-                    pick.title = newPick.title;
+                if(pick.option === option._id){
+                    pick.pick = newPick._id;
                     pick.extraPrice = newPick.extraPrice ? newPick.extraPrice : 0;
                     return pick;
                 } else return pick;
@@ -53,9 +65,10 @@ const Product = (props) => {
         fetch(`${Constants.manifest.extra.apiUrl}/product/${product}`)
         .then(res => res.json())
         .then(res => {
+            console.log(res.options)
             setPicks(res.options.map(option => ({
-                _id: option._id,
-                title: option.options[0].title,
+                option: option._id,
+                pick: option.options[0]._id,
                 extraPrice: option.options[0].extraPrice ? option.options[0].extraPrice : 0
             })))
             res.reviewAverage = {average: 5, number: 4730};
@@ -84,13 +97,35 @@ const Product = (props) => {
             })
         });
     }
+
+    const addToCartHelper = () => {
+        console.log(picks);
+        const quantity = 1;
+        const options = picks;
+
+        setCartLoading(true);
+        fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
+            method: 'post',
+            headers: {token, 'Content-Type': 'application/json'},
+            body: JSON.stringify({product: product._id, options, quantity})
+        })
+        .then(res => res.json())
+        .then(res => {
+            setCartLoading(false);
+            showToast(`Added to Cart Successfully!`);
+            console.log(`CART: Response from server for cart update is`, res)
+            dispatch(setCart(res))
+        })
+        .catch(err => console.log(err))
+    }
     return (
         <View style={styles.container}>
+            <Toast ref={_toast => toast.current = _toast} />
             <Header search={false} details={{title: product ? product.title[language] : ''}} />
-            {!product ? <View style={{width, height, paddingTop: '10%', alignItems: 'center'}}><ActivityIndicator color={gStyles.primary_light} size={RFPercentage(10)} /></View> :
+            {!product ? <View style={{width, height, paddingTop: '10%', alignItems: 'center'}}><ActivityIndicator color={gStyles.color_0} size={RFPercentage(10)} /></View> :
                 <ScrollView contentContainerStyle={{alignItems: 'center'}}>
                 <Swiper
-                    activeDotColor={gStyles.primary_light}
+                    activeDotColor={gStyles.color_0}
                     containerStyle={styles.swiper}
                 >
                     {product.images.map(image => (
@@ -130,8 +165,8 @@ const Product = (props) => {
                                                         <TouchableOpacity key={Math.random()} activeOpacity={0.4} onPress={() => {
                                                             if(!picked)fetchProduct(variant.product);
                                                         }}>
-                                                            <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.primary_light : '#aaa'}}>
-                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.primary_light : '#aaa'}}>{variant.variant[language]}</TextLato>
+                                                            <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_0 : '#aaa'}}>
+                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.color_0 : '#aaa'}}>{variant.variant[language]}</TextLato>
                                                             </View>
                                                         </TouchableOpacity>
                                                     )
@@ -147,13 +182,13 @@ const Product = (props) => {
 
                                             <View style={{flexDirection: 'row', marginBottom: height * 0.02, width: '100%'}}>
                                                 {option.options.map(optionPick => {
-                                                    const picked = picks.filter(pick => pick.title[language] === optionPick.title[language]).length ? true : false;
+                                                    const picked = picks.filter(pick => pick.pick === optionPick._id).length ? true : false;
                                                     return (
                                                         <TouchableOpacity key={Math.random()} activeOpacity={0.4} onPress={() => {
                                                             changePick(option, optionPick)
                                                         }}>
-                                                            <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.primary_light : '#aaa'}}>
-                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.primary_light : '#aaa'}}>{optionPick.title[language]}</TextLato>
+                                                            <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_2 : '#aaa'}}>
+                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.color_2 : '#aaa'}}>{optionPick.title[language]}</TextLato>
                                                             </View>
                                                         </TouchableOpacity>
                                                     )
@@ -173,12 +208,21 @@ const Product = (props) => {
                         </View>
                         
                         {/* CART */}
-                        <TouchableOpacity onPress={() => dispatch(addToCart({product, picks, quantity: 1}))}>
+                        {inCart ? 
+                        <TouchableOpacity onPress={() => {addToCartHelper()}}>
                             <View style={mainStyles.addToCartButton}>
                                 <TextLato style={{color: 'white', fontSize: RFPercentage(2), marginHorizontal: width * 0.03}}>ADD TO CART</TextLato>
                                 <Icon type="FontAwesome5" color="white" size={RFPercentage(2)} name="cart-plus" />
                             </View>
                         </TouchableOpacity>
+                        :
+                        <TouchableOpacity onPress={() => addToCartHelper()}>
+                            <View style={mainStyles.addToCartButton}>
+                                <TextLato style={{color: 'white', fontSize: RFPercentage(2), marginHorizontal: width * 0.03}}>ADD TO CART</TextLato>
+                                <Icon type="FontAwesome5" color="white" size={RFPercentage(2)} name="cart-plus" />
+                            </View>
+                        </TouchableOpacity>
+                        }
 
                         {/* DESCRIPTION */}
                         <View style={mainStyles.descriptionContainer}>
@@ -194,7 +238,7 @@ const Product = (props) => {
                                     const num = product.specifications.indexOf(spec) % 2 === 0;
                                     return (
                                         <View key={Math.random()} style={{...mainStyles.specificationTile, 
-                                            backgroundColor: num ? gStyles.secondary_light : 'transparent'}}>
+                                            backgroundColor: num ? gStyles.background : 'transparent'}}>
                                             <View style={{width: '50%'}}>
                                                 <TextLato bold >{spec.title[language]}</TextLato>
                                             </View>
@@ -260,7 +304,7 @@ const styles = StyleSheet.create({
         marginBottom: 1,
     },
     swiperActiveDot: {
-        backgroundColor:gStyles.primary_light, 
+        backgroundColor:gStyles.color_0, 
         width: 14, 
         height: 3,
         marginLeft: 3, 
@@ -285,11 +329,11 @@ const mainStyles = StyleSheet.create({
         marginBottom: height * 0.01
     },
     price: {
-        color: gStyles.primary_light,
+        color: gStyles.color_0,
         fontSize: RFPercentage(2.4),
     },
     currency: {
-        color: gStyles.secondary_medium,
+        color: gStyles.color_3,
         fontSize: RFPercentage(1.8),
         marginRight: width * 0.02
 
@@ -298,7 +342,15 @@ const mainStyles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: gStyles.primary_light,
+        backgroundColor: gStyles.color_1,
+        height: 50,
+        marginBottom: height * 0.05,
+    },
+    removeFromCartButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: gStyles.color_0,
         height: 50,
         marginBottom: height * 0.05,
     },

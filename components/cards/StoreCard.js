@@ -12,7 +12,7 @@ function StoreCard(props){
             <Text style={styles.title}>{store.title}</Text>
             <View style={styles.categories}>
                 {store.categories.map(category => (
-                    <View style={{...styles.categoryContainer, backgroundColor: gStyles.secondary_medium}} key={Math.random()}>
+                    <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={Math.random()}>
                         <Icon type={category.iconType} color="white" name={category.icon} size={12} style={styles.icon} />
                     </View>
                 ))}

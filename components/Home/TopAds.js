@@ -30,7 +30,7 @@ function TopAds(){
 
 const styles = StyleSheet.create({
     swiper: {
-        height: 210
+        height: 210,
     },
     swiperImage: {
         height: 210,
@@ -38,17 +38,19 @@ const styles = StyleSheet.create({
     },
     swiperDot: {
         backgroundColor:gStyles.background, 
-        width: 14, 
-        height: 3,
+        width: 10, 
+        height: 10,
+        borderRadius: 100,
         marginLeft: 3, 
         marginRight: 3, 
         marginTop: 3, 
         marginBottom: 1,
     },
     swiperActiveDot: {
-        backgroundColor:gStyles.primary_light, 
-        width: 14, 
-        height: 3,
+        backgroundColor:gStyles.color_0, 
+        width: 10, 
+        height: 10,
+        borderRadius: 100,
         marginLeft: 3, 
         marginRight: 3, 
         marginTop: 3, 

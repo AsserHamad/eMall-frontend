@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Dimensions, Text } from 'react-native';
-import Searchbar from './Searchbar';
+import StoreSearchbar from './StoreSearchbar';
 import Constants from 'expo-constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
@@ -8,15 +8,16 @@ import { connect, useSelector } from 'react-redux';
 import { useLanguageText, useLanguage } from '../../hooks/language';
 import { useNavigation } from '@react-navigation/native';
 import TextLato from '../utils/TextLato';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
 const width = Dimensions.get('window').width;
 
-function Navbar(props){
+function StoreNavbar({searchbar, title}){
     const [disabled, setDisabled] = useState(false);
     const language = useLanguage();
     const languageText = useLanguageText('navbar');
     const navigation = useNavigation();
-    const cartProducts = useSelector(state => state.cartReducer.cart.products);
+    const cart = useSelector(state => state.cartReducer.cart);
 
     useEffect(() => {
         const timer = setTimeout(() => setDisabled(false), 1000);
@@ -32,7 +33,7 @@ function Navbar(props){
 
                 {/* Logo */}
                 <View style={styles.logoContainer}>
-                    <Image source={require('../../assets/logoM.png')} style={styles.logo} />
+                    <TextLato bold style={{fontSize: RFPercentage(2.5)}}>{title}</TextLato>
                 </View>
                 
                 {/* Cart */}
@@ -45,14 +46,14 @@ function Navbar(props){
                     }
                     style={styles.burgerContainer}
                 >
-                    <View style={styles.cartNumberContainer}>
-                        <TextLato style={{color: 'black'}}>{cartProducts.length}</TextLato>
+                    {/* <View style={styles.cartNumberContainer}>
+                        <Text style={{color: 'black'}}>{cart.length}</Text>
                     </View>
-                    <FontAwesome5 name="shopping-cart" color={gStyles.color_3} size={ 27 }/>
+                    <FontAwesome5 name="shopping-cart" color={gStyles.color_3} size={ 27 }/> */}
                 </TouchableOpacity>
             </View>
             {/* Search Bar */}
-            {props.searchbar && <Searchbar />}
+            {searchbar && <StoreSearchbar />}
 
         </View>
     )
@@ -63,10 +64,9 @@ const getLanguageStyle = (lang, style) => lang === 'ar' ? styles[`${style}_ar`] 
 const styles = StyleSheet.create({
     container: {
         width,
-        paddingTop: Constants.statusBarHeight+ 5,
         paddingBottom: 10,
+        paddingTop: Constants.statusBarHeight + 10,
         // height: 100,
-        display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
     },
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Navbar;
+export default StoreNavbar;

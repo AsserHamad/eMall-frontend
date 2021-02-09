@@ -119,13 +119,13 @@ const SellerRegister = (props) => {
         }
     }
 
+    if(!fontsLoaded)
+        return <Text>Loading</Text>;
     return (
-        <View>
-        {fontsLoaded ? 
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Data</Text>
-                <Text style={{color: gStyles.secondary, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form with your personal information</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Data</Text>
+                <Text style={{color: gStyles.color_1, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form with your personal information</Text>
             </View>
             <KeyboardAvoidingView style={styles.formContainer}>
                     {/* <View style={styles.profilePictureContainer}>
@@ -144,7 +144,6 @@ const SellerRegister = (props) => {
                     <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12), marginRight: RFValue(6)}}>NEXT</Text>
                     <AntDesign size={RFValue(12)} color="white" name="arrowright" />
             </DisabledButton>
-            <View style={{ position: 'absolute', bottom: headerHeight - 10}}>
                 {/* Other Logins */}
                 {!facebookId && <SafeAreaView style={styles.alternativeLogins}>
                     <TouchableOpacity onPress={facebookRegister}>
@@ -160,9 +159,6 @@ const SellerRegister = (props) => {
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>}
-            </View>
-        </View>
-        : <Text>Loading</Text>}
         </View>
     )
 }
@@ -170,10 +166,11 @@ const SellerRegister = (props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: gStyles.background,
-        height: height + Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight,
         alignItems: 'center',
         display: 'flex',
         flexDirection: 'column',
+        flex: 1
     },
     headerContainer: {
         width: width * 0.9,
@@ -197,12 +194,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: height * 0.025,
     },
     alternativeLogins: {
-        backgroundColor: gStyles.secondary,
+        backgroundColor: gStyles.color_1,
         width,
         height: height * 0.2,
         marginTop: 20,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 0
     },
     alternativeLoginButtonF: {
         width: width * 0.9,
