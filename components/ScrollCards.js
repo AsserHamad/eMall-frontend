@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
 import { gStyles } from '../global.style';
 import Icon from './utils/Icon';
+import TextLato from './utils/TextLato';
 
 function ScrollCards(props){
     const title = props.title;
@@ -18,7 +19,7 @@ function ScrollCards(props){
         <View style={{...styles.container, ...props.style}}>
         <View style={styles.topContainer}>
             <View style={styles.topLeftContainer}>
-                <Text style={styles.title}>{title}</Text>
+                <TextLato style={styles.title}>{title}</TextLato>
                 {countdown && 
                 <View style={styles.countDownContainer}>
                     <Icon type="MaterialIcons" size={18} name="watch-later" style={{color: gStyles.color_0, marginRight: 4}} />
@@ -33,7 +34,7 @@ function ScrollCards(props){
                 </View>}
             </View>
             <View style={styles.topRightContainer}>
-                <Text style={styles.topRightViewMore}>View More</Text>
+                <TextLato style={styles.topRightViewMore}>View More</TextLato>
             </View>
         </View>
             <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.containerContent} horizontal>

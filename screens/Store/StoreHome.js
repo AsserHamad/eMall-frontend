@@ -20,6 +20,7 @@ import SalesGraph from '../../components/Store/Dashboard/SalesGraph';
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar';
 import TotalSales from '../../components/Store/Dashboard/TotalSales';
 import TotalViews from '../../components/Store/Dashboard/TotalViews';
+import CurrentFunds from '../../components/Store/Dashboard/CurrentFunds';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -34,13 +35,19 @@ const StoreHome = ({navigation, route}) => {
                     <TextLato style={styles.name}>Hello, {seller.name}</TextLato>
                     <TextLato italic style={styles.jobTitle}>{seller.title}</TextLato>
                 </View>
-                <View style={{marginVertical: height * 0.02, flexDirection: 'row', padding: width * 0.05, backgroundColor: 'white'}}>
+                <View style={{marginTop: height * 0.02, flexDirection: 'row', padding: width * 0.05, backgroundColor: 'white'}}>
                     <View style={{width: '70%', justifyContent: 'center'}}><TextLato bold style={{fontSize: RFPercentage(3)}}>{store.title}</TextLato></View>
                     <View style={{width: '30%', alignItems: 'center', justifyContent: 'center'}}><Image source={{uri: store.logo}} style={{width: width * 0.15, height: width * 0.15}} /></View>
                 </View>
 
+                {/* CUrrent Funds */}
+                <CurrentFunds />
+                
                 {/* SALES */}
                 <TotalSales />
+                {/* GRAPH */}
+                <SalesGraph />
+
                 
                 {/* VIEWS */}
                 <View>
@@ -49,8 +56,6 @@ const StoreHome = ({navigation, route}) => {
                     <TotalViews />
                 </View>
 
-                {/* GRAPH */}
-                <SalesGraph />
             </ScrollView>
         </View>
     )

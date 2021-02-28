@@ -15,15 +15,17 @@ import { useLanguage } from '../../../hooks/language';
 const SellerCard = ({ seller }) => {
     const [aspectRatio, setAspectRatio] = useState(4/3);
     const navigation = useNavigation();
+    const [reviews, setReviews] = useState({average: 0, number: 0})
     const language = useLanguage();
     const en = language === 'en';
     useEffect(() => {
         Image.getSize(seller.logo, (width, height) => setAspectRatio(width/height));
+        const average = seller.reviews.reduce((total, next) => total + next.stars, 0) / seller.reviews.length;
+        setReviews({
+            average: average || 0,
+            number: seller.reviews.length
+        })
     }, []);
-    seller.reviews = {
-        average: 4,
-        number: 200
-    };
     return (
             <View style={styles.container}>
                 <View style={{...styles.logoContainer, left: en ? width * 0.02 : null, right: en ? null : width * 0.02}}>
@@ -40,13 +42,13 @@ const SellerCard = ({ seller }) => {
                     </View>
                     <View style={styles.reviewsContainer}>
                         {[0, 1, 2, 3, 4].map((elem) => {
-                            const num = seller.reviews.average - elem;
+                            const num = reviews.average - elem;
                             return num > 0.5 ? 
                                 <Icon type="FontAwesome" key={Math.random()} name="star" size={RFPercentage(1.3)} color="#ffe234" /> : num > 0 ?
                                 <Icon type="FontAwesome" key={Math.random()} name="star-half" size={RFPercentage(1.3)} color="#ffe234" /> :
                                 null
                         })}
-                        <Text style={styles.reviewNumber}>({seller.reviews.number})</Text>
+                        <TextLato style={styles.reviewNumber}>({reviews.number})</TextLato>
                     </View>
                 </View>
                 <ScrollView horizontal>
@@ -62,14 +64,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         marginTop: height * 0.035,
         borderRadius: 5,
-        // shadowColor: "#000",
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 2,
-        // },
-        // shadowOpacity: 0.25,
-        // shadowRadius: 3.84,
-        // elevation: 5,
     },
     logoContainer: {
         width: width * 0.23,
@@ -109,6 +103,7 @@ const styles = StyleSheet.create({
     categoriesContainer: {
         display: 'flex',
         flexDirection: 'row',
+        flexWrap: 'wrap',
         marginTop: height * 0.005,
     },
     category: {

@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
-import TextLato from '../utils/TextLato';
 import SellerCardProduct from '../cards/Seller/SellerCardProduct';
 
 const BrowseComponent = ({id}) => {
@@ -21,9 +20,5 @@ const BrowseComponent = ({id}) => {
         </ScrollView>
     )
 }
-
-const styles = StyleSheet.create({
-
-})
 
 export default BrowseComponent;

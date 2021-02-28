@@ -38,12 +38,20 @@ import StoreOrders from '../screens/Store/StoreOrders';
 import MyAddresses from '../screens/Client/MyAddresses';
 import ConfirmPurchase from '../screens/Client/ConfirmPurchase';
 import MyOrders from '../screens/Client/MyOrders';
+import StoreAds from '../screens/Store/StoreAds';
+import HomeAds from '../screens/Store/Ads/HomeAds';
+import BannerAds from '../screens/Store/Ads/BannerAds';
+import StoreMembers from '../screens/Store/StoreMembers';
+import AddMembers from '../components/Store/AddMembers';
+import DealsOfTheDayAd from '../screens/Store/Ads/DealsOfTheDayAd';
+import RequestWithdrawal from '../components/Store/Dashboard/RequestWithdrawal';
 
 
 const Drawers = createDrawerNavigator();
 const HomeStack = createStackNavigator();
 const AuthStack = createStackNavigator();
 const WishlistStack = createStackNavigator();
+const OrdersStack = createStackNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
@@ -91,6 +99,12 @@ const WishlistStackScreen = () => (
   </WishlistStack.Navigator>
 )
 
+const OrdersStackScreen = () => (
+  <OrdersStack.Navigator>
+    <OrdersStack.Screen name="Orders" component={MyOrders} options={{headerShown: false}} />
+  </OrdersStack.Navigator>
+)
+
 const ClientDrawer = () => {
   const languageText = useLanguageText('navigation');
   const language = useLanguage();
@@ -126,6 +140,16 @@ const ClientDrawer = () => {
           />
         :
           [<Drawers.Screen
+            key="orders"
+            headerShown="false"
+            options={{
+              title: 'My Orders',
+              drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="truck" size={16} color={tintColor} />
+            }}
+            name="Orders"
+            component={OrdersStackScreen}
+        />,
+        <Drawers.Screen
               key="deals"
               headerShown="false"
               options={{
@@ -144,10 +168,13 @@ const StoreStack = createStackNavigator();
 const ProductsStack = createStackNavigator();
 const StorePageStack = createStackNavigator();
 const StoreOrdersStack = createStackNavigator();
+const StoreAdsStack = createStackNavigator();
+const StoreMembersStack = createStackNavigator();
 
 const StoreStackScreen = () => (
   <StoreStack.Navigator>
     <StoreStack.Screen name="Home" component={StoreHome} options={{headerShown: false}} />
+    <StoreStack.Screen name="RequestWithdrawal" component={RequestWithdrawal} options={{title: 'Request Withdrawal'}} />
   </StoreStack.Navigator>
 )
 
@@ -168,6 +195,22 @@ const StoreOrdersStackScreen = () => (
   <StoreOrdersStack.Navigator>
     <StoreOrdersStack.Screen name="Orders" component={StoreOrders} options={{headerShown: false}} />
   </StoreOrdersStack.Navigator>
+)
+
+const StoreAdsStackScreen = () => (
+  <StoreAdsStack.Navigator>
+    <StoreAdsStack.Screen name="Ads" component={StoreAds} options={{headerShown: false}} />
+    <StoreAdsStack.Screen name="HomeAds" component={HomeAds} options={{title: 'Home Ads'}} />
+    <StoreAdsStack.Screen name="BannerAds" component={BannerAds} options={{title: 'Banner Ads'}} />
+    <StoreAdsStack.Screen name="DealsOfTheDay" component={DealsOfTheDayAd} options={{title: 'Deal Of The Day'}} />
+  </StoreAdsStack.Navigator>
+)
+
+const StoreMembersStackScreen = () => (
+  <StoreMembersStack.Navigator>
+    <StoreMembersStack.Screen name="Members" component={StoreMembers} options={{headerShown: false}} />
+    <StoreMembersStack.Screen name="AddMember" component={AddMembers} options={{title: 'Add a Member'}} />
+  </StoreMembersStack.Navigator>
 )
 
 const StoreDrawer = () => {
@@ -203,7 +246,7 @@ const StoreDrawer = () => {
           headerShown="false"
           options={{
             title: 'Orders',
-            drawerIcon: ({tintColor}) => <Icon type="AntDesign" name="layout" size={16} color={tintColor} />
+            drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="truck" size={16} color={tintColor} />
           }}
           name="Orders"
           component={StoreOrdersStackScreen}
@@ -216,6 +259,24 @@ const StoreDrawer = () => {
           }}
           name="Page"
           component={StorePageStackScreen}
+      />
+      <Drawers.Screen 
+          headerShown="false"
+          options={{
+            title: 'Advertisements',
+            drawerIcon: ({tintColor}) => <Icon type="Entypo" name="megaphone" size={16} color={tintColor} />
+          }}
+          name="Ads"
+          component={StoreAdsStackScreen}
+      />
+      <Drawers.Screen 
+          headerShown="false"
+          options={{
+            title: 'Members',
+            drawerIcon: ({tintColor}) => <Icon type="AntDesign" name="adduser" size={16} color={tintColor} />
+          }}
+          name="Members"
+          component={StoreMembersStackScreen}
       />
   </Drawers.Navigator>
   )

@@ -10,7 +10,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const SalesGraph = (props) => {
     return(
         <View style={styles.container}>
-            <TextLato style={styles.title} bold>Monthly Sales</TextLato>
+            {/* <TextLato style={styles.title} bold>Monthly Sales</TextLato> */}
             <LineChart
                 data={{
                 labels: ["Jan", "Feb", "Mar", "Apr"],
@@ -74,13 +74,13 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#2C62FF',
         width: width,
-        marginTop: height * 0.05
+        // marginTop: height * 0.05
     },
     title: {
         color: 'white',
         marginTop: height * 0.02,
         marginLeft: width * 0.03,
-        fontSize: RFPercentage(2.3)
+        fontSize: RFPercentage(2)
     }
 })
 

@@ -12,25 +12,12 @@ import { StatusBar } from 'expo-status-bar';
 import { connect } from 'react-redux';
 import { login } from '../src/actions/auth';
 
-function Home(props){
-    const [fontsLoaded] = useFonts({
-      'Lato': require('../assets/fonts/Lato-Regular.ttf')
-    });
-    const scrollRef = useRef(); 
-    useEffect(() =>  {
-        const unsubscribe = props.navigation.addListener('blur', () => {
-            setTimeout(() => scrollRef.current.scrollTo({
-                y: 0,
-                animated: true,
-            }), 500);
-        });
-        return unsubscribe;
-    }, [props.navigation])
+function Home(){
     return(
             <View style={styles.container}>
                 <StatusBar backgroundColor={gStyles.background} style="dark" />
                 <Navbar searchbar />
-                <ScrollView ref={scrollRef} style={{height: Dimensions.get('window').height - 60}}>
+                <ScrollView style={{height: Dimensions.get('window').height - 60}}>
                     <MainHomeView />
                 </ScrollView>
             </View>
@@ -39,7 +26,6 @@ function Home(props){
 
 const styles = StyleSheet.create({
     container: {
-        fontFamily: 'Lato',
         backgroundColor: gStyles.background,
         flex: 1
     },

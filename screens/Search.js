@@ -13,7 +13,7 @@ import TextLato from '../components/utils/TextLato';
 import { useNavigation } from '@react-navigation/native';
 import SellerCardsList from '../components/utils/SellerCardsList';
 
-const CategoryPage = (props) => {
+const SearchPage = (props) => {
     const details = props.route.params;
     const language = useLanguage();
     return (
@@ -57,48 +57,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CategoryPage;
-
-const SubcategoriesScroll = ({details}) => {
-    const navigation = useNavigation();
-    const [subcategories, setSubcategories] = useState([]);
-    const language = useLanguage();
-    useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/subcategory/find-by-category/${details._id}`)
-        .then(res => res.json())
-        .then(res => setSubcategories(res))
-    }, [])
-    return(
-        <View style={{height: height * 0.11, borderColor: '#ddd', borderBottomWidth: 1}}>
-        <ScrollView showsHorizontalScrollIndicator={false} horizontal style={subcategoryStyles.scrollView} contentContainerStyle={{justifyContent: 'center'}}>
-            {subcategories.map(subcategory => (
-                <TouchableOpacity key={Math.random()} style={subcategoryStyles.touchableBlock} activeOpacity={0.4} onPress={() => navigation.push('Subcategory', {...subcategory})}>
-                    <View key={subcategory._id} style={subcategoryStyles.container}>
-                        <Image style={{width: width * 0.13, aspectRatio: 1, borderRadius: 100 }} source={{uri: subcategory.image}} />
-                    </View>
-                        <TextLato style={{fontSize: RFPercentage(1.4), textAlign: 'center'}}>{subcategory.name[language]}</TextLato>
-                </TouchableOpacity>
-            ))}
-        </ScrollView>
-        </View>
-    )
-}
-
-const subcategoryStyles = StyleSheet.create({
-    touchableBlock: {
-    },
-    container: {
-        width: width * 0.17,
-        aspectRatio: 1,
-        backgroundColor: 'white',
-        borderRadius: 100,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: 3,
-        borderWidth: 2,
-        borderColor: gStyles.color_3
-    },
-    scrollView: {
-        width
-    }
-})
+export default SearchPage;

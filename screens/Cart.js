@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
@@ -18,18 +18,15 @@ function Cart(){
     const token = useSelector(state => state.authReducer.token);
     if(!loggedIn)
         return (
-            <ImageBackground
-                source={{uri: 'https://st2.depositphotos.com/3764539/8227/v/950/depositphotos_82275896-stock-illustration-vector-funny-seamless-pattern-in.jpg'}}
-                imageStyle={{opacity: 0.3}}
-                style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
-                <Icon type="FontAwesome5" name="sad-cry" color={gStyles.color_3} size={RFPercentage(20)} style={{marginBottom: height * 0.05}} />
-                <TextLato style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>You are not logged in!</TextLato>
+            <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
+                <Image source={{uri: 'https://imgur.com/7GIUDPi.png'}} type="AntDesign" name="shoppingcart" color={gStyles.color_0} style={{marginBottom: height * 0.05, width: width * 0.9, aspectRatio: 692/553}} />
+                <TextLato italic style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>It seems you're lost, log in to continue...</TextLato>
                 <TouchableOpacity 
                     style={{backgroundColor: gStyles.color_0, padding: width * 0.03, alignItems: 'center'}}
                     onPress={() => {navigation.goBack();navigation.navigate('Register/Login')}}>
                     <TextLato style={{color: 'white'}}>Login to access your cart</TextLato>
                 </TouchableOpacity>
-            </ImageBackground>
+            </View>
         )
     const products = useSelector(state => state.cartReducer.cart.products);
     const [subtotal, setSubtotal] = useState(0);
@@ -41,7 +38,6 @@ function Cart(){
             })
             .then(res => res.json())
             .then(res => {
-                console.log(res);
                 setSubtotal(res.subtotal);
                 setDisabled(false);
             })
@@ -49,13 +45,10 @@ function Cart(){
     }, [products])
     if(products.length === 0)
             return (
-                <ImageBackground
-                    source={{uri: 'https://image.freepik.com/free-vector/hand-drawn-fruits-seamless-pattern_2253-172.jpg'}}
-                    imageStyle={{opacity: 0.3}}
-                    style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
-                    <Icon type="AntDesign" name="shoppingcart" color={gStyles.color_0} size={RFPercentage(20)} style={{marginBottom: height * 0.05}} />
-                    <TextLato style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>Your cart is currently empty</TextLato>
-                </ImageBackground>
+                <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
+                    <Image source={{uri: 'https://imgur.com/8hNOUA5.png'}} type="AntDesign" name="shoppingcart" color={gStyles.color_0} style={{marginBottom: height * 0.05, width: width * 0.9, aspectRatio: 692/553}} />
+                    <TextLato italic style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>Still empty..</TextLato>
+                </View>
             )
     return (
         <View style={styles.container}>

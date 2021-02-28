@@ -1,10 +1,11 @@
 const react = require("react");
 
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { gStyles } from '../../global.style';
+import TextLato from '../utils/TextLato';
 
 const Footer = () => {
 
@@ -12,14 +13,14 @@ const Footer = () => {
         <View style={styles.container}>
             <Image source={require('../../assets/_logoM.png')} style={styles.logo} />
             <View style={styles.secondaryContainer}>
-                <Text style={styles.footerText}>Contact Us</Text>
-                <Text style={styles.footerText}>Terms and Conditions</Text>
+                <TextLato style={styles.footerText}>Contact Us</TextLato>
+                <TextLato style={styles.footerText}>Terms and Conditions</TextLato>
             </View>
             <View style={styles.secondaryContainer}>
-                <Text style={styles.footerText}>Open Your Store</Text>
-                <Text style={styles.footerText}>FAQs</Text>
+                <TextLato style={styles.footerText}>Open Your Store</TextLato>
+                <TextLato style={styles.footerText}>FAQs</TextLato>
             </View>
-            <Text style={styles.bottomText}>© eMall.com All Rights reserved</Text>
+            <TextLato style={styles.bottomText}>© eMall.com All Rights reserved</TextLato>
         </View>
     )
 }

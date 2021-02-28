@@ -14,10 +14,10 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const Profile = ({navigation, route}) => {
     const account = useSelector(state => state.authReducer.account);
     console.log(account)
-    const image = account && account.image ? account.image : 'https://p.favim.com/orig/2018/10/01/cartoon-profile-picture-cute-Favim.com-6346120.jpg';
+    const image = account && account.image ? account.image : 'https://i.imgur.com/Q6x4k3s.png';
     return (
         <View style={styles.container}>
-            <ImageBackground imageStyle={{opacity: 0.6}} source={{uri: image}} style={styles.topContainer}>
+            <ImageBackground imageStyle={{opacity: 0.6}} source={{uri: 'https://imgur.com/3XlqWj1.png'}} style={styles.topContainer}>
             <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
                 <Icon type="Feather" name="arrow-left" size={RFPercentage(4)} color="black" />
             </TouchableOpacity>
@@ -26,9 +26,9 @@ const Profile = ({navigation, route}) => {
                 <View style={{justifyContent: 'center', flexDirection: 'row'}}>
                     <View style={{flexDirection: 'row', alignItems: 'flex-end', transform: [{translateY: -50}]}}>
                         <Image style={styles.image} source={{uri: image}} />
-                        <View style={styles.titleContainer}>
+                        {/* <View style={styles.titleContainer}>
                             <Icon type={'FontAwesome'} name="pencil" size={13} color="white" />
-                        </View>
+                        </View> */}
                     </View>
                     <View style={{paddingVertical: 13, width: width * 0.4}}>
                         <TextLato bold style={{fontSize: RFPercentage(2)}}>ASSER HAMAD</TextLato>
@@ -85,7 +85,8 @@ const styles = StyleSheet.create({
     image: {
         width: width * 0.3,
         borderRadius: 100,
-        aspectRatio: 1
+        aspectRatio: 1,
+        marginRight: width * 0.1
     },
     titleContainer: {
         backgroundColor: gStyles.color_3,

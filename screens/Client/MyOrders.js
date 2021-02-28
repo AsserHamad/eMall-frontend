@@ -3,6 +3,7 @@ import { Animated, Dimensions, Image, ImageBackground, Modal, SafeAreaView, Styl
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from '../../components/utils/Icon';
+import {useLanguage} from '../../hooks/language';
 import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
 import Constants from 'expo-constants';
@@ -25,14 +26,14 @@ const MyOrders = ({navigation}) => {
     }, [])
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{backgroundColor: gStyles.color_0}}>
+            <View style={styles.topContainer}>
                 <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
                     <Icon type="Feather" name="arrow-left" size={RFPercentage(4)} color="white" />
                 </TouchableOpacity>
                 <View style={styles.title}>
                     <Icon style={{alignItems: 'center'}} type={'FontAwesome5'} name={'truck-moving'} size={width * 0.06} color={'white'} />
                     <View>
-                        <TextLato style={{textTransform: 'uppercase', marginLeft: width * 0.03, color: 'white', fontSize: RFPercentage(2.6)}}>MY ORDERS</TextLato>
+                        <TextLato style={{marginLeft: width * 0.03, color: 'white', fontSize: RFPercentage(2.6)}}>My Orders</TextLato>
                     </View>
                 </View>
             </View>
@@ -55,15 +56,20 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         backgroundColor: gStyles.background,
     },
+    topContainer: {
+        backgroundColor: gStyles.color_0,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: height * 0.02,
+        paddingHorizontal: width * 0.02
+    },
     backContainer: {
-        marginLeft: width * 0.02,
-        marginTop: height * 0.01,
+        width: width * 0.13
     },
     title: {
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'flex-end',
-        marginBottom: height * 0.02
+        alignItems: 'center'
     },
     orders: {
         marginHorizontal: width * 0.05,
@@ -84,13 +90,24 @@ const Order = ({order}) => {
     let _date = new Date(order.created_at);
     const date = `${_date.getDay()}-${_date.getMonth()}-${_date.getFullYear()}, ${_date.getUTCHours()}:${_date.getUTCMinutes()}`
     let status = "";
-    const [cancelled, setCancelled] = useState(order.cancelRequest);
+    const language = useLanguage();
+    const [cancelled, setCancelled] = useState(order.status === -1);
     const token = useSelector(state => state.authReducer.token);
     const [expanded, setExpanded] = useState(false);
+    const [orders, setOrders] = useState([]);
     switch(order.status){
         case 0: status = "Awaiting Store Confirmation";
         default: status = "Awaiting Confirmation"
     }
+
+    useEffect(() => {
+        fetch(`${Constants.manifest.extra.apiUrl}/client/order-products/${order.code}`, {headers: {token}})
+        .then(res => res.json())
+        .then(res => {
+            console.log('FETCHED ORDERS', res);
+            setOrders(res)
+        });
+    }, []);
 
     const cancelOrder = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/cancel-order`, {
@@ -108,12 +125,12 @@ const Order = ({order}) => {
             <View style={{flexDirection: 'row'}}>
                 <View>
                     <TextLato bold style={orderStyles.title}>Order #: {order.code}</TextLato>
-                    <TextLato style={orderStyles.title} italic>{order.orders.length} items</TextLato>
+                    {/* <TextLato style={orderStyles.title} italic>{order.storeOrders.length} items</TextLato> */}
                     <TextLato style={orderStyles.date}>{date}</TextLato>
                 </View>
-                <View style={{alignItems: 'flex-end', flex: 1}}>
-                    <Image source={{uri: order.orders[0].product.images[0]}} style={orderStyles.imageStyle} />
-                </View>
+                {/* <View style={{alignItems: 'flex-end', flex: 1}}>
+                    <Image source={{uri: order.storeOrders[0].product.images[0]}} style={orderStyles.imageStyle} />
+                </View> */}
             </View>
             {cancelled ? <TextLato bold style={orderStyles.cancelText}>CANCELLED</TextLato> :
             <TextLato style={orderStyles.statusText}>{status}</TextLato>}
@@ -129,28 +146,48 @@ const Order = ({order}) => {
             {/* 
                 EXPANDED VIEW
             */}
-            {expanded && 
-                <View style={orderStyles.expandedContainer}>
-                    <View style={orderStyles.diagramContainer}>
-                        <View style={{...orderStyles.dot, backgroundColor: order.status >= 0 ? gStyles.active : gStyles.color_0}} />
-                        <View style={{...orderStyles.line, backgroundColor: order.status >= 1 ? gStyles.active : gStyles.color_0}} />
-                        <View style={{...orderStyles.dot, backgroundColor: order.status >= 1 ? gStyles.active : gStyles.color_0}} />
-                        <View style={{...orderStyles.line, backgroundColor: order.status >= 2 ? gStyles.active : gStyles.color_0}} />
-                        <View style={{...orderStyles.dot, backgroundColor: order.status >= 2 ? gStyles.active : gStyles.color_0}} />
-                        <View style={{...orderStyles.line, backgroundColor: order.status >= 3 ? gStyles.active : gStyles.color_0}} />
-                        <View style={{...orderStyles.dot, backgroundColor: order.status >= 3 ? gStyles.active : gStyles.color_0}} />
-                        <View style={{...orderStyles.line, backgroundColor: order.status >= 4 ? gStyles.active : gStyles.color_0}} />
-                        <View style={{...orderStyles.dot, backgroundColor: order.status >= 4 ? gStyles.active : gStyles.color_0}} />
+            {expanded && (
+                <View>
+                    <View style={orderStyles.productsContainer}>
+                        {orders.map(_order => {
+                            const status = _order.status;
+                            return _order.orders.map(order => {
+                                const product = order.product;
+                                console.log(product)
+                                return (
+                                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: height * 0.01}}>
+                                        <Image style={{width: width * 0.1, aspectRatio: 1, marginRight: width * 0.05}} source={{uri: product.images[0]}} />
+                                        <TextLato style={{width: width * 0.5}} italic>{product.title[language]} x{order.quantity}</TextLato>
+                                        {status === 1 ? 
+                                        <Icon color={gStyles.active} type={'AntDesign'} name={'checkcircle'} size={RFPercentage(3)} />:
+                                        <Icon color={gStyles.color_1} type={'Entypo'} name={'dots-three-horizontal'} size={RFPercentage(3)} />}
+                                    </View>
+                                )
+                            })
+                        })}
                     </View>
-                    <View style={orderStyles.detailsContainer}>
-                        <DetailContainer textActive={order.status === 0} active={order.status >= 0} title={'Order Placed'} subtitle={'You have placed this order on 2-Feb-2021'} type={'FontAwesome5'} name={'feather'} />
-                        <DetailContainer textActive={order.status === 1} active={order.status >= 1} title={'Order Confirmed'} subtitle={'You order has been confirmed by the sellers'} type={'Feather'} name={'check-circle'} />
-                        <DetailContainer textActive={order.status === 2} active={order.status >= 2} title={'Processing Order'} subtitle={'We are processing your order'} type={'FontAwesome5'} name={'brain'} />
-                        <DetailContainer textActive={order.status === 3} active={order.status >= 3} title={'Ready to Ship'} subtitle={'Your order is getting ready to be shipped'} type={'FontAwesome5'} name={'box'} />
-                        <DetailContainer textActive={order.status === 4} active={order.status === 4} title={'Out for Delivery'} subtitle={'Your order is on its way to you right now!'} type={'MaterialCommunityIcons'} name={'truck-check'} />
+                    <View style={orderStyles.expandedContainer}>
+                        <View style={orderStyles.diagramContainer}>
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 0 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 1 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 1 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 2 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 2 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 3 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 3 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 4 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 4 ? gStyles.active : gStyles.color_0}} />
+                        </View>
+                        <View style={orderStyles.detailsContainer}>
+                            <DetailContainer textActive={order.status === 0} active={order.status >= 0} title={'Order Placed'} subtitle={'You have placed this order on 2-Feb-2021'} type={'FontAwesome5'} name={'feather'} />
+                            <DetailContainer textActive={order.status === 1} active={order.status >= 1} title={'Order Confirmed'} subtitle={'You order has been confirmed by the sellers'} type={'Feather'} name={'check-circle'} />
+                            <DetailContainer textActive={order.status === 2} active={order.status >= 2} title={'Processing Order'} subtitle={'We are processing your order'} type={'FontAwesome5'} name={'brain'} />
+                            <DetailContainer textActive={order.status === 3} active={order.status >= 3} title={'Ready to Ship'} subtitle={'Your order is getting ready to be shipped'} type={'FontAwesome5'} name={'box'} />
+                            <DetailContainer textActive={order.status === 4} active={order.status === 4} title={'Out for Delivery'} subtitle={'Your order is on its way to you right now!'} type={'MaterialCommunityIcons'} name={'truck-check'} />
+                        </View>
                     </View>
                 </View>
-            }
+            )}
             {!expanded ? 
                 <TouchableWithoutFeedback style={{alignItems: 'center', marginTop: height * 0.03}} onPress={() => setExpanded(expanded => !expanded)} activeOpacity={1}>
                     <TextLato bold style={{fontSize: RFPercentage(1.4),color: gStyles.color_0}}>View Full Details</TextLato>
@@ -226,6 +263,13 @@ const orderStyles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: height * 0.03,
         paddingHorizontal: 20
+    },
+    productsContainer: {
+        marginVertical: height * 0.01,
+        paddingVertical: height * 0.01,
+        paddingHorizontal: width * 0.02,
+        backgroundColor: 'white',
+        borderRadius: 20
     },
     diagramContainer: {
         alignItems: 'center',

@@ -22,6 +22,7 @@ const SellerCardProduct = ({product}) => {
     const cartProducts = useSelector(state => state.cartReducer.cart.products);
     const wishlist = useSelector(state => state.wishlistReducer.wishlist.products);
     const token = useSelector(state => state.authReducer.token);
+    const loggedIn = useSelector(state => state.authReducer.loggedIn);
     const dispatch = useDispatch();
     const toast = useRef();
     
@@ -45,6 +46,7 @@ const SellerCardProduct = ({product}) => {
     const [cartLoading, setCartLoading] = useState(false);
     
     const addToCartHelper = (product) => {
+        if(!loggedIn) return;
         const quantity = 1;
         const options = product.options.map(option =>{
             return {option: option._id, pick: option.options[0]._id}
@@ -65,6 +67,7 @@ const SellerCardProduct = ({product}) => {
     }
 
     const removeFromCartHelper = (product) => {
+        if(!loggedIn) return;
         setCartLoading(true);
         fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
             method: 'delete',
@@ -81,6 +84,7 @@ const SellerCardProduct = ({product}) => {
     }
 
     const addToWishlistHelper = () => {
+        if(!loggedIn) return;
         setWishlistLoading(true);
         fetch(`${Constants.manifest.extra.apiUrl}/client/wishlist`, {
             method: 'post',
@@ -97,6 +101,7 @@ const SellerCardProduct = ({product}) => {
     }
 
     const removeFromWishlistHelper = () => {
+        if(!loggedIn) return;
         setWishlistLoading(true);
         fetch(`${Constants.manifest.extra.apiUrl}/client/wishlist`, {
             method: 'delete',

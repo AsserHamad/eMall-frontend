@@ -1,4 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
+import { manifest } from 'expo-updates';
 import React, { useState, useEffect } from 'react';
 import { View, Text, Dimensions, StyleSheet, Image } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -13,7 +14,7 @@ import { setCart } from '../src/actions/cart';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const Payment = (props) => {
-    const cart = useSelector(state => state.cartReducer.cart.products);
+    const [cart, setCart] = useState([]);
     const account = useSelector(state => state.authReducer.account);
     const address = account.addresses.filter(address => address.active)[0];
     const [subtotal, setSubtotal] = useState(0);
@@ -25,7 +26,12 @@ const Payment = (props) => {
     const navigation = useNavigation();
     const dispatch = useDispatch();
     useEffect(() => {
-        if(cart.length){
+            fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {headers: {token}})
+            .then(res => res.json())
+            .then(res => {
+                console.log('new cart', res);
+                setCart(res.products)
+            })
             fetch(`${Constants.manifest.extra.apiUrl}/client/total`, {
                 headers: {token}
             })
@@ -36,8 +42,7 @@ const Payment = (props) => {
                 setTotal(res.total)
                 setDisabled(false);
             })
-        } else setDisabled(true);
-    }, [cart])
+    }, [])
 
     const order = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/place-order`, {headers: {token}})

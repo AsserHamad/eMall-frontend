@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons  } from '@expo/vector-icons';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
@@ -9,6 +9,8 @@ import Navbar from '../components/Navbar/Navbar';
 import { gStyles } from '../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useFonts } from 'expo-font';
+import Icon from '../components/utils/Icon';
+import TextLato from '../components/utils/TextLato';
 
 function Wishlist(props){
     const [fontsLoaded] = useFonts({
@@ -18,8 +20,8 @@ function Wishlist(props){
     <View style={styles.container}>
         <Navbar />
         <View style={styles.headerContainer}>
-            <MaterialCommunityIcons  color={gStyles.color_3} size={RFPercentage(3.5)} name="heart" />
-            <Text style={styles.headerText}>MY WISHLIST</Text>
+            <TextLato style={styles.headerText}>MY WISHLIST</TextLato>
+            <Image source={{uri: 'https://imgur.com/IUXbbOB.png'}} style={{width: width * 0.35, aspectRatio: 783/553}} />
         </View>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             {props.wishlist.products.map(item => {
@@ -45,9 +47,7 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         width: width * 0.9,
-        height: height * 0.1,
-        display: 'flex',
-        flexDirection: 'column',
+        // flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
@@ -56,9 +56,8 @@ const styles = StyleSheet.create({
     headerText: {
         marginTop: height * 0.01,
         color: gStyles.color_3,
-        fontSize: RFPercentage(3),
+        fontSize: RFPercentage(2.5),
         letterSpacing: RFPercentage(0.6),
-        fontFamily: 'Lato',
     }
 })
 

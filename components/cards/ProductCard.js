@@ -6,6 +6,7 @@ import { addToCart, removeFromCart } from '../../src/actions/cart';
 import { addToWishlist, removeFromWishlist } from '../../src/actions/wishlist';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from '../utils/Icon';
+import TextLato from '../utils/TextLato';
 
 function ProductCard(props){
     const product = props.product;
@@ -13,20 +14,20 @@ function ProductCard(props){
         <View style={styles.container}>
             {
                 product.discount && 
-                <Text style={styles.discountBubble}>{`${Math.floor(product.discount*100)}%`}</Text>
+                <TextLato style={styles.discountBubble}>{`${Math.floor(product.discount*100)}%`}</TextLato>
             }
             <Image style={styles.image} source={{uri: product.image}} />
             <View style={styles.seller}>
                 <Image style={{width: product.seller.width, height: product.seller.height}} source={{uri: product.seller.logo}} />
             </View>
-            <Text style={styles.name}>{product.shortName}</Text>
+            <TextLato style={styles.name}>{product.shortName}</TextLato>
             {product.discount ? 
             <View style={styles.discountBlock}>
-                <Text style={styles.originalPrice}>{product.price}</Text>
-                <Text style={styles.discountedPrice}>{Math.ceil(product.price * (1 - product.discount))} EGP</Text>
+                <TextLato style={styles.originalPrice}>{product.price}</TextLato>
+                <TextLato style={styles.discountedPrice}>{Math.ceil(product.price * (1 - product.discount))} EGP</TextLato>
             </View>
             :
-            <Text style={styles.discountedPrice}>{product.price}</Text>
+            <TextLato style={styles.discountedPrice}>{product.price}</TextLato>
             }
             <View style={styles.bottomButtonsContainer}>
                 {/* Cart */}

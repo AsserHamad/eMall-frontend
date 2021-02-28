@@ -1,15 +1,25 @@
-import React from 'react';
-import { ScrollView, Dimensions, StyleSheet, View, Text, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, Dimensions, StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 import Swiper from 'react-native-swiper/src';
+import { Constants } from 'react-native-unimodules';
 import { gStyles } from '../../global.style';
 
 function TopAds(){
-    const ads = [
-        'https://img.freepik.com/free-vector/new-season-banner-template_1361-1221.jpg?size=626&ext=jpg',
-        'https://cdn.dribbble.com/users/1779799/screenshots/6548351/lady.jpg?compress=1&resize=400x300',
-        'https://i.pinimg.com/originals/73/a8/2e/73a82ecce46cb3f5a8f0ab7fb1b79e08.jpg',
-        'https://img.freepik.com/free-vector/promotion-fashion-banner_1188-223.jpg?size=626&ext=jpg'
-    ]
+    const [ads, setAds] = useState([]);
+    const navigation = useNavigation();
+    useEffect(() => {
+        fetch(`${Constants.manifest.extra.apiUrl}/advertisement/home`)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+            setAds(res)
+        })
+    }, []);
+    if(!ads.length)
+        return <View style={{height: 210, justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator size={RFPercentage(4)} color={gStyles.color_0} /></View>
     return(
         <Swiper 
         style={styles.swiper}
@@ -20,9 +30,13 @@ function TopAds(){
         showsPagination
         >
             {ads.map(ad => (
-                <View key={ad}>
-                    <Image style={styles.swiperImage} source={{uri: ad}} />
-                </View>
+                <TouchableOpacity 
+                    activeOpacity={0.8} 
+                    onPress={() => ad.adType === 0 ? navigation.push('Product', {product: {_id: ad.store}}) : navigation.push('Store', {store: {_id: ad.store}})}
+                    key={ad}
+                >
+                    <Image style={styles.swiperImage} source={{uri: ad.image}} />
+                </TouchableOpacity>
             ))}
         </Swiper>
     )

@@ -1,15 +1,15 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { gStyles } from '../../global.style';
 import Icon from '../utils/Icon';
+import TextLato from '../utils/TextLato';
 
 
-function StoreCard(props){
-    const store = {...props.store, logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/The-Body-Shop-Logo.svg/480px-The-Body-Shop-Logo.svg.png'};
+function StoreCard({store}){
     return(
         <View style={styles.container}>
             <Image style={styles.logo} source={{uri: store.logo}} />
-            <Text style={styles.title}>{store.title}</Text>
+            <TextLato style={styles.title}>{store.title}</TextLato>
             <View style={styles.categories}>
                 {store.categories.map(category => (
                     <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={Math.random()}>
@@ -24,7 +24,7 @@ function StoreCard(props){
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
-        width: 200,
+        width: 180,
         height: 160,
         borderRadius: 5,
         justifyContent: 'center',

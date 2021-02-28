@@ -13,13 +13,13 @@ function Categories(){
         .then(res => setCategories(res))
     }, []);
     return(
-        <ScrollView horizontal style={styles.container} showsHorizontalScrollIndicator={false}>
+        <View horizontal style={styles.container} showsHorizontalScrollIndicator={false}>
             <View style={styles.categoriesContainer}>
                 {categories.map(category => (
                     <CategoryCard key={Math.random()} details={category} />
                 ))}
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
@@ -27,16 +27,11 @@ const styles = StyleSheet.create({
     container: {
         marginVertical: 18,
     },
-    title: {
-        fontSize: gStyles.fontSizeL,
-        marginBottom: 20,
-        fontWeight: '500'
-    },
     categoriesContainer: {
         display: 'flex',
         flexDirection: 'row',
-        // flexWrap: 'wrap',
-        // width: '100%',
+        flexWrap: 'wrap',
+        width: '100%',
         justifyContent: 'center',
         borderWidth: 0
     }

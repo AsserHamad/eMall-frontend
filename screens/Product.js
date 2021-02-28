@@ -34,6 +34,7 @@ const Product = (props) => {
     const cartProducts = useSelector(state => state.cartReducer.cart.products);
     const inCart = () => cartProducts.filter(cartProd => cartProd._id === product._id).length > 0;
     const token = useSelector(state => state.authReducer.token);
+    const loggedIn = useSelector(state => state.authReducer.loggedIn);
     const toast = useRef();
 
     useEffect(() => {
@@ -99,7 +100,7 @@ const Product = (props) => {
     }
 
     const addToCartHelper = () => {
-        console.log(picks);
+        if(!loggedIn) return showToast('You must be logged in to add to your cart!');
         const quantity = 1;
         const options = picks;
 
@@ -113,7 +114,6 @@ const Product = (props) => {
         .then(res => {
             setCartLoading(false);
             showToast(`Added to Cart Successfully!`);
-            console.log(`CART: Response from server for cart update is`, res)
             dispatch(setCart(res))
         })
         .catch(err => console.log(err))
@@ -149,7 +149,7 @@ const Product = (props) => {
                         </View>
 
                         {/* OPTIONS */}
-                        <View style={mainStyles.optionsContainer}>
+                        {(product.variants || product.options.length !== 0) && <View style={mainStyles.optionsContainer}>
                             <TextLato bold style={mainStyles.optionsTitle}>Options</TextLato>
                             <View>
                                 {/* VARIANTS */}
@@ -199,7 +199,7 @@ const Product = (props) => {
                                     )
                                 })}
                             </View>
-                        </View>
+                        </View>}
 
                         {/* PRICE */}
                         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: height * 0.03}}>
@@ -231,14 +231,14 @@ const Product = (props) => {
                         </View>
 
                         {/* SPECIFICATIONS */}
-                        <View style={mainStyles.specificationsContainer}>
+                        {product.specifications.length !== 0 && <View style={mainStyles.specificationsContainer}>
                             <TextLato bold style={mainStyles.specificationTitle}>Specifications</TextLato>
                             <View>
                                 {product.specifications.map(spec => {
                                     const num = product.specifications.indexOf(spec) % 2 === 0;
                                     return (
                                         <View key={Math.random()} style={{...mainStyles.specificationTile, 
-                                            backgroundColor: num ? gStyles.background : 'transparent'}}>
+                                            backgroundColor: num ? 'white' : 'transparent'}}>
                                             <View style={{width: '50%'}}>
                                                 <TextLato bold >{spec.title[language]}</TextLato>
                                             </View>
@@ -249,7 +249,7 @@ const Product = (props) => {
                                     )
                                 })}
                             </View>
-                        </View>
+                        </View>}
 
                         {/* REVIEWS */}
                         <View style={mainStyles.reviewsContainer}>
@@ -417,7 +417,6 @@ const mainStyles = StyleSheet.create({
         marginBottom: height * 0.01
     },
     specificationTile: {
-        height: height * 0.03,
         flexDirection: 'row',
         alignItems: 'center',
         padding: 10

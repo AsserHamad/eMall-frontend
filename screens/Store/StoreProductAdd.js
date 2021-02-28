@@ -45,7 +45,7 @@ const StoreProductsAdd = () => {
     const [price, setPrice] = useState('');
     const [priceErr, setPriceErr] = useState('');
     
-    // const [specifications, setSpecfications] = useState([]);
+    const [specifications, setSpecfications] = useState([]);
     const [images, setImages] = useState([]);
     const token = useSelector(state => state.authReducer.token)
     
@@ -299,26 +299,20 @@ const StoreProductsAdd = () => {
                 }
             
                 {/* SPECIFICATIONS */}
-                {/* <TextLato style={styles.label}>Specifications
+                <TextLato style={styles.label}>Specifications
                 <TextLato italic style={{fontSize: RFPercentage(1.7), color: gStyles.color_1}}>   (weight, model, etc..)</TextLato></TextLato>
                 <View>
                     {specifications.map(specification => {
-                        return (
-                            <View style={{margin: 20, borderRadius: 10, borderColor: gStyles.color_1, borderWidth: 1}}>
-                                <TextErrorInput 
-                                    value={specification.titleEn} 
-                                    setValue={(title) => setSpecfications()} 
-                                    title={'Arabic Description'} 
-                                    placeholder={'وصف موجز يصف منتجك كحزمة ...'} />
-                            </View>
-                        )
+                        const index = specifications.indexOf(specification);
+                        console.log('Specification currently is', specifications[index])
+                        return <Specification setSpecfications={setSpecfications} titleEn={specification.titleEn} index={index} />
                     })}
                     <TouchableOpacity 
-                        onPress={() => setSpecfications(specifications => specifications.concat({titleEn: ''}))} 
+                        onPress={() => setSpecfications(specifications => specifications.concat({titleEn: '', titleAr: ''}))} 
                         style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, backgroundColor: gStyles.color_0, margin: 20, padding: 10}}>
                         <Icon type="AntDesign" name="plus" size={RFPercentage(3)} color={'white'} />
                     </TouchableOpacity>
-                </View> */}
+                </View>
                 <TouchableOpacity 
                     onPress={() => checkNotEmpty() ? submitProduct() : null}
                     style={{...styles.submitButton, backgroundColor: checkNotEmpty() ? gStyles.color_0 : gStyles.color_3 }}
@@ -398,7 +392,7 @@ const TextErrorInput = (props) => {
     return (
         <View style={inputStyles.container}>
             <TextLato bold style={inputStyles.label}>{props.title}</TextLato>
-            <TextInput placeholder={props.placeholder} style={inputStyles.input} {...props} onChangeText={(text) => props.setValue(text)} />
+            <TextInput placeholder={props.placeholder} style={inputStyles.input} {...props} onChangeText={props.setValue} />
             {props.error !== "" && <TextLato italic style={inputStyles.error}>{props.error}</TextLato>}
         </View>
     )
@@ -428,5 +422,22 @@ const inputStyles = StyleSheet.create({
         color: gStyles.color_1
     }
 })
+
+const Specification = ({titleEn, setSpecfications, index}) => {
+
+    return (
+        <View style={{margin: 20, borderRadius: 10}}>
+            <TextErrorInput 
+                value={titleEn} 
+                setValue={(title) => setSpecfications(specifications => {
+                    console.log('current spec', specifications)
+                    specifications[index].titleEn += title;
+                    return specifications;
+                })} 
+                title={'English Specification Title'} 
+                placeholder={'Weight, Color, Dimensions'} />
+        </View>
+    )
+}
 
 export default StoreProductsAdd;

@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
         width: width * 0.97,
         minHeight: 40,
         // backgroundColor: '#FFCECE',
-        backgroundColor: 'white',
+        backgroundColor: '#ebebeb',
         borderRadius: 100,
         alignItems: 'center',
         marginTop: 3,

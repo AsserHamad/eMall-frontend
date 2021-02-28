@@ -28,14 +28,11 @@ function SideBar(props) {
     }
     return (
         <View style={{...styles.container}}>
-            <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Profile')} style={styles.topView}>
-                <ImageBackground style={styles.topDots} imageStyle={{borderRadius:100}} source={{uri: 'https://cdn.hipwallpaper.com/i/29/69/M5kWUT.png'}}>
-                    <View style={styles.logoContainer}>
-                        {props.loggedIn ? <Image source={{uri: 'https://p.favim.com/orig/2018/10/01/cartoon-profile-picture-cute-Favim.com-6346120.jpg'}} style={styles.logo} /> : 
-                        <Image source={require('../assets/logoM.png')} style={styles.logo} />} 
-                    </View>
+            <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Profile')}>
+                <ImageBackground source={{uri: 'https://static.vecteezy.com/system/resources/previews/000/225/074/original/beach-at-night-illustration-vector.jpg'}} style={styles.topView} imageStyle={{opacity: 0.6}}>
+                    <ImageBackground style={styles.topDots} imageStyle={{borderRadius:100}} source={{uri: 'https://i.imgur.com/Q6x4k3s.png'}} />
+                    {props.loggedIn ? <TextLato bold style={styles.name}>{props.account.firstName} {props.account.lastName}</TextLato>: null}
                 </ImageBackground>
-                {props.loggedIn ? <TextLato bold style={styles.name}>{props.account.firstName} {props.account.lastName}</TextLato>: null}
             </TouchableWithoutFeedback>
             <ScrollView>
                 <DrawerContentScrollView {...props}>

@@ -14,7 +14,7 @@ const TotalSales = (props) => {
             <TextLato bold style={styles.salesTitle}>Total Sales for this Month</TextLato>
             <TextLato italic style={styles.salesSubtitle}>Finances made during the month of January</TextLato>
             <TextLato bold style={styles.sales}>3,700 EGP</TextLato>
-            <Icon style={styles.dollar} color={'rgba(255, 255, 255, 0.2)'} type="FontAwesome" size={RFPercentage(10)} name="dollar" />
+            <Icon style={styles.dollar} color={'rgba(255, 255, 255, 0.2)'} type="FontAwesome" size={RFPercentage(10)} name="money" />
         </View>
     )
 }

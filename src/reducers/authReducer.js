@@ -5,13 +5,14 @@ const initialState = {
     loggedIn: true,
     account: {
         title: 'Store Manager',
-        authorities: [ 1, 2, 3, 4, 5 ],
+        authorities: [ 0, 1, 2, 3, 4, 5 ],
         languagePref: 0,
         _id: "5fe6103ae8a7b8485c32e927",
         name: 'Asser Hamad',
         email: 'asserhamad96@gmail.com',
         __v: 0,
-        facebookId: '10158499234586418'
+        facebookId: '10158499234586418',
+        credit: 0
       },
     store: {
         approved: true,

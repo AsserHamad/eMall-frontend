@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
@@ -16,6 +16,7 @@ import { setCart } from '../../../src/actions/cart';
 import DisabledButton from '../DisabledButton';
 import Icon from '../../../components/utils/Icon';
 import { setWishlist } from '../../../src/actions/wishlist';
+import TextLato from '../../../components/utils/TextLato';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
@@ -99,7 +100,7 @@ const ClientLogin = (props) => {
         }
     }
     if(!fontsLoaded)
-        return <Text>Loading</Text>
+        return <TextLato>Loading</TextLato>
     return (
         <View style={styles.container}>
             <View style={styles.backContainer}>
@@ -107,13 +108,13 @@ const ClientLogin = (props) => {
                     <Icon type="FontAwesome5" name="bars" size={RFValue(25)} color={gStyles.secondary} />
                 </TouchableOpacity>
             </View>
-            <Image style={styles.image} source={require('../../../assets/logo.png')} />
+            <Image style={styles.image} source={{uri: 'https://imgur.com/kc4Ry8f.png'}} />
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Welcome Back!</Text>
-                <Text style={{color: gStyles.color_1, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to continue shopping</Text>
+                <TextLato bold style={{color: 'black', fontSize: RFPercentage(3.5), textAlign: 'center'}}>Welcome Back!</TextLato>
+                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11), textAlign: 'center'}}>Please login to continue shopping</TextLato>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <Text style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</Text>)}
+                {errors.map(err => <TextLato style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</TextLato>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
@@ -134,27 +135,27 @@ const ClientLogin = (props) => {
                     onChangeText={(val) => setPassword(val)}
                     style={styles.input} />
                 <TouchableOpacity>
-                    <Text style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</Text>
+                    <TextLato bold style={{color: 'black', fontSize: RFValue(12), marginHorizontal: width * 0.02}}>Forgot Password?</TextLato>
                 </TouchableOpacity>
             </View>
             <DisabledButton onPressIfActive={login} array={[email, password]}>
-                    <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>SUBMIT</Text>
+                    <TextLato bold style={{color: 'white', fontSize: RFValue(12)}}>LOGIN</TextLato>
             </DisabledButton>
             <View style={styles.bottomContainer}>
 
             <View style={styles.others}>
                 {/* Register Now */}
                 <View style={{display:'flex', flexDirection: 'row'}}>
-                    <Text style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Don't have an account?</Text>
+                    <TextLato style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Don't have an account?</TextLato>
                     <TouchableOpacity onPress={() => props.navigation.push('ClientRegister')}>
-                        <Text style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</Text>
+                        <TextLato style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</TextLato>
                     </TouchableOpacity>
                 </View>
                 {/* Seller Account */}
                 <View style={{display:'flex', flexDirection: 'row', marginTop: 5}}>
-                    <Text style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Are you a seller?</Text>
+                    <TextLato style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Are you a seller?</TextLato>
                     <TouchableOpacity onPress={() => props.navigation.push('SellerLogin')}>
-                        <Text style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Login Here</Text>
+                        <TextLato style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Login Here</TextLato>
                     </TouchableOpacity>
                 </View>
                 </View>
@@ -163,13 +164,13 @@ const ClientLogin = (props) => {
                     <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButtonF}>
                             <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFPercentage(1.2), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</Text>
+                            <TextLato style={{color: 'white', fontSize: RFPercentage(1.2), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButtonG}>
                             <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFPercentage(1.2), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</Text>
+                            <TextLato style={{color: 'white', fontSize: RFPercentage(1.2), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</TextLato>
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>
@@ -180,13 +181,13 @@ const ClientLogin = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: gStyles.background,
-        height: height,
+        backgroundColor: 'white',
+        height,
         alignItems: 'center',
         paddingTop: Constants.statusBarHeight,
         display: 'flex',
         flexDirection: 'column',
-        flex: 1
+        // flex: 1
     },
     backContainer: {
         width,
@@ -194,8 +195,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: width * 0.05,
     },
     image: {
-        height: height * 0.1,
-        aspectRatio: gStyles.logoAspectRatio
+        height: height * 0.2,
+        aspectRatio: 1177/867
     },
     headerContainer: {
         width: width * 0.9,
@@ -211,25 +212,35 @@ const styles = StyleSheet.create({
         width: width * 0.9
     },
     input: {
-        fontSize: RFValue(15),
+        fontSize: RFValue(12),
         marginVertical: 10,
-        height: height * 0.04,
-        borderBottomWidth: 2,
-        borderColor: '#707070',
-        fontFamily: gStyles.fontFamily
+        borderRadius: 100,
+        backgroundColor: 'white',
+        paddingHorizontal: width * 0.04,
+        paddingVertical: height * 0.015,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,
+        
+        elevation: 24,
+        color: 'black'
     },
     submitButton: {
         backgroundColor: gStyles.color_1,
         alignItems: 'center',
         justifyContent: 'center',
-        width: width * 0.9,
+        width: width * 0.3,
         height: height * 0.05,
         borderRadius: 2,
         marginTop: height * 0.03
     },
     bottomContainer: {
         position: 'absolute',
-        bottom: RFPercentage(0)
+        bottom: 0
     },
     others: {
         paddingHorizontal: height * 0.025,
