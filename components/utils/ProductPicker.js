@@ -21,7 +21,6 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
         .then(res => {
             setLoading(false);
             setProducts(res)
-            console.log('products', res)
         });
     }, []);
     return (

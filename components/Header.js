@@ -15,7 +15,7 @@ import { useLanguage } from '../hooks/language';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 
-export default ({ details, search }) => {
+export default ({ details, cart }) => {
     const cartProducts = useSelector(state => state.cartReducer.cart.products);
     const language = useLanguage();
     const navigation = useNavigation();
@@ -29,7 +29,7 @@ export default ({ details, search }) => {
                 <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(3)} color="black" />
             </TouchableOpacity>
             <TextLato style={styles.title}>{details.title}</TextLato>
-                <TouchableOpacity
+            {cart && <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => navigation.push('Cart')}
                     style={styles.burgerContainer}
@@ -38,12 +38,8 @@ export default ({ details, search }) => {
                         <TextLato>{cartProducts.length}</TextLato>
                     </View>
                     <Icon type="FontAwesome5" name="shopping-cart" color={gStyles.color_3} size={ 27 }/>
-                </TouchableOpacity>
+                </TouchableOpacity>}
             </View>
-            {search && 
-            <View style={styles.searchbarContainer}>
-            </View>
-            }
         </SafeAreaView>
     )
 }

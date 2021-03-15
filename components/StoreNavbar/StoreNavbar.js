@@ -46,10 +46,6 @@ function StoreNavbar({searchbar, title}){
                     }
                     style={styles.burgerContainer}
                 >
-                    {/* <View style={styles.cartNumberContainer}>
-                        <Text style={{color: 'black'}}>{cart.length}</Text>
-                    </View>
-                    <FontAwesome5 name="shopping-cart" color={gStyles.color_3} size={ 27 }/> */}
                 </TouchableOpacity>
             </View>
             {/* Search Bar */}
@@ -64,10 +60,7 @@ const getLanguageStyle = (lang, style) => lang === 'ar' ? styles[`${style}_ar`] 
 const styles = StyleSheet.create({
     container: {
         width,
-        paddingBottom: 10,
-        paddingTop: Constants.statusBarHeight + 10,
-        // height: 100,
-        flexDirection: 'column',
+        paddingVertical: 10,
         alignItems: 'center'
     },
     topContainer: {

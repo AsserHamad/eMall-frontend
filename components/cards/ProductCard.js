@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { gStyles } from '../../global.style';
 import { connect } from 'react-redux';
 import { addToCart, removeFromCart } from '../../src/actions/cart';

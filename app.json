@@ -34,7 +34,7 @@
       "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "apiUrl": "http://192.168.43.69:5000/api",
+      "apiUrl": "http://192.168.8.177:5000/api",
       "home": "192.168.8.177",
       "home(wifi)": "192.168.8.173",
       "mobile": "192.168.43.69",

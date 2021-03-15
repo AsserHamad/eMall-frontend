@@ -28,27 +28,33 @@ function SideBar(props) {
     }
     return (
         <View style={{...styles.container}}>
+            {props.loggedIn ? (
             <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Profile')}>
                 <ImageBackground source={{uri: 'https://static.vecteezy.com/system/resources/previews/000/225/074/original/beach-at-night-illustration-vector.jpg'}} style={styles.topView} imageStyle={{opacity: 0.6}}>
-                    <ImageBackground style={styles.topDots} imageStyle={{borderRadius:100}} source={{uri: 'https://i.imgur.com/Q6x4k3s.png'}} />
-                    {props.loggedIn ? <TextLato bold style={styles.name}>{props.account.firstName} {props.account.lastName}</TextLato>: null}
+                    <Image style={styles.topDots} source={{uri: 'https://i.imgur.com/Q6x4k3s.png'}} />
+                    <TextLato bold style={styles.name}>{props.account.firstName} {props.account.lastName}</TextLato>
                 </ImageBackground>
             </TouchableWithoutFeedback>
+            ) : (
+                <ImageBackground source={{uri: 'https://static.vecteezy.com/system/resources/previews/000/225/074/original/beach-at-night-illustration-vector.jpg'}} style={styles.topViewU} imageStyle={{opacity: 0.6}}>
+                    <TextLato bold style={styles.topTitle}>Welcome to eMall</TextLato>
+                </ImageBackground>
+            )}
+            <View style={styles.logoutContainer}>
+                <TouchableOpacity onPress={() => {changeLanguage()}}>
+                    <TextLato bold reverse>{languageText && languageText.changeLanguage} 🌍</TextLato>
+                </TouchableOpacity>
+                {props.loggedIn && 
+                        <TouchableOpacity onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});AsyncStorage.removeItem('@token');props.logout()}}>
+                            <TextLato bold>🏃‍♂️ {languageText.logout}</TextLato>
+                        </TouchableOpacity>
+                }
+            </View>
             <ScrollView>
                 <DrawerContentScrollView {...props}>
-                    <DrawerItemList labelStyle={{fontFamily: language === 'en' ? 'Lato' : 'Cairo'}} {...props} />
+                    <DrawerItemList labelStyle={{fontFamily: language === 'en' ? 'Lato' : 'Cairo'}} activeTintColor={gStyles.color_0} {...props} />
                 </DrawerContentScrollView>
             </ScrollView>
-            <View style={styles.logoutContainer}>
-            {props.loggedIn && 
-                    <TouchableOpacity onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});props.logout()}}>
-                        <TextLato>{languageText.logout}</TextLato>
-                    </TouchableOpacity>
-            }
-            <TouchableOpacity onPress={() => {changeLanguage()}}>
-                <TextLato reverse>{languageText && languageText.changeLanguage}</TextLato>
-            </TouchableOpacity>
-            </View>
         </View>
     )
     };
@@ -63,41 +69,39 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: gStyles.color_1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: height * 0.3
+    },
+    topViewU: {
+        paddingTop: Constants.statusBarHeight,
+        width: '100%',
+        backgroundColor: gStyles.color_1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: height * 0.2
+    },
+    topTitle: {
+        color: 'white',
+        fontSize: RFPercentage(3.5),
+        textAlign: 'center',
+        width: '70%'
     },
     name: {
         fontSize: RFPercentage(2.5),
-        marginVertical: height * 0.03,
         color: 'white'
     },
     topDots: {
-        width: 150,
-        height: 150,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: height * 0.05
-        
-    },
-    logoContainer: {
         width: 100,
         height: 100,
-        borderRadius: 100,
-        alignItems: 'center',
-        justifyContent: 'center'
-        
-    },
-    logo: {
-        backgroundColor: gStyles.background,
-        width: 100,
-        height: 100,
-        borderRadius: 100
+        borderRadius:100,
+        marginBottom: height * 0.02
     },
     logoutContainer: {
-        position: 'absolute',
-        bottom: height * 0.03,
+        paddingVertical: height * 0.02,
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'flex-start',
+        paddingHorizontal: width * 0.05
     }
 });
 

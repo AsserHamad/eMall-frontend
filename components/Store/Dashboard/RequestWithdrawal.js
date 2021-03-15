@@ -18,13 +18,12 @@ const RequestWithdrawal = (props) => {
     const credit = useCredit();
     const language = useLanguage();
     const [disabled, setDisabled] = useState(true);
-    const [value, setValue] = useState('0');
     const token = useSelector(state => state.authReducer.token);
     const [loading, setLoading] = useState(false);
     const [confirmed, setConfirmed] = useState(false);
     useEffect(() => {
-        setDisabled(Number.isNaN(Number(value)) || value === "" || Number(value) <= 0 ||  Number(value) > credit);
-    }, [value, credit])
+        setDisabled(credit <= 10);
+    }, [credit])
 
     const requestWidthrawal = () => {
         setLoading(true);
@@ -33,8 +32,7 @@ const RequestWithdrawal = (props) => {
             headers: {
                 token,
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({amount: value})
+            }
         })
         .then(res => {
             setLoading(false);
@@ -68,14 +66,14 @@ const RequestWithdrawal = (props) => {
                     <TextLato bold style={styles.title}>Request Withdrawal of Store Credit</TextLato>
                     <TextLato style={styles.subtitle}>Current Credit:</TextLato>
                     <TextLato bold style={styles.funds}>{credit} EGP</TextLato>
-                    <TextLato italic style={styles.subtitle}>Please enter the amount you would like to withdraw below</TextLato>
-                    <TextLato italic style={styles.disclaimer}>*New requests will overwrite previous unresolved requests</TextLato>
-                    <TextInput
+                    {/* <TextLato italic style={styles.subtitle}>Please enter the amount you would like to withdraw below</TextLato> */}
+                    <TextLato italic style={styles.subtitle}>*You will be withdrawing your entire balance, leaving you with 0 credit</TextLato>
+                    {/* <TextInput
                         style={{...styles.input, fontFamily: language === 'en' ? 'Lato' : 'Cairo'}}
                         keyboardType={'number-pad'}
                         value={value}
                         onChangeText={input => setValue(input)}
-                    />
+                    /> */}
                 </View>
             </KeyboardAvoidingView>
             <TouchableOpacity
@@ -109,8 +107,9 @@ const styles = StyleSheet.create({
 
     },
     subtitle: {
-        fontSize: RFPercentage(2),
+        fontSize: RFPercentage(1.8),
         marginTop: height * 0.01,
+        color: 'black'
         // textAlign: 'center'
     },
     funds: {

@@ -14,11 +14,12 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 const SimilarProductCard = (props) => {
     const language = useLanguage();
+    const en = language === 'en';
     const product = props.product;
     const navigation = useNavigation();
     return (
         <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.push('Product', {product})}>
-            <View style={styles.container}>
+            <View style={{...styles.container, transform: en ? [] : [{scaleX: -1}]}}>
                 <View>
                     {product.discount && <Text style={styles.discountContainer}>{Math.floor(product.discount * 100)}% Off</Text>}
                     <Image style={styles.image} source={{uri: product.images[0]}} />
@@ -48,13 +49,12 @@ const containsItem = (arr, product) => {
 
 const styles = StyleSheet.create({
     container: {
-        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        // width: width * 0.6,
         marginVertical: 10,
         marginHorizontal: 5,
+        height: height * 0.2,
         // shadowColor: "#000",
         // shadowOffset: {
         //     width: 0,

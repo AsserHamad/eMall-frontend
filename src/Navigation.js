@@ -1,5 +1,4 @@
-import React from 'react';
-import {FontAwesome5, Fontisto, Feather} from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -12,8 +11,7 @@ import { gStyles } from '../global.style';
 import ClientLogin from '../screens/Authentication/Client/ClientLogin';
 import ClientLoginSuccess from '../screens/Authentication/Client/ClientLoginSuccess';
 
-import { connect, useSelector } from 'react-redux';
-import { login } from './actions/auth';
+import { useSelector } from 'react-redux';
 import ClientRegister from '../screens/Authentication/Client/ClientRegister';
 import SellerLogin from '../screens/Authentication/Seller/SellerLogin';
 import SellerLoginSuccess from '../screens/Authentication/Seller/SellerLoginSuccess';
@@ -45,6 +43,14 @@ import StoreMembers from '../screens/Store/StoreMembers';
 import AddMembers from '../components/Store/AddMembers';
 import DealsOfTheDayAd from '../screens/Store/Ads/DealsOfTheDayAd';
 import RequestWithdrawal from '../components/Store/Dashboard/RequestWithdrawal';
+import { Constants } from 'react-native-unimodules';
+import MyProfile from '../screens/Client/MyProfile';
+import ContactUs from '../screens/Footer/ContactUs';
+import Terms from '../screens/Footer/Terms';
+import FAQs from '../screens/Footer/FAQs';
+import MyPayments from '../screens/Client/MyPayments';
+import StorePayments from '../screens/Store/StorePayments';
+import ForgotPassword from '../screens/Authentication/Client/ForgotPassword';
 
 
 const Drawers = createDrawerNavigator();
@@ -52,11 +58,15 @@ const HomeStack = createStackNavigator();
 const AuthStack = createStackNavigator();
 const WishlistStack = createStackNavigator();
 const OrdersStack = createStackNavigator();
+const CategoriesStack = createStackNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
     <HomeStack.Screen name="Home" component={Home} options={{headerShown: false}} />
-    <HomeStack.Screen name="Cart" component={Cart} />
+    <HomeStack.Screen name="ContactUs" component={ContactUs} options={{headerShown: false}} />
+    <HomeStack.Screen name="Terms" component={Terms} options={{headerShown: false}} />
+    <HomeStack.Screen name="FAQs" component={FAQs} options={{headerShown: false}} />
+    <HomeStack.Screen name="Cart" component={Cart} options={() => ({headerShown: false})} />
     <HomeStack.Screen name="Category" component={CategoryPage} options={({ route }) => ({title: route.params.name.en, headerShown: false})} />
     <HomeStack.Screen name="Subcategory" component={SubcategoryPage} options={({ route }) => ({ headerShown: false})} />
     <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
@@ -67,12 +77,15 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Profile" component={Profile} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Addresses" component={MyAddresses} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Orders" component={MyOrders} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="MyProfile" component={MyProfile} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="MyPayments" component={MyPayments} options={({ route }) => ({ headerShown: false })} />
   </HomeStack.Navigator>
 )
 
 const AuthStackScreen = () => (
   <AuthStack.Navigator>
     <AuthStack.Screen name="ClientLogin" component={ClientLogin} options={{headerShown: false}} />
+    <AuthStack.Screen name="ForgotPassword" component={ForgotPassword} options={{headerShown: false}} />
     <AuthStack.Screen 
         name="ClientRegister"
         component={ClientRegister} 
@@ -96,6 +109,7 @@ const WishlistStackScreen = () => (
   <WishlistStack.Navigator>
     <WishlistStack.Screen name="Wishlist" component={Wishlist} options={{headerShown: false}} />
     <WishlistStack.Screen name="Cart" component={Cart} />
+    <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
   </WishlistStack.Navigator>
 )
 
@@ -105,16 +119,30 @@ const OrdersStackScreen = () => (
   </OrdersStack.Navigator>
 )
 
+const CategoriesStackScreen = (props) => (
+  <CategoriesStack.Navigator>
+    <CategoriesStack.Screen name="Category" component={CategoryPage} initialParams={props.route.params} options={({ route }) => ({headerShown: false})} />
+    <CategoriesStack.Screen name="Subcategory" component={SubcategoryPage} options={({ route }) => ({ headerShown: false})} />
+    <CategoriesStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
+  </CategoriesStack.Navigator>
+)
+
 const ClientDrawer = () => {
-  const languageText = useLanguageText('navigation');
   const language = useLanguage();
+  const en = language === 'en';
   const loggedIn = useSelector(state => state.authReducer.loggedIn);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+      fetch(`${Constants.manifest.extra.apiUrl}/category`)
+      .then(res => res.json())
+      .then(res => setCategories(res))
+  }, []);
   return(
     <Drawers.Navigator drawerPosition={language === 'ar' ? 'right' : 'left'} statusBarAnimation drawerStyle={{backgroundColor: gStyles.background}} initialRouteName="Home" drawerContent={props => <SideBar {...props} />}>
         <Drawers.Screen 
             headerShown="false"
             options={{
-              title: language === 'en' ? 'Home' : 'الرئيسية',
+              title: en ? 'Home' : 'الرئيسية',
               drawerIcon: ({tintColor}) => <Icon type="Feather" name="log-in" size={16} color={tintColor} />
             }}
             name="Home"
@@ -122,7 +150,7 @@ const ClientDrawer = () => {
         />
         <Drawers.Screen 
             options={{
-              title: language === 'en' ? 'Wishlist' : 'قائمة الرغبات',
+              title: en ? 'Wishlist' : 'قائمة الرغبات',
               drawerIcon: ({tintColor}) => <Icon type="Feather" name="heart" size={16} color={tintColor} />,
             }}
             name="Wishlist"
@@ -133,7 +161,7 @@ const ClientDrawer = () => {
           <Drawers.Screen
               headerShown="false"
               options={{
-                title: language === 'en' ? 'Register/Login' : 'تسجيل الدخول',
+                title: en ? 'Register/Login' : 'تسجيل الدخول',
                 drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="home" size={16} color={tintColor} />
               }} 
               name="Register/Login" component={AuthStackScreen}
@@ -143,7 +171,7 @@ const ClientDrawer = () => {
             key="orders"
             headerShown="false"
             options={{
-              title: 'My Orders',
+              title: en ? 'My Orders' : 'طلباتي',
               drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="truck" size={16} color={tintColor} />
             }}
             name="Orders"
@@ -153,13 +181,28 @@ const ClientDrawer = () => {
               key="deals"
               headerShown="false"
               options={{
-                title: 'Deals',
+                title: en ? 'Deals' : 'العروض',
                 drawerIcon: ({tintColor}) => <Icon type="Fontisto" name="shopping-sale" size={16} color={tintColor} />
               }}
               name="Deals"
               component={HomeStackScreen}
           />]
-        }
+            }
+        {categories.map(category => {
+          return (
+                <Drawers.Screen
+                  key={category._id}
+                  headerShown="false"
+                  options={{
+                    title: category.name[language],
+                    drawerIcon: ({tintColor}) => <Icon type={category.iconType} name={category.icon} size={16} color={tintColor} />
+                  }}
+                  name={category.name[language]}
+                  component={CategoriesStackScreen}
+                  initialParams={category}
+                />
+          )
+        })}
     </Drawers.Navigator>
   )
 }
@@ -170,6 +213,7 @@ const StorePageStack = createStackNavigator();
 const StoreOrdersStack = createStackNavigator();
 const StoreAdsStack = createStackNavigator();
 const StoreMembersStack = createStackNavigator();
+const StorePaymentsStack = createStackNavigator();
 
 const StoreStackScreen = () => (
   <StoreStack.Navigator>
@@ -211,6 +255,13 @@ const StoreMembersStackScreen = () => (
     <StoreMembersStack.Screen name="Members" component={StoreMembers} options={{headerShown: false}} />
     <StoreMembersStack.Screen name="AddMember" component={AddMembers} options={{title: 'Add a Member'}} />
   </StoreMembersStack.Navigator>
+)
+
+const StorePaymentsStackScreen = () => (
+  <StorePaymentsStack.Navigator>
+    <StorePaymentsStack.Screen name="Payments" component={StorePayments} options={{headerShown: false}} />
+    <StorePaymentsStack.Screen name="RequestWithdrawal" component={RequestWithdrawal} options={{title: 'Request Withdrawal'}} />
+  </StorePaymentsStack.Navigator>
 )
 
 const StoreDrawer = () => {
@@ -277,6 +328,15 @@ const StoreDrawer = () => {
           }}
           name="Members"
           component={StoreMembersStackScreen}
+      />
+      <Drawers.Screen 
+          headerShown="false"
+          options={{
+            title: 'Payments',
+            drawerIcon: ({tintColor}) => <Icon type="Feather" name="dollar-sign" size={16} color={tintColor} />
+          }}
+          name="Payments"
+          component={StorePaymentsStackScreen}
       />
   </Drawers.Navigator>
   )

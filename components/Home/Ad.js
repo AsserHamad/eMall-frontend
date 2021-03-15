@@ -14,7 +14,7 @@ const Ad = (props) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity activeOpacity={0.7} onPress={() => 
-                ad.type === 0 ? navigation.push('Product', {product: {_id: ad.destination}})  : navigation.push('Store', {store: {_id: ad.destination}})}>
+                ad.adType === 0 ? navigation.push('Product', {product: {_id: ad.product}})  : navigation.push('Store', {store: {_id: ad.store}})}>
                 <Image style={{width: width * 0.95, aspectRatio: aspectRatio, borderRadius: 5}} source={{uri: ad.image}} />
             </TouchableOpacity>
         </View>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, TextInput, Dimensions, Text, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import TextLato from '../utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';
@@ -16,7 +16,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 function Searchbar(){
     const language = useLanguage();
-    const languageText = useLanguageText('navbar');
+    const languageText = useLanguageText('searchbar');
     const navigation = useNavigation();
     const [text, setText] = useState('');
     const [show, setShow] = useState(false);
@@ -55,60 +55,67 @@ function Searchbar(){
     return(
         <View>
             <View style={{...styles.searchBar, flexDirection: en ? 'row' : 'row-reverse'}}>
-                <View style={styles.searchIcon}>
-                    <Ionicons name="md-search" color='#a3a3a3' size={ 15 } />
+                <View style={styles.searchIcon}>{show?
+                <TouchableOpacity onPress={() => {inputRef.current.blur();setShow(false)}}>
+                    <Icon type={'Feather'} name={`arrow-${en ? 'left': 'right'}`} color='#a3a3a3' size={ 20 } />
+                </TouchableOpacity>
+                :
+                    <Icon type={'Ionicons'} name="md-search" color='#a3a3a3' size={ 15 } />
+                }
                 </View>
                 <TextInput
                     ref={inputRef}
                     onFocus={() => setShow(true)}
                     onBlur={() => setShow(false)}
-                    placeholder={languageText.search}
+                    placeholder={languageText.searchPlaceholder}
                     value={text}
                     onChangeText={text => {setText(text);searchInput(text)}}
                     style={{...styles.input, fontFamily: en ? 'Lato' : 'Cairo', textAlign: en ? 'left' : 'right'}}
                 />
                     <View style={styles.closeIcon}>
-                        <TouchableOpacity onPress={() => {inputRef.current.blur();setText("")}}>
+                        <TouchableOpacity onPress={() => setText("")}>
                             <Icon type="Ionicons" name="md-close-circle" color='#a3a3a3' size={ RFPercentage(2.2) } />
                         </TouchableOpacity>
                     </View>
             </View>
-            {show && <View style={searchStyles.container}>
-                <View style={searchStyles.subContainer}>
-                    <TextLato style={searchStyles.title}>Stores</TextLato>
-                    {stores.map(store => {
-                        return <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{store.title}</TextLato>
-                    })}
-                    <TextLato style={searchStyles.etcText}>Search for more stores...</TextLato>
-                </View>
-                <View style={searchStyles.subContainer}>
-                    <TextLato style={searchStyles.title}>Products</TextLato>
-                    {products.map(product => {
-                        return  <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Product', {product})}>
-                                    <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{product.title[language]}</TextLato>
-                                </TouchableOpacity>
-                    })}
-                    <TouchableOpacity key={Math.random()} onPress={() => navigation.push('ProductsList', {criteria: text})}>
-                        <TextLato style={searchStyles.etcText}>Search for more products...</TextLato>
-                    </TouchableOpacity>
-                </View>
-                <View style={searchStyles.subContainer}>
-                    <TextLato style={searchStyles.title}>Categories</TextLato>
-                    {categories.map(category => {
-                        return <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Category', category)}>
-                                    <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{category.name[language]}</TextLato>
-                                </TouchableOpacity>
-                    })}
-                    <TextLato style={searchStyles.etcText}>Search for more categories...</TextLato>
-                </View>
-                <View style={searchStyles.subContainer} onPress={() => navigation.push('Subcategory', subcategory)}>
-                    <TextLato style={searchStyles.title}>Subcategories</TextLato>
-                    {subcategories.map(subcategory => {
-                        return <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{subcategory.name[language]}</TextLato>
-                    })}
-                    <TextLato style={searchStyles.etcText}>Search for more subcategories...</TextLato>
-                </View>
-            </View>}
+            {show && <ScrollView style={searchStyles.container}>
+                <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={height * 0.2}>
+                    <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}}>
+                        <TextLato style={searchStyles.title}>{languageText.stores}</TextLato>
+                        {stores.map(store => {
+                            return <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{store.title}</TextLato>;
+                        })}
+                        <TextLato style={searchStyles.etcText}>{languageText.searchStores}</TextLato>
+                    </View>
+                    <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}}>
+                        <TextLato style={searchStyles.title}>{languageText.products}</TextLato>
+                        {products.map(product => {
+                            return  <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Product', {product})}>
+                                        <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{product.title[language]}</TextLato>
+                                    </TouchableOpacity>
+                        })}
+                        <TouchableOpacity key={Math.random()} onPress={() => navigation.push('ProductsList', {criteria: text})}>
+                            <TextLato style={searchStyles.etcText}>{languageText.searchProducts}</TextLato>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}}>
+                        <TextLato style={searchStyles.title}>{languageText.categories}</TextLato>
+                        {categories.map(category => {
+                            return <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Category', category)}>
+                                        <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{category.name[language]}</TextLato>
+                                    </TouchableOpacity>
+                        })}
+                        <TextLato style={searchStyles.etcText}>{languageText.searchCategories}</TextLato>
+                    </View>
+                    <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}} onPress={() => navigation.push('Subcategory', subcategory)}>
+                        <TextLato style={searchStyles.title}>{languageText.subcategories}</TextLato>
+                        {subcategories.map(subcategory => {
+                            return <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{subcategory.name[language]}</TextLato>
+                        })}
+                        <TextLato style={searchStyles.etcText}>{languageText.searchSubcategories}</TextLato>
+                    </View>
+                </KeyboardAvoidingView>
+            </ScrollView>}
         </View>
     )
 }
@@ -118,7 +125,7 @@ const styles = StyleSheet.create({
         width: width * 0.97,
         minHeight: 40,
         // backgroundColor: '#FFCECE',
-        backgroundColor: '#ebebeb',
+        backgroundColor: 'white',
         borderRadius: 100,
         alignItems: 'center',
         marginTop: 3,

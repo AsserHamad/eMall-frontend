@@ -46,7 +46,6 @@ const StoreOrders = () => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log(res)
             setOrders(res);
             setDisplayedOrders(res);
         })
@@ -63,13 +62,11 @@ const StoreOrders = () => {
             body: JSON.stringify({order: id, status: newStatus})
         })
         .then(res => {
-            console.log(res);
             if(res.status === 200)
                 return res.json()
             else throw new Error();
         })
         .then(res => {
-            console.log('new orders!!', res);
             setOrders(res)
         })
         .catch(err => console.log(err));
@@ -77,7 +74,6 @@ const StoreOrders = () => {
 
     useEffect(() => {
         const newOrders = orders.filter(order => order.status === status);
-        console.log('orders that fit the filter are', newOrders)
         setDisplayedOrders(newOrders);
     }, [status, orders])
     return (
@@ -146,7 +142,6 @@ const Order = ({order, changeOrderStatus}) => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log('revenue res is', res)
             setRevenue(res.total);
             setDiscount(res.discountedTotal);
         });
@@ -166,7 +161,6 @@ const Order = ({order, changeOrderStatus}) => {
                 {order.options.map(option => {
                     const x = order.product.options.filter(op => op._id === option.option)[0];
                     const pick = x.options.filter(op => op._id === option.pick)[0];
-                    console.log(pick)
                     return (<TextLato italic style={{color: '#aaa'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
                 })}
             </View>))}

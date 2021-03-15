@@ -30,7 +30,6 @@ const BannerAds = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/advertisement/banner`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
-            console.log('Banner ads', res);
             setLoading(false);
             setAds(res);
         })
@@ -64,7 +63,6 @@ const BannerAds = () => {
           quality: 1,
         })
         .then(res => {
-            console.log(res);
             setPickedImage(true);
             if(!res.cancelled) {
                 setImage(res.uri);
@@ -185,7 +183,6 @@ const BannerAd = ({ad}) => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log('ayy', res);
             setBanner(res);
         })
         .catch(err => console.log(err));

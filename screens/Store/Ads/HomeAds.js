@@ -49,7 +49,6 @@ const HomeAds = () => {
           quality: 1,
         })
         .then(res => {
-            console.log(res);
             setPickedImage(true);
             if(!res.cancelled) {
                 setImage(res.uri);
@@ -62,7 +61,6 @@ const HomeAds = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/advertisement/home/current/${page}`)
         .then(res => res.json())
         .then(({current, highestBid}) => {
-            console.log(current, highestBid)
             setCurrent(current);
             setHighestBid(highestBid);
             setLoading(false);
@@ -90,7 +88,6 @@ const HomeAds = () => {
     }, [page]);
 
     useEffect(() => {
-        console.log(!(pickedImage && (!highestBid || bid >= highestBid.bid + 10) && bid <= credit && (adType || pickedProduct)))
         setDisabled(!(pickedImage && (!highestBid || bid >= highestBid.bid + 10) && bid <= credit && (adType || pickedProduct)))
     }, [bid, adType, pickedProduct, pickedImage, loading]);
 

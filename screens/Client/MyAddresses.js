@@ -4,6 +4,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from '../../components/utils/Icon';
 import TextLato from '../../components/utils/TextLato';
+import { useLanguage, useLanguageText } from '../../hooks/language';
 import { gStyles } from '../../global.style';
 import Constants from 'expo-constants';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
@@ -17,6 +18,9 @@ const MyAddresses = (props) => {
     const dispatch = useDispatch();
     const [edited, setEdited] = useState(undefined);
     const [modalVisible, setModalVisible] = useState(false);
+    const language = useLanguage();
+    const en = language === 'en';
+    const text = useLanguageText('myAddresses');
 
     const deleteAddress = (id) => {
         let wasActive = false;
@@ -61,39 +65,37 @@ const MyAddresses = (props) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <InputModal modalVisible={modalVisible} setModalVisible={setModalVisible} addresses={addresses} edited={edited} setEdited={setEdited} />
-            <View style={{backgroundColor: gStyles.color_0}}>
+            <InputModal modalVisible={modalVisible} setModalVisible={setModalVisible} addresses={addresses} edited={edited} setEdited={setEdited} text={text} en={en} />
+            <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', paddingVertical: height * 0.02, paddingHorizontal: width * 0.02}}>
                 <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-                    <Icon type="Feather" name="arrow-left" size={RFPercentage(4)} color="white" />
+                    <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(4)} color="black" />
                 </TouchableOpacity>
-                <View style={styles.title}>
-                    <Icon style={{alignItems: 'center'}} type={'Entypo'} name={'address'} size={width * 0.08} color={'white'} />
-                    <View>
-                        <TextLato style={{textTransform: 'uppercase', marginLeft: width * 0.01, color: 'white', fontSize: RFPercentage(2.6)}}>MY ADDRESSES</TextLato>
-                    </View>
-                </View>
+                <TextLato style={{textTransform: 'uppercase', marginLeft: width * 0.01, color: 'black', fontSize: RFPercentage(2.6)}}>{text.myAddresses}</TextLato>
+                {/* <View style={styles.title}> */}
+                    {/* <Icon style={{alignItems: 'center'}} type={'Entypo'} name={'address'} size={width * 0.08} color={'white'} /> */}
+                {/* </View> */}
             </View>
             <ScrollView style={{marginTop: height * 0.03}} contentContainerStyle={{alignItems: 'center'}}>
                 {addresses.map(address => {
                     return (
                         <View key={Math.random()} style={address.active ? styles.activeAddressContainer : styles.addressContainer}>
-                            <TextLato style={styles.cardText} bold>{address.governate}</TextLato>
-                            <TextLato style={styles.cardText} bold>{address.city}</TextLato>
-                            <TextLato style={styles.cardText} bold>{address.street}</TextLato>
-                            <TextLato style={styles.cardText} bold>{address.building}, {address.apartment}</TextLato>
+                            <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.governate}</TextLato>
+                            <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.city}</TextLato>
+                            <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.street}</TextLato>
+                            <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.building}, {address.apartment}</TextLato>
                             {address.extra && 
-                            <TextLato style={styles.cardText} italic>{address.extra}</TextLato>
+                            <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} italic>{address.extra}</TextLato>
                             }
-                            <View style={{marginTop: height * 0.02, flexDirection: 'row'}}>
+                            <View style={{marginTop: height * 0.02, flexDirection: en ? 'row' : 'row-reverse'}}>
                                 {address.active ? 
                                     <View style={{...styles.activeButton, backgroundColor: 'white'}}>
                                         <Icon type={'AntDesign'} name={`smile-circle`} color={gStyles.color_0} size={20} />
-                                        <TextLato style={{...styles.activeText, color: gStyles.color_0}} italic>ACTIVE</TextLato>
+                                        <TextLato style={{...styles.activeText, color: gStyles.color_0}} italic>{text.active}</TextLato>
                                     </View>
                                 :
                                     <TouchableOpacity onPress={() => setActive(address._id)} style={styles.activeButton}>
                                         <Icon type={'AntDesign'} name={`frowno`} color={'white'} size={20} />
-                                        <TextLato style={styles.activeText} italic>SET ACTIVE</TextLato>
+                                        <TextLato style={styles.activeText} italic>{text.setActive}</TextLato>
                                     </TouchableOpacity>
                                 }
                                 <TouchableOpacity onPress={() => edit(address)} style={styles.activeButton}>
@@ -107,7 +109,7 @@ const MyAddresses = (props) => {
                     )
                 })}
                 <TouchableOpacity activeOpacity={0.8} onPress={() => setModalVisible(true)} style={styles.addNew}>
-                    <TextLato style={{fontSize: RFPercentage(2), color: 'white', marginBottom: height * 0.01}}>ADD NEW ADDRESS</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(2), color: 'white', marginBottom: height * 0.01}}>{text.addAddress}</TextLato>
                     <Icon size={40} type={'AntDesign'} name="plus" color="white" />
                 </TouchableOpacity>
             </ScrollView>
@@ -150,7 +152,7 @@ const styles = StyleSheet.create({
     },
     activeAddressContainer: {
         width: width * 0.8,
-        backgroundColor: gStyles.color_0,
+        backgroundColor: gStyles.color_2,
         paddingVertical: height * 0.03,
         shadowColor: gStyles.color_0,
         shadowOffset: {
@@ -166,7 +168,7 @@ const styles = StyleSheet.create({
     },
     addressContainer: {
         width: width * 0.8,
-        backgroundColor: gStyles.color_2,
+        backgroundColor: gStyles.color_3,
         paddingVertical: height * 0.03,
         shadowColor: gStyles.color_0,
         shadowOffset: {
@@ -200,7 +202,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const InputModal = ({modalVisible, setModalVisible, addresses, oldValues, edited, setEdited}) => {
+const InputModal = ({modalVisible, setModalVisible, addresses, oldValues, edited, setEdited, en, text}) => {
     const [governate, setGovernate] = useState('');
     const [city, setCity] = useState('');
     const [street, setStreet] = useState('');
@@ -273,13 +275,43 @@ const InputModal = ({modalVisible, setModalVisible, addresses, oldValues, edited
           onRequestClose={close}
           visible={modalVisible}>
             <View style={modalStyles.modalView}>
-              <Text style={modalStyles.modalText}>Please enter your address data:</Text>
-              <TextInput multiline value={governate} onChangeText={value => setGovernate(value)} style={modalStyles.input} placeholder={'Governate'} />
-              <TextInput multiline value={city} onChangeText={value => setCity(value)} style={modalStyles.input} placeholder={'City'} />
-              <TextInput multiline value={street} onChangeText={value => setStreet(value)} style={modalStyles.input} placeholder={'Street'} />
-              <TextInput multiline value={building} onChangeText={value => setBuilding(value)} style={modalStyles.input} placeholder={'Building'} />
-              <TextInput multiline value={apartment} onChangeText={value => setApartment(value)} style={modalStyles.input} placeholder={'Apartment'} />
-              <TextInput multiline value={extra} onChangeText={value => setExtra(value)} style={modalStyles.input} placeholder={'Extra info (landmarks, etc..)'} />
+              <TextLato style={modalStyles.modalText}>{text.enterAddress}</TextLato>
+              <TextInput 
+                multiline 
+                value={governate}    
+                onChangeText={value => setGovernate(value)} 
+                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                placeholder={text.governate} />
+              <TextInput 
+                multiline 
+                value={city}         
+                onChangeText={value => setCity(value)} 
+                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                placeholder={text.city} />
+              <TextInput 
+                multiline 
+                value={street}       
+                onChangeText={value => setStreet(value)} 
+                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                placeholder={text.street} />
+              <TextInput 
+                multiline 
+                value={building}     
+                onChangeText={value => setBuilding(value)} 
+                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                placeholder={text.building} />
+              <TextInput 
+                multiline 
+                value={apartment}    
+                onChangeText={value => setApartment(value)} 
+                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                placeholder={text.apartment} />
+              <TextInput 
+                multiline 
+                value={extra}        
+                onChangeText={value => setExtra(value)} 
+                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                placeholder={text.extra} />
   
             <View style={{flexDirection: 'row', marginTop: height * 0.05}}>
                 <TouchableOpacity

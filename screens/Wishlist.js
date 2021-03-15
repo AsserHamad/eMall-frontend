@@ -1,6 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { MaterialCommunityIcons  } from '@expo/vector-icons';
+import { Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { connect } from 'react-redux';
@@ -8,20 +7,18 @@ import WishlistCard from '../components/cards/WishlistCard';
 import Navbar from '../components/Navbar/Navbar';
 import { gStyles } from '../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { useFonts } from 'expo-font';
-import Icon from '../components/utils/Icon';
 import TextLato from '../components/utils/TextLato';
+import { useLanguageText } from '../hooks/language';
 
 function Wishlist(props){
-    const [fontsLoaded] = useFonts({
-      'Lato': require('../assets/fonts/Lato-Light.ttf')
-    });
+    const text = useLanguageText('wishlist');
     return (
     <View style={styles.container}>
         <Navbar />
         <View style={styles.headerContainer}>
-            <TextLato style={styles.headerText}>MY WISHLIST</TextLato>
+            <TextLato style={styles.headerText}>{text.myWishlist}</TextLato>
             <Image source={{uri: 'https://imgur.com/IUXbbOB.png'}} style={{width: width * 0.35, aspectRatio: 783/553}} />
+            <TextLato italic style={{textAlign: 'center', color: 'black', width: '60%', fontSize: RFPercentage(1.5)}}>{text.wishlistDescription}</TextLato>
         </View>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             {props.wishlist.products.map(item => {
@@ -34,7 +31,6 @@ function Wishlist(props){
 
 const styles = StyleSheet.create({
     container: {
-        width,
         flex: 1,
         backgroundColor: gStyles.background,
         justifyContent: 'center',
@@ -51,10 +47,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'white',
-        marginBottom: height * 0.01
+        marginBottom: height * 0.01,
+        paddingVertical: height * 0.02
     },
     headerText: {
-        marginTop: height * 0.01,
         color: gStyles.color_3,
         fontSize: RFPercentage(2.5),
         letterSpacing: RFPercentage(0.6),

@@ -54,7 +54,7 @@ const Store = (props) => {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setViewState(state => state === 1 ? state : 1)}>
                         <View style={{...styles.menuItem, backgroundColor: viewState === 1 ? gStyles.color_0 : 'transparent' }}>
-                            <TextLato style={{color: viewState !== 1 ? gStyles.color_0 : 'white'}}>Browse</TextLato>
+                            <TextLato style={{color: viewState !== 1 ? gStyles.color_0 : 'white'}}>All Products</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setViewState(state => state === 2 ? state : 2)}>

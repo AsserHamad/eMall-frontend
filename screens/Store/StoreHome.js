@@ -21,6 +21,7 @@ import StoreNavbar from '../../components/StoreNavbar/StoreNavbar';
 import TotalSales from '../../components/Store/Dashboard/TotalSales';
 import TotalViews from '../../components/Store/Dashboard/TotalViews';
 import CurrentFunds from '../../components/Store/Dashboard/CurrentFunds';
+import PendingFunds from '../../components/Store/Dashboard/PendingFunds';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -40,11 +41,12 @@ const StoreHome = ({navigation, route}) => {
                     <View style={{width: '30%', alignItems: 'center', justifyContent: 'center'}}><Image source={{uri: store.logo}} style={{width: width * 0.15, height: width * 0.15}} /></View>
                 </View>
 
-                {/* CUrrent Funds */}
+                {/* CURRENT FUNDS */}
                 <CurrentFunds />
-                
-                {/* SALES */}
-                <TotalSales />
+
+                {/* PENDING FUNDS */}
+                <PendingFunds />
+
                 {/* GRAPH */}
                 <SalesGraph />
 
@@ -63,7 +65,6 @@ const StoreHome = ({navigation, route}) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop:  5,
         backgroundColor: gStyles.background,
         alignItems: 'center',
         flex: 1

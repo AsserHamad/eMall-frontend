@@ -3,16 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { useSelector } from 'react-redux';
-import { gStyles } from '../../../global.style';
 import { useLanguage } from '../../../hooks/language';
-import Icon from '../../utils/Icon';
-import Reviews from '../../utils/Reviews';
 import TextLato from '../../utils/TextLato';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height ]
 
 const ProductsList = ({products}) => {
-    console.log(products)
     return (
         <ScrollView>
             {products.map(product => <ProductCard product={product} key={Math.random()} />)}
@@ -25,7 +20,6 @@ const ProductCard = ({product}) => {
     const navigation = useNavigation();
     const [logoAspect, setLogoAspect] = useState(1);
     useEffect(() => {
-        console.log(product)
         Image.getSize(product.store.logo, (width, height) => setLogoAspect(width/height));
     }, [])
     return (
@@ -34,12 +28,10 @@ const ProductCard = ({product}) => {
                 <Image source={{uri: product.images[0]}} style={styles.image} />
                 <View style={styles.logoContainer}><Image source={{uri: product.store.logo}} style={{...styles.logo, aspectRatio: logoAspect}} /></View>
             </View>
-            <View>
-                <TextLato>{product.title[language]}</TextLato>
-                {/* <TouchableOpacity onPress={() => navigation.push('Store', {store: product.store})}> */}
-                    <TextLato>Sold by: {product.store.title}</TextLato>
-                {/* </TouchableOpacity> */}
-                <TextLato bold>{product.price} EGP</TextLato>
+            <View style={{marginHorizontal: width * 0.1}}>
+                <TextLato bold>{product.title[language]}</TextLato>
+                <TextLato style={{marginVertical: height * 0.01, width: width * 0.5, fontSize: RFPercentage(1.7)}}>{product.description[language].substr(0, 100)}...</TextLato>
+                <TextLato style={styles.price} bold>{product.price} EGP</TextLato>
             </View>
         </TouchableOpacity>
     )
@@ -47,7 +39,7 @@ const ProductCard = ({product}) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: height * 0.01,
+        paddingVertical: height * 0.02,
         backgroundColor: 'white',
         marginVertical: height * 0.005,
         flexDirection: 'row',
@@ -55,11 +47,13 @@ const styles = StyleSheet.create({
     },
     image: {
         width: width * 0.25,
-        aspectRatio: 1
+        aspectRatio: 1,
+        resizeMode: 'contain'
     },
     logoContainer: {
         position: 'absolute',
-        top: height * -0.02,
+        bottom: 0,
+        right: -width * 0.05,
         elevation: 10,
         backgroundColor: 'white',
         borderRadius: 200,
@@ -71,6 +65,9 @@ const styles = StyleSheet.create({
     logo: {
         width: width * 0.07,
         aspectRatio: 1
+    },
+    price: {
+        marginTop: height * 0.07
     }
 })
 

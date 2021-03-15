@@ -1,53 +1,69 @@
-import React from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import { Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
+import { useLanguage } from '../../hooks/language';
 import Icon from '../utils/Icon';
 import TextLato from '../utils/TextLato';
+const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 
 function StoreCard({store}){
+    const [aspectRatio, setAspectRatio] = useState(1);
+    const navigation = useNavigation();
+    const language = useLanguage();
+    const en = language === 'en';
+    useEffect(() => {
+        if(store.logo)
+            Image.getSize(store.logo, (width, height) => setAspectRatio(width/height))
+    }, []);
     return(
-        <View style={styles.container}>
-            <Image style={styles.logo} source={{uri: store.logo}} />
+        <TouchableOpacity activeOpacity={0.7} onPress={() => {navigation.push('Store', {store})}} style={[styles.container, {transform: en ? [] : [{scaleX: -1}]}]}>
+            <View style={styles.logoContainer}>
+                    <Image source={{uri: store.logo}} style={{height: 60,  width: 80, resizeMode: 'contain'}} />
+            </View>
             <TextLato style={styles.title}>{store.title}</TextLato>
             <View style={styles.categories}>
                 {store.categories.map(category => (
-                    <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={Math.random()}>
+                    <View style={styles.categoryContainer} key={Math.random()}>
                         <Icon type={category.iconType} color="white" name={category.icon} size={12} style={styles.icon} />
                     </View>
                 ))}
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
-        width: 180,
-        height: 160,
-        borderRadius: 5,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+        elevation: 18,
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: 'center',
-        marginRight: 5,
-        marginLeft: 5,
-        marginTop: 20,
-        marginBottom: 20
+        paddingHorizontal: width * 0.07,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        marginHorizontal: width * 0.02,
+        height: height * 0.2,
+        minWidth: width * 0.4
     },
-    logo: {
-        height: 70,
-        width: 90,
-        resizeMode: 'contain'
+    logoContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
     },
     title: {
-        marginTop: 5,
-        fontSize: gStyles.fontSizeM
+        fontSize: gStyles.fontSizeM,
+        marginTop: 10
     },
     categories: {
-        height: 30,
-        width: 120,
-        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -60,6 +76,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         margin: 2,
+        backgroundColor: gStyles.color_3
     },
     icon: {
         color: 'white'

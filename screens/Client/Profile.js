@@ -2,9 +2,8 @@ import React, {useState, useEffect} from 'react';
 import { Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useSelector } from 'react-redux';
-import Navbar from '../../components/Navbar/Navbar';
 import Icon from '../../components/utils/Icon';
-import Footer from '../../components/Home/Footer';
+import { useLanguageText, useLanguage } from '../../hooks/language';
 import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
 import Constants from 'expo-constants';
@@ -13,35 +12,34 @@ import { useNavigation } from '@react-navigation/native';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const Profile = ({navigation, route}) => {
     const account = useSelector(state => state.authReducer.account);
-    console.log(account)
     const image = account && account.image ? account.image : 'https://i.imgur.com/Q6x4k3s.png';
+    const language = useLanguage();
+    const en = language === 'en';
+    const text = useLanguageText('profile');
     return (
         <View style={styles.container}>
             <ImageBackground imageStyle={{opacity: 0.6}} source={{uri: 'https://imgur.com/3XlqWj1.png'}} style={styles.topContainer}>
-            <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-                <Icon type="Feather" name="arrow-left" size={RFPercentage(4)} color="black" />
+            <TouchableOpacity style={[styles.backContainer, {alignItems: en ? 'flex-start' : 'flex-end'}]} onPress={() => navigation.goBack()}>
+                <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(5)} color="black" />
             </TouchableOpacity>
             </ImageBackground>
             <View style={styles.profileContainer}>
                 <View style={{justifyContent: 'center', flexDirection: 'row'}}>
                     <View style={{flexDirection: 'row', alignItems: 'flex-end', transform: [{translateY: -50}]}}>
                         <Image style={styles.image} source={{uri: image}} />
-                        {/* <View style={styles.titleContainer}>
-                            <Icon type={'FontAwesome'} name="pencil" size={13} color="white" />
-                        </View> */}
                     </View>
                     <View style={{paddingVertical: 13, width: width * 0.4}}>
-                        <TextLato bold style={{fontSize: RFPercentage(2)}}>ASSER HAMAD</TextLato>
+                        <TextLato bold style={{fontSize: RFPercentage(2), textTransform: 'uppercase', width: width * 0.35}}>{account.firstName} {account.lastName}</TextLato>
                         <TextLato italic style={{fontSize: RFPercentage(1.5)}}>{account && account.email}</TextLato>
                     </View>
                 </View>
 
                 {/* LIST */}
                 <View style={{paddingHorizontal: width * 0.1}}>
-                    <ListItem type="MaterialCommunityIcons" name="face-profile" text="my profile" />
-                    <ListItem type="FontAwesome5" name="truck-moving" text="my orders" destination="Orders" />
-                    <ListItem type="Entypo" name="address" text="my addresses" destination="Addresses" />
-                    <ListItem type="FontAwesome" name="dollar" text="my payments" />
+                    <ListItem reverse={!en} type="MaterialCommunityIcons" name="face-profile" text={text.myProfile} destination="MyProfile" />
+                    <ListItem reverse={!en} type="FontAwesome5" name="truck-moving" text={text.myOrders} destination="Orders" />
+                    <ListItem reverse={!en} type="Entypo" name="address" text={text.myAddresses} destination="Addresses" />
+                    <ListItem reverse={!en} type="FontAwesome" name="dollar" text={text.myPayments} destination="MyPayments" />
                     
                 </View>
             </View>
@@ -49,13 +47,13 @@ const Profile = ({navigation, route}) => {
     )
 }
 
-const ListItem = ({type, name, text, destination}) => {
+const ListItem = ({type, name, text, destination, reverse}) => {
     const navigation = useNavigation();
     return (
-        <TouchableOpacity activeOpacity={0.7} style={{alignItems: 'center', flexDirection: 'row', marginVertical: 13}} onPress={() => navigation.push(destination)}>
-            <Icon style={{marginLeft: width * 0.1, fontSize: 20, width: width * 0.13, alignItems: 'center'}} type={type} name={name} size={width * 0.08} />
+        <TouchableOpacity activeOpacity={0.7} style={{alignItems: 'center', flexDirection: !reverse ? 'row' : 'row-reverse', marginVertical: 13}} onPress={() => navigation.push(destination)}>
+            <Icon style={{marginHorizontal: width * 0.1, fontSize: 20, width: width * 0.13, alignItems: 'center'}} type={type} name={name} size={width * 0.08} />
             <View>
-                <TextLato style={{textTransform: 'uppercase', marginLeft: width * 0.11}}>{text}</TextLato>
+                <TextLato style={{textTransform: 'uppercase'}}>{text}</TextLato>
             </View>
         </TouchableOpacity>
     )
@@ -68,8 +66,8 @@ const styles = StyleSheet.create({
         backgroundColor: gStyles.background
     },
     backContainer: {
-        marginLeft: width * 0.02,
-        marginTop: height * 0.01,
+        marginHorizontal: width * 0.05,
+        marginTop: height * 0.03,
     },
     topContainer: {
         width: '100%',

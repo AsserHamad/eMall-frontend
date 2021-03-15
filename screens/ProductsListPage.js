@@ -24,9 +24,8 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 const ProductsListPage = ({navigation, route}) => {
     const [products, setProducts] = useState([]);
+    const criteria = route.params.criteria;
     useEffect(() => {
-        const criteria = route.params.criteria;
-        console.log('criteria', criteria);
         fetch(`${Constants.manifest.extra.apiUrl}/product/find`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -40,6 +39,7 @@ const ProductsListPage = ({navigation, route}) => {
     return (
         <SafeAreaView style={{flex: 1}}>
             <Header details={{title: 'Products'}} />
+            <TextLato bold style={{marginHorizontal: width * 0.05, marginVertical: height * 0.02}}>Search Results For: {criteria}</TextLato>
             <ProductsList products={products} />
         </SafeAreaView>
 

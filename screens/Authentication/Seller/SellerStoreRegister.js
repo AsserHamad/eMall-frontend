@@ -12,11 +12,12 @@ import AwesomeAlert from 'react-native-awesome-alerts';
 // Redux
 import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
-import { useFonts } from 'expo-font';
 import { useEffect } from 'react';
 import RegisterInputAndError from '../RegisterInputAndError';
 import DisabledButton from '../DisabledButton';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import TextLato from '../../../components/utils/TextLato';
+import { useLanguage } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerStoreRegister = (props) => {
@@ -27,12 +28,11 @@ const SellerStoreRegister = (props) => {
     const headerHeight = useHeaderHeight();
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [other, setOther] = useState(false);
     const [otherCategory, setOtherCategory] = useState('');
     const [showAlert, setShowAlert] = useState(true);
-    const [fontsLoaded] = useFonts({
-      'Lato': require('../../../assets/fonts/Lato-Regular.ttf'),
-      'Lato-Bold': require('../../../assets/fonts/Lato-Bold.ttf')
-    });
+    const language = useLanguage();
+    const en = language === 'en';
 
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/category`)
@@ -68,10 +68,12 @@ const SellerStoreRegister = (props) => {
     // }
     
     const register = () => {
+        if(other && otherCategory === '') return;
         const body = {seller: props.route.params.seller, store: {
             title,
             description,
-            categories
+            categories,
+            otherCategory: other ? otherCategory : undefined
         }};
         fetch(`${Constants.manifest.extra.apiUrl}/seller/register`, {
             method: 'post',
@@ -156,11 +158,10 @@ const SellerStoreRegister = (props) => {
 
     return (
         <ScrollView>
-        {fontsLoaded ? 
         <KeyboardAvoidingView keyboardVerticalOffset={headerHeight} behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Store Data</Text>
-                <Text style={{color: gStyles.color_1, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form with your store's information</Text>
+                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(20)}}>Store Data</TextLato>
+                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(12), marginTop: height * 0.01}}>Fill this form with your store's information</TextLato>
             </View>
             <View style={styles.formContainer}>
                     {/* <View style={styles.profilePictureContainer}>
@@ -171,8 +172,8 @@ const SellerStoreRegister = (props) => {
                     </View> */}
                 <RegisterInputAndError errors={errors} value={title} type={'storeTitle'} set={setTitle} />
                 <RegisterInputAndError multiline={true} errors={errors} value={description} type={'storeDescription'} set={setDescription} />
-                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Categories</Text>
-                <Text style={{color: 'black', fontSize: RFValue(11), fontFamily: gStyles.fontFamily, marginVertical: height * 0.01}}>Please select the most appropriate categories regarding your store's products</Text>
+                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(20)}}>Categories</TextLato>
+                <TextLato style={{color: 'black', fontSize: RFValue(11), marginVertical: height * 0.01}}>Please select the most appropriate categories regarding your store's products</TextLato>
             <View style={styles.categoryContainer}>
                 {categories.map(category => {
                     return(
@@ -186,29 +187,28 @@ const SellerStoreRegister = (props) => {
                         >
                             <View style={!includes(selectedCategories, category._id) ? styles.categoryButton : styles.selectedCategoryButton} 
                                 >
-                                <Text style={!includes(selectedCategories, category._id) ? styles.categoryTitle : styles.selectedCategoryTitle}>{category.name.en}</Text>
+                                <TextLato bold style={!includes(selectedCategories, category._id) ? styles.categoryTitle : styles.selectedCategoryTitle}>{category.name.en}</TextLato>
                                 {returnIconType(category, !includes(selectedCategories, category._id))}
                             </View>
                         </TouchableOpacity>
                     )
                 })}
+            </View>
+            </View>
                 <TouchableOpacity
-                activeOpacity={0.9}
-                    onPress
+                    activeOpacity={0.9}
+                    onPress={() => setOther(other => !other)}
                 >
-                    <View style={otherCategory === '' ? styles.categoryButton : styles.selectedCategoryButton} 
-                        >
-                        <Text style={otherCategory === '' ? styles.categoryTitle : styles.selectedCategoryTitle}>Other</Text>
+                    <View style={!other ? styles.categoryButton : styles.selectedCategoryButton}>
+                        <TextLato bold style={{color: other ? 'white' : gStyles.color_3, fontSize: RFPercentage(2.5)}}>Other</TextLato>
                     </View>
                 </TouchableOpacity>
-            </View>
-            </View>
+                {other && <TextInput style={{marginVertical: height * 0.05, fontFamily: 'Cairo'}} placeholder={'Please enter the other category name here'} value={otherCategory} onChangeText={(value) => setOtherCategory(value)} />}
             <DisabledButton onPressIfActive={register} array={[title, description]} errors={errors}>
-                    <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>REGISTER</Text>
+                    <TextLato style={{color: 'white', fontSize: RFValue(12)}}>REGISTER</TextLato>
             </DisabledButton>
             {Alert}
         </KeyboardAvoidingView>
-        : <Text>Loading</Text>}
         </ScrollView>
     )
 }
@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         flexDirection: 'column',
+        paddingBottom: height * 0.1
     },
     headerContainer: {
         width: width * 0.9,
@@ -262,7 +263,6 @@ const styles = StyleSheet.create({
     },
     categoryTitle: {
         color: gStyles.color_3,
-        fontFamily: 'Lato-Bold',
         marginBottom: RFPercentage(1),
         fontSize: RFPercentage(1.2)
     },
@@ -271,7 +271,6 @@ const styles = StyleSheet.create({
     },
     selectedCategoryTitle: {
         color: 'white',
-        fontFamily: 'Lato-Bold',
         fontSize: RFPercentage(1),
         marginBottom: RFPercentage(1),
         fontSize: RFPercentage(1.2)

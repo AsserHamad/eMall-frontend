@@ -14,7 +14,6 @@ function TopAds(){
         fetch(`${Constants.manifest.extra.apiUrl}/advertisement/home`)
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             setAds(res)
         })
     }, []);

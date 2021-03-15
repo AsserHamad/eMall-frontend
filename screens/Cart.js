@@ -8,12 +8,16 @@ import { Constants } from 'react-native-unimodules';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { useSelector } from 'react-redux';
 import CartCard from '../components/cards/CartCard';
+import Header from '../components/Header';
 import Icon from '../components/utils/Icon';
 import TextLato from '../components/utils/TextLato';
 import { gStyles } from '../global.style';
+import { useLanguage } from '../hooks/language';
 
 function Cart(){
     const loggedIn = useSelector(state => state.authReducer.loggedIn);
+    const language = useLanguage();
+    const en = language === 'en';
     const navigation = useNavigation();
     const token = useSelector(state => state.authReducer.token);
     if(!loggedIn)
@@ -52,6 +56,7 @@ function Cart(){
             )
     return (
         <View style={styles.container}>
+            <Header cart={false} details={{title: en ? 'Cart' : 'السلة'}} />
             <ScrollView>
                 {products.map(item => {
                     return <CartCard key={Math.random()} item={item} />
@@ -79,9 +84,8 @@ const styles = StyleSheet.create({
         backgroundColor: gStyles.background
     },
     bottomContainer: {
-        width,
-        height: height * 0.12,
-        padding: width * 0.03,
+        paddingHorizontal: width * 0.03,
+        paddingVertical: height * 0.01,
         backgroundColor: 'white',
         alignItems: 'center'
     },

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
 import Header from '../components/Header';
-import { useLanguage } from '../hooks/language';
+import { useLanguage, useLanguageText } from '../hooks/language';
 import Swiper from 'react-native-swiper/src';
 import { gStyles } from '../global.style';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -19,7 +19,27 @@ import ProductReviewCard from '../components/cards/Product/ProductReviewCard';
 import { useNavigation } from '@react-navigation/native';
 import { useRef } from 'react';
 import Toast from 'react-native-easy-toast';
+
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
+const image = 'https://www.pikpng.com/pngl/b/46-461447_deal-of-the-day-png-deal-day-clipart.png';
+const bubbles = [
+    'https://imgur.com/G27hm50.png',
+    'https://imgur.com/Jd0bH1o.png',
+    'https://imgur.com/FnOaCd8.png',
+    'https://imgur.com/5AcEkKV.png',
+];
+
+
+const getColors = (discount) => {
+    discount = Number(discount);
+    if(discount < 40)
+        return 0;
+    if(discount < 60)
+        return 1;
+    if(discount < 80)
+        return 2
+    return 3;
+}
 
 const Product = (props) => {
     const [product, setProduct] = useState(null);
@@ -30,6 +50,8 @@ const Product = (props) => {
     const [logoAspectRatio, setLogoAspectRatio] = useState(4/3);
     const [cartLoading, setCartLoading] = useState(false);
     const language = useLanguage();
+    const en = language === 'en';
+    const text = useLanguageText('product');
     const dispatch = useDispatch();
     const cartProducts = useSelector(state => state.cartReducer.cart.products);
     const inCart = () => cartProducts.filter(cartProd => cartProd._id === product._id).length > 0;
@@ -50,7 +72,6 @@ const Product = (props) => {
     }
 
     const changePick = (option, newPick) => {
-        // console.log(option, newPick)
         setPicks(picks => {
             return picks.map(pick => {
                 if(pick.option === option._id){
@@ -66,7 +87,6 @@ const Product = (props) => {
         fetch(`${Constants.manifest.extra.apiUrl}/product/${product}`)
         .then(res => res.json())
         .then(res => {
-            console.log(res.options)
             setPicks(res.options.map(option => ({
                 option: option._id,
                 pick: option.options[0]._id,
@@ -118,6 +138,12 @@ const Product = (props) => {
         })
         .catch(err => console.log(err))
     }
+
+    const calculatePrice = () => {
+        const dealOfTheDay = product.dealOfTheDay ? 1 - product.dealOfTheDay.discount/100 : 1;
+        const discount = product.discount ? 1 - product.discount : 1;
+        return ((product.price + addedPrice) * dealOfTheDay * discount).toFixed(2);
+    }
     return (
         <View style={styles.container}>
             <Toast ref={_toast => toast.current = _toast} />
@@ -137,11 +163,11 @@ const Product = (props) => {
                         <TextLato bold style={mainStyles.title}>{product.title[language]}</TextLato>
                         
                         {/* REVIEWS */}
-                        <Reviews style={mainStyles.reviews} size={RFPercentage(1.5)} reviews={product.reviewAverage} />
+                        <Reviews style={{...mainStyles.reviews, flexDirection: en ? 'row' : 'row-reverse'}} size={RFPercentage(1.5)} reviews={product.reviewAverage} />
                         
                         {/* STORE */}
-                        <View style={mainStyles.storeContainer}>
-                            <TextLato bold style={mainStyles.soldBy}>Sold by</TextLato>
+                        <View style={{...mainStyles.storeContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
+                            <TextLato bold style={mainStyles.soldBy}>{text.soldBy}</TextLato>
                             <View style={mainStyles.storeViewContainer}>
                                 <TextLato style={mainStyles.storeTitle}>{product.store.title}</TextLato>
                                 <Image style={{...mainStyles.storeLogo, aspectRatio: logoAspectRatio }} source={{uri: product.store.logo}} />
@@ -150,7 +176,7 @@ const Product = (props) => {
 
                         {/* OPTIONS */}
                         {(product.variants || product.options.length !== 0) && <View style={mainStyles.optionsContainer}>
-                            <TextLato bold style={mainStyles.optionsTitle}>Options</TextLato>
+                            <TextLato bold style={mainStyles.optionsTitle}>{text.options}</TextLato>
                             <View>
                                 {/* VARIANTS */}
                                 {product.variants && 
@@ -158,7 +184,7 @@ const Product = (props) => {
                                             <TextLato bold style={mainStyles.optionsSubtitle}>{product.variants.title[language]}</TextLato>
                                             <ScrollView horizontal>
 
-                                            <View style={{flexDirection: 'row', marginBottom: height * 0.02, width: '100%'}}>
+                                            <View style={{flexDirection: en ? 'row' : 'row-reverse', marginBottom: height * 0.02, width: '100%'}}>
                                                 {product.variants.products.map(variant => {
                                                     const picked = variant.product === product._id;
                                                     return (
@@ -201,24 +227,49 @@ const Product = (props) => {
                             </View>
                         </View>}
 
+                        {/* DEAL OF THE DAY */}
+                        {product.dealOfTheDay && (
+                        <View style={{flexDirection: 'row', marginBottom: height * 0.02}}>
+                            <Image source={{uri: image}} style={{width: width * 0.2, aspectRatio: 1.7, zIndex: 2}} />
+                            <ImageBackground source={{uri: bubbles[getColors(product.dealOfTheDay.discount)]}} 
+                                style={{...styles.discountBubble, transform: [{translateX: en ? -width * 0.02 : width * 0.02}]}}>
+                                <TextLato style={{fontSize: RFPercentage(3.5), textAlign: 'center', color: 'white'}}>{product.dealOfTheDay.discount}<TextLato style={{fontSize: RFPercentage(2)}}>%</TextLato></TextLato>
+                                <TextLato style={{fontSize: en ? RFPercentage(1.1) : RFPercentage(1.5), textAlign: 'center', color: 'white'}}>{en ? 'D I S C O U N T' : 'تخفيض'}</TextLato>
+                            </ImageBackground>
+                        </View>
+                        )}
+
                         {/* PRICE */}
-                        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: height * 0.03}}>
-                            <TextLato style={mainStyles.currency}>{product.currency.toUpperCase()}</TextLato>
-                            <TextLato bold style={mainStyles.price}>{(product.price + addedPrice).toFixed(2)}</TextLato>
+                        <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', marginBottom: height * 0.03}}>
+                            
+                            {(!product.discount && !product.dealOfTheDay) ? 
+                                <TextLato bold style={mainStyles.price}>{(product.price + addedPrice).toFixed(2)} <TextLato style={mainStyles.currency}>{en ? 'EGP' : 'ج.م.'}</TextLato></TextLato>
+                            :
+                                <View>
+                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                        <TextLato bold style={{...mainStyles.price, textDecorationLine: 'line-through'}}>{(product.price + addedPrice).toFixed(2)} <TextLato style={mainStyles.currency}>{en ? 'EGP' : 'ج.م.'}</TextLato></TextLato>
+                                        {product.discount && <View style={styles.discountContainer}>
+                                            <TextLato bold style={{color: 'white', fontSize: RFPercentage(1.7)}}>{product.discount * 100}%</TextLato>
+                                            <TextLato style={{color: 'white', fontSize: RFPercentage(1.7), marginHorizontal: width * 0.01}} italic>OFF</TextLato>
+                                        </View>}
+                                    </View>
+                                    <TextLato bold style={mainStyles.price}>{calculatePrice()} <TextLato style={mainStyles.currency}>{en ? 'EGP' : 'ج.م.'}</TextLato></TextLato>                                    
+                                </View>
+                        }
                         </View>
                         
                         {/* CART */}
                         {inCart ? 
                         <TouchableOpacity onPress={() => {addToCartHelper()}}>
                             <View style={mainStyles.addToCartButton}>
-                                <TextLato style={{color: 'white', fontSize: RFPercentage(2), marginHorizontal: width * 0.03}}>ADD TO CART</TextLato>
+                                <TextLato style={{color: 'white', fontSize: RFPercentage(2), marginHorizontal: width * 0.03}}>{text.addToCart}</TextLato>
                                 <Icon type="FontAwesome5" color="white" size={RFPercentage(2)} name="cart-plus" />
                             </View>
                         </TouchableOpacity>
                         :
                         <TouchableOpacity onPress={() => addToCartHelper()}>
                             <View style={mainStyles.addToCartButton}>
-                                <TextLato style={{color: 'white', fontSize: RFPercentage(2), marginHorizontal: width * 0.03}}>ADD TO CART</TextLato>
+                                <TextLato style={{color: 'white', fontSize: RFPercentage(2), marginHorizontal: width * 0.03}}>{text.addToCart}</TextLato>
                                 <Icon type="FontAwesome5" color="white" size={RFPercentage(2)} name="cart-plus" />
                             </View>
                         </TouchableOpacity>
@@ -226,18 +277,19 @@ const Product = (props) => {
 
                         {/* DESCRIPTION */}
                         <View style={mainStyles.descriptionContainer}>
-                            <TextLato bold style={mainStyles.descriptionTitle}>Overview</TextLato>
+                            <TextLato bold style={mainStyles.descriptionTitle}>{text.overview}</TextLato>
                             <TextLato style={{fontSize: RFPercentage(1.7)}}>{product.description[language]}</TextLato>
                         </View>
 
                         {/* SPECIFICATIONS */}
                         {product.specifications.length !== 0 && <View style={mainStyles.specificationsContainer}>
-                            <TextLato bold style={mainStyles.specificationTitle}>Specifications</TextLato>
+                            <TextLato bold style={mainStyles.specificationTitle}>{text.specifications}</TextLato>
                             <View>
                                 {product.specifications.map(spec => {
                                     const num = product.specifications.indexOf(spec) % 2 === 0;
                                     return (
-                                        <View key={Math.random()} style={{...mainStyles.specificationTile, 
+                                        <View key={Math.random()} style={{...mainStyles.specificationTile,
+                                            flexDirection: en ? 'row' : 'row-reverse', 
                                             backgroundColor: num ? 'white' : 'transparent'}}>
                                             <View style={{width: '50%'}}>
                                                 <TextLato bold >{spec.title[language]}</TextLato>
@@ -252,22 +304,22 @@ const Product = (props) => {
                         </View>}
 
                         {/* REVIEWS */}
-                        <View style={mainStyles.reviewsContainer}>
-                            <TextLato bold style={mainStyles.reviewsTitle}>Customer Reviews</TextLato>
+                        {product.reviews.length !== 0 && <View style={mainStyles.reviewsContainer}>
+                            <TextLato bold style={mainStyles.reviewsTitle}>{text.reviews}</TextLato>
                             <ScrollView horizontal>
                                 {product.reviews.map(review => <ProductReviewCard key={Math.random()} review={review} />)}
                             </ScrollView>
-                        </View>
+                        </View>}
                     </View>
                         {/* MORE FROM STORE */}
                         <ScrollCards 
                             style={{width}}
-                            title={`More From ${product.store.title}`}
+                            title={`${text.moreFrom} ${product.store.title}`}
                             cards={similarProducts.map(product => <SimilarProductCard key={Math.random()} product={product} />)}
                             />
 
                         {/* MORE ITEMS */}
-                        <ScrollCards style={{width}} title={'Similar Stores'} cards={similarStores.map(store => <StoreCard key={Math.random()} store={store} />)} />
+                        <ScrollCards style={{width}} title={text.similarStores} cards={similarStores.map(store => <StoreCard key={Math.random()} store={store} />)} />
                 </ScrollView>
             }
         </View>
@@ -288,11 +340,13 @@ const styles = StyleSheet.create({
         backgroundColor: gStyles.background
     },
     swiper: {
-        height: height * 0.4
+        height: height * 0.4,
+        backgroundColor: 'white'
     },
     swiperImage: {
         height: height * 0.4,
         width: '100%',
+        resizeMode: 'contain'
     },
     swiperDot: {
         backgroundColor:gStyles.background, 
@@ -311,7 +365,37 @@ const styles = StyleSheet.create({
         marginRight: 3, 
         marginTop: 3, 
         marginBottom: 1,
-    }
+    },
+    discountBubble: {
+        width: width * 0.2,
+        aspectRatio: 1,
+        // transf
+        borderRadius: 100,
+        marginHorizontal: 'auto',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    innerDiscountBubble: {
+        position: 'absolute',
+        right: 0,
+        bottom: 0,
+        width: width * 0.2,
+        borderRadius: 100,
+        marginHorizontal: 'auto',
+        // transform: [{translateY: height * 0.01}, {translateX: width * 0.02}],
+        zIndex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    discountContainer: {
+        flexDirection: 'row',
+        paddingVertical: height * 0.008,
+        paddingHorizontal: width * 0.015,
+        backgroundColor: gStyles.active,
+        borderRadius: 10,
+        marginHorizontal: width * 0.02,
+        alignItems: 'center'
+    },
 });
 
 const mainStyles = StyleSheet.create({
@@ -335,7 +419,7 @@ const mainStyles = StyleSheet.create({
     currency: {
         color: gStyles.color_3,
         fontSize: RFPercentage(1.8),
-        marginRight: width * 0.02
+        marginHorizontal: width * 0.02
 
     },
     addToCartButton: {
@@ -364,7 +448,7 @@ const mainStyles = StyleSheet.create({
     },
     soldBy: {
         fontSize: RFPercentage(1.7),
-        marginRight: width * 0.02
+        marginHorizontal: width * 0.02
     },
     storeViewContainer: {
         flexDirection: 'row',

@@ -35,7 +35,6 @@ const StorePageDashboard = (props) => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/page/${store._id}`)
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             setCoverImage(res.coverImage);
             setAds(res.homeAds);
         })

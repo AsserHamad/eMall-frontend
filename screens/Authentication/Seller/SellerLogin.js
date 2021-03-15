@@ -14,6 +14,8 @@ import { connect } from 'react-redux';
 import { loginSeller } from '../../../src/actions/auth';
 import DisabledButton from '../DisabledButton';
 import TextLato from '../../../components/utils/TextLato';
+import Icon from '../../../components/utils/Icon';
+import { useLanguage } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const SellerLogin = (props) => {
@@ -21,9 +23,8 @@ const SellerLogin = (props) => {
     const [email, setEmail] = useState('asserhamad96@gmail.com');
     const [errors, setErrors] = useState([]);
     const [password, setPassword] = useState('Abcd1234');
-    const [fontsLoaded] = useFonts({
-      'Lato': require('../../../assets/fonts/Lato-Regular.ttf')
-    });
+    const language = useLanguage();
+    const en = language === 'en';
     const login = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/seller/login`, {
             method: 'post',
@@ -34,7 +35,6 @@ const SellerLogin = (props) => {
         .then(res => {
             if(res && !res.status){
                 setErrors([]);
-                console.log('res is', res);
                 res.store.approved? props.loginSeller(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
             }
             else {
@@ -84,16 +84,15 @@ const SellerLogin = (props) => {
             alert(`facebook login error: ${message}`)
         }
     }
-    if(!fontsLoaded)
-        return <Text>Loading</Text>;
     return (
         <View style={styles.container}>
+        <Image style={styles.image} source={{uri: 'https://imgur.com/eoMwgCe.png'}} />
             <View style={styles.headerContainer}>
-                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Dashboard</TextLato>
-                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11), fontFamily: gStyles.fontFamily}}>Please login to access your dashboard</TextLato>
+                <TextLato style={{color: 'black', fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Dashboard</TextLato>
+                <TextLato italic style={{color: 'black', fontSize: RFValue(11)}}>Please login to access your dashboard</TextLato>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <TextLato style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</TextLato>)}
+                {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={Math.random()}>{err.msg ? err.msg : err}</TextLato>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
@@ -103,7 +102,7 @@ const SellerLogin = (props) => {
                     placeholder={'Email'}
                     placeholderTextColor={"#ffc6c6"}
                     onChangeText={(val) => setEmail(val)}
-                    style={styles.input} />
+                    style={{...styles.input, textAlign: en ? 'left' : 'right'}} />
                 <TextInput 
                     value={password}
                     textContentType={"password"}
@@ -112,8 +111,8 @@ const SellerLogin = (props) => {
                     placeholderTextColor={"#ffc6c6"}
                     secureTextEntry={true}
                     onChangeText={(val) => setPassword(val)}
-                    style={styles.input} />
-                <TouchableOpacity>
+                    style={{...styles.input, textAlign: en ? 'left' : 'right'}} />
+                <TouchableOpacity onPress={() => props.navigation.push('ForgotPassword', {route: 'seller'})}>
                     <TextLato style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</TextLato>
                 </TouchableOpacity>
             </View>
@@ -130,15 +129,13 @@ const SellerLogin = (props) => {
                 {/* Other Logins */}
                 <SafeAreaView style={styles.alternativeLogins}>
                     <TouchableOpacity onPress={facebookLogin}>
-                        <View style={styles.alternativeLoginButtonF}>
-                            <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <TextLato style={{color: 'white', fontSize: RFValue(10), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</TextLato>
+                        <View style={styles.alternativeLoginButton}>
+                            <Icon type={'FontAwesome'} name="facebook-f" size={RFValue(25)} color="white" />
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <View style={styles.alternativeLoginButtonG}>
-                            <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <TextLato style={{color: 'white', fontSize: RFValue(10), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</TextLato>
+                        <View style={[styles.alternativeLoginButton, {backgroundColor: '#EA4335'}]}>
+                            <AntDesign name="google" size={RFValue(25)} color="white" />
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>
@@ -150,7 +147,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: gStyles.background,
         alignItems: 'center',
-        paddingTop: Constants.statusBarHeight,
         flex: 1
     },
     backContainer: {
@@ -159,8 +155,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: width * 0.05,
     },
     image: {
-        height: height * 0.1,
-        aspectRatio: gStyles.logoAspectRatio
+        height: height * 0.21,
+        aspectRatio: 714/553
     },
     headerContainer: {
         width: width * 0.9,
@@ -176,12 +172,22 @@ const styles = StyleSheet.create({
         width: width * 0.9
     },
     input: {
-        fontSize: RFValue(15),
+        fontSize: RFValue(12),
         marginVertical: 10,
-        height: height * 0.04,
-        borderBottomWidth: 2,
-        borderColor: '#707070',
-        fontFamily: gStyles.fontFamily
+        borderRadius: 100,
+        backgroundColor: 'white',
+        paddingHorizontal: width * 0.04,
+        paddingVertical: height * 0.015,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 12,
+        },
+        shadowOpacity: 0.58,
+        shadowRadius: 16.00,
+        fontFamily: 'Cairo',
+        elevation: 24,
+        color: 'black'
     },
     submitButton: {
         backgroundColor: gStyles.color_0,
@@ -196,36 +202,23 @@ const styles = StyleSheet.create({
         paddingHorizontal: height * 0.025,
     },
     alternativeLogins: {
-        backgroundColor: gStyles.color_1,
         width,
-        height: height * 0.2,
+        marginVertical: height * 0.1,
         alignItems: 'center',
         justifyContent: 'center',
-        position: 'absolute',
-        bottom: 0
+        flexDirection: 'row'
     },
-    alternativeLoginButtonF: {
-        // marginTop: height * 0.05,
-        width: width * 0.9,
+    alternativeLoginButton: {
+        width: width * 0.15,
+        aspectRatio: 1,
         backgroundColor: '#3b5998',
-        height: height * 0.06,
-        borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginHorizontal: width * 0.05,
+        borderRadius: 100
     },
-    alternativeLoginButtonG: {
-        marginTop: height * 0.03,
-        width: width * 0.9,
-        backgroundColor: '#EA4335',
-        height: height * 0.06,
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: 'flex',
-        flexDirection: 'row'
-    }
 })
 
 

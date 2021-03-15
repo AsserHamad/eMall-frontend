@@ -20,6 +20,7 @@ const StoreProductsAdd = () => {
     const headerHeight = useHeaderHeight();
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
+    const [filters, setFilters] = useState([]);
     
     const [enTitle, setEnTitle] = useState('');
     const [enTitleErr, setEnTitleErr] = useState('');
@@ -38,6 +39,9 @@ const StoreProductsAdd = () => {
     
     const [pickedSubcategory, setPickedSubcategory] = useState('');
     const [pickedSubcategoryErr, setPickedSubcategoryErr] = useState('');
+    
+    const [pickedFilter, setPickedFilter] = useState('');
+    const [pickedFilterErr, setPickedFilterErr] = useState('');
     
     const [stock, setStock] = useState('');
     const [stockErr, setStockErr] = useState('');
@@ -65,6 +69,15 @@ const StoreProductsAdd = () => {
             .then(res => setSubcategories(res))
         }
     }, [pickedCategory])
+    
+    useEffect(() => {
+        if(!isEmpty(pickedSubcategory)){
+            setPickedFilter('');
+            fetch(`${Constants.manifest.extra.apiUrl}/subcategory/filters/${pickedSubcategory}`)
+            .then(res => res.json())
+            .then(res => setFilters(res))
+        }
+    }, [pickedSubcategory])
     
     const submitProduct = () => {
         const product = {
@@ -108,7 +121,6 @@ const StoreProductsAdd = () => {
                 })
             } else {
                 setShowAlert(true);
-                console.log('REEESSSSS', res);
             }
         })
         .catch(err => console.log('ERRR', err));
@@ -134,7 +146,6 @@ const StoreProductsAdd = () => {
           quality: 1,
         })
         .then(res => {
-            console.log(res);
             if(!res.cancelled) {
                 res.id = Math.random();
                 setImages(images => [...images, res]);
@@ -147,7 +158,6 @@ const StoreProductsAdd = () => {
     }
 
     const checkNotEmpty = () => {
-        console.log('not empty says', (enTitle && arTitle && pickedCategory && pickedSubcategory && stock && price && images.length !== 0) === true)
         return enTitle && arTitle && pickedCategory && pickedSubcategory && stock && price && images.length !== 0;
     }
 
@@ -297,6 +307,26 @@ const StoreProductsAdd = () => {
                 })}
                 </ScrollView>
                 }
+                
+                {/* FILTER */}
+                <TextLato style={styles.label}>Pick Filter</TextLato>
+                {pickedSubcategory === '' ? <View style={{marginHorizontal: 20, height: width * 0.35, justifyContent: 'center', alignItems: 'center', borderColor: gStyles.color_3, borderWidth: 1, borderRadius: 3}}>
+                    <TextLato>Please Pick a Subcategory</TextLato></View> : 
+                <ScrollView horizontal style={styles.categories}>
+                {filters.map(filter => {
+                        return(
+                        <TouchableOpacity
+                            key={filter._id}
+                            activeOpacity={0.7}
+                            style={{...styles.category, backgroundColor: pickedFilter === filter._id ? gStyles.color_0 : gStyles.color_3}} 
+                            onPress={() => setPickedFilter(filter._id)}
+                        >
+                            <Icon type={filter.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={filter.icon} />
+                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{filter.name.en}</TextLato>
+                        </TouchableOpacity>)
+                })}
+                </ScrollView>
+                }
             
                 {/* SPECIFICATIONS */}
                 <TextLato style={styles.label}>Specifications
@@ -304,7 +334,6 @@ const StoreProductsAdd = () => {
                 <View>
                     {specifications.map(specification => {
                         const index = specifications.indexOf(specification);
-                        console.log('Specification currently is', specifications[index])
                         return <Specification setSpecfications={setSpecfications} titleEn={specification.titleEn} index={index} />
                     })}
                     <TouchableOpacity 
@@ -430,7 +459,6 @@ const Specification = ({titleEn, setSpecfications, index}) => {
             <TextErrorInput 
                 value={titleEn} 
                 setValue={(title) => setSpecfications(specifications => {
-                    console.log('current spec', specifications)
                     specifications[index].titleEn += title;
                     return specifications;
                 })} 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, StyleSheet, ToastAndroid, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View } from 'react-native';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { connect, useDispatch, useSelector } from 'react-redux';
@@ -18,6 +18,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 const SellerCardProduct = ({product}) => {
     const language = useLanguage();
+    const en = language === 'en';
     const navigation = useNavigation();
     const cartProducts = useSelector(state => state.cartReducer.cart.products);
     const wishlist = useSelector(state => state.wishlistReducer.wishlist.products);
@@ -60,7 +61,6 @@ const SellerCardProduct = ({product}) => {
         .then(res => res.json())
         .then(res => {
             setCartLoading(false);
-            console.log(`CART: Response from server for cart update is`, res)
             dispatch(setCart(res))
         })
         .catch(err => console.log(err))
@@ -77,7 +77,6 @@ const SellerCardProduct = ({product}) => {
         .then(res => res.json())
         .then(res => {
             setCartLoading(false);
-            console.log(`CART: Response from server for cart update is`, res)
             dispatch(setCart(res))
         })
         .catch(err => console.log(err))
@@ -94,7 +93,6 @@ const SellerCardProduct = ({product}) => {
         .then(res => res.json())
         .then(res => {
             setWishlistLoading(false);
-            console.log(`WISHLIST: Response from server for cart update is`, res)
             dispatch(setWishlist(res))
         })
         .catch(err => console.log(err))
@@ -111,7 +109,6 @@ const SellerCardProduct = ({product}) => {
         .then(res => res.json())
         .then(res => {
             setWishlistLoading(false);
-            console.log(`WISHLIST: Response from server for cart update is`, res)
             dispatch(setWishlist(res))
         })
         .catch(err => console.log(err))
@@ -124,9 +121,9 @@ const SellerCardProduct = ({product}) => {
 
     return (
         <TouchableOpacity activeOpacity={1} onPress={() => navigation.push('Product', {product: product})}>
-            <View style={styles.container}>
+            <View style={[styles.container, {flexDirection: en ? 'row' : 'row-reverse', transform: en ? [] : [{scaleX: -1}]}]}>
                 <View>
-                    {product.discount && <TextLato style={styles.discountContainer}>{Math.floor(product.discount * 100)}% Off</TextLato>}
+                    {product.discount && <TextLato style={styles.discountContainer}>{Math.floor(product.discount * 100)}% {en ? 'OFF' : 'خصم'}</TextLato>}
                     <Image style={styles.image} source={{uri: product.images[0]}} />
                 </View>
 
@@ -135,12 +132,12 @@ const SellerCardProduct = ({product}) => {
                     <TextLato bold style={styles.title}>{product.title[language]}</TextLato>
                     <TextLato style={styles.description}>{product.description[language].substr(0, 100)}...</TextLato>
                     {product.discount ? 
-                        <View key={Math.random()} style={{display: 'flex', flexDirection: 'row', marginTop: height * 0.02}}>
-                            <TextLato style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.color_0}}>{product.price}</TextLato>
-                            <TextLato style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.color_0}}>{Math.floor(product.price * (1-product.discount))} EGP</TextLato>
+                        <View key={Math.random()} style={{marginTop: height * 0.02}}>
+                            <TextLato style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.color_0}}>{product.price} {en ? 'EGP' : 'ج.م'}</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.color_0}}>{Math.floor(product.price * (1-product.discount))} {en ? 'EGP' : 'ج.م'}</TextLato>
                         </View>
                         :
-                        <TextLato style={{fontSize: RFPercentage(1.7), color: gStyles.color_0, marginTop: height * 0.02}}>{product.price} EGP</TextLato>
+                        <TextLato style={{fontSize: RFPercentage(1.7), color: gStyles.color_0, marginTop: height * 0.02}}>{product.price} {en ? 'EGP' : 'ج.م'}</TextLato>
                     }
                 </View>
 
@@ -218,7 +215,7 @@ const styles = StyleSheet.create({
         fontSize: RFPercentage(1.7),
     },
     description: {
-        fontSize: RFPercentage(1.3),
+        fontSize: RFPercentage(1.1),
         marginTop: height * 0.005
     },
     buttons: {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dimensions, Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
@@ -8,6 +8,7 @@ import * as Facebook from 'expo-facebook';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useFonts } from 'expo-font';
 import * as Google from 'expo-google-app-auth';
+import { useLanguage, useLanguageText } from '../../../hooks/language';
 
 // Redux
 import { connect } from 'react-redux';
@@ -17,15 +18,17 @@ import DisabledButton from '../DisabledButton';
 import Icon from '../../../components/utils/Icon';
 import { setWishlist } from '../../../src/actions/wishlist';
 import TextLato from '../../../components/utils/TextLato';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
     const [email, setEmail] = useState('asserhamad96@gmail.com');
     const [errors, setErrors] = useState([]);
     const [password, setPassword] = useState('Abcd1234');
-    const [fontsLoaded] = useFonts({
-      'Lato': require('../../../assets/fonts/Lato-Regular.ttf')
-    });
+    const language = useLanguage();
+    const en = language === 'en';
+    const languageText = useLanguageText('clientAuth');
+    
     const login = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/login`, {
             method: 'post',
@@ -37,10 +40,10 @@ const ClientLogin = (props) => {
             if(!res.status){
                 setErrors([]);
                 if(res.client.verified){
-                    console.log(`CART: I have logged in, this is my cart`, res.client)
+                    AsyncStorage.setItem('@token', res.token);
                     props.setCart(res.client.cart);
-                    props.setWishlist(res.client.wishlist)
-                    props.login(res)
+                    props.setWishlist(res.client.wishlist);
+                    props.login(res);
                  }
                  else props.navigation.replace('ClientLoginSuccess', {account: res.client})
             }
@@ -84,13 +87,14 @@ const ClientLogin = (props) => {
             }
         }
         catch ({ message }) {
-            alert(`facebook login error: ${message}`)
+            alert(`Facebook login error: ${message}`)
         }
     }
 
     const GoogleLogin = async () => {
         const config = {
             androidClientId: "202581872046-r45t047pgp795ur78o6tmeqvi9hn0dih.apps.googleusercontent.com",
+            webClientId: '202581872046-b17q9altfm5bgi2kp2lp1011pm93bu2f.apps.googleusercontent.com',
             scopes: ['profile', 'email'],
         }
         const { type, accessToken, user } = await Google.logInAsync(config);
@@ -99,78 +103,81 @@ const ClientLogin = (props) => {
             console.log(accessToken, user)
         }
     }
-    if(!fontsLoaded)
-        return <TextLato>Loading</TextLato>
+
+    useEffect(() => {
+        if(props.route.params && props.route.params.store)
+            props.navigation.push('SellerLogin')
+    }, []);
+
     return (
         <View style={styles.container}>
-            <View style={styles.backContainer}>
+            <View style={[styles.backContainer, {alignItems: en ? 'baseline' : 'flex-end'}]}>
                 <TouchableOpacity onPress={() => props.navigation.openDrawer()}>
                     <Icon type="FontAwesome5" name="bars" size={RFValue(25)} color={gStyles.secondary} />
                 </TouchableOpacity>
             </View>
-            <Image style={styles.image} source={{uri: 'https://imgur.com/kc4Ry8f.png'}} />
+            <Image style={styles.image} source={{uri: 'https://i.imgur.com/iXv3XUH.png'}} />
             <View style={styles.headerContainer}>
-                <TextLato bold style={{color: 'black', fontSize: RFPercentage(3.5), textAlign: 'center'}}>Welcome Back!</TextLato>
-                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11), textAlign: 'center'}}>Please login to continue shopping</TextLato>
+                <TextLato bold style={{color: 'black', fontSize: RFPercentage(3.5), textAlign: 'center'}}>{languageText.welcome}</TextLato>
+                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11), textAlign: 'center'}}>{languageText.pleaseLogin}</TextLato>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <TextLato style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily}} key={Math.random()}>{err.msg ? err.msg : err}</TextLato>)}
+                {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={Math.random()}>{err.msg ? err.msg[language] : err[language]}</TextLato>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
                     value={email}
                     textContentType={"emailAddress"}
                     autoCompleteType={"email"}
-                    placeholder={'Email'}
+                    placeholder={en ? 'Email' : 'بريد الالكتروني'}
                     placeholderTextColor={"#ffc6c6"}
                     onChangeText={(val) => setEmail(val)}
-                    style={styles.input} />
+                    style={{...styles.input, textAlign: en ? 'left' : 'right'}} />
                 <TextInput 
                     value={password}
                     textContentType={"password"}
                     autoCompleteType={"password"}
-                    placeholder={'Password'}
+                    placeholder={en ? 'Password' : 'كلمة المرور'}
                     placeholderTextColor={"#ffc6c6"}
                     secureTextEntry={true}
                     onChangeText={(val) => setPassword(val)}
-                    style={styles.input} />
-                <TouchableOpacity>
-                    <TextLato bold style={{color: 'black', fontSize: RFValue(12), marginHorizontal: width * 0.02}}>Forgot Password?</TextLato>
+                    style={{...styles.input, textAlign: en ? 'left' : 'right'}} />
+                <TouchableOpacity onPress={() => props.navigation.push('ForgotPassword', {route: 'client'})}>
+                    <TextLato bold style={{color: 'black', fontSize: RFValue(12), marginHorizontal: width * 0.02}}>{languageText.forgotPassword}</TextLato>
                 </TouchableOpacity>
             </View>
             <DisabledButton onPressIfActive={login} array={[email, password]}>
-                    <TextLato bold style={{color: 'white', fontSize: RFValue(12)}}>LOGIN</TextLato>
+                    <TextLato bold style={{color: 'white', fontSize: RFValue(12)}}>{languageText.login}</TextLato>
             </DisabledButton>
             <View style={styles.bottomContainer}>
 
-            <View style={styles.others}>
-                {/* Register Now */}
-                <View style={{display:'flex', flexDirection: 'row'}}>
-                    <TextLato style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Don't have an account?</TextLato>
-                    <TouchableOpacity onPress={() => props.navigation.push('ClientRegister')}>
-                        <TextLato style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</TextLato>
-                    </TouchableOpacity>
+                <View style={styles.others}>
+                    {/* Register Now */}
+                    <View style={{flexDirection: en ? 'row' : 'row-reverse'}}>
+                        <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11)}}>{languageText.dontHaveAccount}</TextLato>
+                        <TouchableOpacity onPress={() => props.navigation.push('ClientRegister')}>
+                            <TextLato style={{marginHorizontal: 5, color: gStyles.color_0, fontSize: RFValue(11)}}>{languageText.signUp}</TextLato>
+                        </TouchableOpacity>
+                    </View>
+                    {/* Seller Account */}
+                    <View style={{flexDirection: en ? 'row' : 'row-reverse', marginTop: 5}}>
+                        <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11)}}>{languageText.areYouSeller}</TextLato>
+                        <TouchableOpacity onPress={() => props.navigation.push('SellerLogin')}>
+                            <TextLato style={{marginHorizontal: 5, color: gStyles.color_0, fontSize: RFValue(11)}}>{languageText.loginHere}</TextLato>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                {/* Seller Account */}
-                <View style={{display:'flex', flexDirection: 'row', marginTop: 5}}>
-                    <TextLato style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Are you a seller?</TextLato>
-                    <TouchableOpacity onPress={() => props.navigation.push('SellerLogin')}>
-                        <TextLato style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Login Here</TextLato>
-                    </TouchableOpacity>
-                </View>
-                </View>
+
                 {/* Other Logins */}
                 <SafeAreaView style={styles.alternativeLogins}>
                     <TouchableOpacity onPress={facebookLogin}>
-                        <View style={styles.alternativeLoginButtonF}>
-                            <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <TextLato style={{color: 'white', fontSize: RFPercentage(1.2), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Facebook</TextLato>
+                        <View style={styles.alternativeLoginButton}>
+                            <Icon type={'FontAwesome'} name="facebook" size={RFValue(25)} color="white" />
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={facebookLogin}>
-                        <View style={styles.alternativeLoginButtonG}>
-                            <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <TextLato style={{color: 'white', fontSize: RFPercentage(1.2), width: width * 0.4, fontFamily: gStyles.fontFamily}}>Sign in with Google</TextLato>
+                    <TouchableOpacity onPress={GoogleLogin}>
+                        <View style={[styles.alternativeLoginButton, {backgroundColor: '#EA4335'}]}>
+                            <AntDesign name="google" size={RFValue(25)} color="white" />
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>
@@ -185,7 +192,6 @@ const styles = StyleSheet.create({
         height,
         alignItems: 'center',
         paddingTop: Constants.statusBarHeight,
-        display: 'flex',
         flexDirection: 'column',
         // flex: 1
     },
@@ -225,7 +231,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.58,
         shadowRadius: 16.00,
-        
+        fontFamily: 'Cairo',
         elevation: 24,
         color: 'black'
     },
@@ -246,35 +252,23 @@ const styles = StyleSheet.create({
         paddingHorizontal: height * 0.025,
     },
     alternativeLogins: {
-        backgroundColor: gStyles.color_1,
         width,
-        // height: height * 0.23,
-        marginTop: height * 0.02,
+        marginVertical: height * 0.03,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'row'
     },
-    alternativeLoginButtonF: {
-        marginTop: height * 0.02,
-        width: width * 0.9,
+    alternativeLoginButton: {
+        width: width * 0.15,
+        aspectRatio: 1,
         backgroundColor: '#3b5998',
-        height: height * 0.06,
-        borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginHorizontal: width * 0.05,
+        borderRadius: 100
     },
-    alternativeLoginButtonG: {
-        marginVertical: height * 0.02,
-        width: width * 0.9,
-        backgroundColor: '#EA4335',
-        height: height * 0.06,
-        borderRadius: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: 'flex',
-        flexDirection: 'row'
-    }
 })
 
 

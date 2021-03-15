@@ -1,6 +1,5 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import ProductCard from '../cards/ProductCard';
 import StoreCard from '../cards/StoreCard';
 import ScrollCards from '../ScrollCards';
 import Categories from './Categories';
@@ -12,6 +11,8 @@ import Constants from 'expo-constants';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import DealsOfTheDay from '../../screens/DealsOfTheDay';
+import SellerCardProduct from '../cards/Seller/SellerCardProduct';
+import FeaturedProducts from './FeaturedProducts';
 
 function MainHomeView(props){
     const language = useLanguageText('mainHomeView');
@@ -26,17 +27,16 @@ function MainHomeView(props){
             <ScrollView>
                 <TopAds />
                 <Categories />
-                <ScrollCards cards={getMostPopularStores(props)} title={language && language.titlePop} />
+                <ScrollCards title={language && language.titlePop} cards={getMostPopularStores()} />
                 {ads[0] && <Ad ad={ads[0]} />}
-                {/* <ScrollCards countdown cards={getDealsOfTheDay(props)} title={language && language.titleDealsOfTheDay} /> */}
-                <DealsOfTheDay />
+                <FeaturedProducts />
                 {ads[1] && <Ad ad={ads[1]} />}
+                <DealsOfTheDay />
+                {ads[2] && <Ad ad={ads[2]} />}
                 <Footer />
             </ScrollView>
     )
 }
-
-export default MainHomeView;
 
 // Returns an array of StoreCards
 const getMostPopularStores = () => {
@@ -48,3 +48,5 @@ const getMostPopularStores = () => {
     }, [])
     return stores.map(store => <StoreCard key={Math.random()} store={store} />);
 };
+
+export default MainHomeView;

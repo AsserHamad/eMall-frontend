@@ -15,7 +15,7 @@ export default ({reviews, size, style}) => {
     return (
         <View style={{flexDirection: 'row', alignItems: 'center', ...style}}>
             {stars}
-            {reviews.number && <Text style={{fontSize: size, marginLeft: width * 0.01}}>({reviews.number})</Text>}
+            {reviews.number && <Text style={{fontSize: size, marginHorizontal: width * 0.01}}>({reviews.number})</Text>}
         </View>
     )
 }

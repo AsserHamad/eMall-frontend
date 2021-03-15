@@ -1,26 +1,40 @@
-const react = require("react");
-
 import React from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { gStyles } from '../../global.style';
 import TextLato from '../utils/TextLato';
+import { useNavigation } from '@react-navigation/native';
+import { useLanguage, useLanguageText } from '../../hooks/language';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+
+const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const Footer = () => {
-
+    const language = useLanguage();
+    const en = language === 'en';
+    const text = useLanguageText('footer');
+    const navigation = useNavigation();
     return(
         <View style={styles.container}>
             <Image source={require('../../assets/_logoM.png')} style={styles.logo} />
-            <View style={styles.secondaryContainer}>
-                <TextLato style={styles.footerText}>Contact Us</TextLato>
-                <TextLato style={styles.footerText}>Terms and Conditions</TextLato>
+            <View style={{...styles.secondaryContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
+                <TouchableNativeFeedback onPress={() => navigation.push('ContactUs')} style={{width: width * 0.45}}>
+                    <TextLato style={styles.footerText}>{text.contactUs}</TextLato>
+                </TouchableNativeFeedback>
+                <TouchableNativeFeedback onPress={() => navigation.push('Terms')} style={{width: width * 0.45}}>
+                    <TextLato style={styles.footerText}>{text.terms}</TextLato>
+                </TouchableNativeFeedback>
             </View>
-            <View style={styles.secondaryContainer}>
-                <TextLato style={styles.footerText}>Open Your Store</TextLato>
-                <TextLato style={styles.footerText}>FAQs</TextLato>
+            <View style={{...styles.secondaryContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
+                <TouchableNativeFeedback onPress={() => {navigation.navigate('Register/Login', {store: true})}} style={{width: width * 0.45}}>
+                    <TextLato style={styles.footerText}>{text.openStore}</TextLato>
+                </TouchableNativeFeedback>
+                
+                <TouchableNativeFeedback onPress={() => navigation.push('FAQs')} style={{width: width * 0.45}}>
+                    <TextLato style={styles.footerText}>{text.faq}</TextLato>
+                </TouchableNativeFeedback>
             </View>
-            <TextLato style={styles.bottomText}>© eMall.com All Rights reserved</TextLato>
+            <TextLato style={styles.bottomText}>{text.rights}</TextLato>
         </View>
     )
 }
@@ -34,7 +48,6 @@ const styles = StyleSheet.create({
     },
     secondaryContainer: {
         width: width * 0.9,
-        display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
@@ -46,7 +59,6 @@ const styles = StyleSheet.create({
     },
     footerText: {
         fontSize: RFPercentage(1.7),
-        width: '50%',
         textAlign: 'center',
         color: 'gray',
         marginVertical: height * 0.01,

@@ -43,10 +43,9 @@ const HomeAdType_1 = ({ad}) => {
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/product/${ad.product}`)
         .then(res => res.json())
-        .then(prdct => {console.log(prdct);setProduct(prdct)})
+        .then(prdct => {setProduct(prdct)})
         .catch(err => console.log(err));
     }, []);
-    console.log(ad)
     return (
         <View>
             {product && <SellerCardProduct product={product} />}
@@ -58,7 +57,6 @@ const HomeAdType_2 = ({ad}) => {
     const navigation = useNavigation();
     const [aspectRatio, setAspectRatio] = useState(1);
     useEffect(() => {
-        console.log(ad)
         Image.getSize(ad.image, (width, height) => setAspectRatio(width/height))
     }, []);
     return (

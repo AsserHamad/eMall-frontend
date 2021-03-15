@@ -1,7 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
-import { manifest } from 'expo-updates';
 import React, { useState, useEffect } from 'react';
-import { View, Text, Dimensions, StyleSheet, Image } from 'react-native';
+import { View, Dimensions, StyleSheet, Image } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
@@ -14,7 +13,7 @@ import { setCart } from '../src/actions/cart';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const Payment = (props) => {
-    const [cart, setCart] = useState([]);
+    const [cart, _setCart] = useState([]);
     const account = useSelector(state => state.authReducer.account);
     const address = account.addresses.filter(address => address.active)[0];
     const [subtotal, setSubtotal] = useState(0);
@@ -29,8 +28,7 @@ const Payment = (props) => {
             fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {headers: {token}})
             .then(res => res.json())
             .then(res => {
-                console.log('new cart', res);
-                setCart(res.products)
+                _setCart(res.products)
             })
             fetch(`${Constants.manifest.extra.apiUrl}/client/total`, {
                 headers: {token}
@@ -48,10 +46,9 @@ const Payment = (props) => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/place-order`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
-            console.log(res)
-            dispatch(setCart(res.cart))
-            props.navigation.popToTop();
-            props.navigation.push('Order', res.order);
+            dispatch(setCart({products: []}));
+            navigation.popToTop();
+            navigation.push('Order', res.order);
         })
     }
     return (
@@ -74,7 +71,6 @@ const Payment = (props) => {
                 <TextLato style={{marginTop: height * 0.03, fontSize: RFPercentage(1.7)}}>Review</TextLato>
                 <View style={styles.addressContainer}>
                     {cart.map(item => {
-                        console.log(item)
                         return (
                             <View style={{width: '100%', flexDirection: 'row', paddingVertical: 20, marginVertical: 5, borderBottomColor: '#eee', borderBottomWidth: 1}}>
                                 <Image style={{width: '25%', aspectRatio: 1, borderRadius: 4, marginRight: width * 0.05}} source={{uri: item.product.images[0]}} />

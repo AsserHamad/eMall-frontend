@@ -1,106 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
-import { gStyles } from '../global.style';
-import Icon from './utils/Icon';
+import React from 'react';
+import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
+import { RFPercentage } from 'react-native-responsive-fontsize';
+import { useLanguage } from '../hooks/language';
 import TextLato from './utils/TextLato';
+const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 function ScrollCards(props){
     const title = props.title;
-    const countdown = props.countdown;
-    const cards = props.cards;
-    const [count, setCount] = useState('00:00:00')
-    useEffect(() => {
-        setInterval(() => {
-            const countDate = countRemainingTime();
-            setCount(`${addZero(countDate.getHours())}:${addZero(countDate.getMinutes())}:${addZero(countDate.getSeconds())}`);
-        }, 1000)
-    }, []);
+    const language = useLanguage();
+    const en = language === 'en';
+    if(!props.cards.length) return null;
     return (
         <View style={{...styles.container, ...props.style}}>
-        <View style={styles.topContainer}>
-            <View style={styles.topLeftContainer}>
-                <TextLato style={styles.title}>{title}</TextLato>
-                {countdown && 
-                <View style={styles.countDownContainer}>
-                    <Icon type="MaterialIcons" size={18} name="watch-later" style={{color: gStyles.color_0, marginRight: 4}} />
-                    <Text
-                    style={{
-                        color: gStyles.color_0,
-                        fontWeight: 'bold',
-                        fontSize: 20
-                    }}>
-                        {count}
-                    </Text>
-                </View>}
-            </View>
-            <View style={styles.topRightContainer}>
-                <TextLato style={styles.topRightViewMore}>View More</TextLato>
-            </View>
-        </View>
-            <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.containerContent} horizontal>
-                {cards}
+            <TextLato bold style={styles.title}>{title}</TextLato>
+            <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={styles.containerContent} style={{transform: en ? [] : [{scaleX: -1}]}} horizontal>
+                {props.cards}
             </ScrollView>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginVertical: Dimensions.get('window').width * 0.03
+    title: {
+        fontSize: RFPercentage(2.5),
+        marginHorizontal: width * 0.03,
+        marginVertical: width * 0.03,
     },
     containerContent: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: '1%'
-    },
-    topContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-    },
-    topLeftContainer: {
-        width: '50%',
-        marginLeft: 10,
-        marginBottom: 5
-    },
-    title: {
-        fontSize: gStyles.fontSizeL
-    },
-    countDownContainer: {
-        marginTop: 7,
-        display: 'flex',
-        flexDirection: 'row',
-        color: gStyles.color_0,
-        alignItems: 'center'
-    },
-    topRightContainer: {
-        width: '45%',
-        alignItems: 'flex-end',
-        justifyContent: 'flex-end',
-
-    },
-    topRightViewMore: {
-        color: gStyles.background,
-        backgroundColor: gStyles.color_3,
-        padding: 6,
-        fontSize: 13,
-        // marginBottom: 10,
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5,
-    },
-    scrollContainer: {
-        width: '100%',
-        backgroundColor: gStyles.color_3,
+        paddingVertical: height * 0.02,
+        backgroundColor: 'black'
     },
 })
-
-const addZero = (number) => number <= 9 ? `0${number}`: number;
-
-const countRemainingTime = () => {
-    const dayStart = new Date();
-    dayStart.setHours(dayStart.getHours() + 2)
-    const dayEnd = new Date();
-    dayEnd.setHours(23, 59, 59, 999);
-    return  new Date(dayEnd - dayStart);
-}
 
 export default ScrollCards;

@@ -1,6 +1,14 @@
 {
     "searchbar": {
-        "search": "ابحث عن أي شيء..."
+        "searchPlaceholder": "ابحث عن أي شيء...",
+        "stores": "المتاجر",
+        "products": "المنتجات",
+        "categories": "التصنيفات",
+        "subcategories": "الفئات الفرعية",
+        "searchStores": "البحث عن المزيد من المتاجر ...",
+        "searchProducts": "البحث عن المزيد من المنتجات ...",
+        "searchCategories": "البحث عن المزيد من الفئات ...",
+        "searchSubcategories": "البحث عن المزيد من الفئات الفرعية ..."
     },
     "sidebar": {
         "home": "المنزل",
@@ -11,9 +19,110 @@
     },
     "mainHomeView": {
         "titlePop": "المتاجر الأكثر شهرة",
+        "titleFeatured": "منتجات مميزة",
         "titleDealsOfTheDay": "عروض اليوم " 
+    },
+    "wishlist": {
+        "myWishlist": "قائمة امنياتي",
+        "wishlistDescription": "سيتم إخطارك عندما يتم طرح عنصر في قائمة أمنياتك للبيع!",
+        "seller": "البائع:"
+    },
+    "product": {
+        "soldBy": "البائع",
+        "options": "الخيارات",
+        "addToCart": "أضف إلى السلة",
+        "overview": "ملخص",
+        "specifications": "مواصفات",
+        "reviews": "آراء المستخدمين",
+        "moreFrom": "المزيد من",
+        "similarStores": "متاجر مماثلة"
+    },
+    "clientAuth": {
+        "welcome": "لقد افتقدناك!",
+        "pleaseLogin": "الرجاء تسجيل الدخول لمواصلة التسوق",
+        "forgotPassword": "نسيت كلمة السر؟",
+        "login": "تسجيل الدخول",
+        "dontHaveAccount": "ليس لديك حساب؟",
+        "signUp": "أفتح حساب الأن",
+        "areYouSeller" : "هل انت بائع؟",
+        "loginHere": "سجل دخولك",
+        "register": "يسجل",
+        "registerDescription": "املأ هذا النموذج لإكمال عملية التسجيل الخاصة بك",
+        "firstName": "الاسم الاول",
+        "lastName": "اسم العائلة",
+        "phoneNumber": "رقم التليفون",
+        "email": "بريد الالكتروني",
+        "password": "كلمة المرور"
+    },
+    "profile": {
+        "myProfile": "ملفي",
+        "myOrders": "طلباتي",
+        "myAddresses": "عناويني",
+        "myPayments": "مدفوعاتي"
+    },
+    "myProfile": {
+        "email": "البريد الإلكتروني",
+        "firstName": "الاسم الاول",
+        "lastName": "اسم العائلة",
+        "phone": "رقم التليفون",
+        "update": "تحديث"
+    },
+    "myOrders": {
+        "myOrders": "طلباتي",
+        "order": "طلب",
+        "awaitingConfirmation": "بانتظار التأكيد",
+        "cancelled": "ملغى",
+        "cancelOrder": "الغاء الطلب",
+        "orderPlaced": "تم الطلب",
+        "orderPlacedDescription": "لقد قمت بوضع هذا الطلب في",
+        "orderConfirmed": "تاكيد الطلب",
+        "orderConfirmedDescription": "تم تأكيد طلبك من قبل البائعين",
+        "orderProcessing": "مراجعة الطلب",
+        "orderProcessingDescription": "نقوم حاليا بمعالجة طلبك",
+        "orderReadyToShip": "جاهز للشحن",
+        "orderReadyToShipDescription": "طلبك جاهز للشحن.",
+        "orderOutForDelivery": "خارج للتوصيل",
+        "orderOutForDeliveryDescription": "طلبك في طريقه إليك الآن!",
+        "orderComplete": "Your order has been completed!",
+        "viewFullDetails": "عرض التفاصيل الكاملة",
+        "viewFewerDetails": "عرض تفاصيل أقل"
     },
     "navbar": {
         "search": "ابحث عن أي شيء..."
+    },
+    "myAddresses": {
+        "myAddresses": "عناويني",
+        "active": "فعال",
+        "setActive": "تعيين كفعال",
+        "addAddress": "أضف عنوانًا جديدًا",
+        "enterAddress": "الرجاء إدخال بيانات عنوانك:",
+        "governate": "المحافظة",
+        "city": "المدينة",
+        "street": "الشارع",
+        "building": "المبنى",
+        "apartment": "الشقة",
+        "extra": "معلومات إضافية (المعالم ، إلخ ...)"
+    },
+    "myPayments": {
+        "payments": "مدفوعاتي"
+    },
+    "footer": {
+        "contactUs": "تواصل معنا",
+        "terms": "الأحكام والشروط",
+        "openStore": "افتح متجرك",
+        "faq": "أسئلة وأجوبة",
+        "rights": "© eMall.com جميع الحقوق محفوظة"
+    },
+    "contactUs": {
+        "contactUs": "تواصل معنا",
+        "city": "المقطم",
+        "street": "شارع لوريم ابسوم بجوار كبابجي كازا",
+        "building": "رقم المبنى 24 ، الطابق الثاني ، شقة رقم 210"    
+    },
+    "terms": {
+        "terms": "الأحكام والشروط"
+    },
+    "faqs": {
+        "faqs": "أسئلة وأجوبة"
     }
 }

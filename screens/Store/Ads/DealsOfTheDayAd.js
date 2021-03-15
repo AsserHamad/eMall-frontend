@@ -45,7 +45,6 @@ const DealOfTheDayAd = () => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             setRefresh(refresh => !refresh);
             fetchProducts();
         });

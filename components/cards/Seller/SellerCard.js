@@ -33,9 +33,9 @@ const SellerCard = ({ seller }) => {
                             <Image source={{uri: seller.logo}} style={{...styles.logo, aspectRatio}} />
                     </TouchableOpacity>
                 </View>
-                <View style={{...headerStyles.container, alignItems: en ? 'flex-start' : 'flex-end', paddingRight: en ? 0 : width * 0.28}}>
+                <View style={{...headerStyles.container, alignItems: en ? 'flex-start' : 'flex-end', paddingHorizontal:width * 0.27}}>
                     <TextLato style={headerStyles.title}>{seller.title}</TextLato>
-                    <View style={styles.categoriesContainer}>
+                    <View style={[styles.categoriesContainer, {justifyContent: en ? 'flex-start' : 'flex-end'}]}>
                         {seller.categories.map(details => {
                             return <Icon type={details.iconType} key={Math.random()} color="white" name={details.icon} style={styles.category} size={RFPercentage(1.7)} />
                         })}
@@ -51,7 +51,7 @@ const SellerCard = ({ seller }) => {
                         <TextLato style={styles.reviewNumber}>({reviews.number})</TextLato>
                     </View>
                 </View>
-                <ScrollView horizontal>
+                <ScrollView style={{transform: en ? [] : [{scaleX: -1}]}} horizontal>
                     {seller.products.map(product => <SellerCardProduct key={Math.random()} product={product} />)}
                 </ScrollView>
             </View>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginTop: height * 0.005,
+        justifyContent: 'flex-end',
     },
     category: {
         width: width * 0.07,
@@ -114,13 +114,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 100,
         backgroundColor: gStyles.color_3,
-        marginRight: width * 0.01
+        marginRight: width * 0.01,
+        marginTop: height * 0.005,
     }
 });
 
 const headerStyles = StyleSheet.create({
     container: {
-        marginLeft: width * 0.28,
         marginTop: height * 0.01,
     },
     title: {

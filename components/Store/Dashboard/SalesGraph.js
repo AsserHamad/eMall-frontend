@@ -4,37 +4,46 @@ import { LineChart } from "react-native-chart-kit";
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { gStyles } from '../../../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import { Constants } from 'react-native-unimodules';
+import { useSelector } from 'react-redux';
+import TotalSales from './TotalSales';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const SalesGraph = (props) => {
+    const token = useSelector(state => state.authReducer.token);
+    const [data, setData] = useState([0,0,0,0]);
+    useEffect(() => {
+        fetch(`${Constants.manifest.extra.apiUrl}/store/previous-sales`, {headers: {token}})
+        .then(res => res.json())
+        .then(sales => {
+            const s = sales.map(monthSales => monthSales.reduce((elem, next) => elem + next.amount, 0));
+            setData(s);
+        })
+    }, [])
     return(
         <View style={styles.container}>
+            <TotalSales />
             {/* <TextLato style={styles.title} bold>Monthly Sales</TextLato> */}
             <LineChart
                 data={{
                 labels: ["Jan", "Feb", "Mar", "Apr"],
                 datasets: [
                     {
-                    data: [
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100,
-                        Math.random() * 100
-                    ]
+                    data
                     }
                 ]
                 }}
                 width={width} // from react-native
-                height={220}
+                height={300}
                 // transparent
-                withHorizontalLabels={false}
+                // withHorizontalLabels={false}
                 withHorizontalLines={false}
                 withVerticalLines={false}
                 withShadow={false}
                 // withVerticalLabels={false}
                 // yAxisLabel="$"
-                yAxisSuffix="k"
+                // yAxisSuffix=""
                 yAxisInterval={1} // optional, defaults to 1
                 
                 chartConfig={{

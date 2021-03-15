@@ -1,4 +1,15 @@
 {
+    "searchbar": {
+        "searchPlaceholder": "Search for anything...",
+        "stores": "Stores",
+        "products": "Products",
+        "categories": "Categories",
+        "subcategories": "Subcategories",
+        "searchStores": "Search for more stores...",
+        "searchProducts": "Search for more stores...",
+        "searchCategories": "Search for more stores...",
+        "searchSubcategories": "Search for more stores..."
+    },
     "sidebar": {
         "home": "Home",
         "deals": "Deals",
@@ -8,9 +19,106 @@
     },
     "mainHomeView": {
         "titlePop": "Most Popular Stores",
+        "titleFeatured": "Featured Products",
         "titleDealsOfTheDay": "Deals of the Day"
     },
-    "navbar": {
-        "search": "Search for anything..."
+    "wishlist": {
+        "myWishlist": "MY WISHLIST",
+        "wishlistDescription": "You will get notified whenever an item in your wishlist goes on sale!",
+        "seller": "Seller:"
+    },
+    "product": {
+        "soldBy": "Sold by",
+        "options": "Options",
+        "addToCart": "ADD TO CART",
+        "overview": "Overview",
+        "specifications": "Specifications",
+        "reviews": "Customer Reviews",
+        "moreFrom": "More From",
+        "similarStores": "Similar Stores"
+    },
+    "clientAuth": {
+        "welcome": "Welcome Back!",
+        "pleaseLogin": "Please login to continue shopping",
+        "forgotPassword": "Forgot Password?",
+        "login": "Login",
+        "dontHaveAccount": "Don't have an account?",
+        "signUp": "Sign Up Now",
+        "areYouSeller" : "Are you a seller?",
+        "loginHere": "Login Here",
+        "register": "Register",
+        "registerDescription": "Fill this form to complete your registration process",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "password": "Password"
+    },
+    "profile": {
+        "myProfile": "My Profile",
+        "myOrders": "My Orders",
+        "myAddresses": "My Addresses",
+        "myPayments": "My Payments"
+    },
+    "myProfile": {
+        "email": "EMAIL",
+        "firstName": "FIRST NAME",
+        "lastName": "LAST NAME",
+        "phone": "PHONE NUMBER",
+        "update": "UPDATE"
+    },
+    "myOrders": {
+        "myOrders": "My Orders",
+        "order": "Order",
+        "awaitingConfirmation": "Awaiting Confirmation",
+        "cancelled": "Cancelled",
+        "cancelOrder": "Cancel Order",
+        "orderPlaced": "Order Placed",
+        "orderPlacedDescription": "You have placed this order on",
+        "orderConfirmed": "Order Confirmed",
+        "orderConfirmedDescription": "Your order has been confirmed by the sellers",
+        "orderProcessing": "Processing Order",
+        "orderProcessingDescription": "We are currently processing your order.",
+        "orderReadyToShip": "Ready to Ship",
+        "orderReadyToShipDescription": "Your order is getting ready to be shipped.",
+        "orderOutForDelivery": "Out for Delivery",
+        "orderOutForDeliveryDescription": "Your order is on its way to you right now!",
+        "orderComplete": "Complete ✅",
+        "viewFullDetails": "View Full Details",
+        "viewFewerDetails": "View Fewer Details"
+    },
+    "myAddresses": {
+        "myAddresses": "MY ADDRESSES",
+        "active": "ACTIVE",
+        "setActive": "SET ACTIVE",
+        "addAddress": "ADD NEW ADDRESS",
+        "enterAddress": "Please enter your address data:",
+        "governate": "Governate",
+        "city": "City",
+        "street": "Street",
+        "building": "Building",
+        "apartment": "Apartment",
+        "extra": "Extra Info (landmarks, etc...)"
+    },
+    "myPayments": {
+        "payments": "My Payments"
+    },
+    "footer": {
+        "contactUs": "Contact Us",
+        "terms": "Terms And Conditions",
+        "openStore": "Open Your Store",
+        "faq": "FAQs",
+        "rights": "© eMall.com All Rights reserved"
+    },
+    "contactUs": {
+        "contactUs": "Contact Us",
+        "city": "EL Mokattam",
+        "street": "Lorem Ipsum Street, Beside kababgy kaza",
+        "building": "Building number 24, Second Floor, Apartment #210"    
+    },
+    "terms": {
+        "terms": "Terms And Conditions"
+    },
+    "faqs": {
+        "faqs": "FAQ"
     }
 }

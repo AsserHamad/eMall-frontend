@@ -7,7 +7,6 @@ const initialState = {
 }
 
 const wishlistReducer = (state = initialState, action) => {
-    if(action.type === SET_WISHLIST)console.log('SETTING WISHLIST', action)
     switch(action.type){
         case SET_WISHLIST: 
             return {

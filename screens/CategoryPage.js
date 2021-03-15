@@ -12,14 +12,41 @@ import { useLanguage } from '../hooks/language';
 import TextLato from '../components/utils/TextLato';
 import { useNavigation } from '@react-navigation/native';
 import SellerCardsList from '../components/utils/SellerCardsList';
+import Icon from '../components/utils/Icon';
+import CustomModal from '../components/utils/CustomModal';
 
 const CategoryPage = (props) => {
     const details = props.route.params;
     const language = useLanguage();
+    const en = language === 'en';
+    const [sortVisible, setSortVisible] = useState(false);
     return (
         <View style={styles.container}>
             <Header search details={{title: details.name[language]}} />
             <SubcategoriesScroll details={details} />
+            <TouchableOpacity style={styles.sortContainer} onPress={() => setSortVisible(m => !m)}>
+                <Icon type={'FontAwesome5'} name={'sort'} size={RFPercentage(3)} />
+                <TextLato bold style={{marginHorizontal: width * 0.02, fontSize: RFPercentage(2.5)}}>{en ? 'Sort' : 'رتب'}</TextLato>
+            </TouchableOpacity>
+            {sortVisible && (
+                <ScrollView horizontal contentContainerStyle={{paddingHorizontal: width * 0.03, paddingVertical: height * 0.02}}>
+                    <TouchableOpacity style={styles.sortChoice}>
+                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Price: High to Low</TextLato>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.sortChoice}>
+                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Price: Low to High</TextLato>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.sortChoice}>
+                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Popularity</TextLato>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.sortChoice}>
+                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Newest Arrivals</TextLato>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.sortChoice}>
+                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Rating</TextLato>
+                    </TouchableOpacity>
+                </ScrollView>
+            )}
             <SellerCardsList url={`${Constants.manifest.extra.apiUrl}/store/find-by-category`} body={{category: details._id}} />
         </View>
     )
@@ -27,7 +54,7 @@ const CategoryPage = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -54,6 +81,21 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
         elevation: 3,
+    },
+    sortContainer: {
+        paddingVertical: height * 0.01,
+        flexDirection: 'row',
+        width,
+        paddingHorizontal: width * 0.05,
+        alignItems: 'center',
+    },
+    sortChoice: {
+        paddingHorizontal: width * 0.05,
+        paddingVertical: height * 0.01,
+        borderRadius: 100,
+        borderWidth: 1,
+        borderColor: '#888',
+        marginRight: width * 0.02
     }
 });
 
@@ -63,16 +105,21 @@ const SubcategoriesScroll = ({details}) => {
     const navigation = useNavigation();
     const [subcategories, setSubcategories] = useState([]);
     const language = useLanguage();
+    const en = language === 'en';
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/subcategory/find-by-category/${details._id}`)
         .then(res => res.json())
         .then(res => setSubcategories(res))
     }, [])
     return(
-        <View style={{height: height * 0.11, borderColor: '#ddd', borderBottomWidth: 1}}>
-        <ScrollView showsHorizontalScrollIndicator={false} horizontal style={subcategoryStyles.scrollView} contentContainerStyle={{justifyContent: 'center'}}>
+        <ScrollView 
+            showsHorizontalScrollIndicator={false} 
+            horizontal 
+            style={{...subcategoryStyles.scrollView, transform: en ? [] : [{scaleX: -1}]}} 
+            contentContainerStyle={{justifyContent: 'center'}}
+        >
             {subcategories.map(subcategory => (
-                <TouchableOpacity key={Math.random()} style={subcategoryStyles.touchableBlock} activeOpacity={0.4} onPress={() => navigation.push('Subcategory', {...subcategory})}>
+                <TouchableOpacity key={Math.random()} style={{...subcategoryStyles.touchableBlock, transform: en ? [] : [{scaleX: -1}]}} activeOpacity={0.4} onPress={() => navigation.push('Subcategory', {...subcategory})}>
                     <View key={subcategory._id} style={subcategoryStyles.container}>
                         <Image style={{width: width * 0.13, aspectRatio: 1, borderRadius: 100 }} source={{uri: subcategory.image}} />
                     </View>
@@ -80,7 +127,6 @@ const SubcategoriesScroll = ({details}) => {
                 </TouchableOpacity>
             ))}
         </ScrollView>
-        </View>
     )
 }
 
@@ -99,6 +145,9 @@ const subcategoryStyles = StyleSheet.create({
         borderColor: gStyles.color_3
     },
     scrollView: {
-        width
+        width,
+        borderColor: '#ddd',
+        borderBottomWidth: 1,
+        paddingVertical: height * 0.02
     }
 })

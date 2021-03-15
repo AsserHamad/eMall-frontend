@@ -15,6 +15,7 @@ import { login } from '../../../src/actions/auth';
 import { useFonts } from 'expo-font';
 import RegisterInputAndError from '../RegisterInputAndError';
 import DisabledButton from '../DisabledButton';
+import TextLato from '../../../components/utils/TextLato';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerRegister = (props) => {
@@ -25,11 +26,6 @@ const SellerRegister = (props) => {
     const [phone, setPhone] = useState('+20');
     const [title, setTitle] = useState('');
     const [facebookId, setFacebookId] = useState(undefined);
-    const [image, setImage] = useState('https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-400x284.jpg');
-    const headerHeight = useHeaderHeight();
-    const [fontsLoaded] = useFonts({
-      'Lato': require('../../../assets/fonts/Lato-Regular.ttf')
-    });
 
     // Get image permission
     // useEffect(() => {
@@ -118,22 +114,13 @@ const SellerRegister = (props) => {
             alert(`facebook login error: ${message}`)
         }
     }
-
-    if(!fontsLoaded)
-        return <Text>Loading</Text>;
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Text style={{color: gStyles.color_1, fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Data</Text>
-                <Text style={{color: gStyles.color_1, fontSize: RFValue(12), fontFamily: gStyles.fontFamily, marginTop: height * 0.01}}>Fill this form with your personal information</Text>
+                <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>Seller Data</TextLato>
+                <TextLato italic style={{color: 'black', fontSize: RFValue(12), marginTop: height * 0.01}}>Fill this form with your personal information</TextLato>
             </View>
             <KeyboardAvoidingView style={styles.formContainer}>
-                    {/* <View style={styles.profilePictureContainer}>
-                        <TouchableOpacity onPress={pickImage}>
-                            <Image source={{ uri: image }} style={{ width: width * 0.3, height: width * 0.3, borderRadius: 10 }} />
-
-                        </TouchableOpacity>
-                    </View> */}
                 <RegisterInputAndError errors={errors} value={name} type={'name'} set={setName} />
                 <RegisterInputAndError errors={errors} value={title} type={'title'} set={setTitle} />
                 <RegisterInputAndError errors={errors} value={phone} type={'phone'} set={setPhone} numeric keyboardType={'numeric'} />
@@ -141,7 +128,7 @@ const SellerRegister = (props) => {
                 <RegisterInputAndError errors={errors} value={password} secureTextEntry type={'password'} set={setPassword} />
             </KeyboardAvoidingView>
             <DisabledButton onPressIfActive={registerSeller} array={[name, phone, email, password]} errors={errors}>
-                    <Text style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12), marginRight: RFValue(6)}}>NEXT</Text>
+                    <TextLato style={{color: 'white', fontSize: RFValue(12), marginRight: RFValue(6)}}>NEXT</TextLato>
                     <AntDesign size={RFValue(12)} color="white" name="arrowright" />
             </DisabledButton>
                 {/* Other Logins */}
@@ -149,13 +136,13 @@ const SellerRegister = (props) => {
                     <TouchableOpacity onPress={facebookRegister}>
                         <View style={styles.alternativeLoginButtonF}>
                             <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.45, fontFamily: gStyles.fontFamily}}>Fetch Data From Facebook</Text>
+                            <TextLato style={{color: 'white', fontSize: RFValue(12), width: width * 0.45}}>Fetch Data From Facebook</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <View style={styles.alternativeLoginButtonG}>
                             <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <Text style={{color: 'white', fontSize: RFValue(12), width: width * 0.45, fontFamily: gStyles.fontFamily}}>Fetch Data From Google</Text>
+                            <TextLato style={{color: 'white', fontSize: RFValue(12), width: width * 0.45}}>Fetch Data From Google</TextLato>
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>}
@@ -194,14 +181,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: height * 0.025,
     },
     alternativeLogins: {
-        backgroundColor: gStyles.color_1,
         width,
         height: height * 0.2,
         marginTop: 20,
         alignItems: 'center',
-        justifyContent: 'center',
-        position: 'absolute',
-        bottom: 0
+        justifyContent: 'center'
     },
     alternativeLoginButtonF: {
         width: width * 0.9,
