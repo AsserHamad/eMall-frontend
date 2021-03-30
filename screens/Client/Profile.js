@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const Profile = ({navigation, route}) => {
     const account = useSelector(state => state.authReducer.account);
-    const image = account && account.image ? account.image : 'https://i.imgur.com/Q6x4k3s.png';
+    const image = 'https://imgur.com/RwdRLaD.png';
     const language = useLanguage();
     const en = language === 'en';
     const text = useLanguageText('profile');

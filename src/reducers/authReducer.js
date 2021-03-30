@@ -46,7 +46,7 @@ const authReducer = (state = initialState, action) => {
                 account: action.data.seller,
                 store: action.data.store,
                 token: action.data.token,
-                type: action.data.type
+                type: 'store'
             }
         case LOGOUT:
             return {

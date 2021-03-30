@@ -1,14 +1,12 @@
 import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useSelector } from 'react-redux';
-import Searchbar from './Navbar/Searchbar';
 import Icon from './utils/Icon';
 import TextLato from './utils/TextLato';
-import HeaderSearchbar from './HeaderSearchbar';
 import { useNavigation } from '@react-navigation/native';
 import { useLanguage } from '../hooks/language';
 
@@ -25,11 +23,11 @@ export default ({ details, cart }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={{...styles.topContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
-            <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-                <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(3)} color="black" />
-            </TouchableOpacity>
-            <TextLato style={styles.title}>{details.title}</TextLato>
-            {cart && <TouchableOpacity
+                <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
+                    <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(3)} color="black" />
+                </TouchableOpacity>
+                <TextLato style={{...styles.title, textAlign: en ? 'left' : 'right'}}>{details.title}</TextLato>
+                {cart && <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => navigation.push('Cart')}
                     style={styles.burgerContainer}
@@ -46,16 +44,16 @@ export default ({ details, cart }) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight + 5,
         width,
         backgroundColor: gStyles.background,
     },
     topContainer: {
         width,
-        height: height * 0.06,
-        display: 'flex',
+        // height: height * 0.06,
         flexDirection: 'row',
         alignItems: 'center',
+        paddingVertical: height * 0.02
         // paddingHorizontal: width * 0.02
     },
     backContainer: {
@@ -64,7 +62,7 @@ const styles = StyleSheet.create({
         // alignItems: 'center'
     },
     title: {
-        fontSize: RFPercentage(2),
+        fontSize: RFPercentage(2.5),
         width: width * 0.7
     },
     burgerContainer: {

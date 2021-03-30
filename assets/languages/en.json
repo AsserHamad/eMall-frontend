@@ -35,7 +35,11 @@
         "specifications": "Specifications",
         "reviews": "Customer Reviews",
         "moreFrom": "More From",
-        "similarStores": "Similar Stores"
+        "similarStores": "Similar Stores",
+        "extraTextTitle": "This product requires your input",
+        "extraImageTitle": "This product requires an image",
+        "extraDetails": "Check the above description for more details",
+        "enterInfo": "Enter Info Here"
     },
     "clientAuth": {
         "welcome": "Welcome Back!",
@@ -47,6 +51,8 @@
         "areYouSeller" : "Are you a seller?",
         "loginHere": "Login Here",
         "register": "Register",
+        "loginF": "Login with Facebook",
+        "loginG": "Login with Google",
         "registerDescription": "Fill this form to complete your registration process",
         "firstName": "First Name",
         "lastName": "Last Name",
@@ -82,7 +88,7 @@
         "orderReadyToShipDescription": "Your order is getting ready to be shipped.",
         "orderOutForDelivery": "Out for Delivery",
         "orderOutForDeliveryDescription": "Your order is on its way to you right now!",
-        "orderComplete": "Complete ✅",
+        "orderComplete": "Complete",
         "viewFullDetails": "View Full Details",
         "viewFewerDetails": "View Fewer Details"
     },
@@ -104,7 +110,7 @@
     },
     "footer": {
         "contactUs": "Contact Us",
-        "terms": "Terms And Conditions",
+        "terms": "Privacy Policy",
         "openStore": "Open Your Store",
         "faq": "FAQs",
         "rights": "© eMall.com All Rights reserved"
@@ -116,9 +122,17 @@
         "building": "Building number 24, Second Floor, Apartment #210"    
     },
     "terms": {
-        "terms": "Terms And Conditions"
+        "terms": "Privacy Policy"
     },
     "faqs": {
-        "faqs": "FAQ"
+        "faqs": "Frequently Asked Questions"
+    },
+    "storePage": {
+        "home": "Home",
+        "allProducts": "All products",
+        "reviews": "Reviews",
+        "addReview": "Add Review",
+        "helpful": "people found this review helpful",
+        "typeReview": "Type your review here"
     }
 }

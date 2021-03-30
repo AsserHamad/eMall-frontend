@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, SafeAreaView, StyleSheet, View } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Header from '../components/Header';
@@ -14,19 +14,28 @@ import { useNavigation } from '@react-navigation/native';
 import SellerCardsList from '../components/utils/SellerCardsList';
 import Icon from '../components/utils/Icon';
 import CustomModal from '../components/utils/CustomModal';
+import ProductCardsList from '../components/utils/ProductCardsList';
+import Toast from 'react-native-easy-toast';
 
 const CategoryPage = (props) => {
     const details = props.route.params;
     const language = useLanguage();
     const en = language === 'en';
+    const toast = useRef();
     const [sortVisible, setSortVisible] = useState(false);
+
+    const showToast = message => {
+        toast.current.show(message);
+    }
+
     return (
         <View style={styles.container}>
+            <Toast ref={_toast => toast.current = _toast} />
             <Header search details={{title: details.name[language]}} />
+            <ScrollView>
             <SubcategoriesScroll details={details} />
-            <TouchableOpacity style={styles.sortContainer} onPress={() => setSortVisible(m => !m)}>
-                <Icon type={'FontAwesome5'} name={'sort'} size={RFPercentage(3)} />
-                <TextLato bold style={{marginHorizontal: width * 0.02, fontSize: RFPercentage(2.5)}}>{en ? 'Sort' : 'رتب'}</TextLato>
+            {/* <TouchableOpacity onPress={() => setSortVisible(m => !m)}>
+                <Icon type={'FontAwesome'} name={'sort-amount-asc'} size={RFPercentage(3)} style={styles.sortContainer} />
             </TouchableOpacity>
             {sortVisible && (
                 <ScrollView horizontal contentContainerStyle={{paddingHorizontal: width * 0.03, paddingVertical: height * 0.02}}>
@@ -46,17 +55,32 @@ const CategoryPage = (props) => {
                         <TextLato style={{fontSize: RFPercentage(1.3)}}>Rating</TextLato>
                     </TouchableOpacity>
                 </ScrollView>
-            )}
-            <SellerCardsList url={`${Constants.manifest.extra.apiUrl}/store/find-by-category`} body={{category: details._id}} />
+            )} */}
+                <TextLato style={styles.title} bold>{en ? 'Stores' : 'البائعون'}</TextLato>
+                <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-category`} body={{category: details._id}} />
+                <TextLato style={{...styles.title, marginTop: height * 0.05}} bold>{en ? 'Products' : 'المنتجات'}</TextLato>
+                <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/category`} body={{id: details._id}} />
+            </ScrollView>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: gStyles.background
+    },
+    title: {
+        marginHorizontal: width * 0.2,
+        paddingVertical: height * 0.02,
+        backgroundColor: 'white',
+        marginTop: height * 0.02,
+        fontSize: RFPercentage(3),
+        textAlign: 'center',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
     },
     banner: {
         width,
@@ -84,10 +108,12 @@ const styles = StyleSheet.create({
     },
     sortContainer: {
         paddingVertical: height * 0.01,
-        flexDirection: 'row',
-        width,
-        paddingHorizontal: width * 0.05,
-        alignItems: 'center',
+        paddingHorizontal: width * 0.01,
+        // backgroundColor: 'red',
+        justifyContent: 'flex-start',
+        borderRadius: 10,
+        borderColor: '#aaa',
+        borderWidth: 1
     },
     sortChoice: {
         paddingHorizontal: width * 0.05,
@@ -110,20 +136,30 @@ const SubcategoriesScroll = ({details}) => {
         fetch(`${Constants.manifest.extra.apiUrl}/subcategory/find-by-category/${details._id}`)
         .then(res => res.json())
         .then(res => setSubcategories(res))
-    }, [])
+    }, []);
+    if(!subcategories.length)
+        return (
+            <View style={{flexDirection: 'row', width}}>
+                {[1,2,3,4].map(() => (
+                    <View key={Math.random()} style={{ width: width * 0.18, aspectRatio: 1, backgroundColor: '#aaa', marginLeft: 5, borderRadius: 10, justifyContent: 'center', alignItems: 'center', paddingVertical: height * 0.01}}>
+                        <ActivityIndicator color={'white'} />
+                    </View>
+                ))}
+            </View>
+        )
     return(
         <ScrollView 
             showsHorizontalScrollIndicator={false} 
             horizontal 
             style={{...subcategoryStyles.scrollView, transform: en ? [] : [{scaleX: -1}]}} 
-            contentContainerStyle={{justifyContent: 'center'}}
+            contentContainerStyle={{justifyContent: 'center', minHeight: height * 0.15, paddingVertical: height * 0.01}}
         >
             {subcategories.map(subcategory => (
-                <TouchableOpacity key={Math.random()} style={{...subcategoryStyles.touchableBlock, transform: en ? [] : [{scaleX: -1}]}} activeOpacity={0.4} onPress={() => navigation.push('Subcategory', {...subcategory})}>
+                <TouchableOpacity key={Math.random()} style={{...subcategoryStyles.touchableBlock, transform: en ? [] : [{scaleX: -1}]}} activeOpacity={0.8} onPress={() => navigation.push('Subcategory', {...subcategory})}>
                     <View key={subcategory._id} style={subcategoryStyles.container}>
-                        <Image style={{width: width * 0.13, aspectRatio: 1, borderRadius: 100 }} source={{uri: subcategory.image}} />
+                        <Image style={{width: width * 0.10, aspectRatio: 1}} source={{uri: subcategory.image}} />
                     </View>
-                        <TextLato style={{fontSize: RFPercentage(1.4), textAlign: 'center'}}>{subcategory.name[language]}</TextLato>
+                    <TextLato bold style={{fontSize: RFPercentage(1.5), textAlign: 'center', color: 'black', marginTop: height * 0.01}}>{subcategory.name[language]}</TextLato>
                 </TouchableOpacity>
             ))}
         </ScrollView>
@@ -132,22 +168,27 @@ const SubcategoriesScroll = ({details}) => {
 
 const subcategoryStyles = StyleSheet.create({
     touchableBlock: {
+        // paddingVertical: height * 0.05
     },
     container: {
-        width: width * 0.17,
+        width: width * 0.18,
         aspectRatio: 1,
-        backgroundColor: 'white',
-        borderRadius: 100,
+        backgroundColor: gStyles.color_2,
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 3,
-        borderWidth: 2,
-        borderColor: gStyles.color_3
+        marginHorizontal: 3.5,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+        elevation: 18,
     },
     scrollView: {
         width,
-        borderColor: '#ddd',
-        borderBottomWidth: 1,
-        paddingVertical: height * 0.02
+        marginTop: height * 0.01
     }
 })

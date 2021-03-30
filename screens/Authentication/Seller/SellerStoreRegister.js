@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Dimensions, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { gStyles } from '../../../global.style';
+import { funcs } from '../../../global.funcs';
 import Constants from 'expo-constants';
 import { AntDesign, Ionicons, FontAwesome5, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import * as Facebook from 'expo-facebook';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useHeaderHeight } from '@react-navigation/stack';
-import * as ImagePicker from 'expo-image-picker';
 import AwesomeAlert from 'react-native-awesome-alerts';
 
 // Redux
@@ -39,92 +38,35 @@ const SellerStoreRegister = (props) => {
         .then(res => res.json())
         .then(res => setCategories(res));
     },[]);
-
-    // Get image permission
-    // useEffect(() => {
-    //     (async () => {
-    //         if(Platform.OS !== 'web'){
-    //             const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
-    //             if(status !== 'granted') {
-    //                 alert('Sorry, we need camera roll permission to register!')
-    //             }
-    //         }
-    //     })();
-    // }, []);
-    
-    // Pick image
-    // const pickImage = async () => {
-    //     ImagePicker.launchImageLibraryAsync({
-    //       mediaTypes: ImagePicker.MediaTypeOptions.All,
-    //       allowsEditing: true,
-    //       aspect: [1, 1],
-    //       quality: 1,
-    //     })
-    //     .then(res => {
-    //         if(!res.cancelled) {
-    //             setImage(res.uri);
-    //         }
-    //     })
-    // }
     
     const register = () => {
         if(other && otherCategory === '') return;
-        const body = {seller: props.route.params.seller, store: {
-            title,
-            description,
-            categories,
-            otherCategory: other ? otherCategory : undefined
-        }};
-        fetch(`${Constants.manifest.extra.apiUrl}/seller/register`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(body)
-        })
-        .then(res => res.json())
-        .then(res => {
-            if(!res.status){
-                setErrors([]);
-                props.navigation.replace('SellerLoginSuccess', {seller: res.seller, store: res.store})
-            }
-            else {
-                setErrors(res.message ? [res.message] : res.errors)
-            }
-        });
-    }
 
-    const facebookRegister = async () => {
-        await Facebook.initializeAsync(
-            {
-              autoLogAppEvents: true,
-              appId: '322777442117432',
-            }
-          );
-        try {
-            const { 
-                type, 
-                token, 
-                expires, 
-                permissions, 
-                declinedPermissions 
-            } = await Facebook.logInWithReadPermissionsAsync({appId: '322777442117432', permissions: ['public_profile', 'email']});
-            if(type === 'success') {
-                fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`)
-                .then(res => res.json())
-                .then(data => {
-                    fetch(`${Constants.manifest.extra.apiUrl}/client/login/facebook`, {
-                        method: 'post',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(data)
-                    })
-                    .then(res => res.json())
-                    .then(res => props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller}))
-                })
-                .catch(e => console.log(e))
-            }
-        }
-        catch ({ message }) {
-            alert(`facebook login error: ${message}`)
-        }
+        funcs.uploadImage(image, title)
+        .then(res => {
+            const body = {seller: props.route.params.seller, store: {
+                title,
+                description,
+                categories: selectedCategories,
+                logo: res.location,
+                otherCategory: other ? otherCategory : undefined
+            }};
+            fetch(`${Constants.manifest.extra.apiUrl}/seller/register`, {
+                method: 'post',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(body)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(!res.status){
+                    setErrors([]);
+                    props.navigation.replace('SellerLoginSuccess', {seller: res.seller, store: res.store})
+                }
+                else {
+                    setErrors(res.message ? [res.message] : res.errors)
+                }
+            });
+        })
     }
 
     const Alert = () => (
@@ -160,19 +102,20 @@ const SellerStoreRegister = (props) => {
         <ScrollView>
         <KeyboardAvoidingView keyboardVerticalOffset={headerHeight} behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles.container}>
             <View style={styles.headerContainer}>
-                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(20)}}>Store Data</TextLato>
+                <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>Store Data</TextLato>
                 <TextLato style={{color: gStyles.color_1, fontSize: RFValue(12), marginTop: height * 0.01}}>Fill this form with your store's information</TextLato>
             </View>
             <View style={styles.formContainer}>
-                    {/* <View style={styles.profilePictureContainer}>
-                        <TouchableOpacity onPress={pickImage}>
-                            <Image source={{ uri: image }} style={{ width: width * 0.3, height: width * 0.3, borderRadius: 10 }} />
-
-                        </TouchableOpacity>
-                    </View> */}
+                <TextLato style={{fontSize: RFValue(20), textAlign: 'center'}} bold>Logo</TextLato>
+                <TextLato style={{fontSize: RFValue(10), textAlign: 'center'}} italic>Preferably a transparent.png image</TextLato>
+                <View style={styles.profilePictureContainer}>
+                    <TouchableOpacity onPress={() => funcs.chooseImage(setImage, [1,1])}>
+                        <Image source={{ uri: image }} style={{ width: width * 0.3, height: width * 0.3, borderRadius: 10 }} />
+                    </TouchableOpacity>
+                </View>
                 <RegisterInputAndError errors={errors} value={title} type={'storeTitle'} set={setTitle} />
                 <RegisterInputAndError multiline={true} errors={errors} value={description} type={'storeDescription'} set={setDescription} />
-                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(20)}}>Categories</TextLato>
+                <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>Categories</TextLato>
                 <TextLato style={{color: 'black', fontSize: RFValue(11), marginVertical: height * 0.01}}>Please select the most appropriate categories regarding your store's products</TextLato>
             <View style={styles.categoryContainer}>
                 {categories.map(category => {
@@ -236,7 +179,6 @@ const styles = StyleSheet.create({
     },
     categoryContainer: {
         width,
-        display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
     },

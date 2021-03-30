@@ -22,7 +22,7 @@ const CurrentFunds = (props) => {
             <TextLato bold style={styles.requestText}>Request Withdrawal</TextLato>
         </TouchableOpacity>
             <TextLato bold style={styles.sales}>{credit} EGP</TextLato>
-            <Icon style={styles.dollar} color={'rgba(255, 255, 255, 0.2)'} type="FontAwesome" size={RFPercentage(10)} name="dollar" />
+            {/* <Icon style={styles.dollar} color={'rgba(255, 255, 255, 0.2)'} type="FontAwesome" size={RFPercentage(10)} name="dollar" /> */}
         </View>
     )
 }

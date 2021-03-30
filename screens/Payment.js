@@ -48,7 +48,7 @@ const Payment = (props) => {
         .then(res => {
             dispatch(setCart({products: []}));
             navigation.popToTop();
-            navigation.push('Order', res.order);
+            navigation.push('Order', {code: res.code});
         })
     }
     return (

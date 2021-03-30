@@ -107,7 +107,7 @@ const Order = ({order, en, text}) => {
     const token = useSelector(state => state.authReducer.token);
     const [expanded, setExpanded] = useState(false);
     const [orders, setOrders] = useState([]);
-    const [reviewVisible, setReviewVisible] = useState(true);
+    const [reviewVisible, setReviewVisible] = useState(false);
 
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/order-products/${order.code}`, {headers: {token}})
@@ -155,9 +155,9 @@ const Order = ({order, en, text}) => {
                     <TouchableNativeFeedback style={orderStyles.completeButtons} onPress={() => setReviewVisible(true)}>
                         <TextLato bold style={{fontSize: RFPercentage(2)}}>Review</TextLato>
                     </TouchableNativeFeedback>
-                    <TouchableNativeFeedback style={orderStyles.completeButtons}>
+                    {/* <TouchableNativeFeedback style={orderStyles.completeButtons}>
                         <TextLato bold style={{fontSize: RFPercentage(2)}}>Complain</TextLato>
-                    </TouchableNativeFeedback>
+                    </TouchableNativeFeedback> */}
                 </View>
             )}
             </View>
@@ -177,7 +177,7 @@ const Order = ({order, en, text}) => {
                                         <Image style={{width: width * 0.1, aspectRatio: 1, marginRight: width * 0.05}} source={{uri: product.images[0]}} />
                                         <TextLato style={{width: width * 0.5, marginRight: width * 0.05}} italic>{product.title[language]} x{order.quantity}</TextLato>
                                         {status >= 1 ? 
-                                        <Icon color={gStyles.active} type={'AntDesign'} name={'checkcircle'} size={RFPercentage(3)} />:
+                                        <Icon color={gStyles.color_2} type={'AntDesign'} name={'checkcircle'} size={RFPercentage(3)} />:
                                         <Icon color={gStyles.color_3} type={'FontAwesome'} name={'circle-o'} size={RFPercentage(3)} />}
                                     </View>
                                 )
@@ -186,15 +186,15 @@ const Order = ({order, en, text}) => {
                     </View>
                     <View style={orderStyles.expandedContainer}>
                         <View style={orderStyles.diagramContainer}>
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 0 ? gStyles.active : gStyles.color_0}} />
-                            <View style={{...orderStyles.line, backgroundColor: order.status >= 1 ? gStyles.active : gStyles.color_0}} />
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 1 ? gStyles.active : gStyles.color_0}} />
-                            <View style={{...orderStyles.line, backgroundColor: order.status >= 2 ? gStyles.active : gStyles.color_0}} />
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 2 ? gStyles.active : gStyles.color_0}} />
-                            <View style={{...orderStyles.line, backgroundColor: order.status >= 3 ? gStyles.active : gStyles.color_0}} />
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 3 ? gStyles.active : gStyles.color_0}} />
-                            <View style={{...orderStyles.line, backgroundColor: order.status >= 4 ? gStyles.active : gStyles.color_0}} />
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 4 ? gStyles.active : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 0 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 2 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 2 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 3 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 3 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.color_0}} />
                         </View>
                         <View style={orderStyles.detailsContainer}>
                             <DetailContainer textActive={order.status === 0} active={order.status >= 0} title={text.orderPlaced} subtitle={`${text.orderPlacedDescription} ${date}`} type={'FontAwesome5'} name={'feather'} />
@@ -224,12 +224,12 @@ const Order = ({order, en, text}) => {
 
 const DetailContainer = ({type, name, active, textActive, title, subtitle}) => (
     <View style={orderStyles.detail}>
-        <View style={{...orderStyles.iconContainer, backgroundColor: active ? gStyles.active : gStyles.color_0}}>
+        <View style={{...orderStyles.iconContainer, backgroundColor: active ? gStyles.color_2 : gStyles.color_0}}>
             <Icon type={type} name={name} color={'white'} size={25} />
         </View>
         <View style={{width: width * 0.45}}>
-            <TextLato bold style={{fontSize: RFPercentage(2), color: textActive ? gStyles.active : '#636363'}}>{title}</TextLato>
-            <TextLato bold style={{fontSize: RFPercentage(1.5), color: textActive ? gStyles.active : '#a5a5a5'}}>{subtitle}</TextLato>
+            <TextLato bold style={{fontSize: RFPercentage(2), color: textActive ? gStyles.color_2 : '#636363'}}>{title}</TextLato>
+            <TextLato bold style={{fontSize: RFPercentage(1.5), color: textActive ? gStyles.color_2 : '#a5a5a5'}}>{subtitle}</TextLato>
         </View>
     </View>
 )
@@ -273,7 +273,7 @@ const orderStyles = StyleSheet.create({
     },
     statusText: {
         marginTop: height * 0.02,
-        color: gStyles.active
+        color: gStyles.color_2
     },
     arrow: {
         
@@ -339,7 +339,6 @@ const ReviewModal = ({modalVisible, setModalVisible, order}) => {
     const products = order.storeOrders.map(storeOrder => {
             return storeOrder.orders.map(storeOrderOrder => storeOrderOrder.product);
         }).flat();
-    console.log(products)
     const [pick, setPick] = useState('');
     const [stars, setStars] = useState(0);
     const [review, setReview] = useState('');
@@ -361,7 +360,6 @@ const ReviewModal = ({modalVisible, setModalVisible, order}) => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             close();
         })
     }
@@ -377,7 +375,8 @@ const ReviewModal = ({modalVisible, setModalVisible, order}) => {
               {products.map(product => {
                   const picked = pick === product._id;
                   return (
-                      <TouchableOpacity 
+                      <TouchableOpacity
+                        key={Math.random()}
                         activeOpacity={0.7}
                         onPress={() => setPick(product._id)}
                         style={{paddingVertical: height * 0.01, paddingHorizontal: width * 0.02, backgroundColor: picked ? gStyles.color_2:gStyles.color_3, borderRadius: 10, marginVertical: height * 0.01}}>

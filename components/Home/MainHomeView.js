@@ -44,7 +44,7 @@ const getMostPopularStores = () => {
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/most-popular`)
         .then(res => res.json())
-        .then(res => setStores([...res, ...res, ...res, ...res, ...res, ...res, ...res, ...res, ...res, ...res, ]))
+        .then(res => setStores(res))
     }, [])
     return stores.map(store => <StoreCard key={Math.random()} store={store} />);
 };

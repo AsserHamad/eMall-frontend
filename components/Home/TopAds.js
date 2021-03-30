@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Dimensions, StyleSheet, View, Text, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Image, ActivityIndicator } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Swiper from 'react-native-swiper/src';
@@ -18,7 +18,7 @@ function TopAds(){
         })
     }, []);
     if(!ads.length)
-        return <View style={{height: 210, justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator size={RFPercentage(4)} color={gStyles.color_0} /></View>
+        return <View style={{height: 210, backgroundColor: '#aaa', justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator size={RFPercentage(4)} color={'white'} /></View>
     return(
         <Swiper 
         style={styles.swiper}
@@ -44,6 +44,7 @@ function TopAds(){
 const styles = StyleSheet.create({
     swiper: {
         height: 210,
+        minHeight: 210
     },
     swiperImage: {
         height: 210,

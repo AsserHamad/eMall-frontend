@@ -35,49 +35,49 @@ const getColors = (discount) => {
     return 3;
 }
 
-function CartCard({item}){
+function CartCard({item, setRefresh}){
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [quantityLoading, setQuantityLoading] = useState(false);
-    const [product, setProduct] = useState(null);
+    const product = item.product;
+    const [quantity, setQuantity] = useState(item.quantity);
     const language = useLanguage();
+    const en = language === 'en';
     const dispatch = useDispatch();
     const token = useSelector(state => state.authReducer.token);
     const navigation = useNavigation();
-
-    useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/product/${item.product}`)
-        .then(res => res.json())
-        .then(res => {setProduct(res);});
-    }, []);
 
     const increaseQuantity = () => {
         setQuantityLoading(true);
         fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
             method: 'put',
             headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product: item.product, options: item.options, quantity: item.quantity + 1})
+            body: JSON.stringify({product: item.product, options: item.options, quantity: quantity + 1})
         })
         .then(res => res.json())
         .then(res => {
             setQuantityLoading(false);
-            dispatch(setCart(res))
+            setQuantity(quantity + 1);
+            dispatch(setCart(res));
+            setRefresh(refresh => !refresh);
         })
         .catch(err => console.log(err))
     }
 
     const decreaseQuantity = () => {
-        if(item.quantity <= 1) 
+        if(quantity <= 1) 
             return;
         setQuantityLoading(true);
         fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
             method: 'put',
             headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product: item.product, options: item.options, quantity: item.quantity - 1})
+            body: JSON.stringify({product: item.product, options: item.options, quantity: quantity - 1})
         })
         .then(res => res.json())
         .then(res => {
             setQuantityLoading(false);
-            dispatch(setCart(res))
+            setQuantity(quantity - 1);
+            dispatch(setCart(res));
+            setRefresh(refresh => !refresh);
         })
         .catch(err => console.log(err))
     }
@@ -91,9 +91,22 @@ function CartCard({item}){
         })
         .then(res => res.json())
         .then(res => {
-            dispatch(setCart(res))
+            dispatch(setCart(res));
+            setRefresh(refresh => !refresh);
         })
         .catch(err => console.log(err))
+    }
+
+    const calculatePricePreDiscount = () => {
+        if(!product.price) return 0;
+
+        let price = product.price;
+        item.options.map(pickedOption => {
+            const fullPick = product.options.filter(productOption => productOption._id.toString() === pickedOption.option.toString())[0];
+            const pick = fullPick.options.filter(optionOption => optionOption._id.toString() === pickedOption.pick.toString())[0];
+            price += (pick.extraPrice || 0);
+        })
+        return (price * item.quantity);
     }
 
     const calculatePrice = () =>  {
@@ -114,76 +127,98 @@ function CartCard({item}){
             <ActivityIndicator size={RFPercentage(4)} color={gStyles.color_0} />
         </View>
     return (
-        <View style={styles.itemContainer}>
+        <View style={{...styles.itemContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
+
+            {/* Deal of the Day */}
+            {product.dealOfTheDay && <Image source={{uri: 'https://imgur.com/qIJjuUY.gif'}} style={{...styles.topImage, aspectRatio: 612/453}} />}
 
             {/* Image */}
             <View style={styles.imageContainer}>
                 <Image style={styles.itemImage} source={{uri: product.images[0]}} />
             </View>
-            <View style={styles.itemDetails}>
+            <View style={{alignItems: en ? 'flex-start' : 'flex-end'}}>
                 
                 {/* Title */}
                 <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.push('Product', {product: {_id: product._id}})}>
                     <TextLato bold style={styles.itemTitle} >{product.title[language]}</TextLato>
                 </TouchableOpacity>
-                
+
+                {/* Options */}
+                {item.options.map(option => {
+                    const x = item.product.options.filter(op => op._id === option.option)[0];
+                    const pick = x.options.filter(op => op._id === option.pick)[0];
+                    return (<TextLato key={Math.random()} italic style={{color: '#aaa'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
+                })}
+
                 {/* Seller */}
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <TextLato style={{fontSize: RFPercentage(1.8)}}>Sold By:</TextLato>
-                    <TouchableOpacity onPress={() => {navigation.push('Store', {store: product.store})}}>
-                        <TextLato style={{paddingLeft: 5, fontWeight: 'bold', color: gStyles.secondary, fontSize: RFPercentage(1.8)}}>{product.store.title}</TextLato>
+                <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', marginTop: height * 0.01}}>
+                    <TextLato style={{fontSize: RFPercentage(1.8)}}>{en ? 'Sold By' : 'البائع'}:</TextLato>
+                    <TouchableOpacity onPress={() => {navigation.push('Store', {store: {_id: product.store._id}})}}>
+                        <TextLato bold style={{paddingHorizontal: 5, color: gStyles.secondary, fontSize: RFPercentage(1.8)}}>{product.store.title}</TextLato>
                     </TouchableOpacity>
                 </View>
                 
                 {/* Quantity */}
-                <View style={{flexDirection: 'row', alignItems: 'center', height: 50}}>
-                    <TextLato style={{fontSize: RFPercentage(1.8)}}>Quantity:</TextLato>
+                <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', height: 50}}>
+                    <TextLato style={{fontSize: RFPercentage(1.8)}}>{en ? 'Quantity' : 'الكمية'}:</TextLato>
                     <TouchableOpacity onPress={() => decreaseQuantity()}>
-                        <Icon type="AntDesign" color={gStyles.color_0} style={{marginLeft: 10, marginRight: 5}} size={15} name="minuscircle" />
+                        <Icon type="AntDesign" color={gStyles.color_0} style={{marginHorizontal: 5}} size={15} name="minuscircle" />
                     </TouchableOpacity>
                     {quantityLoading ?
                         <ActivityIndicator color={gStyles.color_1} size={15} />
                     :
-                        <TextLato style={{fontWeight: 'bold', color: gStyles.color_1, fontSize: 20}}>{item.quantity}</TextLato>
+                        <TextLato style={{fontWeight: 'bold', color: gStyles.color_1, fontSize: 20}}>{quantity}</TextLato>
                     }
                     <TouchableOpacity onPress={() => increaseQuantity()}>
-                        <Icon type="AntDesign" color={gStyles.color_0} style={{marginLeft: 5}} size={15} name="pluscircle" />
+                        <Icon type="AntDesign" color={gStyles.color_0} style={{marginHorizontal: 5}} size={15} name="pluscircle" />
                     </TouchableOpacity>
                 </View>
 
-                {/* Deal of the Day */}
-                {product.dealOfTheDay && 
-                (
-                    <View style={{flexDirection: 'row', alignItems: 'center', height: 50}}>
-                    <Image source={{uri: image}} style={{...styles.topImage, aspectRatio: 820/481}} />
-                    <ImageBackground source={{uri: bubbles[getColors(product.dealOfTheDay.discount)]}} style={{...styles.innerDiscountBubble, aspectRatio: 1}}>
-                        <TextLato style={{fontSize: RFPercentage(2.5), textAlign: 'center', color: 'white'}}>{product.dealOfTheDay.discount}<TextLato style={{fontSize: RFPercentage(2)}}>%</TextLato></TextLato>
-                    </ImageBackground>
+                {/* Text And Image */}
+                {item.text && (
+                    <View style={{marginVertical: height * 0.035}}>
+                        <TextLato bold>{en ? 'Provided Text' : 'الكلام المضاف'}:</TextLato>
+                        <TextLato>{item.text}</TextLato>
                     </View>
-                )
-                }
+                )}
+                
+                {/* Text And Image */}
+                {item.image && (
+                    <View style={{marginVertical: height * 0.035}}>
+                        <TextLato bold>{en ? 'Provided Image' : 'الصورة المضافة'}:</TextLato>
+                        <TouchableOpacity onPress={() => navigation.push('Gallery', {images: [item.image]})}>
+                            <View style={styles.downloadButton}>
+                                <TextLato style={{color: 'white'}} bold>View Image</TextLato>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                )}
+
                 
                 {/* Price */}
-                <View style={{marginTop: 40, flexDirection: 'row'}}>
-                    {product.discount ?
+                <View style={{marginTop: 10, flexDirection: en ? 'row' : 'row-reverse'}}>
+                    {(product.discount || product.dealOfTheDay) ?
                     <View style={{width: '73%'}}>
                         {/* Discount thingy */}
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <TextLato style={{textDecorationLine: 'line-through', fontSize: RFPercentage(2), marginRight: 10}}>{product.price * item.quantity} EGP</TextLato>
-                            <View style={styles.discountContainer}>
-                                <TextLato bold style={{color: 'white'}}>{product.discount * 100}%</TextLato>
-                            </View>
-                            <TextLato style={{color: gStyles.active, fontSize: RFPercentage(2.5)}} italic>OFF</TextLato>
+                        <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center'}}>
+                            <TextLato style={{textDecorationLine: 'line-through', fontSize: RFPercentage(2), marginHorizontal: 10}}>{calculatePricePreDiscount().toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato>
+                            {product.discount && <View style={styles.discountContainer}>
+                                <TextLato bold style={{color: 'white', fontSize: RFPercentage(1.6)}}>{product.discount * 100}%</TextLato>
+                            </View>}
+                            {product.dealOfTheDay && <View style={{...styles.discountContainer, backgroundColor: 'black'}}>
+                                <TextLato bold style={{color: 'white', fontSize: RFPercentage(1.6)}}>{product.dealOfTheDay.discount}%</TextLato>
+                            </View>}
+                            <TextLato style={{color: gStyles.active, fontSize: RFPercentage(2)}} italic>{en ? 'OFF' : 'خصم'}</TextLato>
                         </View>
 
-                        <TextLato bold style={{fontSize: RFPercentage(2)}}>{calculatePrice().toFixed(2)} EGP</TextLato>
+                        <TextLato bold style={{fontSize: RFPercentage(2), marginHorizontal: 10}}>{calculatePrice().toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato>
                     </View> 
                     :
-                    <TextLato bold style={{fontSize: RFPercentage(2), width: '73%'}}>{calculatePrice()} EGP</TextLato>
+                    <TextLato bold style={{fontSize: RFPercentage(2), width: '73%'}}>{calculatePrice()} {en ? 'EGP' : 'ج.م'}</TextLato>
                     }
 
                     {/* Delete */}
-                    <View style={{justifyContent: 'flex-end'}}>
+                    <View style={{justifyContent: 'flex-end', height: height * 0.1}}>
                         <TouchableOpacity onPress={() => removeFromCartHelper(item)}>
                             {deleteLoading ? 
                             <ActivityIndicator size={24} style={{alignItems: 'center', justifyContent: 'center'}} color={gStyles.color_0} />
@@ -210,15 +245,18 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     topImage: {
-        height: height * 0.06,
-        zIndex: 3
+        width: width * 0.25,
+        zIndex: 3,
+        position: 'absolute',
+        left: 0,
+        top: -height * 0.02
     },
     discountContainer: {
         paddingVertical: height * 0.008,
         paddingHorizontal: width * 0.015,
         backgroundColor: gStyles.active,
         borderRadius: 10,
-        marginRight: width * 0.01
+        marginHorizontal: width * 0.01
     },
     innerDiscountBubble: {
         width: 60,
@@ -234,14 +272,23 @@ const styles = StyleSheet.create({
     },
     itemImage: {
         width: 100,
-        height: 100
+        height: 100,
+        borderRadius: 3
     },
     itemTitle: {
         fontSize: 15,
-        maxWidth: 300
+        maxWidth: width * 0.6
     },
     itemDetails: {
         flexDirection: 'column'
+    },
+    downloadButton: {
+        paddingHorizontal: width * 0.02,
+        paddingVertical: height * 0.01,
+        marginTop: height * 0.01,
+        backgroundColor: '#1184e8',
+        borderRadius: 15,
+        alignItems: 'center'
     }
 })
 

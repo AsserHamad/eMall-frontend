@@ -17,7 +17,7 @@ import SellerLogin from '../screens/Authentication/Seller/SellerLogin';
 import SellerLoginSuccess from '../screens/Authentication/Seller/SellerLoginSuccess';
 import SellerRegister from '../screens/Authentication/Seller/SellerRegister';
 import SellerStoreRegister from '../screens/Authentication/Seller/SellerStoreRegister';
-import { useLanguageText, useLanguage } from '../hooks/language';
+import { useLanguage } from '../hooks/language';
 import CategoryPage from '../screens/CategoryPage';
 import Wishlist from '../screens/Wishlist';
 import SubcategoryPage from '../screens/SubcategoryPage';
@@ -51,6 +51,14 @@ import FAQs from '../screens/Footer/FAQs';
 import MyPayments from '../screens/Client/MyPayments';
 import StorePayments from '../screens/Store/StorePayments';
 import ForgotPassword from '../screens/Authentication/Client/ForgotPassword';
+import StoreProductOptions from '../screens/Store/StoreProductOptions';
+import CategoriesList from '../screens/CategoriesList';
+import UpdateProductPick from '../screens/Store/Products/UpdateProductPick';
+import UpdateProduct from '../screens/Store/Products/UpdateProduct';
+import DeleteProduct from '../screens/Store/Products/DeleteProduct';
+import Gallery from '../screens/Gallery';
+import Deals from '../screens/Deals';
+import DealsOfTheDayScreen from '../screens/DealsOfTheDayScreen';
 
 
 const Drawers = createDrawerNavigator();
@@ -59,6 +67,8 @@ const AuthStack = createStackNavigator();
 const WishlistStack = createStackNavigator();
 const OrdersStack = createStackNavigator();
 const CategoriesStack = createStackNavigator();
+const DealsStack = createStackNavigator();
+const DealsOfTheDayStack = createStackNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
@@ -67,9 +77,11 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Terms" component={Terms} options={{headerShown: false}} />
     <HomeStack.Screen name="FAQs" component={FAQs} options={{headerShown: false}} />
     <HomeStack.Screen name="Cart" component={Cart} options={() => ({headerShown: false})} />
-    <HomeStack.Screen name="Category" component={CategoryPage} options={({ route }) => ({title: route.params.name.en, headerShown: false})} />
+    <HomeStack.Screen name="Categories" component={CategoriesList} options={({ route }) => ({headerShown: false})} />
+    <HomeStack.Screen name="Category" component={CategoryPage} options={({ route }) => ({headerShown: false})} />
     <HomeStack.Screen name="Subcategory" component={SubcategoryPage} options={({ route }) => ({ headerShown: false})} />
     <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="Gallery" component={Gallery} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="ProductsList" component={ProductsListPage} options={({ route }) => ({headerShown: false})} />
     <HomeStack.Screen name="Payment" component={Payment}/>
     <HomeStack.Screen name="Order" component={ConfirmPurchase} options={({ route }) => ({title: 'Order Complete'})} />
@@ -92,7 +104,7 @@ const AuthStackScreen = () => (
         options={{title: '', headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}} 
     />
     <AuthStack.Screen name="ClientLoginSuccess" component={ClientLoginSuccess} options={{headerShown: false}} />
-    <AuthStack.Screen name="SellerLogin" component={SellerLogin} options={{title: '', headerBackTitleVisible: false, headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}} />
+    <AuthStack.Screen name="SellerLogin" component={SellerLogin} options={({ route }) => ({ headerShown: false })} />
     <AuthStack.Screen name="SellerRegister" 
         component={SellerRegister}
         options={{title: '', headerBackTitleVisible: false, headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}}
@@ -110,6 +122,7 @@ const WishlistStackScreen = () => (
     <WishlistStack.Screen name="Wishlist" component={Wishlist} options={{headerShown: false}} />
     <WishlistStack.Screen name="Cart" component={Cart} />
     <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="Gallery" component={Gallery} options={({ route }) => ({ headerShown: false })} />
   </WishlistStack.Navigator>
 )
 
@@ -124,7 +137,24 @@ const CategoriesStackScreen = (props) => (
     <CategoriesStack.Screen name="Category" component={CategoryPage} initialParams={props.route.params} options={({ route }) => ({headerShown: false})} />
     <CategoriesStack.Screen name="Subcategory" component={SubcategoryPage} options={({ route }) => ({ headerShown: false})} />
     <CategoriesStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="Gallery" component={Gallery} options={({ route }) => ({ headerShown: false })} />
   </CategoriesStack.Navigator>
+)
+
+const DealsStackScreen = (props) => (
+  <DealsStack.Navigator>
+    <DealsStack.Screen name="Deals" component={Deals} options={({ route }) => ({headerShown: false})} />
+    <DealsStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
+    <DealsStack.Screen name="Gallery" component={Gallery} options={({ route }) => ({ headerShown: false })} />
+  </DealsStack.Navigator>
+)
+
+const DealsOfTheDayStackScreen = (props) => (
+  <DealsOfTheDayStack.Navigator>
+    <DealsOfTheDayStack.Screen name="DealsOfTheDay" component={DealsOfTheDayScreen} options={({ route }) => ({headerShown: false})} />
+    <DealsOfTheDayStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
+    <DealsOfTheDayStack.Screen name="Gallery" component={Gallery} options={({ route }) => ({ headerShown: false })} />
+  </DealsOfTheDayStack.Navigator>
 )
 
 const ClientDrawer = () => {
@@ -148,14 +178,6 @@ const ClientDrawer = () => {
             name="Home"
             component={HomeStackScreen}
         />
-        <Drawers.Screen 
-            options={{
-              title: en ? 'Wishlist' : 'قائمة الرغبات',
-              drawerIcon: ({tintColor}) => <Icon type="Feather" name="heart" size={16} color={tintColor} />,
-            }}
-            name="Wishlist"
-            component={WishlistStackScreen}
-        />
         
         {!loggedIn ? 
           <Drawers.Screen
@@ -168,7 +190,7 @@ const ClientDrawer = () => {
           />
         :
           [<Drawers.Screen
-            key="orders"
+            key={Math.random()}
             headerShown="false"
             options={{
               title: en ? 'My Orders' : 'طلباتي',
@@ -177,17 +199,37 @@ const ClientDrawer = () => {
             name="Orders"
             component={OrdersStackScreen}
         />,
-        <Drawers.Screen
-              key="deals"
-              headerShown="false"
-              options={{
-                title: en ? 'Deals' : 'العروض',
-                drawerIcon: ({tintColor}) => <Icon type="Fontisto" name="shopping-sale" size={16} color={tintColor} />
-              }}
-              name="Deals"
-              component={HomeStackScreen}
-          />]
-            }
+        <Drawers.Screen 
+            key={Math.random()}
+            options={{
+              title: en ? 'Wishlist' : 'قائمة الرغبات',
+              drawerIcon: ({tintColor}) => <Icon type="Feather" name="heart" size={16} color={tintColor} />,
+            }}
+            name="Wishlist"
+            component={WishlistStackScreen}
+        />
+      ]
+    }
+      <Drawers.Screen
+          key={Math.random()}
+            headerShown="false"
+            options={{
+              title: en ? 'Deals of the Day' : 'عروض اليوم',
+              drawerIcon: ({tintColor}) => <Icon type="Entypo" name="megaphone" size={16} color={tintColor} />
+            }}
+            name="DealsOfTheDay"
+            component={DealsOfTheDayStackScreen}
+        />
+      <Drawers.Screen
+          key={Math.random()}
+            headerShown="false"
+            options={{
+              title: en ? 'Deals' : 'العروض',
+              drawerIcon: ({tintColor}) => <Icon type="Fontisto" name="shopping-sale" size={16} color={tintColor} />
+            }}
+            name="Deals"
+            component={DealsStackScreen}
+        />
         {categories.map(category => {
           return (
                 <Drawers.Screen
@@ -225,7 +267,11 @@ const StoreStackScreen = () => (
 const ProductsStackScreen = () => (
   <ProductsStack.Navigator>
     <ProductsStack.Screen name="Products" component={StoreProducts} options={{headerShown: false}} />
-    <ProductsStack.Screen name="Add Product" component={StoreProductsAdd} options={{headerShown: false}} />
+    <ProductsStack.Screen name="AddProduct" component={StoreProductsAdd} options={{headerShown: false}} />
+    <ProductsStack.Screen name="UpdateProductPick" component={UpdateProductPick} options={{headerShown: false}} />
+    <ProductsStack.Screen name="UpdateProduct" component={UpdateProduct} options={{headerShown: false}} />
+    <ProductsStack.Screen name="DeleteProduct" component={DeleteProduct} options={{headerShown: false}} />
+    <ProductsStack.Screen name="ProductOptions" component={StoreProductOptions} options={{headerShown: false}} />
   </ProductsStack.Navigator>
 )
 
@@ -265,15 +311,13 @@ const StorePaymentsStackScreen = () => (
 )
 
 const StoreDrawer = () => {
-  const languageText = useLanguageText('navigation');
   const language = useLanguage();
-  const loggedIn = useSelector(state => state.authReducer.loggedIn);
   return (
   <Drawers.Navigator
     edgeWidth={0}
     drawerPosition={language === 'ar' ? 'right' : 'left'}
     drawerStyle={{backgroundColor: gStyles.background}}
-    initialRouteName="Orders"
+    initialRouteName="Home"
     drawerContent={props => <StoreSidebar {...props} />}>
       <Drawers.Screen 
           headerShown="false"

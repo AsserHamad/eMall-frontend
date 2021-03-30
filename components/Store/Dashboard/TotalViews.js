@@ -5,11 +5,21 @@ import { gStyles } from '../../../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Icon from '../../utils/Icon';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSelector } from 'react-redux';
+import { Constants } from 'react-native-unimodules';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const TotalViews = (props) => {
-
+    const token = useSelector(state => state.authReducer.token);
+    const [views, setViews] = useState('-');
+    useEffect(() => {
+        fetch(`${Constants.manifest.extra.apiUrl}/store/views`, {headers: {token}})
+        .then(res => res.json())
+        .then(res => {
+            setViews(res);
+        })
+    }, [])
     return (
         <LinearGradient colors={['#4D92FF', '#4FB8FB']} start={{ x: -1, y: 0 }} end={{ x: 1, y: 0 }} style={styles.container}>
             <View style={{flexDirection: 'row'}}>
@@ -17,7 +27,7 @@ const TotalViews = (props) => {
                     <Icon color="white" size={RFPercentage(4.5)} type="Entypo" name="eye" />
                 </View>
                 <View style={{marginLeft: width * 0.43, alignItems: 'flex-end'}}>
-                    <TextLato bold style={{color: 'white', fontSize: RFPercentage(3), letterSpacing: 2}}>3,200</TextLato>
+                    <TextLato bold style={{color: 'white', fontSize: RFPercentage(3), letterSpacing: 2}}>{views}</TextLato>
                     <TextLato style={{color: 'white', fontSize: RFPercentage(1.8), textAlign: 'right', marginTop: 7}}>Unique Visitors</TextLato>
                 </View>
             </View>

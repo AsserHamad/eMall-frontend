@@ -1,24 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Constants from 'expo-constants';
 
 import SellerCardProduct from '../cards/Seller/SellerCardProduct'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import TextLato from '../utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Reviews from '../utils/Reviews';
 import { useSelector } from 'react-redux';
+import { gStyles } from '../../global.style';
+import CustomModal from '../utils/CustomModal';
+import Icon from '../utils/Icon';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
-const ReviewsComponent = ({ reviews }) => {
+const ReviewsComponent = ({ id, en, text }) => {
     const loggedIn = useSelector(state => state.authReducer.loggedIn);
+    const [reviews, setReviews] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [visible, setVisible] = useState(false);
+    const [stars, setStars] = useState(0);
+    const [review, setReview] = useState('');
+    const token = useSelector(state => state.authReducer.token);
+    
+    const fetchReviews = () => {
+        setLoading(true);
+        fetch(`${Constants.manifest.extra.apiUrl}/store/reviews/${id}`)
+        .then(res => res.json())
+        .then(res => {
+            setReviews(res);
+            setLoading(false);
+        })
+    }
+
+    useEffect(() => {
+        fetchReviews()
+    }, []);
+
+
+    const submit = () => {
+        fetch(`${Constants.manifest.extra.apiUrl}/client/store-review`, {
+            method: 'post',
+            headers: {'Content-Type': 'application/json', token},
+            body: JSON.stringify({
+                store: id,
+                stars,
+                review
+            })
+        })
+        .then(res => {
+            fetchReviews();
+            setVisible(false);
+        })
+    }
+
+    if(loading)
+    return (
+        <View style={{height: 200, justifyContent: 'center', alignItems: 'center'}}>
+            <ActivityIndicator size={RFPercentage(5)} color={gStyles.color_2} />
+        </View>
+    )
     return (
         <ScrollView>
+            <CustomModal modalVisible={visible} setModalVisible={setVisible} confirm={submit}>
+                <View style={{width: width * 0.7, alignItems: 'center'}}>
+                    <View style={{flexDirection: 'row', marginBottom: height * 0.05}}>
+                        {[1, 2, 3, 4, 5].map(num => {
+                            return (
+                                <TouchableOpacity onPress={() => setStars(num)} activeOpacity={0.6} key={Math.random()}>
+                                    <Icon type="AntDesign" key={Math.random()} name={stars >= num ? 'star' : 'staro'} size={RFPercentage(5)} color={gStyles.starColor} />
+                                </TouchableOpacity>
+                            )
+                        })}
+                    </View>
+                    <TextInput value={review} onChangeText={val => setReview(val)} multiline placeholder={text.typeReview} style={{width: '90%', marginBottom: height * 0.05}} />
+                </View>
+            </CustomModal>
+            {loggedIn && <TouchableOpacity onPress={() => setVisible(true)} style={styles.addButton}>
+                <TextLato bold style={{color: 'white', fontSize: RFPercentage(2.5)}}>{text.addReview}</TextLato>
+            </TouchableOpacity>}
             {reviews.map(review => {
                 return (
-                    <View style={styles.reviewContainer} key={Math.random()}>
-                        <View style={styles.titleContainer}>
+                    <View style={{...styles.reviewContainer, alignItems: en ? 'flex-start' : 'flex-end'}} key={Math.random()}>
+                        <View style={{...styles.titleContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                             <Image style={styles.profilePic}
                                 source={{
                                     uri: review.client.image ?
@@ -26,12 +89,12 @@ const ReviewsComponent = ({ reviews }) => {
                                 }}/>
                             <TextLato bold style={styles.name}>{review.client.firstName} {review.client.lastName}</TextLato>
                         </View>
-                        <Reviews reviews={{average: 5}} size={RFPercentage(2.3)} style={{marginBottom: height * 0.03}} />
+                        <Reviews reviews={{average: review.stars}} size={RFPercentage(2.3)} style={{marginBottom: height * 0.03}} number={false} />
                         <TextLato style={{marginBottom: height * 0.05}}>{review.review}</TextLato>
                         {loggedIn && <View>
 
                         </View>}
-                        <TextLato style={styles.helpful}>{review.helpful.length} people found this review helpful.</TextLato>
+                        <TextLato style={styles.helpful}>{review.helpful.length} {text.helpful}</TextLato>
                     </View>
                 )
             })}
@@ -40,6 +103,15 @@ const ReviewsComponent = ({ reviews }) => {
 }
 
 const styles = StyleSheet.create({
+    addButton: {
+        marginHorizontal: width * 0.05,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: height * 0.03,
+        borderRadius: 10,
+        backgroundColor: gStyles.color_2,
+        marginBottom: height * 0.02
+    },
     reviewContainer: {
         marginHorizontal: width * 0.05,
         backgroundColor: 'white',
@@ -61,6 +133,8 @@ const styles = StyleSheet.create({
     },
     helpful: {
         textAlign: 'center',
+        alignItems: 'center',
+        width: '100%',
         color: '#888'
     }
 })

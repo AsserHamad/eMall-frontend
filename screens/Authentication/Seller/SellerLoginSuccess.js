@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
 import { gStyles } from '../../../global.style';
 import { Entypo, AntDesign } from '@expo/vector-icons';
@@ -13,7 +13,8 @@ function SellerLoginSuccess(props) {
     const seller = props.route.params.seller;
     return (
     <View style={styles.container}>
-        <Entypo name="hour-glass" size={RFValue(130)} color={gStyles.secondary} />
+        <Image source={{uri: store.logo}} style={{width: 200, aspectRatio: 1}} />
+        {/* <Entypo name="hour-glass" size={RFValue(130)} color={gStyles.secondary} /> */}
         <Text style={styles.welcomeText}>Greetings, {seller.name}</Text>
         <View style={styles.subtitle}>
             <Text style={{fontSize: RFPercentage(2.5), fontWeight: 'bold', color: gStyles.color_0}}>{store.title}</Text>
@@ -23,12 +24,12 @@ function SellerLoginSuccess(props) {
         <View style={{flexDirection: 'row'}}>
             <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.popToTop()}>
                 <View style={styles.homeContainer}>
-                    <AntDesign name="arrowleft" size={RFPercentage(4)} color={gStyles.secondary} />
+                    <AntDesign name="arrowleft" size={RFPercentage(4)} color={'white'} />
                 </View>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.navigate('Home')}>
                 <View style={styles.homeContainer}>
-                    <AntDesign name="home" size={RFPercentage(4)} color={gStyles.secondary} />
+                    <AntDesign name="home" size={RFPercentage(4)} color={'white'} />
                 </View>
             </TouchableOpacity>
 
@@ -57,7 +58,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: width * 0.8,
         fontSize: RFValue(10),
-        display: 'flex',
         flexDirection: 'column',
     },
     backButton: {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, ScrollableView, StyleSheet, Dimensions, Text, KeyboardAvoidingView, ImageBackground } from 'react-native';
+import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ImageBackground, Switch } from 'react-native';
 import TextLato from '../../components/utils/TextLato';
 import Constants from 'expo-constants';
 import { gStyles } from '../../global.style';
@@ -10,8 +10,8 @@ import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 import { useHeaderHeight } from '@react-navigation/stack';
-import * as ImagePicker from 'expo-image-picker';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import { funcs } from '../../global.funcs';
 
 const isEmpty = (obj) => Object.keys(obj).length === 0;
 
@@ -22,16 +22,16 @@ const StoreProductsAdd = () => {
     const [subcategories, setSubcategories] = useState([]);
     const [filters, setFilters] = useState([]);
     
-    const [enTitle, setEnTitle] = useState('');
+    const [enTitle, setEnTitle] = useState('Drops of moisture, common wealth');
     const [enTitleErr, setEnTitleErr] = useState('');
     
-    const [arTitle, setArTitle] = useState('');
+    const [arTitle, setArTitle] = useState('قطرات النقاء الذكيه');
     const [arTitleErr, setArTitleErr] = useState('');
     
-    const [enDescription, setEnDescription] = useState('');
+    const [enDescription, setEnDescription] = useState('An offer you cannot refuse my dude');
     const [enDescriptionErr, setEnDescriptionErr] = useState('');
     
-    const [arDescription, setArDescription] = useState('');
+    const [arDescription, setArDescription] = useState('يا صاح تعالا انت و صباح');
     const [arDescriptionErr, setArDescriptionErr] = useState('');
     
     const [pickedCategory, setPickedCategory] = useState('');
@@ -43,14 +43,18 @@ const StoreProductsAdd = () => {
     const [pickedFilter, setPickedFilter] = useState('');
     const [pickedFilterErr, setPickedFilterErr] = useState('');
     
-    const [stock, setStock] = useState('');
+    const [stock, setStock] = useState('20');
     const [stockErr, setStockErr] = useState('');
     
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState('100');
     const [priceErr, setPriceErr] = useState('');
     
     const [specifications, setSpecfications] = useState([]);
     const [images, setImages] = useState([]);
+
+    const [extraText, setExtraText] = useState(false);
+    const [extraImage, setExtraImage] = useState(false);
+
     const token = useSelector(state => state.authReducer.token)
     
     const [showAlert, setShowAlert] = useState(false);
@@ -80,77 +84,56 @@ const StoreProductsAdd = () => {
     }, [pickedSubcategory])
     
     const submitProduct = () => {
-        const product = {
-            title: {
-                en: enTitle,
-                ar: arTitle
-            },
-            description: {
-                en: enDescription,
-                ar: arDescription
-            },
-            category: pickedCategory,
-            subcategory: pickedSubcategory,
-            stock,
-            price,
-            currency: 'EGP',
-        }
-        fetch(`${Constants.manifest.extra.apiUrl}/product`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json', token},
-            body: JSON.stringify({product})
-        })
-        .then(res => res.json(res))
+        funcs.uploadMultipleImages(images.map(image => image.uri))
         .then(res => {
-            if(res.status || res.errors){
-                setEnTitleErr('')
-                setArTitleErr('')
-                setPickedCategoryErr('')
-                setPickedSubcategoryErr('')
-                setStockErr('')
-                setPriceErr('')
-                res.errors.map(err => {
-                    switch(err.param){
-                        case 'title.en': setEnTitleErr(err.msg); break;
-                        case 'title.ar': setArTitleErr(err.msg); break;
-                        case 'category': setPickedCategoryErr(err.msg); break;
-                        case 'subcategory': setPickedSubcategoryErr(err.msg); break;
-                        case 'stock': setStockErr(err.msg); break;
-                        case 'price': setPriceErr(err.msg); break;
-                    }
-                })
-            } else {
-                setShowAlert(true);
+            const product = {
+                title: {
+                    en: enTitle,
+                    ar: arTitle
+                },
+                description: {
+                    en: enDescription,
+                    ar: arDescription
+                },
+                category: pickedCategory,
+                subcategory: pickedSubcategory,
+                stock,
+                price,
+                extraImage,
+                extraText,
+                currency: 'EGP',
+                images: res
             }
-        })
-        .catch(err => console.log('ERRR', err));
-    }
-    
-    // Get image permission
-    useEffect(() => {
-        (async () => {
-            if(Platform.OS !== 'web'){
-                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
-                if(status !== 'granted') {
-                    alert('Sorry, we need camera roll permission to register!')
+            fetch(`${Constants.manifest.extra.apiUrl}/product`, {
+                method: 'post',
+                headers: {'Content-Type': 'application/json', token},
+                body: JSON.stringify({product})
+            })
+            .then(res => res.json(res))
+            .then(res => {
+                if(res.status || res.errors){
+                    setEnTitleErr('')
+                    setArTitleErr('')
+                    setPickedCategoryErr('')
+                    setPickedSubcategoryErr('')
+                    setStockErr('')
+                    setPriceErr('')
+                    res.errors.map(err => {
+                        switch(err.param){
+                            case 'title.en': setEnTitleErr(err.msg); break;
+                            case 'title.ar': setArTitleErr(err.msg); break;
+                            case 'category': setPickedCategoryErr(err.msg); break;
+                            case 'subcategory': setPickedSubcategoryErr(err.msg); break;
+                            case 'stock': setStockErr(err.msg); break;
+                            case 'price': setPriceErr(err.msg); break;
+                        }
+                    })
+                } else {
+                    setShowAlert(true);
                 }
-            }
-        })();
-    }, []);
-    
-    // Pick image
-    const pickImage = async () => {
-        ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          quality: 1,
-        })
-        .then(res => {
-            if(!res.cancelled) {
-                res.id = Math.random();
-                setImages(images => [...images, res]);
-            }
-        })
+            })
+            .catch(err => console.log('ERRR', err));
+        });
     }
 
     const removeImage = (id) => {
@@ -158,7 +141,7 @@ const StoreProductsAdd = () => {
     }
 
     const checkNotEmpty = () => {
-        return enTitle && arTitle && pickedCategory && pickedSubcategory && stock && price && images.length !== 0;
+        return enTitle && arTitle && pickedCategory && pickedSubcategory && stock && price && images.length !== 0 && images.length <= 10;
     }
 
     const Alert = () => (
@@ -258,14 +241,14 @@ const StoreProductsAdd = () => {
                     <ImageBackground
                         key={Math.random()}
                         source={{uri: image.uri}}
-                        style={{...styles.imageContainer, aspectRatio: image.width/image.height}}>
+                        style={{...styles.imageContainer, aspectRatio: 1}} imageStyle={{resizeMode: 'contain'}}>
                             <TouchableOpacity onPress={() => removeImage(image.id)} style={styles.trashContainer}>
                                 <Icon type="Feather" name="trash" color="white" size={RFPercentage(2.5)} />
                             </TouchableOpacity>
                     </ImageBackground>
                     ))}
 
-                    <TouchableOpacity onPress={() => pickImage()} style={styles.addImageContainer}>
+                    <TouchableOpacity onPress={() => funcs.chooseImage(uri => setImages(images => [...images, {id: Math.random(), uri}]))} style={styles.addImageContainer}>
                         <Icon type="AntDesign" name="plus" color="white" size={RFPercentage(2.5)} />
                         <TextLato style={{color: 'white', fontSize: RFPercentage(1.5)}}>Add Image</TextLato>
                     </TouchableOpacity>
@@ -292,21 +275,21 @@ const StoreProductsAdd = () => {
                 <TextLato style={styles.label}>Pick Subcategory</TextLato>
                 {pickedCategory === '' ? <View style={{marginHorizontal: 20, height: width * 0.35, justifyContent: 'center', alignItems: 'center', borderColor: gStyles.color_3, borderWidth: 1, borderRadius: 3}}>
                     <TextLato>Please Pick a Category</TextLato></View> : 
-                <ScrollView horizontal style={styles.categories}>
-                {subcategories.map(subcategory => {
-                        return(
-                        <TouchableOpacity
-                            key={subcategory._id}
-                            activeOpacity={0.7}
-                            style={{...styles.category, backgroundColor: pickedSubcategory === subcategory._id ? gStyles.color_0 : gStyles.color_3}} 
-                            onPress={() => setPickedSubcategory(subcategory._id)}
-                        >
-                            <Icon type={subcategory.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={subcategory.icon} />
-                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{subcategory.name.en}</TextLato>
-                        </TouchableOpacity>)
-                })}
-                </ScrollView>
-                }
+                    <ScrollView horizontal style={styles.categories}>
+                    {subcategories.map(subcategory => {
+                            return(
+                            <TouchableOpacity
+                                key={subcategory._id}
+                                activeOpacity={0.7}
+                                style={{...styles.category, backgroundColor: pickedSubcategory === subcategory._id ? gStyles.color_0 : gStyles.color_3}} 
+                                onPress={() => setPickedSubcategory(subcategory._id)}
+                            >
+                                <Icon type={subcategory.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={subcategory.icon} />
+                                <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{subcategory.name.en}</TextLato>
+                            </TouchableOpacity>)
+                    })}
+                    </ScrollView>
+                    }
                 
                 {/* FILTER */}
                 <TextLato style={styles.label}>Pick Filter</TextLato>
@@ -329,7 +312,7 @@ const StoreProductsAdd = () => {
                 }
             
                 {/* SPECIFICATIONS */}
-                <TextLato style={styles.label}>Specifications
+                {/* <TextLato style={styles.label}>Specifications
                 <TextLato italic style={{fontSize: RFPercentage(1.7), color: gStyles.color_1}}>   (weight, model, etc..)</TextLato></TextLato>
                 <View>
                     {specifications.map(specification => {
@@ -342,6 +325,30 @@ const StoreProductsAdd = () => {
                         <Icon type="AntDesign" name="plus" size={RFPercentage(3)} color={'white'} />
                     </TouchableOpacity>
                 </View>
+                 */}
+
+                 {/* CHECKS */}
+                 <View style={{flexDirection: 'row', marginHorizontal: 20, alignItems: 'center', marginTop: height * 0.02}}>
+                    <TextLato bold style={{width: '80%'}}>Require the user to input text</TextLato>
+                    <Switch
+                        trackColor={{ false: '#ccc', true: gStyles.color_2 }}
+                        thumbColor={'#f4f3f4'}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={() => setExtraText(extra => !extra)}
+                        value={extraText}
+                    />
+                 </View>
+                 <View style={{flexDirection: 'row', marginHorizontal: 20, alignItems: 'center', marginTop: height * 0.02}}>
+                    <TextLato bold style={{width: '80%'}}>Require the user to add an image</TextLato>
+                    <Switch
+                        trackColor={{ false: '#ccc', true: gStyles.color_2 }}
+                        thumbColor={'#f4f3f4'}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={() => setExtraImage(extra => !extra)}
+                        value={extraImage}
+                    />
+                 </View>
+                
                 <TouchableOpacity 
                     onPress={() => checkNotEmpty() ? submitProduct() : null}
                     style={{...styles.submitButton, backgroundColor: checkNotEmpty() ? gStyles.color_0 : gStyles.color_3 }}
@@ -387,10 +394,9 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         height: width * 0.35,
-        backgroundColor: gStyles.color_0,
         alignItems: 'flex-end',
         padding: 5,
-        marginRight: 5
+        marginRight: 2
     },
     addImageContainer: {
         width: width * 0.25,

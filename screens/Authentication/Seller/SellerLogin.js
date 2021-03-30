@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { Alert, Dimensions, Image, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { Dimensions, Image, SafeAreaView, StyleSheet, View } from 'react-native';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
 import { AntDesign } from '@expo/vector-icons';
 import * as Facebook from 'expo-facebook';
 import { RFValue } from "react-native-responsive-fontsize";
-import { useFonts } from 'expo-font';
-import { useHeaderHeight } from '@react-navigation/stack';
 
 // Redux
 import { connect } from 'react-redux';
@@ -16,10 +14,11 @@ import DisabledButton from '../DisabledButton';
 import TextLato from '../../../components/utils/TextLato';
 import Icon from '../../../components/utils/Icon';
 import { useLanguage } from '../../../hooks/language';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Header from '../../../components/Header';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const SellerLogin = (props) => {
-    const headerHeight = useHeaderHeight();
     const [email, setEmail] = useState('asserhamad96@gmail.com');
     const [errors, setErrors] = useState([]);
     const [password, setPassword] = useState('Abcd1234');
@@ -35,7 +34,10 @@ const SellerLogin = (props) => {
         .then(res => {
             if(res && !res.status){
                 setErrors([]);
-                res.store.approved? props.loginSeller(res) : props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
+                if(res.store.approved){
+                    AsyncStorage.setItem('@token', JSON.stringify({type: 'store', token: res.token}));
+                    props.loginSeller(res); 
+                } else props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
             }
             else {
                 setErrors(res.message ? [res.message] : res.errors)
@@ -85,10 +87,11 @@ const SellerLogin = (props) => {
         }
     }
     return (
-        <View style={styles.container}>
-        <Image style={styles.image} source={{uri: 'https://imgur.com/eoMwgCe.png'}} />
+        <ScrollView contentContainerStyle={styles.container}>
+            <Header details={{title: ''}} />
+        <Image style={styles.image} source={{uri: 'https://imgur.com/CoPeD7N.png'}} />
             <View style={styles.headerContainer}>
-                <TextLato style={{color: 'black', fontSize: RFValue(20), fontFamily: gStyles.fontFamily}}>Seller Dashboard</TextLato>
+                <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>Seller Dashboard</TextLato>
                 <TextLato italic style={{color: 'black', fontSize: RFValue(11)}}>Please login to access your dashboard</TextLato>
             </View>
             <View style={styles.errorContainer}>
@@ -113,33 +116,35 @@ const SellerLogin = (props) => {
                     onChangeText={(val) => setPassword(val)}
                     style={{...styles.input, textAlign: en ? 'left' : 'right'}} />
                 <TouchableOpacity onPress={() => props.navigation.push('ForgotPassword', {route: 'seller'})}>
-                    <TextLato style={{color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(10)}}>Forgot Password</TextLato>
+                    <TextLato style={{color: gStyles.color_0, fontSize: RFValue(10)}}>Forgot Password</TextLato>
                 </TouchableOpacity>
             </View>
-            <DisabledButton onPressIfActive={login} array={[email, password]} errors={errors}>
-                    <TextLato style={{color: 'white', fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>SUBMIT</TextLato>
-            </DisabledButton>
-                {/* Register Now */}
-                <View style={{flexDirection: 'row', marginTop: height * 0.02}}>
-                    <TextLato style={{color: gStyles.color_1, fontFamily: gStyles.fontFamily, fontSize: RFValue(12)}}>Don't have an account?</TextLato>
-                    <TouchableOpacity onPress={() => props.navigation.push('SellerRegister')}>
-                        <TextLato style={{marginLeft: 5, color: gStyles.color_0, fontFamily: gStyles.fontFamily, fontSize: RFValue(11)}}>Sign Up Now</TextLato>
-                    </TouchableOpacity>
-                </View>
                 {/* Other Logins */}
                 <SafeAreaView style={styles.alternativeLogins}>
                     <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButton}>
-                            <Icon type={'FontAwesome'} name="facebook-f" size={RFValue(25)} color="white" />
+                            <Icon style={{width: '30%', alignItems: 'center'}} type={'FontAwesome'} name="facebook-f" size={RFValue(18)} color="white" />
+                            <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>Login with Facebook</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <View style={[styles.alternativeLoginButton, {backgroundColor: '#EA4335'}]}>
-                            <AntDesign name="google" size={RFValue(25)} color="white" />
+                            <Icon type={'AntDesign'} style={{width: '30%', alignItems: 'center'}} name="google" size={RFValue(18)} color="white" />
+                            <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>Login with Google</TextLato>
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>
-            </View>
+            <DisabledButton onPressIfActive={login} array={[email, password]} errors={errors}>
+                    <TextLato style={{color: 'white', fontSize: RFValue(12)}}>Login</TextLato>
+            </DisabledButton>
+                {/* Register Now */}
+                <View style={{flexDirection: 'row', marginTop: height * 0.02}}>
+                    <TextLato style={{color: 'black', fontSize: RFValue(12)}}>Don't have an account?</TextLato>
+                    <TouchableOpacity onPress={() => props.navigation.push('SellerRegister')}>
+                        <TextLato bold style={{marginLeft: 5, color: gStyles.color_2, fontSize: RFValue(11)}}>Sign Up Now</TextLato>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
     )
 }
 
@@ -149,19 +154,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1
     },
-    backContainer: {
-        width,
-        marginTop: height * 0.02,
-        paddingHorizontal: width * 0.05,
-    },
     image: {
-        height: height * 0.21,
-        aspectRatio: 714/553
+        height: height * 0.16,
+        aspectRatio: 786/610
     },
     headerContainer: {
         width: width * 0.9,
+        alignItems: 'center',
         // marginTop: height * 0.05,
-        marginBottom: height * 0.02
+        marginTop: height * 0.01
     },
     errorContainer: {
         width: width * 0.9,
@@ -172,21 +173,21 @@ const styles = StyleSheet.create({
         width: width * 0.9
     },
     input: {
-        fontSize: RFValue(12),
+        fontSize: RFValue(10),
         marginVertical: 10,
         borderRadius: 100,
         backgroundColor: 'white',
         paddingHorizontal: width * 0.04,
-        paddingVertical: height * 0.015,
+        paddingVertical: height * 0.01,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 12,
+            height: 2,
         },
-        shadowOpacity: 0.58,
-        shadowRadius: 16.00,
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,        
         fontFamily: 'Cairo',
-        elevation: 24,
         color: 'black'
     },
     submitButton: {
@@ -203,20 +204,21 @@ const styles = StyleSheet.create({
     },
     alternativeLogins: {
         width,
-        marginVertical: height * 0.1,
+        marginTop: height * 0.03,
+        // marginBottom: height * 0.05,
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'row'
     },
     alternativeLoginButton: {
-        width: width * 0.15,
-        aspectRatio: 1,
+        width: width * 0.6,
+        // aspectRatio: 1,
+        // paddingHorizontal: width * 0.05,
+        paddingVertical: height * 0.02,
         backgroundColor: '#3b5998',
         alignItems: 'center',
         justifyContent: 'center',
-        display: 'flex',
         flexDirection: 'row',
-        marginHorizontal: width * 0.05,
+        marginBottom: height * 0.02,
         borderRadius: 100
     },
 })

@@ -31,14 +31,13 @@ const DisabledButton = (props) => {
 
 const styles = StyleSheet.create({
     submitButton: {
-        backgroundColor: gStyles.color_1,
+        backgroundColor: gStyles.color_2,
         alignItems: 'center',
         justifyContent: 'center',
-        width: width * 0.3,
-        borderRadius: 100,
-        paddingVertical: height * 0.02,
+        width: width * 0.95,
+        borderRadius: 5,
+        paddingVertical: height * 0.017,
         marginTop: height * 0.03,
-        display: 'flex',
         flexDirection: 'row'
     },
 })

@@ -22,7 +22,7 @@ const ProductReviewCard = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <Image style={styles.clientIcon} source={{uri : "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"}} />
+                <Image style={styles.clientIcon} source={{uri : "https://i.imgur.com/Q6x4k3s.png"}} />
                 <TextLato bold style={styles.clientName}>{review.client.firstName} {review.client.lastName}</TextLato>
             </View>
             <View style={{flexDirection: 'row', marginBottom: height * 0.015}}>{stars}</View>

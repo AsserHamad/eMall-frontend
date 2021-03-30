@@ -65,19 +65,14 @@ const styles = StyleSheet.create({
         width,
         paddingTop: Constants.statusBarHeight+ 5,
         paddingBottom: 10,
-        // height: 100,
-        display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center'
     },
     topContainer: {
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         height: 45
     },
     topContainer_ar: {
-        display: 'flex',
         flexDirection: 'row-reverse',
         alignItems: 'center',
         height: 45
@@ -86,7 +81,6 @@ const styles = StyleSheet.create({
         width: width * 0.7,
         justifyContent: 'center',
         alignItems: 'center',
-        display: 'flex',
         flexDirection: 'row'
     },
     logo: {

@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, KeyboardAvoidingView, StyleSheet, Switch, Text, View } from 'react-native';
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
 import { SafeAreaView } from 'react-navigation';
 import { useSelector } from 'react-redux';
 import TextLato from '../../../components/utils/TextLato';
 import { gStyles } from '../../../global.style';
-import * as ImagePicker from 'expo-image-picker';
 import ProductPicker from '../../../components/utils/ProductPicker';
 import useCredit from '../../../hooks/credit';
-import Icon from '../../../components/utils/Icon';
 import { useLanguage } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
@@ -93,7 +90,7 @@ const DealOfTheDayAd = () => {
                     <TextLato style={{fontSize: RFPercentage(1.8)}} italic>Add one of your products to the Deals of the Day list</TextLato>
                     <TextLato style={{fontSize: RFPercentage(1.8), color: 'red', marginTop: height * 0.01}} bold>Costs 50 EGP</TextLato>
                     <TextLato style={{fontSize: RFPercentage(1.8), color: gStyles.color_1, marginBottom: height * 0.03}} italic>Current Store Credit: {credit} EGP</TextLato>
-                    <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} />
+                    <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} style={{height: height * 0.5}} />
                     {pickedProduct && (
                         <View style={{marginTop: height * 0.03}}>
                             <TextLato style={{fontSize: RFPercentage(2.5)}} bold>Percent Value</TextLato>

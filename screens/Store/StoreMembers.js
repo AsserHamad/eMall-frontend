@@ -43,7 +43,7 @@ const StoreMembers = ({navigation}) => {
     }, [members])
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <StoreNavbar title={'Members'} />
             <ScrollView>
             <ScrollView contentContainerStyle={{paddingBottom: height * 0.03}} horizontal>
@@ -81,7 +81,7 @@ const StoreMembers = ({navigation}) => {
             </ScrollView>
             </ScrollView>
             <Image source={{uri: 'https://i.imgur.com/adbpROj.png'}} style={{width, aspectRatio: 734/553, position: 'absolute', bottom: 0}} />
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -92,7 +92,7 @@ const MemberCheckbox = ({member, authority, seller, containsAuthority, setRefres
 
     const disabled = member._id === seller._id || !containsAuthority(0);
     const updateAuthorities = () => {
-        setLoading(true);
+        // setLoading(true);
         let authorities = isChecked ?
             member.authorities.filter(auth => auth !== authority.num):
             member.authorities.concat(authority.num).sort();
@@ -107,10 +107,10 @@ const MemberCheckbox = ({member, authority, seller, containsAuthority, setRefres
                 }
             })
         })
-        .then(res => {
-            setLoading(false);
-            setRefresh(refresh => !refresh);
-        })
+        // .then(res => {
+        //     setLoading(false);
+        //     setRefresh(refresh => !refresh);
+        // })
         .catch(err => console.log(err));
     }
     return (

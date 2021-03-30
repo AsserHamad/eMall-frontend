@@ -18,7 +18,6 @@ import {
   } from "react-native-chart-kit";
 import SalesGraph from '../../components/Store/Dashboard/SalesGraph';
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar';
-import TotalSales from '../../components/Store/Dashboard/TotalSales';
 import TotalViews from '../../components/Store/Dashboard/TotalViews';
 import CurrentFunds from '../../components/Store/Dashboard/CurrentFunds';
 import PendingFunds from '../../components/Store/Dashboard/PendingFunds';
@@ -28,17 +27,18 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const StoreHome = ({navigation, route}) => {
     const seller = useSelector(state => state.authReducer.account);
     const store = useSelector(state => state.authReducer.store);
+    console.log(store);
     return(
         <View style={styles.container}>
             <StoreNavbar title={'Dashboard'} />
-            <ScrollView contentContainerStyle={{alignItems: 'center'}}>
+            <ScrollView contentContainerStyle={{alignItems: 'center', paddingBottom: height * 0.04}}>
                 <View style={styles.nameContainer}>
                     <TextLato style={styles.name}>Hello, {seller.name}</TextLato>
                     <TextLato italic style={styles.jobTitle}>{seller.title}</TextLato>
                 </View>
                 <View style={{marginTop: height * 0.02, flexDirection: 'row', padding: width * 0.05, backgroundColor: 'white'}}>
                     <View style={{width: '70%', justifyContent: 'center'}}><TextLato bold style={{fontSize: RFPercentage(3)}}>{store.title}</TextLato></View>
-                    <View style={{width: '30%', alignItems: 'center', justifyContent: 'center'}}><Image source={{uri: store.logo}} style={{width: width * 0.15, height: width * 0.15}} /></View>
+                    <View style={{width: '30%', alignItems: 'center', justifyContent: 'center'}}><Image source={{uri: store.logo}} style={{width: width * 0.15, height: width * 0.15, resizeMode: 'contain'}} /></View>
                 </View>
 
                 {/* CURRENT FUNDS */}
@@ -53,8 +53,6 @@ const StoreHome = ({navigation, route}) => {
                 
                 {/* VIEWS */}
                 <View>
-                    <TotalViews />
-                    <TotalViews />
                     <TotalViews />
                 </View>
 

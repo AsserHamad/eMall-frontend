@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import SellerCardProduct from '../cards/Seller/SellerCardProduct';
 
-const BrowseComponent = ({id}) => {
+const BrowseComponent = ({id, showToast, en}) => {
     const [products, setProducts] = useState([]);
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/product/store/${id}`)
@@ -16,7 +16,7 @@ const BrowseComponent = ({id}) => {
         return <View><ActivityIndicator size={20} /></View>
     return (
         <ScrollView>
-            {products.map(product => <SellerCardProduct key={Math.random()} product={product} />)}
+            {products.map(product => <SellerCardProduct showToast={showToast} key={Math.random()} product={product} style={{transform: en ? [] : [{scaleX: -1}]}} />)}
         </ScrollView>
     )
 }

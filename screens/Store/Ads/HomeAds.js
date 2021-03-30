@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-navigation';
 import { useSelector } from 'react-redux';
 import TextLato from '../../../components/utils/TextLato';
 import { gStyles } from '../../../global.style';
-import * as ImagePicker from 'expo-image-picker';
+import { funcs } from '../../../global.funcs';
 import ProductPicker from '../../../components/utils/ProductPicker';
 import useCredit from '../../../hooks/credit';
 
@@ -21,40 +21,11 @@ const HomeAds = () => {
     const [pickedImage, setPickedImage] = useState(false);
     const [bid, setBid] = useState("0");
     const [disabled, setDisabled] = useState(true);
-    const store = useSelector(state => state.authReducer.account);
     const [image, setImage] = useState('https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png');
     const [adType, setAdType] = useState(0);
     const [pickedProduct, setPickedProduct] = useState(null);
     const credit = useCredit(loading);
     const token = useSelector(state => state.authReducer.token);
-    
-    // Get image permission
-    useEffect(() => {
-        (async () => {
-            if(Platform.OS !== 'web'){
-                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
-                if(status !== 'granted') {
-                    alert('Sorry, we need camera roll permission to register!')
-                }
-            }
-        })();
-    }, []);
-    
-    // Pick image
-    const pickImage = async () => {
-        ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [2.5, 1],
-          quality: 1,
-        })
-        .then(res => {
-            setPickedImage(true);
-            if(!res.cancelled) {
-                setImage(res.uri);
-            }
-        })
-    }
 
     const getPageAd = () => {
         setLoading(true);
@@ -144,7 +115,7 @@ const HomeAds = () => {
                             <View>
                                 <TextLato bold style={{marginTop: height * 0.03}}>Pick an image for your Ad</TextLato>
                                 <View style={styles.profilePictureContainer}>
-                                    <TouchableOpacity onPress={pickImage}>
+                                    <TouchableOpacity onPress={() => funcs.chooseImage(setImage, [2.5, 1])}>
                                         <Image source={{ uri: image }} style={{ width: '100%', aspectRatio: 2.5 }} />
                                     </TouchableOpacity>
                                 </View>

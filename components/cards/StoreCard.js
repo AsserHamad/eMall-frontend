@@ -19,7 +19,7 @@ function StoreCard({store}){
             Image.getSize(store.logo, (width, height) => setAspectRatio(width/height))
     }, []);
     return(
-        <TouchableOpacity activeOpacity={0.7} onPress={() => {navigation.push('Store', {store})}} style={[styles.container, {transform: en ? [] : [{scaleX: -1}]}]}>
+        <TouchableOpacity activeOpacity={0.9} onPress={() => {navigation.push('Store', {store})}} style={[styles.container, {transform: en ? [] : [{scaleX: -1}]}]}>
             <View style={styles.logoContainer}>
                     <Image source={{uri: store.logo}} style={{height: 60,  width: 80, resizeMode: 'contain'}} />
             </View>

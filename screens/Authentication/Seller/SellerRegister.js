@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import { Dimensions, KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { Dimensions, KeyboardAvoidingView, SafeAreaView, StyleSheet, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
 import { AntDesign } from '@expo/vector-icons';
 import * as Facebook from 'expo-facebook';
 import { RFValue } from "react-native-responsive-fontsize";
-import { useHeaderHeight } from '@react-navigation/stack';
-import * as ImagePicker from 'expo-image-picker';
 
 // Redux
 import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
-import { useFonts } from 'expo-font';
 import RegisterInputAndError from '../RegisterInputAndError';
 import DisabledButton from '../DisabledButton';
 import TextLato from '../../../components/utils/TextLato';
@@ -20,39 +17,12 @@ import TextLato from '../../../components/utils/TextLato';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerRegister = (props) => {
     const [errors, setErrors] = useState([]);
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [phone, setPhone] = useState('+20');
-    const [title, setTitle] = useState('');
+    const [name, setName] = useState('Amer Hamad');
+    const [email, setEmail] = useState('asserhamad1@gmail.com');
+    const [password, setPassword] = useState('Abcd1234');
+    const [phone, setPhone] = useState('+201140008042');
+    const [title, setTitle] = useState('CEO of Madness');
     const [facebookId, setFacebookId] = useState(undefined);
-
-    // Get image permission
-    // useEffect(() => {
-    //     (async () => {
-    //         if(Platform.OS !== 'web'){
-    //             const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
-    //             if(status !== 'granted') {
-    //                 alert('Sorry, we need camera roll permission to register!')
-    //             }
-    //         }
-    //     })();
-    // }, []);
-    
-    // Pick image
-    // const pickImage = async () => {
-    //     ImagePicker.launchImageLibraryAsync({
-    //       mediaTypes: ImagePicker.MediaTypeOptions.All,
-    //       allowsEditing: true,
-    //       aspect: [1, 1],
-    //       quality: 1,
-    //     })
-    //     .then(res => {
-    //         if(!res.cancelled) {
-    //             setImage(res.uri);
-    //         }
-    //     })
-    // }
     
     function registerSeller() {
         fetch(`${Constants.manifest.extra.apiUrl}/seller/verify`, {
@@ -155,7 +125,6 @@ const styles = StyleSheet.create({
         backgroundColor: gStyles.background,
         paddingTop: Constants.statusBarHeight,
         alignItems: 'center',
-        display: 'flex',
         flexDirection: 'column',
         flex: 1
     },
@@ -194,7 +163,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        display: 'flex',
         flexDirection: 'row'
     },
     alternativeLoginButtonG: {
@@ -205,7 +173,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        display: 'flex',
         flexDirection: 'row'
     }
 })

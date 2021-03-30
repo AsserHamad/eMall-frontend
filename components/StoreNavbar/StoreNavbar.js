@@ -61,16 +61,15 @@ const styles = StyleSheet.create({
     container: {
         width,
         paddingVertical: 10,
+        marginTop: Constants.statusBarHeight,
         alignItems: 'center'
     },
     topContainer: {
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        height: 45
+        height: 35
     },
     topContainer_ar: {
-        display: 'flex',
         flexDirection: 'row-reverse',
         alignItems: 'center',
         height: 45
@@ -79,7 +78,6 @@ const styles = StyleSheet.create({
         width: width * 0.7,
         justifyContent: 'center',
         alignItems: 'center',
-        display: 'flex',
         flexDirection: 'row'
     },
     logo: {

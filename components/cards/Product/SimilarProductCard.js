@@ -30,7 +30,7 @@ const SimilarProductCard = (props) => {
                     <TextLato bold style={styles.title}>{product.title[language]}</TextLato>
                     <TextLato style={styles.description}>{product.description[language].substr(0, 50)}...</TextLato>
                     {product.discount ? 
-                        <View key={Math.random()} style={{display: 'flex', flexDirection: 'row', marginTop: height * 0.02}}>
+                        <View key={Math.random()} style={{flexDirection: 'row', marginTop: height * 0.02}}>
                             <TextLato style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.color_0}}>{product.price}</TextLato>
                             <TextLato style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.color_0}}>{Math.floor(product.price * (1-product.discount))} EGP</TextLato>
                         </View>

@@ -27,26 +27,19 @@ function ClientLoginSuccess(props) {
         })
         .then(res => {
             if(res.ok){
-                props.login(res);
-                props.navigation.navigate('Home');
+                return res.json();
             }
             else {
-                Alert.alert(
-                    "Problem with Verification",
-                    "Incorrect PIN",
-                    [{text: "OK"}]
-                );
+                throw new Error('Incorrect PIN');
             }
+        })
+        .then(res => {
+            props.login(res);
+            props.navigation.navigate('Home');
         })
         .catch(err => Alert.alert(
             "Problem with Verification",
-            err.message,
-            [{
-                text: "Cancel",
-                style: "cancel"
-            }, {
-                text: "OK"
-            }, {cancelable: false}]
+            err.message
         ));
     }
     return (
@@ -91,7 +84,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         width: width * 0.8,
         fontSize: RFValue(10),
-        display: 'flex',
         flexDirection: 'column',
     },
     backButton: {

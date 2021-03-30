@@ -30,27 +30,27 @@ function SideBar(props) {
         <View style={{...styles.container}}>
             {props.loggedIn ? (
             <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Profile')}>
-                <ImageBackground source={{uri: 'https://static.vecteezy.com/system/resources/previews/000/225/074/original/beach-at-night-illustration-vector.jpg'}} style={styles.topView} imageStyle={{opacity: 0.6}}>
-                    <Image style={styles.topDots} source={{uri: 'https://i.imgur.com/Q6x4k3s.png'}} />
+                <ImageBackground source={{uri: 'https://image.freepik.com/free-vector/red-geometrical-halftone-curved-star-pattern-background_1164-1624.jpg'}} style={styles.topView} imageStyle={{opacity: 0.6}}>
+                    <Image style={styles.topDots} source={{uri: 'https://imgur.com/RwdRLaD.png'}} />
                     <TextLato bold style={styles.name}>{props.account.firstName} {props.account.lastName}</TextLato>
                 </ImageBackground>
             </TouchableWithoutFeedback>
             ) : (
-                <ImageBackground source={{uri: 'https://static.vecteezy.com/system/resources/previews/000/225/074/original/beach-at-night-illustration-vector.jpg'}} style={styles.topViewU} imageStyle={{opacity: 0.6}}>
+                <ImageBackground source={{uri: 'https://image.freepik.com/free-vector/red-geometrical-halftone-curved-star-pattern-background_1164-1624.jpg'}} style={styles.topViewU} imageStyle={{opacity: 0.6}}>
                     <TextLato bold style={styles.topTitle}>Welcome to eMall</TextLato>
                 </ImageBackground>
             )}
+            <ScrollView>
             <View style={styles.logoutContainer}>
-                <TouchableOpacity onPress={() => {changeLanguage()}}>
-                    <TextLato bold reverse>{languageText && languageText.changeLanguage} 🌍</TextLato>
+                <TouchableOpacity style={styles.logoutButton} onPress={() => {changeLanguage()}}>
+                    <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold reverse>{languageText && languageText.changeLanguage}</TextLato>
                 </TouchableOpacity>
                 {props.loggedIn && 
-                        <TouchableOpacity onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});AsyncStorage.removeItem('@token');props.logout()}}>
-                            <TextLato bold>🏃‍♂️ {languageText.logout}</TextLato>
-                        </TouchableOpacity>
+                    <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});AsyncStorage.removeItem('@token');props.logout()}}>
+                        <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold>{languageText.logout}</TextLato>
+                    </TouchableOpacity>
                 }
             </View>
-            <ScrollView>
                 <DrawerContentScrollView {...props}>
                     <DrawerItemList labelStyle={{fontFamily: language === 'en' ? 'Lato' : 'Cairo'}} activeTintColor={gStyles.color_0} {...props} />
                 </DrawerContentScrollView>
@@ -100,8 +100,19 @@ const styles = StyleSheet.create({
         paddingVertical: height * 0.02,
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'flex-start',
+        alignItems: 'center',
+        flexDirection: 'row',
         paddingHorizontal: width * 0.05
+    },
+    logoutButton: {
+        paddingHorizontal: width * 0.05,
+        paddingVertical: height * 0.01,
+        backgroundColor: gStyles.color_2,
+        borderRadius: 100,
+        height: height * 0.05,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: width * 0.02
     }
 });
 

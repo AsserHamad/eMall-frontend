@@ -40,7 +40,7 @@ const ClientLogin = (props) => {
             if(!res.status){
                 setErrors([]);
                 if(res.client.verified){
-                    AsyncStorage.setItem('@token', res.token);
+                    AsyncStorage.setItem('@token', JSON.stringify({type: 'client', token: res.token}));
                     props.setCart(res.client.cart);
                     props.setWishlist(res.client.wishlist);
                     props.login(res);
@@ -116,10 +116,10 @@ const ClientLogin = (props) => {
                     <Icon type="FontAwesome5" name="bars" size={RFValue(25)} color={gStyles.secondary} />
                 </TouchableOpacity>
             </View>
-            <Image style={styles.image} source={{uri: 'https://i.imgur.com/iXv3XUH.png'}} />
+            <Image style={styles.image} source={{uri: 'https://imgur.com/hLnp9Kc.png'}} />
             <View style={styles.headerContainer}>
-                <TextLato bold style={{color: 'black', fontSize: RFPercentage(3.5), textAlign: 'center'}}>{languageText.welcome}</TextLato>
-                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11), textAlign: 'center'}}>{languageText.pleaseLogin}</TextLato>
+                <TextLato bold style={{color: 'black', fontSize: RFPercentage(3), textAlign: 'center'}}>{languageText.welcome}</TextLato>
+                <TextLato style={{color: gStyles.color_1, fontSize: RFPercentage(1.5), textAlign: 'center'}}>{languageText.pleaseLogin}</TextLato>
             </View>
             <View style={styles.errorContainer}>
                 {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={Math.random()}>{err.msg ? err.msg[language] : err[language]}</TextLato>)}
@@ -146,53 +146,55 @@ const ClientLogin = (props) => {
                     <TextLato bold style={{color: 'black', fontSize: RFValue(12), marginHorizontal: width * 0.02}}>{languageText.forgotPassword}</TextLato>
                 </TouchableOpacity>
             </View>
+            {/* Other Logins */}
+            <SafeAreaView style={styles.alternativeLogins}>
+                <TouchableOpacity onPress={facebookLogin}>
+                    <View style={{...styles.alternativeLoginButton, flexDirection: en ? 'row' : 'row-reverse'}}>
+                        <Icon style={{width: '30%', alignItems: 'center'}} type={'FontAwesome'} name="facebook-f" size={RFValue(15)} color="white" />
+                        <TextLato style={{color: 'white', textAlign: en ? 'left' : 'right', width: '70%'}}>{languageText.loginF}</TextLato>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View style={{...styles.alternativeLoginButton, flexDirection: en ? 'row' : 'row-reverse', backgroundColor: '#EA4335'}}>
+                        <Icon type={'AntDesign'} style={{width: '30%', alignItems: 'center'}} name="google" size={RFValue(15)} color="white" />
+                        <TextLato style={{color: 'white', textAlign: en ? 'left' : 'right', width: '70%'}}>{languageText.loginG}</TextLato>
+                    </View>
+                </TouchableOpacity>
+            </SafeAreaView>
+
+            {/* Login Button */}
             <DisabledButton onPressIfActive={login} array={[email, password]}>
                     <TextLato bold style={{color: 'white', fontSize: RFValue(12)}}>{languageText.login}</TextLato>
             </DisabledButton>
-            <View style={styles.bottomContainer}>
 
                 <View style={styles.others}>
                     {/* Register Now */}
                     <View style={{flexDirection: en ? 'row' : 'row-reverse'}}>
-                        <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11)}}>{languageText.dontHaveAccount}</TextLato>
+                        <TextLato style={{color: gStyles.color_3, fontSize: RFValue(11)}}>{languageText.dontHaveAccount}</TextLato>
                         <TouchableOpacity onPress={() => props.navigation.push('ClientRegister')}>
-                            <TextLato style={{marginHorizontal: 5, color: gStyles.color_0, fontSize: RFValue(11)}}>{languageText.signUp}</TextLato>
+                            <TextLato bold style={{marginHorizontal: 5, color: gStyles.color_2, fontSize: RFValue(11)}}>{languageText.signUp}</TextLato>
                         </TouchableOpacity>
                     </View>
                     {/* Seller Account */}
                     <View style={{flexDirection: en ? 'row' : 'row-reverse', marginTop: 5}}>
-                        <TextLato style={{color: gStyles.color_1, fontSize: RFValue(11)}}>{languageText.areYouSeller}</TextLato>
+                        <TextLato style={{color: gStyles.color_3, fontSize: RFValue(11)}}>{languageText.areYouSeller}</TextLato>
                         <TouchableOpacity onPress={() => props.navigation.push('SellerLogin')}>
-                            <TextLato style={{marginHorizontal: 5, color: gStyles.color_0, fontSize: RFValue(11)}}>{languageText.loginHere}</TextLato>
+                            <TextLato bold style={{marginHorizontal: 5, color: gStyles.color_2, fontSize: RFValue(11)}}>{languageText.loginHere}</TextLato>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                {/* Other Logins */}
-                <SafeAreaView style={styles.alternativeLogins}>
-                    <TouchableOpacity onPress={facebookLogin}>
-                        <View style={styles.alternativeLoginButton}>
-                            <Icon type={'FontAwesome'} name="facebook" size={RFValue(25)} color="white" />
-                        </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={GoogleLogin}>
-                        <View style={[styles.alternativeLoginButton, {backgroundColor: '#EA4335'}]}>
-                            <AntDesign name="google" size={RFValue(25)} color="white" />
-                        </View>
-                    </TouchableOpacity>
-                </SafeAreaView>
-            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
         height,
         alignItems: 'center',
         paddingTop: Constants.statusBarHeight,
         flexDirection: 'column',
+        backgroundColor: gStyles.background
         // flex: 1
     },
     backContainer: {
@@ -201,38 +203,40 @@ const styles = StyleSheet.create({
         paddingHorizontal: width * 0.05,
     },
     image: {
-        height: height * 0.2,
-        aspectRatio: 1177/867
+        height: height * 0.17,
+        aspectRatio: 820/433
     },
     headerContainer: {
         width: width * 0.9,
-        paddingTop: height * 0.02,
-        marginBottom: height * 0.02
+        paddingTop: height * 0.01,
+        marginBottom: height * 0.01
     },
     errorContainer: {
         width: width * 0.9,
-        height: height * 0.04,
+        height: height * 0.03,
         textAlign: 'left'
     },
     formContainer: {
         width: width * 0.9
     },
     input: {
-        fontSize: RFValue(12),
+        fontSize: RFValue(10),
         marginVertical: 10,
         borderRadius: 100,
         backgroundColor: 'white',
         paddingHorizontal: width * 0.04,
-        paddingVertical: height * 0.015,
+        paddingVertical: height * 0.01,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 12,
+            height: 2,
         },
-        shadowOpacity: 0.58,
-        shadowRadius: 16.00,
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        
+        elevation: 4,
+        
         fontFamily: 'Cairo',
-        elevation: 24,
         color: 'black'
     },
     submitButton: {
@@ -240,33 +244,34 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: width * 0.3,
-        height: height * 0.05,
+        height: height * 0.04,
         borderRadius: 2,
         marginTop: height * 0.03
     },
     bottomContainer: {
-        position: 'absolute',
-        bottom: 0
     },
     others: {
         paddingHorizontal: height * 0.025,
+        marginTop: height * 0.02,
+        width,
+        alignItems: 'center'
     },
     alternativeLogins: {
         width,
-        marginVertical: height * 0.03,
+        marginTop: height * 0.03,
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'row'
     },
     alternativeLoginButton: {
-        width: width * 0.15,
-        aspectRatio: 1,
+        width: width * 0.6,
+        // aspectRatio: 1,
+        // paddingHorizontal: width * 0.05,
+        paddingVertical: height * 0.02,
         backgroundColor: '#3b5998',
         alignItems: 'center',
         justifyContent: 'center',
-        display: 'flex',
         flexDirection: 'row',
-        marginHorizontal: width * 0.05,
+        marginBottom: height * 0.02,
         borderRadius: 100
     },
 })

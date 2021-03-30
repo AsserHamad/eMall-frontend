@@ -1,43 +1,65 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { Dimensions, Image, StyleSheet, View, ScrollView } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, SafeAreaView, StyleSheet, View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 import Header from '../components/Header';
 import { gStyles } from '../global.style';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
-import { MaterialIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-import SellerCardsList from '../components/utils/SellerCardsList';
-import { useNavigation } from '@react-navigation/native';
 import { useLanguage } from '../hooks/language';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from '../components/utils/Icon';
 import TextLato from '../components/utils/TextLato';
-import { RFPercentage } from 'react-native-responsive-fontsize';
+import { useNavigation } from '@react-navigation/native';
+import SellerCardsList from '../components/utils/SellerCardsList';
+import Icon from '../components/utils/Icon';
+import ProductCardsList from '../components/utils/ProductCardsList';
+import Toast from 'react-native-easy-toast';
 
-const image = `https://img.freepik.com/free-psd/new-style-sale-promotion-banner-template_85212-146.jpg?size=626&ext=jpg&ga=GA1.2.356975455.1604448000`;
 const SubcategoryPage = (props) => {
     const details = props.route.params;
-    const [aspectRatio, setAspectRatio] = useState(0);
     const [filter, setFilter] = useState('');
-    useEffect(() => {
-        Image.getSize(image, (width, height) => setAspectRatio(width / height));
-    }, []);
+    const language = useLanguage();
+    
+    const toast = useRef();
+    
+    const showToast = message => {
+        toast.current.show(message);
+    }
+
     return (
         <View style={styles.container}>
-            <Header details={{title: details.name.en}} />
-            <FiltersScroll details={details} selected={filter} setSelected={setFilter} />
-            <SellerCardsList url={`${Constants.manifest.extra.apiUrl}/store/find-by-subcategory`} body={{subcategory: {...details}, filter}} refresh={filter} />
+            <Toast ref={_toast => toast.current = _toast} />
+            <Header details={{title: details.name[language]}} />
+            <ScrollView>
+                <FiltersScroll details={details} selected={filter} setSelected={setFilter} language={language} />
+                <TextLato style={styles.title} bold>Stores</TextLato>
+                <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-subcategory`} body={{subcategory: details, filter}} refresh={filter} />
+                <TextLato style={{...styles.title, marginTop: height * 0.05}} bold>Products</TextLato>
+                <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/subcategory/`} body={{id: details._id, filter}} refresh={filter} />
+            </ScrollView>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1
+        flex: 1,
+        backgroundColor: gStyles.background,
+        alignItems: 'center',
     },
     banner: {
         width
+    },
+    title: {
+        marginHorizontal: width * 0.2,
+        paddingVertical: height * 0.02,
+        backgroundColor: 'white',
+        marginTop: height * 0.02,
+        fontSize: RFPercentage(3),
+        textAlign: 'center',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20
     },
     sortButton: {
         position: 'absolute',
@@ -63,9 +85,7 @@ const styles = StyleSheet.create({
 
 export default SubcategoryPage;
 
-const FiltersScroll = ({details, selected, setSelected}) => {
-    const navigation = useNavigation();
-    const language = useLanguage();
+const FiltersScroll = ({details, selected, setSelected, language}) => {
     const [filters, setFilters] = useState([]);
     const en = language === 'en';
     useEffect(() => {
@@ -73,11 +93,26 @@ const FiltersScroll = ({details, selected, setSelected}) => {
         .then(res => res.json())
         .then(res => setFilters(res))
     }, [])
+
+    if(!filters.length)
+    return (
+        <ScrollView 
+            style={{...subcategoryStyles.scrollView, minHeight: height * 0.15, paddingVertical: height * 0.01, transform: en ? [] : [{scaleX: -1}]}}
+            contentContainerStyle={{justifyContent: 'center'}}
+            horizontal
+        >
+            {[1,2,3,4,5].map(num => (
+                <View style={{...subcategoryStyles.container, backgroundColor: '#aaa'}} key={num}>
+                    <ActivityIndicator color={'white'} size={RFPercentage(3)} />
+                </View>
+            ))}
+        </ScrollView>
+    )
     return(
         <ScrollView 
             showsHorizontalScrollIndicator={false} 
             horizontal 
-            style={{...subcategoryStyles.scrollView, transform: en ? [] : [{scaleX: -1}]}} 
+            style={{...subcategoryStyles.scrollView, minHeight: height * 0.15, paddingVertical: height * 0.01, transform: en ? [] : [{scaleX: -1}]}} 
             contentContainerStyle={{justifyContent: 'center'}}
         >
             {filters.map(filter => (

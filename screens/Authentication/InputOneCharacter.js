@@ -14,7 +14,7 @@ export default (props) => {
           ref_input4 = useRef();
 
     return (
-        <View style={{display: 'flex', flexDirection: 'row', marginVertical: height * 0.2}}>
+        <View style={{flexDirection: 'row', marginVertical: height * 0.2}}>
             <TextInput
                 autoCapitalize={'characters'}
                 blurOnSubmit={false}

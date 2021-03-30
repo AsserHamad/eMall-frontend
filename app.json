@@ -1,17 +1,14 @@
 {
   "expo": {
-    "name": "emall-frontend",
-    "slug": "emall-frontend",
+    "name": "eMall",
+    "slug": "eMall",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logoM.png",
     "facebookScheme": "fb1213603305321250",
     "splash": {
-      "image": "./assets/_logoM.png",
-      "resizeMode": "contain",
-      "height": "150",
-      "width": "150",
-      "backgroundColor": "#E74A5F"
+      "image": "./assets/splash.png",
+      "backgroundColor": "#FA1B1C"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -20,29 +17,35 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.emall.emall"
+      "supportsTablet": false,
+      "bundleIdentifier": "com.emall.eg.official"
     },
     "android": {
-      "package": "com.emall.emall",
+      "package": "com.emall.eg.official",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "foregroundImage": "./assets/logoM.png",
+        "backgroundColor": "#FFF"
+      },
+      "permissions": [
+        "CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"
+      ],
+      "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logoM.png"
     },
     "extra": {
       "apiUrl": "http://192.168.8.177:5000/api",
       "home": "192.168.8.177",
-      "home(wifi)": "192.168.8.173",
+      "home(wifi)": "192.168.8.156",
       "mobile": "192.168.43.69",
       "clubhouse": "192.168.0.131",
       "yaraIphone": "172.20.10.4",
       "x's": "192.168.1.6",
       "rawaj:": "25.122.141.35",
-      "hardee's": "100.64.138.131"
+      "hardee's": "100.64.138.131",
+      "server": "3.143.23.248",
+      "moar": "192.168.1.36"
     }
   }
 }

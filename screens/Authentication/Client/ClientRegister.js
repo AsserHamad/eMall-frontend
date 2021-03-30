@@ -95,24 +95,26 @@ const ClientRegister = (props) => {
                 <RegisterInputAndError errors={errors} value={email} type={'email'} set={setEmail} keyboardType={'email-address'} />
                 <RegisterInputAndError errors={errors} value={password} type={'password'} set={setPassword} secureTextEntry />
             </View>
+            {/* Other Logins */}
+            <SafeAreaView style={styles.alternativeLogins}>
+                <TouchableOpacity onPress={facebookRegister}>
+                    <View style={styles.alternativeLoginButton}>
+                        <Icon type={'FontAwesome'} name="facebook" size={RFValue(17)} color="white" style={{width: '30%', alignItems: 'center'}} />
+                        <TextLato style={{color: 'white', width: '70%'}}>Register with Facebook</TextLato>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View style={[styles.alternativeLoginButton, {backgroundColor: '#EA4335'}]}>
+                        <Icon type={'AntDesign'} name="google" size={RFValue(17)} color="white" style={{width: '30%', alignItems: 'center'}} />
+                        <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>Register with Google</TextLato>
+                    </View>
+                </TouchableOpacity>
+            </SafeAreaView>
             <TouchableOpacity onPress={() => register()}>
                 <View style={styles.submitButton}>
                     <TextLato style={{color: 'white', fontSize: RFValue(12)}}>{languageText.register}</TextLato>
                 </View>
             </TouchableOpacity>
-            {/* Other Logins */}
-            <SafeAreaView style={styles.alternativeLogins}>
-                <TouchableOpacity onPress={facebookRegister}>
-                    <View style={styles.alternativeLoginButton}>
-                        <Icon type={'FontAwesome'} name="facebook" size={RFValue(25)} color="white" />
-                    </View>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <View style={[styles.alternativeLoginButton, {backgroundColor: '#EA4335'}]}>
-                        <AntDesign name="google" size={RFValue(25)} color="white" />
-                    </View>
-                </TouchableOpacity>
-            </SafeAreaView>
         </View>
     )
 }
@@ -152,29 +154,26 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         marginTop: height * 0.03
     },
-    bottomContainer: {
-        position: 'absolute',
-        bottom: 0
-    },
     others: {
         paddingHorizontal: height * 0.025,
     },
     alternativeLogins: {
         width,
-        marginTop: height * 0.1,
+        marginTop: height * 0.03,
+        marginBottom: height * 0.05,
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'row'
     },
     alternativeLoginButton: {
-        width: width * 0.15,
-        aspectRatio: 1,
+        width: width * 0.6,
+        // aspectRatio: 1,
+        // paddingHorizontal: width * 0.05,
+        paddingVertical: height * 0.02,
         backgroundColor: '#3b5998',
         alignItems: 'center',
         justifyContent: 'center',
-        display: 'flex',
         flexDirection: 'row',
-        marginHorizontal: width * 0.05,
+        marginBottom: height * 0.02,
         borderRadius: 100
     },
 })

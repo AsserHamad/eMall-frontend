@@ -12,7 +12,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 const SalesGraph = (props) => {
     const token = useSelector(state => state.authReducer.token);
-    const [data, setData] = useState([0,0,0,0]);
+    const [data, setData] = useState([0,0,0]);
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/previous-sales`, {headers: {token}})
         .then(res => res.json())
@@ -27,7 +27,7 @@ const SalesGraph = (props) => {
             {/* <TextLato style={styles.title} bold>Monthly Sales</TextLato> */}
             <LineChart
                 data={{
-                labels: ["Jan", "Feb", "Mar", "Apr"],
+                labels: ["Jan", "Feb", "Mar"],
                 datasets: [
                     {
                     data

@@ -38,6 +38,7 @@ const FAQs = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: gStyles.background
     },
     pinContainer: {
         justifyContent: 'center',

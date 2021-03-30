@@ -2,9 +2,10 @@ import React from 'react';
 import { Text, View, Dimensions } from 'react-native';
 import { gStyles } from '../../global.style';
 import Icon from './Icon';
+import TextLato from './TextLato';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-export default ({reviews, size, style}) => {
+export default ({reviews, size, style, number}) => {
     const stars = [0, 1, 2, 3, 4].map((elem) => {
         const num = reviews.average - elem;
         return num > 0.5 ? 
@@ -15,7 +16,7 @@ export default ({reviews, size, style}) => {
     return (
         <View style={{flexDirection: 'row', alignItems: 'center', ...style}}>
             {stars}
-            {reviews.number && <Text style={{fontSize: size, marginHorizontal: width * 0.01}}>({reviews.number})</Text>}
+            {number && <TextLato style={{fontSize: size, marginHorizontal: width * 0.01}}>({reviews.number})</TextLato>}
         </View>
     )
 }

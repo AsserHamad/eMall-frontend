@@ -27,34 +27,29 @@ function StoreSideBar(props) {
     }
     return (
         <View style={{...styles.container}}>
-            <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Profile')} style={styles.topView}>
-                <ImageBackground style={styles.topDots} imageStyle={{borderRadius:100}} source={{uri: 'https://cdn.hipwallpaper.com/i/29/69/M5kWUT.png'}}>
+            {/* <View style={styles.topView}> */}
+                <ImageBackground style={styles.topDots} source={{uri: 'https://image.freepik.com/free-vector/red-geometrical-halftone-curved-star-pattern-background_1164-1624.jpg'}}>
                     <View style={styles.logoContainer}>
-                        {props.loggedIn ? <Image source={{uri: 'https://p.favim.com/orig/2018/10/01/cartoon-profile-picture-cute-Favim.com-6346120.jpg'}} style={styles.logo} /> : 
-                        <Image source={require('../assets/logoM.png')} style={styles.logo} />} 
+                        <Image source={props.loggedIn ? {uri: props.store.logo} : require('../assets/logoM.png')} style={styles.logo} />
                     </View>
-                    <View style={styles.logoContainer}>
-                        {props.loggedIn ? <Image source={{uri: props.store.logo}} style={styles.logo} /> : 
-                        <Image source={require('../assets/logoM.png')} style={styles.logo} />} 
-                    </View>
+                {props.loggedIn ? <TextLato bold style={styles.name}>{props.account.name}</TextLato>: null}
                 </ImageBackground>
-                {props.loggedIn ? <TextLato light style={styles.name}>{props.account.name}</TextLato>: null}
-            </TouchableWithoutFeedback>
+            {/* </View> */}
             <ScrollView>
+                <View style={styles.logoutContainer}>
+                    <TouchableOpacity style={styles.logoutButton} onPress={() => {changeLanguage()}}>
+                        <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold reverse>{languageText && languageText.changeLanguage}</TextLato>
+                    </TouchableOpacity>
+                    {props.loggedIn && 
+                        <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={() => {props.navigation.closeDrawer();props.logout();AsyncStorage.removeItem('@token');}}>
+                            <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold>{languageText.logout}</TextLato>
+                        </TouchableOpacity>
+                    }
+                </View>
                 <DrawerContentScrollView {...props}>
                     <DrawerItemList labelStyle={{fontFamily: language === 'en' ? 'Lato' : 'Cairo'}} {...props} />
                 </DrawerContentScrollView>
             </ScrollView>
-            <View style={styles.logoutContainer}>
-            {props.loggedIn && 
-                    <TouchableOpacity onPress={() => { props.navigation.closeDrawer();props.logout()}}>
-                        <TextLato>{languageText.logout}</TextLato>
-                    </TouchableOpacity>
-            }
-            <TouchableOpacity onPress={() => {changeLanguage()}}>
-                <TextLato reverse>{languageText && languageText.changeLanguage}</TextLato>
-            </TouchableOpacity>
-            </View>
         </View>
     )
     };
@@ -65,47 +60,53 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     topView: {
-        paddingTop: Constants.statusBarHeight,
         width: '100%',
-        backgroundColor: gStyles.color_3,
         alignItems: 'center',
         justifyContent: 'center',
     },
     name: {
-        fontSize: RFPercentage(2.5),
-        marginVertical: height * 0.01,
-        color: '#aaa'
+        fontSize: RFPercentage(3),
+        marginTop: height * 0.01,
+        color: 'white'
     },
     topDots: {
-        width: 150,
-        height: 100,
+        height: height * 0.3,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: height * 0.05,
-        flexDirection: 'row'
-        
+        backgroundColor: gStyles.color_2,
     },
     logoContainer: {
-        width: 80,
-        height: 80,
-        borderRadius: 100,
+        width: 100,
+        aspectRatio: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        marginHorizontal: 10
+        // marginHorizontal: 10,
+        borderRadius: 100,
+        backgroundColor: gStyles.background,
         
     },
     logo: {
-        backgroundColor: gStyles.background,
         width: 80,
-        height: 80,
-        borderRadius: 100
+        aspectRatio: 1,
+        resizeMode: 'contain',
     },
     logoutContainer: {
-        position: 'absolute',
-        bottom: height * 0.03,
+        paddingVertical: height * 0.02,
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        flexDirection: 'row',
+        paddingHorizontal: width * 0.05
+    },
+    logoutButton: {
+        paddingHorizontal: width * 0.05,
+        paddingVertical: height * 0.01,
+        backgroundColor: gStyles.color_2,
+        borderRadius: 100,
+        height: height * 0.05,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: width * 0.02
     }
 });
 

@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: 3,
-        display: 'flex',
         flexDirection: 'row',
     },
     searchIcon: {

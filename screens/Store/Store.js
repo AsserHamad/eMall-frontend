@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, ScrollableView, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Image, ScrollableView, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import Header from '../../components/Header';
 import TextLato from '../../components/utils/TextLato';
 import Constants from 'expo-constants';
@@ -11,67 +11,111 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import HomeComponent from '../../components/Store/HomeComponent';
 import BrowseComponent from '../../components/Store/BrowseComponent';
 import ReviewsComponent from '../../components/Store/ReviewsComponent';
+import { useSelector } from 'react-redux';
+import Toast from 'react-native-easy-toast';
+import { useLanguage, useLanguageText } from '../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 const Store = (props) => {
     const [store, setStore] = useState(null);
     const [viewState, setViewState] = useState(0);
+    const [reviews, setReviews] = useState({average: 0, number: 0});
+    const loggedIn = useSelector(state => state.authReducer.loggedIn);
+    const token = useSelector(state => state.authReducer.token);
+    const toast = useRef();
+    const language = useLanguage();
+    const en = language === 'en';
+    const text = useLanguageText('storePage');
+    
+    const showToast = message => {
+        toast.current.show(message);
+    }
+
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/${props.route.params.store._id}`)
         .then(res => res.json())
-        .then(res => {res.reviewAverage = {average: 5, number: 4730};setStore(res)});
+        .then(res => {
+            if(res.page.homeAds.length === 0) setViewState(1);
+            setStore(res)
+        });
+
+            fetch(`${Constants.manifest.extra.apiUrl}/store/reviews/overview/${props.route.params.store._id}`)
+            .then(res => res.json())
+            .then(res => {
+                setReviews(res);
+            })
+
+            
+
+        if(loggedIn){
+            fetch(`${Constants.manifest.extra.apiUrl}/store/views/add`, {
+                method: 'post',
+                headers: {'Content-Type': 'application/json', token},
+                body: JSON.stringify({store: props.route.params.store._id})
+            }).then(res => res.json());
+        }
     }, []);
-    return store ? (
+    if(!store)
+        return (
+            <View style={{flex: 1}}>
+            <Header details={{title: ''}} />
+            <View style={{height: '90%', alignItems: 'center', justifyContent: 'center'}}>
+                <ActivityIndicator color={gStyles.color_2} size={RFPercentage(7)} />
+            </View>
+            </View>
+        )
+    return (
         <View style={styles.container}>
+            <Toast ref={_toast => toast.current = _toast} />
             <Header details={{title: store.title}} />
             <ScrollView style={styles.headerContainer}>
-                <Image source={{uri: store.page.coverImage}} style={styles.cover} />
-                <View style={styles.header}>
+                <Image source={{uri: store.page.coverImage || 'https://image.freepik.com/free-vector/red-oriental-chinese-seamless-pattern-illustration_193606-43.jpg'}} style={styles.cover} />
+                <View style={{...styles.header, flexDirection: en ? 'row' : 'row-reverse'}}>
                     <View style={styles.logoContainer}>
                         <Image source={{uri: store.logo}} style={styles.logo} />
                     </View>
-            <View style={styles.categories}>
-                {store.categories.map(category => (
-                    <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={Math.random()}>
-                        <Icon type={category.iconType} color="white" name={category.icon} size={12} style={styles.icon} />
+                    <View style={styles.categories}>
+                        {store.categories.map(category => (
+                            <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={Math.random()}>
+                                <Icon type={category.iconType} color="white" name={category.icon} size={12} style={styles.icon} />
+                            </View>
+                        ))}
                     </View>
-                ))}
-            </View>
                 </View>
                 {/* STORE TITLE */}
-                <TextLato bold style={styles.title}>{store.title}</TextLato>
+                <TextLato bold style={{...styles.title, textAlign: en ? 'left' : 'right'}}>{store.title}</TextLato>
                 
                 {/* REVIEWS */}
-                <Reviews style={styles.reviews} size={RFPercentage(1.5)} reviews={store.reviewAverage} />
+                <Reviews number style={{...styles.reviews, flexDirection: en ? 'row' : 'row-reverse'}} size={RFPercentage(1.5)} reviews={reviews} />
                 
                 {/* MENU */}
-                <View style={styles.menuContainer}>
-                    <TouchableOpacity onPress={() => setViewState(state => state === 0 ? state : 0)}>
+                <View style={{...styles.menuContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
+                    {store.page.homeAds.length > 0 && <TouchableOpacity onPress={() => setViewState(state => state === 0 ? state : 0)}>
                         <View style={{...styles.menuItem, backgroundColor: viewState === 0 ? gStyles.color_0 : 'transparent' }}>
-                            <TextLato style={{color: viewState !== 0 ? gStyles.color_0 : 'white'}}>Home</TextLato>
+                            <TextLato style={{color: viewState !== 0 ? gStyles.color_0 : 'white'}}>{text.home}</TextLato>
                         </View>
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
                     <TouchableOpacity onPress={() => setViewState(state => state === 1 ? state : 1)}>
                         <View style={{...styles.menuItem, backgroundColor: viewState === 1 ? gStyles.color_0 : 'transparent' }}>
-                            <TextLato style={{color: viewState !== 1 ? gStyles.color_0 : 'white'}}>All Products</TextLato>
+                            <TextLato style={{color: viewState !== 1 ? gStyles.color_0 : 'white'}}>{text.allProducts}</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setViewState(state => state === 2 ? state : 2)}>
                         <View style={{...styles.menuItem, backgroundColor: viewState === 2 ? gStyles.color_0 : 'transparent' }}>
-                            <TextLato style={{color: viewState !== 2 ? gStyles.color_0 : 'white'}}>Reviews</TextLato>
+                            <TextLato style={{color: viewState !== 2 ? gStyles.color_0 : 'white'}}>{text.reviews}</TextLato>
                         </View>
                     </TouchableOpacity>
                 </View>
                 
                 {/* HOME BODY */}
                 {viewState === 0 ? 
-                <HomeComponent homeAds={store.page.homeAds} /> : viewState === 1 ?
-                <BrowseComponent id={store._id} /> : 
-                <ReviewsComponent reviews={store.reviews} />}
+                <HomeComponent showToast={showToast} en={en} homeAds={store.page.homeAds} /> : viewState === 1 ?
+                <BrowseComponent showToast={showToast} en={en} id={store._id} /> : 
+                <ReviewsComponent reviews={store.reviews} text={text} en={en} id={store._id} />}
             </ScrollView>
         </View>
-    ) : <TextLato>Loading...</TextLato>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -90,14 +134,13 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     categories: {
-        height: 30,
-        width: 120,
-        display: 'flex',
+        // height: 30,
+        // width: 120,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: height * 0.05,
-        marginLeft: width * 0.02
+        marginHorizontal: width * 0.02
     },
     categoryContainer: {
         width: 27,
@@ -117,23 +160,34 @@ const styles = StyleSheet.create({
         width: width * 0.24,
         backgroundColor: gStyles.background,
         borderRadius: 100,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+        elevation: 4,
     },
     logo: {
-        width: width * 0.22,
-        aspectRatio: 1
+        width: 60,
+        height: 80,
+        resizeMode: 'contain'
     },
     title: {
         fontSize: RFPercentage(3),
-        marginLeft: width * 0.05
+        marginTop: height * 0.01,
+        marginHorizontal: width * 0.05
     },
     reviews: {
         marginTop: height * 0.01,
-        marginLeft: width * 0.05,
+        marginHorizontal: width * 0.05,
         marginBottom: height * 0.03
     },
     menuContainer: {
         flexDirection: 'row',
-        marginLeft: width * 0.02,
+        alignItems: 'center',
+        marginHorizontal: width * 0.02,
         marginBottom: height * 0.015
     },
     menuItem: {

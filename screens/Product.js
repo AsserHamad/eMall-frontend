@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Image, ImageBackground, Linking, Platform, StyleSheet, View } from 'react-native';
 import Header from '../components/Header';
 import { useLanguage, useLanguageText } from '../hooks/language';
 import Swiper from 'react-native-swiper/src';
 import { gStyles } from '../global.style';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { funcs } from '../global.funcs';
+import { ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Reviews from '../components/utils/Reviews';
@@ -19,9 +20,10 @@ import ProductReviewCard from '../components/cards/Product/ProductReviewCard';
 import { useNavigation } from '@react-navigation/native';
 import { useRef } from 'react';
 import Toast from 'react-native-easy-toast';
+import SellerCardProduct from '../components/cards/Seller/SellerCardProduct';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
-const image = 'https://www.pikpng.com/pngl/b/46-461447_deal-of-the-day-png-deal-day-clipart.png';
+const image = 'https://imgur.com/qIJjuUY.gif';
 const bubbles = [
     'https://imgur.com/G27hm50.png',
     'https://imgur.com/Jd0bH1o.png',
@@ -49,6 +51,7 @@ const Product = (props) => {
     const [similarProducts, setSimilarProducts] = useState([]);
     const [logoAspectRatio, setLogoAspectRatio] = useState(4/3);
     const [cartLoading, setCartLoading] = useState(false);
+    const [reviews, setReviews] = useState([]);
     const language = useLanguage();
     const en = language === 'en';
     const text = useLanguageText('product');
@@ -58,14 +61,28 @@ const Product = (props) => {
     const token = useSelector(state => state.authReducer.token);
     const loggedIn = useSelector(state => state.authReducer.loggedIn);
     const toast = useRef();
+    const [extraImage, setExtraImage] = useState(undefined);
+    const [extraAspectRatio, setExtraAspectRatio] = useState(1);
+    const [extraText, setExtraText] = useState('');
+    const navigation = useNavigation();
 
     useEffect(() => {
         fetchProduct(props.route.params.product._id);
+        fetch(`${Constants.manifest.extra.apiUrl}/product/reviews/${props.route.params.product._id}`)
+        .then(res => res.json())
+        .then(res => {
+            setReviews(res);
+        })
     }, []);
 
     useEffect(() => {
         setAddedPrice(picks.reduce((pickA, pickB) => pickA + pickB.extraPrice ,0));
-    }, [picks])
+    }, [picks]);
+
+    useEffect(() => {
+        if(extraImage)
+            Image.getSize(extraImage, (width, height) => setExtraAspectRatio(width/height))
+    }, [extraImage])
 
     const showToast = message => {
         toast.current.show(message);
@@ -95,7 +112,7 @@ const Product = (props) => {
             res.reviewAverage = {average: 5, number: 4730};
             res.store.logo = res.store.logo ? res.store.logo : "https://logos-world.net/wp-content/uploads/2020/11/The-Body-Shop-Logo.png";
             Image.getSize(res.store.logo, (width, height) => setLogoAspectRatio(width/height));
-            setProduct(res)
+            setProduct(res);
 
             fetch(`${Constants.manifest.extra.apiUrl}/store/find-similar-stores`, {
                 method: 'post',
@@ -121,22 +138,44 @@ const Product = (props) => {
 
     const addToCartHelper = () => {
         if(!loggedIn) return showToast('You must be logged in to add to your cart!');
+        if(product.extraText && extraText === '') return showToast('You must input the text specified by this product!');
+        if(product.extraImage && extraImage === undefined) return showToast('You must select an image as specified by this product!');
         const quantity = 1;
         const options = picks;
 
         setCartLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
-            method: 'post',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product: product._id, options, quantity})
-        })
-        .then(res => res.json())
-        .then(res => {
-            setCartLoading(false);
-            showToast(`Added to Cart Successfully!`);
-            dispatch(setCart(res))
-        })
-        .catch(err => console.log(err))
+        if(product.extraImage){
+            funcs.uploadImage(extraImage, product._id + '_')
+            .then(res => {
+                fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
+                    method: 'post',
+                    headers: {token, 'Content-Type': 'application/json'},
+                    body: JSON.stringify({product: product._id, options, quantity, image: res.location, text: extraText !== '' ? extraText : undefined})
+                })
+                .then(res => res.json())
+                .then(res => {
+                    setCartLoading(false);
+                    // showToast(`Added to Cart Successfully!`);
+                    dispatch(setCart(res))
+                    navigation.push('Cart');
+                })
+                .catch(err => console.log(err))
+            });
+        } else {
+            fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
+                method: 'post',
+                headers: {token, 'Content-Type': 'application/json'},
+                body: JSON.stringify({product: product._id, options, quantity, text: extraText !== '' ? extraText : undefined})
+            })
+            .then(res => res.json())
+            .then(res => {
+                setCartLoading(false);
+                // showToast(`Added to Cart Successfully!`);
+                dispatch(setCart(res))
+                navigation.push('Cart');
+            })
+            .catch(err => console.log(err))
+        }
     }
 
     const calculatePrice = () => {
@@ -144,20 +183,49 @@ const Product = (props) => {
         const discount = product.discount ? 1 - product.discount : 1;
         return ((product.price + addedPrice) * dealOfTheDay * discount).toFixed(2);
     }
+
+    if(!product)
+        return (
+            
+            <View style={{...styles.container}}>
+                <Header search={false} details={{title: product ? product.title[language] : ''}} />
+                <View style={{height: height * 0.8, justifyContent: 'center'}}>
+                    <ActivityIndicator color={gStyles.color_0} size={RFPercentage(10)} />
+                </View>
+            </View>
+        )
+
     return (
         <View style={styles.container}>
             <Toast ref={_toast => toast.current = _toast} />
             <Header search={false} details={{title: product ? product.title[language] : ''}} />
-            {!product ? <View style={{width, height, paddingTop: '10%', alignItems: 'center'}}><ActivityIndicator color={gStyles.color_0} size={RFPercentage(10)} /></View> :
                 <ScrollView contentContainerStyle={{alignItems: 'center'}}>
                 <Swiper
                     activeDotColor={gStyles.color_0}
                     containerStyle={styles.swiper}
                 >
                     {product.images.map(image => (
-                            <Image style={styles.swiperImage} source={{uri: image}} key={Math.random()} />
+                        <TouchableOpacity activeOpacity={1} key={Math.random()}  onPress={() => {navigation.push('Gallery', {images: product.images})}}>
+                            <ImageBackground style={styles.swiperImage} source={{uri: image}}>
+
+                            </ImageBackground>
+                        </TouchableOpacity>
                     ))}
+                    
                 </Swiper>
+                        
+                    {/* DEAL OF THE DAY */}
+                    {product.dealOfTheDay && (
+                    <View style={{flexDirection: 'row', position: 'absolute', left: 0, top: height * 0.33}}>
+                        <Image source={{uri: image}} style={{width: width * 0.3, aspectRatio: 1.7, zIndex: 2}} />
+                        {/* <ImageBackground source={{uri: bubbles[getColors(product.dealOfTheDay.discount)]}} 
+                            style={{...styles.discountBubble, transform: [{translateX: en ? -width * 0.02 : width * 0.02}]}}>
+                            <TextLato style={{fontSize: RFPercentage(3.5), textAlign: 'center', color: 'white'}}>{product.dealOfTheDay.discount}<TextLato style={{fontSize: RFPercentage(2)}}>%</TextLato></TextLato>
+                            <TextLato style={{fontSize: en ? RFPercentage(1.1) : RFPercentage(1.5), textAlign: 'center', color: 'white'}}>{en ? 'D I S C O U N T' : 'تخفيض'}</TextLato>
+                        </ImageBackground> */}
+                    </View>
+                    )}
+
                     <View style={mainStyles.detailsContainer}>
                         {/* TITLE */}
                         <TextLato bold style={mainStyles.title}>{product.title[language]}</TextLato>
@@ -204,16 +272,18 @@ const Product = (props) => {
                                     return (
                                         <View key={Math.random()}>
                                             <TextLato bold style={mainStyles.optionsSubtitle}>{option.title[language]}</TextLato>
-                                            <ScrollView horizontal>
+                                            <ScrollView style={{transform: en ? [] : [{scaleX: -1}]}} horizontal>
 
                                             <View style={{flexDirection: 'row', marginBottom: height * 0.02, width: '100%'}}>
                                                 {option.options.map(optionPick => {
+                                                    if(optionPick.stock === 0) return;
+                                                    
                                                     const picked = picks.filter(pick => pick.pick === optionPick._id).length ? true : false;
                                                     return (
                                                         <TouchableOpacity key={Math.random()} activeOpacity={0.4} onPress={() => {
                                                             changePick(option, optionPick)
                                                         }}>
-                                                            <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_2 : '#aaa'}}>
+                                                            <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_2 : '#aaa', transform: en ? [] : [{scaleX: -1}]}}>
                                                                 <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.color_2 : '#aaa'}}>{optionPick.title[language]}</TextLato>
                                                             </View>
                                                         </TouchableOpacity>
@@ -227,16 +297,35 @@ const Product = (props) => {
                             </View>
                         </View>}
 
-                        {/* DEAL OF THE DAY */}
-                        {product.dealOfTheDay && (
-                        <View style={{flexDirection: 'row', marginBottom: height * 0.02}}>
-                            <Image source={{uri: image}} style={{width: width * 0.2, aspectRatio: 1.7, zIndex: 2}} />
-                            <ImageBackground source={{uri: bubbles[getColors(product.dealOfTheDay.discount)]}} 
-                                style={{...styles.discountBubble, transform: [{translateX: en ? -width * 0.02 : width * 0.02}]}}>
-                                <TextLato style={{fontSize: RFPercentage(3.5), textAlign: 'center', color: 'white'}}>{product.dealOfTheDay.discount}<TextLato style={{fontSize: RFPercentage(2)}}>%</TextLato></TextLato>
-                                <TextLato style={{fontSize: en ? RFPercentage(1.1) : RFPercentage(1.5), textAlign: 'center', color: 'white'}}>{en ? 'D I S C O U N T' : 'تخفيض'}</TextLato>
-                            </ImageBackground>
+                        {/* DESCRIPTION */}
+                        <View style={mainStyles.descriptionContainer}>
+                            <TextLato bold style={mainStyles.descriptionTitle}>{text.overview}</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.7)}}>{product.description[language]}</TextLato>
                         </View>
+
+
+                        {/* EXTRA IMAGE AND TEXT */}
+                        {(product.extraText) && (
+                            <View>
+                                <TextLato style={{fontSize: RFPercentage(2.5), color: gStyles.color_2}} bold>{text.extraTextTitle}</TextLato>
+                                <TextLato style={{fontSize: RFPercentage(1.7)}} italic>{text.extraDetails}</TextLato>
+                                <TextInput
+                                    value={extraText}
+                                    onChangeText={(val) => setExtraText(val)}
+                                    style={mainStyles.input}
+                                    placeholder={text.enterInfo} />
+                            </View>
+                        )}
+                        {(product.extraImage) && (
+                            <View style={{marginBottom: height * 0.02}}>
+                                <TextLato style={{fontSize: RFPercentage(2.5), color: gStyles.color_2}} bold>{text.extraImageTitle}</TextLato>
+                                <TextLato style={{fontSize: RFPercentage(1.7)}} italic>{text.extraDetails}</TextLato>
+                                <TouchableOpacity onPress={() => funcs.chooseImage(setExtraImage)}>
+                                    <Image 
+                                        source={{uri: extraImage || 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png'}}
+                                        style={{width: '40%', aspectRatio: extraAspectRatio, maxHeight: height * 0.4, resizeMode: 'contain', borderRadius: 5, marginVertical: height * 0.01}}/>
+                                </TouchableOpacity>
+                            </View>
                         )}
 
                         {/* PRICE */}
@@ -246,17 +335,22 @@ const Product = (props) => {
                                 <TextLato bold style={mainStyles.price}>{(product.price + addedPrice).toFixed(2)} <TextLato style={mainStyles.currency}>{en ? 'EGP' : 'ج.م.'}</TextLato></TextLato>
                             :
                                 <View>
-                                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                    <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center'}}>
                                         <TextLato bold style={{...mainStyles.price, textDecorationLine: 'line-through'}}>{(product.price + addedPrice).toFixed(2)} <TextLato style={mainStyles.currency}>{en ? 'EGP' : 'ج.م.'}</TextLato></TextLato>
                                         {product.discount && <View style={styles.discountContainer}>
                                             <TextLato bold style={{color: 'white', fontSize: RFPercentage(1.7)}}>{product.discount * 100}%</TextLato>
-                                            <TextLato style={{color: 'white', fontSize: RFPercentage(1.7), marginHorizontal: width * 0.01}} italic>OFF</TextLato>
+                                            <TextLato style={{color: 'white', fontSize: RFPercentage(1.7), marginHorizontal: width * 0.01}} italic>{en ? 'OFF' : 'خصم'}</TextLato>
+                                        </View>}
+                                        {product.dealOfTheDay && <View style={{...styles.discountContainer, backgroundColor: 'black', marginHorizontal: 5}}>
+                                            <TextLato bold style={{color: 'white', fontSize: RFPercentage(1.7)}}>{product.dealOfTheDay.discount}%</TextLato>
+                                            <TextLato style={{color: 'white', fontSize: RFPercentage(1.7), marginHorizontal: width * 0.01}} italic>{en ? 'OFF' : 'خصم'}</TextLato>
                                         </View>}
                                     </View>
                                     <TextLato bold style={mainStyles.price}>{calculatePrice()} <TextLato style={mainStyles.currency}>{en ? 'EGP' : 'ج.م.'}</TextLato></TextLato>                                    
                                 </View>
                         }
                         </View>
+
                         
                         {/* CART */}
                         {inCart ? 
@@ -274,12 +368,6 @@ const Product = (props) => {
                             </View>
                         </TouchableOpacity>
                         }
-
-                        {/* DESCRIPTION */}
-                        <View style={mainStyles.descriptionContainer}>
-                            <TextLato bold style={mainStyles.descriptionTitle}>{text.overview}</TextLato>
-                            <TextLato style={{fontSize: RFPercentage(1.7)}}>{product.description[language]}</TextLato>
-                        </View>
 
                         {/* SPECIFICATIONS */}
                         {product.specifications.length !== 0 && <View style={mainStyles.specificationsContainer}>
@@ -304,10 +392,10 @@ const Product = (props) => {
                         </View>}
 
                         {/* REVIEWS */}
-                        {product.reviews.length !== 0 && <View style={mainStyles.reviewsContainer}>
+                        {reviews.length > 0 && <View style={mainStyles.reviewsContainer}>
                             <TextLato bold style={mainStyles.reviewsTitle}>{text.reviews}</TextLato>
                             <ScrollView horizontal>
-                                {product.reviews.map(review => <ProductReviewCard key={Math.random()} review={review} />)}
+                                {reviews.map(review => <ProductReviewCard key={Math.random()} review={review} />)}
                             </ScrollView>
                         </View>}
                     </View>
@@ -315,13 +403,12 @@ const Product = (props) => {
                         <ScrollCards 
                             style={{width}}
                             title={`${text.moreFrom} ${product.store.title}`}
-                            cards={similarProducts.map(product => <SimilarProductCard key={Math.random()} product={product} />)}
+                            cards={similarProducts.map(product => <SellerCardProduct showToast={showToast} key={Math.random()} product={product} style={{marginHorizontal: width * 0.02}} />)}
                             />
 
                         {/* MORE ITEMS */}
                         <ScrollCards style={{width}} title={text.similarStores} cards={similarStores.map(store => <StoreCard key={Math.random()} store={store} />)} />
                 </ScrollView>
-            }
         </View>
     )
 }
@@ -419,8 +506,8 @@ const mainStyles = StyleSheet.create({
     currency: {
         color: gStyles.color_3,
         fontSize: RFPercentage(1.8),
-        marginHorizontal: width * 0.02
-
+        marginHorizontal: width * 0.02,
+        fontFamily: 'Cairo'
     },
     addToCartButton: {
         flexDirection: 'row',
@@ -512,7 +599,16 @@ const mainStyles = StyleSheet.create({
         marginBottom: height * 0.01,
         fontSize: RFPercentage(2)
 
-    }
+    },
+    input: {
+        marginTop: height * 0.01,
+        paddingTop: height * 0.01,
+        fontSize: RFPercentage(2.5),
+        fontFamily: 'Cairo',
+        borderBottomWidth: 2,
+        borderColor: gStyles.color_2,
+        marginBottom: height * 0.02
+    },
 })
 
 export default Product;

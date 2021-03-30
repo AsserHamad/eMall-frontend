@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         alignItems: 'center',
         marginTop: 3,
-        display: 'flex',
     },
     searchIcon: {
         width: '10%',

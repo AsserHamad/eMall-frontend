@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, {useState, useEffect, useRef} from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, ImageBackground, StyleSheet, View } from 'react-native';
 import { ScrollView, TextInput, TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
@@ -30,11 +30,13 @@ const MyPayments = () => {
     return (
         <View style={styles.container}>
             <Header details={{title: text.payments}} />
-            <View style={styles.creditContainer}>
-                <TextLato style={{color: 'white', fontSize: RFPercentage(1.5), marginBottom: height * 0.01}}>TOTAL BALANCE</TextLato>
-                <TextLato bold style={{color: 'white', fontSize: RFPercentage(3), letterSpacing: 3}}> 300.00 EGP</TextLato>
-            </View>
-            <ScrollView>
+            <ImageBackground source={{uri: 'https://image.freepik.com/free-vector/red-oriental-chinese-seamless-pattern-illustration_193606-43.jpg'}} style={{width}}>
+                <View style={styles.creditContainer}>
+                    <TextLato style={{color: 'white', fontSize: RFPercentage(1.5), marginBottom: height * 0.01}}>TOTAL BALANCE</TextLato>
+                    <TextLato bold style={{color: 'white', fontSize: RFPercentage(3), letterSpacing: 3}}> 300.00 EGP</TextLato>
+                </View>
+            </ImageBackground>
+            <ScrollView style={{marginTop: height * 0.02}}>
                 {payments.map(payment => {
                     const date = new Date(payment.created_at);
                     return (
@@ -42,10 +44,7 @@ const MyPayments = () => {
                             <View style={{width: '30%', alignItems: 'center'}}>
                                 <TextLato bold>{returnDate(date)}</TextLato>
                             </View>
-                            <View style={{width: '15%'}}>
-                                <Icon type={'Feather'} name={'dollar-sign'} size={RFPercentage(3.5)} />
-                            </View>
-                            <View style={{width: '50%'}}>
+                            <View style={{width: '70%', alignItems: 'center'}}>
                                 <TextLato italic>Order #: {payment.order.code}</TextLato>
                                 <TextLato style={{fontSize: RFPercentage(3), marginTop: height * 0.01}} bold>{payment.total.toFixed(2)} EGP</TextLato>
                             </View>
@@ -63,20 +62,32 @@ const styles = StyleSheet.create({
     },
     creditContainer: {
         marginHorizontal: width * 0.1,
-        marginTop: height * 0.05,
-        backgroundColor: '#5469DD',
+        marginTop: height * 0.02,
+        backgroundColor: gStyles.color_3,
         paddingVertical: height * 0.07,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        borderRadius: 20,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        transform: [{translateY: 20}],
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 2,
+            height: 2,
+        },
+        shadowOpacity: 0.4,
+        shadowRadius: 3.84,
+        elevation: 5,
+        borderColor: '#222',
+        borderLeftWidth: 7,
+        borderRightWidth: 7
     },
     paymentContainer: {
-        height: height * 0.15,
+        height: height * 0.12,
+        marginVertical: height * 0.015,
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomColor: '#5469DD',
-        borderBottomWidth: 1
+        borderLeftColor: gStyles.color_2,
+        borderLeftWidth: 10
     }
 })
 

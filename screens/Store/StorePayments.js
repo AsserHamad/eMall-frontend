@@ -43,7 +43,7 @@ const StorePayments = ({navigation, route}) => {
                 <TextLato style={{color: 'white', fontSize: RFPercentage(1.5), marginBottom: height * 0.01}}>AVAILABLE BALANCE</TextLato>
                 <TextLato bold style={{color: 'white', fontSize: RFPercentage(3), letterSpacing: 3}}> {credit.toFixed(2)} EGP</TextLato>
                 <View style={{marginTop: height * 0.02}}>
-                    <Button onPress={() => navigation.push('RequestWithdrawal')} title={'REQUEST WITHDRAWAL'} />
+                    <Button color={gStyles.color_1} onPress={() => navigation.push('RequestWithdrawal')} title={'REQUEST WITHDRAWAL'} />
                 </View>
             </View>
             <ScrollView>
@@ -55,7 +55,7 @@ const StorePayments = ({navigation, route}) => {
                                 <TextLato bold>{returnDate(date)}</TextLato>
                             </View>
                             <View style={{width: '15%'}}>
-                                <Icon type={'Feather'} name={'dollar-sign'} size={RFPercentage(3.5)} />
+                                {/* <Icon type={'Feather'} name={'dollar-sign'} size={RFPercentage(3.5)} /> */}
                             </View>
                             <View style={{width: '50%'}}>
                                 <TextLato italic>Order #: {payment.storeOrder.code}</TextLato>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     creditContainer: {
         marginHorizontal: width * 0.1,
         marginTop: height * 0.05,
-        backgroundColor: '#5469DD',
+        backgroundColor: gStyles.color_2,
         paddingVertical: height * 0.04,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,

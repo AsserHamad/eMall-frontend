@@ -1,19 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import TextLato from '../../utils/TextLato';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { gStyles } from '../../../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Icon from '../../utils/Icon';
-import useCredit from '../../../hooks/credit';
-import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import { Constants } from 'react-native-unimodules';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 
-const PendingFunds = (props) => {
+const PendingFunds = () => {
     const token = useSelector(state => state.authReducer.token);
     const [funds, setFunds] = useState('-');
 
@@ -29,7 +25,7 @@ const PendingFunds = (props) => {
         <TextLato bold style={styles.salesTitle}>Pending Funds</TextLato>
         <TextLato italic style={styles.salesSubtitle}>Funds that will become two weeks after they were added.</TextLato>
         <TextLato bold style={styles.sales}>{funds} EGP</TextLato>
-        <Icon style={styles.dollar} color={'rgba(255, 255, 255, 0.2)'} type="FontAwesome" size={RFPercentage(10)} name="dollar" />
+        {/* <Icon style={styles.dollar} color={'rgba(255, 255, 255, 0.2)'} type="FontAwesome" size={RFPercentage(10)} name="dollar" /> */}
         </View>
     )
 }

@@ -16,7 +16,7 @@ const Footer = () => {
     const navigation = useNavigation();
     return(
         <View style={styles.container}>
-            <Image source={require('../../assets/_logoM.png')} style={styles.logo} />
+            <Image source={require('../../assets/logoM.png')} style={styles.logo} />
             <View style={{...styles.secondaryContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                 <TouchableNativeFeedback onPress={() => navigation.push('ContactUs')} style={{width: width * 0.45}}>
                     <TextLato style={styles.footerText}>{text.contactUs}</TextLato>
@@ -53,9 +53,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     logo: {
-        width: width * 0.2,
-        height: (width * 0.3) * (width/height),
-        marginBottom: 20
+        width: width * 0.1,
+        height: (width * 0.2) * (width/height),
+        marginBottom: 20,
+        marginTop: height * 0.02
     },
     footerText: {
         fontSize: RFPercentage(1.7),

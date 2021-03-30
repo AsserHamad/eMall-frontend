@@ -11,8 +11,9 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useLanguage } from '../../../hooks/language';
+import { Constants } from 'react-native-unimodules';
 
-const SellerCard = ({ seller }) => {
+const SellerCard = ({ seller, showToast }) => {
     const [aspectRatio, setAspectRatio] = useState(4/3);
     const navigation = useNavigation();
     const [reviews, setReviews] = useState({average: 0, number: 0})
@@ -20,10 +21,10 @@ const SellerCard = ({ seller }) => {
     const en = language === 'en';
     useEffect(() => {
         Image.getSize(seller.logo, (width, height) => setAspectRatio(width/height));
-        const average = seller.reviews.reduce((total, next) => total + next.stars, 0) / seller.reviews.length;
-        setReviews({
-            average: average || 0,
-            number: seller.reviews.length
+        fetch(`${Constants.manifest.extra.apiUrl}/store/reviews/overview/${seller._id}`)
+        .then(res => res.json())
+        .then(res => {
+            setReviews(res);
         })
     }, []);
     return (
@@ -36,9 +37,10 @@ const SellerCard = ({ seller }) => {
                 <View style={{...headerStyles.container, alignItems: en ? 'flex-start' : 'flex-end', paddingHorizontal:width * 0.27}}>
                     <TextLato style={headerStyles.title}>{seller.title}</TextLato>
                     <View style={[styles.categoriesContainer, {justifyContent: en ? 'flex-start' : 'flex-end'}]}>
-                        {seller.categories.map(details => {
+                        {seller.categories.slice(1,5).map(details => {
                             return <Icon type={details.iconType} key={Math.random()} color="white" name={details.icon} style={styles.category} size={RFPercentage(1.7)} />
                         })}
+                        <Icon type={'AntDesign'} key={Math.random()} color="white" name={'plus'} style={styles.category} size={RFPercentage(1.7)} />
                     </View>
                     <View style={styles.reviewsContainer}>
                         {[0, 1, 2, 3, 4].map((elem) => {
@@ -51,8 +53,8 @@ const SellerCard = ({ seller }) => {
                         <TextLato style={styles.reviewNumber}>({reviews.number})</TextLato>
                     </View>
                 </View>
-                <ScrollView style={{transform: en ? [] : [{scaleX: -1}]}} horizontal>
-                    {seller.products.map(product => <SellerCardProduct key={Math.random()} product={product} />)}
+                <ScrollView style={{marginTop: height * 0.01, transform: en ? [] : [{scaleX: -1}]}} horizontal>
+                    {seller.products.map(product => <SellerCardProduct showToast={showToast} style={{marginHorizontal: width * 0.02, marginBottom: height * 0.01, marginVertical: height * 0.04}} key={Math.random()} product={product} />)}
                 </ScrollView>
             </View>
     )
@@ -62,8 +64,16 @@ const styles = StyleSheet.create({
     container: {
         width: width * 0.95,
         backgroundColor: 'white',
-        marginTop: height * 0.035,
-        borderRadius: 5,
+        marginBottom: height * 0.035,
+        borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+        elevation: 3,
     },
     logoContainer: {
         width: width * 0.23,
@@ -83,15 +93,12 @@ const styles = StyleSheet.create({
         top: height * -0.025,
         left: width * 0.02,
         backgroundColor: 'white',
-        // transform: [{translateX: width * 0.05}, {translateY: -height * 0.1}]
     },
     logo: {
         backgroundColor: 'white',
         width: width * 0.15,
-        // borderRadius: 100
     },
     reviewsContainer: {
-        display: 'flex',
         flexDirection: 'row',
         marginTop: height * 0.004,
         alignItems: 'center'
@@ -101,7 +108,6 @@ const styles = StyleSheet.create({
         marginLeft: width * 0.01
     },
     categoriesContainer: {
-        display: 'flex',
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'flex-end',
@@ -109,7 +115,6 @@ const styles = StyleSheet.create({
     category: {
         width: width * 0.07,
         height: width * 0.07,
-        backgroundColor: 'red',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 100,

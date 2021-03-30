@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
         height: 30
     },
     discountBlock: {
-        display: 'flex',
         flexDirection: 'row',
         marginTop: 10
     },
@@ -136,7 +135,6 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        display: 'flex',
         flexDirection: 'row'
     },
     cartContainer: {
@@ -146,8 +144,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: Dimensions.get('window').width * 0.01
-        // marginTop: -20,
-        // transform: [{translateY: 20}]
     },
 })
 

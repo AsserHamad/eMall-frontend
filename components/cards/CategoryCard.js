@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 import TextLato from '../utils/TextLato';
@@ -17,7 +17,8 @@ export default function CategoryCard(props){
     return(
         <TouchableOpacity onPress={() => navigation.push('Category', details)} activeOpacity={0.8} style={{borderWidth: 0, width: width * 0.32, alignItems: 'center'}}>
             <View style={styles.container}>
-                <Icon type={details.iconType} size={40} color={'white'} name={details.icon} style={styles.icon} />
+                <Image source={{uri: details.image}} style={{height: '40%', aspectRatio: 1}} />
+                {/* <Icon type={details.iconType} size={40} color={'white'} name={details.icon} style={styles.icon} /> */}
                 <TextLato style={styles.title}>{details.name[language]}</TextLato>
             </View>
         </TouchableOpacity>
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
     container: {
         height: Dimensions.get('window').width * 0.3,
         aspectRatio: 1,
-        backgroundColor: gStyles.color_0,
+        backgroundColor: gStyles.color_1,
         borderRadius: 2,
         borderWidth: 0,
         alignItems: 'center',

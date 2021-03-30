@@ -35,7 +35,11 @@
         "specifications": "مواصفات",
         "reviews": "آراء المستخدمين",
         "moreFrom": "المزيد من",
-        "similarStores": "متاجر مماثلة"
+        "similarStores": "متاجر مماثلة",
+        "extraTextTitle": "هذا المنتج يحتاج ادخال بيانات اضافية",
+        "extraImageTitle": "هذا المنتج يحتاج الى صورة",
+        "extraDetails": "تحقق من الوصف أعلاه",
+        "enterInfo": "أدخل المعلومات هنا"
     },
     "clientAuth": {
         "welcome": "لقد افتقدناك!",
@@ -47,6 +51,8 @@
         "areYouSeller" : "هل انت بائع؟",
         "loginHere": "سجل دخولك",
         "register": "يسجل",
+        "loginF": "تسجيل الدخول الفيسبوك",
+        "loginG": "تسجيل الدخول جوجل",
         "registerDescription": "املأ هذا النموذج لإكمال عملية التسجيل الخاصة بك",
         "firstName": "الاسم الاول",
         "lastName": "اسم العائلة",
@@ -124,5 +130,13 @@
     },
     "faqs": {
         "faqs": "أسئلة وأجوبة"
+    },
+    "storePage": {
+        "home": "الرئيسي",
+        "allProducts": "جميع المنتجات",
+        "reviews": "المراجعات",
+        "addReview": "إضافة مراجعة",
+        "helpful": "أشخاص وجدوا هذه المراجعة مفيدة",
+        "typeReview": "اكتب رأيك هنا"
     }
 }

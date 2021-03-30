@@ -6,6 +6,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
+import { Permissions } from 'expo';
 import { useSelector } from 'react-redux';
 import CartCard from '../components/cards/CartCard';
 import Header from '../components/Header';
@@ -20,46 +21,65 @@ function Cart(){
     const en = language === 'en';
     const navigation = useNavigation();
     const token = useSelector(state => state.authReducer.token);
+    const [loading, setLoading] = useState(true);
     if(!loggedIn)
         return (
-            <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
-                <Image source={{uri: 'https://imgur.com/7GIUDPi.png'}} type="AntDesign" name="shoppingcart" color={gStyles.color_0} style={{marginBottom: height * 0.05, width: width * 0.9, aspectRatio: 692/553}} />
-                <TextLato italic style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>It seems you're lost, log in to continue...</TextLato>
-                <TouchableOpacity 
-                    style={{backgroundColor: gStyles.color_0, padding: width * 0.03, alignItems: 'center'}}
-                    onPress={() => {navigation.goBack();navigation.navigate('Register/Login')}}>
-                    <TextLato style={{color: 'white'}}>Login to access your cart</TextLato>
-                </TouchableOpacity>
+            <View style={{flex: 1, alignItems: 'center', backgroundColor: gStyles.background}}>
+                <Header details={{title: en ? 'Cart' : 'السلة'}} />
+                <View style={{justifyContent: 'center', alignItems: 'center', height: height * 0.8}}>
+                    <Image source={{uri: 'https://imgur.com/ZiYG51c.png'}} style={{marginBottom: height * 0.05, width: width * 0.9, aspectRatio: 692/553}} />
+                    <TextLato italic style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>It seems you're lost, log in to continue...</TextLato>
+                    <TouchableOpacity 
+                        style={{backgroundColor: gStyles.color_2, padding: width * 0.03, alignItems: 'center', borderRadius: 5}}
+                        onPress={() => {navigation.goBack();navigation.navigate('Register/Login')}}>
+                        <TextLato style={{color: 'white'}}>Login to access your cart</TextLato>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
-    const products = useSelector(state => state.cartReducer.cart.products);
+    const [products, setProducts] = useState([]);
     const [subtotal, setSubtotal] = useState(0);
     const [disabled, setDisabled] = useState(true);
+    const [refresh, setRefresh] = useState(false);
     useEffect(() => {
-        if(products.length){
-            fetch(`${Constants.manifest.extra.apiUrl}/client/subtotal`, {
-                headers: {token}
-            })
-            .then(res => res.json())
-            .then(res => {
-                setSubtotal(res.subtotal);
-                setDisabled(false);
-            })
-        } else setDisabled(true);
-    }, [products])
-    if(products.length === 0)
+        fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {headers: {token}})
+        .then(res => res.json())
+        .then(res => {
+            setLoading(false);
+            setProducts(res.products);
+        })
+        
+        fetchSubtotal();
+    }, [refresh]);
+
+    const fetchSubtotal = () => {
+        setSubtotal(null)
+        fetch(`${Constants.manifest.extra.apiUrl}/client/subtotal`, {
+            headers: {token}
+        })
+        .then(res => res.json())
+        .then(res => {
+            setSubtotal(res.subtotal);
+            setDisabled(false);
+        })
+    }
+
+    if(products.length === 0 && !loading)
             return (
-                <View style={{justifyContent: 'center', flex: 1, alignItems: 'center', backgroundColor: 'white'}}>
-                    <Image source={{uri: 'https://imgur.com/8hNOUA5.png'}} type="AntDesign" name="shoppingcart" color={gStyles.color_0} style={{marginBottom: height * 0.05, width: width * 0.9, aspectRatio: 692/553}} />
-                    <TextLato italic style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>Still empty..</TextLato>
+                <View style={styles.container}>
+                <Header details={{title: en ? 'Cart' : 'السلة'}} />
+                    <View style={{justifyContent: 'center', flex: 1, alignItems: 'center'}}>
+                        <Image source={{uri: 'https://imgur.com/Nkntljq.png'}} type="AntDesign" name="shoppingcart" color={gStyles.color_0} style={{marginBottom: height * 0.05, width: width * 0.9, aspectRatio: 692/553}} />
+                        <TextLato italic style={{marginBottom: height * 0.02, fontSize: RFPercentage(2.3)}}>Still empty..</TextLato>
+                    </View>
                 </View>
             )
     return (
         <View style={styles.container}>
-            <Header cart={false} details={{title: en ? 'Cart' : 'السلة'}} />
+            <Header details={{title: en ? 'Cart' : 'السلة'}} />
             <ScrollView>
                 {products.map(item => {
-                    return <CartCard key={Math.random()} item={item} />
+                    return <CartCard setRefresh={setRefresh} key={Math.random()} item={item} />
                 })}
             </ScrollView>
             <View style={styles.bottomContainer}>

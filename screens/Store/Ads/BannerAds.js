@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-navigation';
 import { useSelector } from 'react-redux';
 import TextLato from '../../../components/utils/TextLato';
 import { gStyles } from '../../../global.style';
-import * as ImagePicker from 'expo-image-picker';
+import { funcs } from '../../../global.funcs';
 import ProductPicker from '../../../components/utils/ProductPicker';
 import useCredit from '../../../hooks/credit';
 import Icon from '../../../components/utils/Icon';
@@ -17,7 +17,6 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const BannerAds = () => {
     const [loading, setLoading] = useState(true);
     const [ads, setAds] = useState([]);
-    const [pickedImage, setPickedImage] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [image, setImage] = useState('https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png');
     const [adType, setAdType] = useState(0);
@@ -41,50 +40,25 @@ const BannerAds = () => {
     useEffect(() => {
         setDisabled(!(image && credit >= 20 && (adType || pickedProduct)))
     }, [image, credit, adType, pickedProduct]);
-    
-    // Get image permission
-    useEffect(() => {
-        (async () => {
-            if(Platform.OS !== 'web'){
-                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
-                if(status !== 'granted') {
-                    alert('Sorry, we need camera roll permission to register!')
-                }
-            }
-        })();
-    }, []);
-    
-    // Pick image
-    const pickImage = async () => {
-        ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.All,
-          allowsEditing: true,
-          aspect: [2.5, 1],
-          quality: 1,
-        })
-        .then(res => {
-            setPickedImage(true);
-            if(!res.cancelled) {
-                setImage(res.uri);
-            }
-        })
-    }
 
     const createBanner = () => {
         if(disabled) return;
 
         setLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/advertisement/banner`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json', token},
-            body: JSON.stringify({
-                adType,
-                image,
-                product: pickedProduct
+        funcs.uploadImage(image, 'banner_', token)
+        .then(res => {
+            fetch(`${Constants.manifest.extra.apiUrl}/advertisement/banner`, {
+                method: 'post',
+                headers: {'Content-Type': 'application/json', token},
+                body: JSON.stringify({
+                    adType,
+                    image: res.location,
+                    product: pickedProduct
+                })
             })
-        })
-        .then(() => {
-            fetchBanners();
+            .then(() => {
+                fetchBanners();
+            })
         })
     }
 
@@ -129,7 +103,7 @@ const BannerAds = () => {
                             <View>
                                 <TextLato bold style={{marginTop: height * 0.03}}>Pick an image for your Ad</TextLato>
                                 <View style={styles.profilePictureContainer}>
-                                    <TouchableOpacity activeOpacity={0.7} onPress={pickImage}>
+                                    <TouchableOpacity activeOpacity={0.7} onPress={() => funcs.chooseImage(setImage)}>
                                         <Image source={{ uri: image }} style={{ width: '100%', aspectRatio: 2.5 }} />
                                     </TouchableOpacity>
                                 </View>

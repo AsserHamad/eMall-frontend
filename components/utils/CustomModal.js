@@ -1,44 +1,74 @@
 import React from 'react';
-import { Modal, StyleSheet, View, Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-navigation';
+import { Modal, StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { RFPercentage } from 'react-native-responsive-fontsize';
+import { gStyles } from '../../global.style';
+import Icon from './Icon';
+const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const CustomModal = ({children, modalVisible, setModalVisible}) => {
+const CustomModal = ({children, modalVisible, setModalVisible, confirm = () => {}}) => {
 
     return (
+        <View>
         <Modal
-            // animationType="fade"
-            // transparent={true}
-            // onRequestClose={close}
-            // animationIn="slideInLeft"
-            // animationOut="slideOutRight"
-            // useNativeDriver={true}
-            // visible={modalVisible}
-            >
-                <View style={styles.modalView}>
-                    <TouchableOpacity onPress={() => console.log('hi')}><Text>hi</Text></TouchableOpacity>
-                    {children}
-                </View>
-        </Modal>
-    )
-}
+          animationType="fade"
+          transparent={true}
+          hideModalContentWhileAnimati
+          onRequestClose={() => setModalVisible(false)}
+          visible={modalVisible}
+          >
+            <View style={modalStyles.modalView}>
+              <View style={modalStyles.modalContainer}>
+                  {children}
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: height * 0.02}}>
+                    <TouchableOpacity
+                        style={{ ...modalStyles.openButton, backgroundColor: '#9DB68C' }}
+                        onPress={confirm}>
+                        <Icon type={'Entypo'} name={'check'} color="white" size={RFPercentage(4)} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{ ...modalStyles.openButton, backgroundColor: gStyles.color_1 }}
+                        onPress={() => setModalVisible(false)}>
+                        <Icon type={'Entypo'} name={'cross'} color="white" size={RFPercentage(4)} />
+                    </TouchableOpacity>
 
-const styles = StyleSheet.create({
-    modalView: {
-      backgroundColor: 'white',
-      margin: 30,
-      borderRadius: 10,
-      padding: 35,
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5,
-    }
+                </View>
+              </View>
+            </View>
+        </Modal>
+      </View>
+    );
+}
+  
+const modalStyles = StyleSheet.create({
+  modalView: {
+    flex: 1,
+    // margin: 30,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    // borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 35,
+    borderRadius: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 5,
+    padding: 10,
+    marginHorizontal: width * 0.02
+    // elevation: 2,
+  }
 });
 
 export default CustomModal;

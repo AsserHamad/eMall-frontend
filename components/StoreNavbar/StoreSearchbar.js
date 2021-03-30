@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         alignItems: 'center',
         marginTop: 3,
-        display: 'flex',
         flexDirection: 'row',
     },
     searchIcon: {
