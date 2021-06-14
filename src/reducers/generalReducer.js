@@ -1,23 +1,9 @@
-import { CHANGE_LANGUAGE } from '../actions/types';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-const loadLanguage = async () => 
-    AsyncStorage.getItem('language')
-    .then(val => {
-        if(val !== null){
-            return Number(val);
-        } else {
-            AsyncStorage.setItem('language', 0)
-            .then(() => 0);
-        }
-    })
-    .catch(err => console.log(err));
-
+import { CHANGE_LANGUAGE, CHANGE_FIRST_TIME } from '../actions/types';
     
 // 0: English
 const initialState = {
-    language: 0
+    language: 0,
+    firstTime: true
 }
 
 const generalReducer = (state = initialState, action) => {
@@ -26,6 +12,11 @@ const generalReducer = (state = initialState, action) => {
             return {
                 ...state,
                 language: action.language
+            }
+        case CHANGE_FIRST_TIME:
+            return {
+                ...state,
+                firstTime: action.firstTime
             }
         default:
             return state;

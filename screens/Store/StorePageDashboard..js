@@ -11,6 +11,7 @@ import SellerCardProduct from '../../components/cards/Seller/SellerCardProduct';
 import ProductPicker from '../../components/utils/ProductPicker';
 import CustomModal from '../../components/utils/CustomModal';
 import { funcs } from '../../global.funcs';
+import { useLanguage, useLanguageText } from '../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -33,6 +34,8 @@ const StorePageDashboard = () => {
     const [modalStep, setModalStep] = useState(-1);
     const [aspectRatio, setAspectRatio] = useState(1);
     const [pickedProduct, setPickedProduct] = useState(undefined);
+
+    const text = useLanguageText('sellerPage');
     
     const [image, setImage] = useState(undefined);
     const [uploading, setUploading] = useState(false);
@@ -135,41 +138,43 @@ const StorePageDashboard = () => {
 
     const ModalContent = (
         <CustomModal confirm={confirm} modalVisible={modalVisible} setModalVisible={setModalVisible}>
-            <View style={{alignItems: 'center'}}>
-                <TextLato bold>Pick an Ad type</TextLato>
-                <View style={{flexDirection: 'row', marginVertical: height * 0.02}}>
-                    <TouchableOpacity style={{...modalStyles.button, backgroundColor: modalStep === 0 ? gStyles.color_2 : 'black'}} onPress={() => setModalStep(0)}>
-                        <TextLato style={{color: 'white'}}>Static Image</TextLato>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{...modalStyles.button, backgroundColor: modalStep === 1 ? gStyles.color_2 : 'black'}} onPress={() => setModalStep(1)}>
-                        <TextLato style={{color: 'white'}}>Product</TextLato>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{...modalStyles.button, backgroundColor: modalStep === 2 ? gStyles.color_2 : 'black'}} onPress={() => setModalStep(2)}>
-                        <TextLato style={{color: 'white'}}>Product Ad</TextLato>
-                    </TouchableOpacity>
-                </View>
-                {(modalStep === 0 || modalStep === 2) && (
-                    <TouchableOpacity onPress={() => funcs.chooseImage(setImage)} style={{width: '100%', alignItems: 'center'}}>
-                        <Image style={{width: '70%', aspectRatio, maxHeight: height * 0.2}} source={{uri: image || 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png'}} />
-                    </TouchableOpacity>
-                )}
-                {(modalStep === 1 || modalStep === 2) && (
-                    <ProductPicker style={{height: height * 0.4, width: width * 0.65, marginTop: height * 0.02}} pickedProduct={pickedProduct} setPickedProduct={setPickedProduct}  />
+            <ScrollView>
+                <View style={{alignItems: 'center'}}>
+                    <TextLato bold>{text.pick}</TextLato>
+                    <View style={{flexDirection: 'row', marginVertical: height * 0.02}}>
+                        <TouchableOpacity style={{...modalStyles.button, backgroundColor: modalStep === 0 ? gStyles.color_2 : 'black'}} onPress={() => setModalStep(0)}>
+                            <TextLato style={{color: 'white'}}>{text.image}</TextLato>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{...modalStyles.button, backgroundColor: modalStep === 1 ? gStyles.color_2 : 'black'}} onPress={() => setModalStep(1)}>
+                            <TextLato style={{color: 'white'}}>{text.product}</TextLato>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{...modalStyles.button, backgroundColor: modalStep === 2 ? gStyles.color_2 : 'black'}} onPress={() => setModalStep(2)}>
+                            <TextLato style={{color: 'white'}}>{text.productAd}</TextLato>
+                        </TouchableOpacity>
+                    </View>
+                    {(modalStep === 0 || modalStep === 2) && (
+                        <TouchableOpacity onPress={() => funcs.chooseImage(setImage)} style={{width: '100%', alignItems: 'center'}}>
+                            <Image style={{width: '70%', aspectRatio, maxHeight: height * 0.2}} source={{uri: image || 'https://www.signfix.com.au/wp-content/uploads/2017/09/placeholder-600x400.png'}} />
+                        </TouchableOpacity>
                     )}
-                {uploading && <View style={{height: height * 0.1, justifyContent: 'center', alignItems: 'center'}}>
-                    <TextLato>Uploading...</TextLato>
-                    <ActivityIndicator color={gStyles.color_2} size={RFPercentage(4)} />
-                </View>}
-            </View>
+                    {(modalStep === 1 || modalStep === 2) && (
+                        <ProductPicker style={{height: height * 0.4, width: width * 0.65, marginTop: height * 0.02}} pickedProduct={pickedProduct} setPickedProduct={setPickedProduct}  />
+                        )}
+                    {uploading && <View style={{height: height * 0.1, justifyContent: 'center', alignItems: 'center'}}>
+                        <TextLato>Uploading...</TextLato>
+                        <ActivityIndicator color={gStyles.color_2} size={RFPercentage(4)} />
+                    </View>}
+                </View>
+            </ScrollView>
         </CustomModal>
     )
     
     return (
         <View style={styles.container}>
-            <StoreNavbar title={'Page Layout'} />
+            <StoreNavbar title={text.title} />
             <ScrollView contentContainerStyle={{padding: width * 0.05}}>
                 {ModalContent}
-                <TextLato bold style={{fontSize: RFPercentage(2.5)}}>Store Banner</TextLato>
+                <TextLato bold style={{fontSize: RFPercentage(2.5)}}>{text.storeBanner}</TextLato>
                 <View style={styles.coverImageContainer}>
                     {coverImage !== '' && <Image source={{uri: coverImage}} style={styles.coverImage} />}
                     <View>
@@ -181,17 +186,17 @@ const StorePageDashboard = () => {
                         </TouchableOpacity> */}
                     </View>
                 </View>
-                <TextLato bold style={{fontSize: RFPercentage(2.5), marginTop: height * 0.03}}>Store Page/Ads</TextLato>
+                <TextLato bold style={{fontSize: RFPercentage(2.5), marginTop: height * 0.03}}>{text.ads}</TextLato>
                 <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
                     <Icon type="AntDesign" name="plus" color={'white'} size={RFPercentage(4)} />
-                    <TextLato style={{color: 'white', fontSize: RFPercentage(2), marginLeft: width * 0.1}}>Add Block</TextLato>
+                    <TextLato style={{color: 'white', fontSize: RFPercentage(2), marginLeft: width * 0.1}}>{text.addBlock}</TextLato>
                 </TouchableOpacity>
                 <View style={{marginTop: height * 0.01}}>
                     {ads.map(ad => {
                         switch(ad.adType){
-                            case 0: return <AdType_0 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} />;
-                            case 1: return <AdType_1 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} />;
-                            case 2: return <AdType_2 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} />;
+                            case 0: return <AdType_0 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
+                            case 1: return <AdType_1 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
+                            case 2: return <AdType_2 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
                         }
                     })}
                 </View>
@@ -200,7 +205,7 @@ const StorePageDashboard = () => {
     )
 }
 
-const AdType_0 = ({ad, changePosition, removeAd}) => {
+const AdType_0 = ({ad, changePosition, removeAd, text}) => {
     const [aspectRatio, setAspectRatio] = useState(1);
     useEffect(() => {
         Image.getSize(ad.image, (width, height) => setAspectRatio(width/height));
@@ -209,7 +214,7 @@ const AdType_0 = ({ad, changePosition, removeAd}) => {
         <View style={{flexDirection: 'row'}}>
             <ImageBackground source={{uri: ad.image}} style={{width: width * 0.83, aspectRatio}}>
                 <View style={{width: width * 0.3, backgroundColor: gStyles.color_0, alignItems: 'center', justifyContent: 'center', paddingVertical: height * 0.01}}>
-                    <TextLato style={{color: 'white', fontSize: RFPercentage(2)}}>Image</TextLato>
+                    <TextLato style={{color: 'white', fontSize: RFPercentage(2)}}>{text.image}</TextLato>
                 </View>
             </ImageBackground>
             <View>
@@ -236,11 +241,16 @@ const AdType_0 = ({ad, changePosition, removeAd}) => {
     )
 }
 
-const AdType_1 = ({ad, changePosition, removeAd}) => {
+const AdType_1 = ({ad, changePosition, removeAd, text}) => {
+    const language = useLanguage();
+    const en = language === 'en';
     return (
         <View style={{flexDirection: 'row'}}>
-            <View style={{width: width * 0.83}}>
-                <SellerCardProduct seller style={{paddingVertical: height * 0.02}} product={ad.product} />
+        <View style={{width: width * 0.3, backgroundColor: gStyles.color_0, alignItems: 'center', justifyContent: 'center', paddingVertical: height * 0.01, position: 'absolute', zIndex: 4, elevation: 2}}>
+            <TextLato style={{color: 'white', fontSize: RFPercentage(2)}}>{text.product}</TextLato>
+        </View>
+            <View style={{width: width * 0.83, transform: en ? [] : [{scaleX: -1}]}}>
+                <SellerCardProduct style={{paddingVertical: height * 0.02}} product={ad.product} />
             </View>
             <View>
                 <TouchableOpacity 
@@ -266,7 +276,7 @@ const AdType_1 = ({ad, changePosition, removeAd}) => {
     )
 }
 
-const AdType_2 = ({ad, changePosition, removeAd}) => {
+const AdType_2 = ({ad, changePosition, removeAd, text}) => {
     const [aspectRatio, setAspectRatio] = useState(0);
     useEffect(() => {
         Image.getSize(ad.image, (width, height) => setAspectRatio(width/height));
@@ -275,7 +285,7 @@ const AdType_2 = ({ad, changePosition, removeAd}) => {
         <View style={{flexDirection: 'row'}}>
             <ImageBackground source={{uri: ad.image}} style={{width: width * 0.83, aspectRatio}}>
                 <View style={{width: width * 0.3, backgroundColor: gStyles.color_0, alignItems: 'center', justifyContent: 'center', paddingVertical: height * 0.01}}>
-                    <TextLato style={{color: 'white', fontSize: RFPercentage(2)}}>Product Ad</TextLato>
+                    <TextLato style={{color: 'white', fontSize: RFPercentage(2)}}>{text.productAd}</TextLato>
                 </View>
             </ImageBackground>
             <View>
@@ -342,7 +352,9 @@ const modalStyles = StyleSheet.create({
         paddingHorizontal: width * 0.02,
         backgroundColor: 'cyan',
         borderRadius: 10,
-        marginHorizontal: width * 0.01
+        marginHorizontal: width * 0.01,
+        minWidth: '25%',
+        alignItems: 'center'
     }
 })
 

@@ -10,14 +10,9 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 
 function StoreCard({store}){
-    const [aspectRatio, setAspectRatio] = useState(1);
     const navigation = useNavigation();
     const language = useLanguage();
     const en = language === 'en';
-    useEffect(() => {
-        if(store.logo)
-            Image.getSize(store.logo, (width, height) => setAspectRatio(width/height))
-    }, []);
     return(
         <TouchableOpacity activeOpacity={0.9} onPress={() => {navigation.push('Store', {store})}} style={[styles.container, {transform: en ? [] : [{scaleX: -1}]}]}>
             <View style={styles.logoContainer}>
@@ -25,11 +20,14 @@ function StoreCard({store}){
             </View>
             <TextLato style={styles.title}>{store.title}</TextLato>
             <View style={styles.categories}>
-                {store.categories.map(category => (
+                {store.categories.slice(0, 3).map(category => (
                     <View style={styles.categoryContainer} key={Math.random()}>
                         <Icon type={category.iconType} color="white" name={category.icon} size={12} style={styles.icon} />
                     </View>
                 ))}
+                <View style={styles.categoryContainer} key={Math.random()}>
+                        <Icon type={'AntDesign'} color="white" name="plus" size={12} style={styles.icon} />
+                    </View>
             </View>
         </TouchableOpacity>
     )
@@ -51,8 +49,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 10,
         marginHorizontal: width * 0.02,
-        height: height * 0.2,
-        minWidth: width * 0.4
+        height: height * 0.25,
+        width: width * 0.4
     },
     logoContainer: {
         justifyContent: 'center',
@@ -61,7 +59,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: gStyles.fontSizeM,
-        marginTop: 10
+        marginTop: 10,
+        textAlign: 'center'
     },
     categories: {
         flexDirection: 'row',

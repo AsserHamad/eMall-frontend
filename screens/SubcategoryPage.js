@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, SafeAreaView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Header from '../components/Header';
@@ -10,7 +10,6 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 import Constants from 'expo-constants';
 import { useLanguage } from '../hooks/language';
 import TextLato from '../components/utils/TextLato';
-import { useNavigation } from '@react-navigation/native';
 import SellerCardsList from '../components/utils/SellerCardsList';
 import Icon from '../components/utils/Icon';
 import ProductCardsList from '../components/utils/ProductCardsList';
@@ -36,7 +35,7 @@ const SubcategoryPage = (props) => {
                 <TextLato style={styles.title} bold>Stores</TextLato>
                 <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-subcategory`} body={{subcategory: details, filter}} refresh={filter} />
                 <TextLato style={{...styles.title, marginTop: height * 0.05}} bold>Products</TextLato>
-                <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/subcategory/`} body={{id: details._id, filter}} refresh={filter} />
+                <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/subcategory`} body={{id: details._id, filter}} refresh={filter} title={details.name[language]} />
             </ScrollView>
         </View>
     )
@@ -87,14 +86,19 @@ export default SubcategoryPage;
 
 const FiltersScroll = ({details, selected, setSelected, language}) => {
     const [filters, setFilters] = useState([]);
+    const [loading, setLoading] = useState(true);
     const en = language === 'en';
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/subcategory/filters/${details._id}`)
         .then(res => res.json())
-        .then(res => setFilters(res))
+        .then(res => {
+            setLoading(false);
+            console.log('filters', res)
+            setFilters(res)
+        })
     }, [])
 
-    if(!filters.length)
+    if(loading)
     return (
         <ScrollView 
             style={{...subcategoryStyles.scrollView, minHeight: height * 0.15, paddingVertical: height * 0.01, transform: en ? [] : [{scaleX: -1}]}}
@@ -108,6 +112,7 @@ const FiltersScroll = ({details, selected, setSelected, language}) => {
             ))}
         </ScrollView>
     )
+    if(filters.length)
     return(
         <ScrollView 
             showsHorizontalScrollIndicator={false} 
@@ -121,24 +126,27 @@ const FiltersScroll = ({details, selected, setSelected, language}) => {
                     style={{...subcategoryStyles.touchableBlock, transform: en ? [] : [{scaleX: -1}]}} 
                     activeOpacity={0.4} 
                     onPress={() => setSelected(filter._id)}>
-                    <View key={filter._id} style={{...subcategoryStyles.container, backgroundColor: selected === filter._id ? gStyles.color_2 : gStyles.color_3}}>
-                        <Icon size={RFPercentage(5)} color={'white'} type={filter.iconType} name={filter.icon} />
-                    </View>
-                        <TextLato style={{fontSize: RFPercentage(1.7), textAlign: 'center', marginTop: height * 0.01}}>{filter.name[language]}</TextLato>
+                    <ImageBackground 
+                        key={filter._id}
+                        style={{...subcategoryStyles.container, opacity: selected === filter._id ? 1 : 0.5 }}
+                        imageStyle={{borderRadius: 4, resizeMode: 'cover'}} source={{uri: filter.image}}/>
+                    <TextLato style={{fontSize: RFPercentage(1.7), textAlign: 'center', marginTop: height * 0.01, width: width * 0.3, color: selected === filter._id ? 'red' : 'black' }}>{filter.name[language]}</TextLato>
                 </TouchableOpacity>
             ))}
         </ScrollView>
     )
+    else return null;
 }
 
 const subcategoryStyles = StyleSheet.create({
     touchableBlock: {
+        alignItems: 'center'
     },
     container: {
-        width: width * 0.17,
-        aspectRatio: 1,
-        backgroundColor: gStyles.color_3,
-        borderRadius: 100,
+        width: width * 0.3,
+        aspectRatio: 16/9,
+        // backgroundColor: gStyles.color_2,
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 3,

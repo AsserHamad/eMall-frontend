@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, ScrollableView, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Image, ScrollableView, StyleSheet, Dimensions, ActivityIndicator, ImageBackground } from 'react-native';
 import Header from '../../components/Header';
 import TextLato from '../../components/utils/TextLato';
 import Constants from 'expo-constants';
@@ -19,7 +19,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 const Store = (props) => {
     const [store, setStore] = useState(null);
-    const [viewState, setViewState] = useState(0);
+    const [viewState, setViewState] = useState(props.route.params.state || 0);
     const [reviews, setReviews] = useState({average: 0, number: 0});
     const loggedIn = useSelector(state => state.authReducer.loggedIn);
     const token = useSelector(state => state.authReducer.token);
@@ -36,6 +36,7 @@ const Store = (props) => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/${props.route.params.store._id}`)
         .then(res => res.json())
         .then(res => {
+            console.log('store page', res);
             if(res.page.homeAds.length === 0) setViewState(1);
             setStore(res)
         });
@@ -45,9 +46,6 @@ const Store = (props) => {
             .then(res => {
                 setReviews(res);
             })
-
-            
-
         if(loggedIn){
             fetch(`${Constants.manifest.extra.apiUrl}/store/views/add`, {
                 method: 'post',
@@ -72,13 +70,11 @@ const Store = (props) => {
             <ScrollView style={styles.headerContainer}>
                 <Image source={{uri: store.page.coverImage || 'https://image.freepik.com/free-vector/red-oriental-chinese-seamless-pattern-illustration_193606-43.jpg'}} style={styles.cover} />
                 <View style={{...styles.header, flexDirection: en ? 'row' : 'row-reverse'}}>
-                    <View style={styles.logoContainer}>
-                        <Image source={{uri: store.logo}} style={styles.logo} />
-                    </View>
+                    <ImageBackground style={styles.logoContainer} source={{uri: store.logo}} imageStyle={styles.logo} />
                     <View style={styles.categories}>
                         {store.categories.map(category => (
                             <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={Math.random()}>
-                                <Icon type={category.iconType} color="white" name={category.icon} size={12} style={styles.icon} />
+                                <Image source={{uri: category.image}} style={styles.icon} />
                             </View>
                         ))}
                     </View>
@@ -143,23 +139,27 @@ const styles = StyleSheet.create({
         marginHorizontal: width * 0.02
     },
     categoryContainer: {
-        width: 27,
-        height: 27,
+        width: 30,
+        height: 30,
         borderRadius: 100,
         justifyContent: 'center',
         alignItems: 'center',
         margin: 2
     },
     icon: {
-        color: 'white'
+        width: 25,
+        borderRadius: 100,
+        aspectRatio: 1,
+        tintColor: 'white'
     },
     logoContainer: {
         padding: width * 0.02,
         justifyContent: 'center',
         alignItems: 'center',
-        width: width * 0.24,
+        width: width * 0.26,
+        aspectRatio: 1,
         backgroundColor: gStyles.background,
-        borderRadius: 100,
+        borderRadius: 300,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -170,9 +170,10 @@ const styles = StyleSheet.create({
         elevation: 4,
     },
     logo: {
-        width: 60,
-        height: 80,
-        resizeMode: 'contain'
+        width: width * 0.26,
+        aspectRatio: 1,
+        resizeMode: 'cover',
+        borderRadius: 300,
     },
     title: {
         fontSize: RFPercentage(3),

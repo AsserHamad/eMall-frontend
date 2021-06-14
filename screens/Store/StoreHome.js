@@ -1,39 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, ScrollableView, StyleSheet, Dimensions, Text } from 'react-native';
-import Header from '../../components/Header';
+import React from 'react';
+import { View, Image, StyleSheet, Dimensions } from 'react-native';
 import TextLato from '../../components/utils/TextLato';
-import Constants from 'expo-constants';
 import { gStyles } from '../../global.style';
-import Icon from '../../components/utils/Icon';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import {
-    LineChart,
-    BarChart,
-    PieChart,
-    ProgressChart,
-    ContributionGraph,
-    StackedBarChart
-  } from "react-native-chart-kit";
 import SalesGraph from '../../components/Store/Dashboard/SalesGraph';
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar';
 import TotalViews from '../../components/Store/Dashboard/TotalViews';
 import CurrentFunds from '../../components/Store/Dashboard/CurrentFunds';
 import PendingFunds from '../../components/Store/Dashboard/PendingFunds';
+import { useLanguage, useLanguageText } from '../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
-const StoreHome = ({navigation, route}) => {
+const StoreHome = () => {
     const seller = useSelector(state => state.authReducer.account);
     const store = useSelector(state => state.authReducer.store);
-    console.log(store);
+    const language = useLanguage();
+    const en = language === 'en';
+    const text = useLanguageText('sellerDashboard');
     return(
         <View style={styles.container}>
-            <StoreNavbar title={'Dashboard'} />
+            <StoreNavbar title={text.dashboard} />
             <ScrollView contentContainerStyle={{alignItems: 'center', paddingBottom: height * 0.04}}>
                 <View style={styles.nameContainer}>
-                    <TextLato style={styles.name}>Hello, {seller.name}</TextLato>
+                    <TextLato style={styles.name}>{en ? 'Hello, ' : 'مرحبا, '}{seller.name}</TextLato>
                     <TextLato italic style={styles.jobTitle}>{seller.title}</TextLato>
                 </View>
                 <View style={{marginTop: height * 0.02, flexDirection: 'row', padding: width * 0.05, backgroundColor: 'white'}}>
@@ -50,11 +42,8 @@ const StoreHome = ({navigation, route}) => {
                 {/* GRAPH */}
                 <SalesGraph />
 
-                
                 {/* VIEWS */}
-                <View>
-                    <TotalViews />
-                </View>
+                <TotalViews />
 
             </ScrollView>
         </View>

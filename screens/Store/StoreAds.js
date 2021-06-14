@@ -1,19 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Image, ScrollableView, StyleSheet, Dimensions } from 'react-native';
-import Header from '../../components/Header';
+import React from 'react';
+import { View, Image, StyleSheet, Dimensions } from 'react-native';
 import TextLato from '../../components/utils/TextLato';
-import Constants from 'expo-constants';
-import { gStyles } from '../../global.style';
-import Icon from '../../components/utils/Icon';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import Reviews from '../../components/utils/Reviews';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import HomeComponent from '../../components/Store/HomeComponent';
-import BrowseComponent from '../../components/Store/BrowseComponent';
-import ReviewsComponent from '../../components/Store/ReviewsComponent';
-import StorePageDashboard from './StorePageDashboard.';
 import { SafeAreaView } from 'react-navigation';
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar';
+import { useLanguageText } from '../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -22,19 +14,20 @@ const adImage_1 = "https://imgur.com/C5KLvi8.png";
 const adImage_2 = "https://imgur.com/L8t7Enp.png";
 
 const StoreAds = ({navigation}) => {
+    const text = useLanguageText('sellerAds');
     return (
-        <SafeAreaView style={styles.container}>
-            <StoreNavbar title={'Advertisements'} />
+        <View style={styles.container}>
+            <StoreNavbar title={text.title} />
             <ScrollView>
                 <View style={styles.titleContainer}>
-                    <Image style={{width: width * 0.75, aspectRatio: 819/488}} source={{uri: 'https://i.imgur.com/dydF1FY.png'}} />
-                    <TextLato italic style={styles.title}>Press on the ad type that you'd like to explore, You can either advertise your store page or a specific product</TextLato>
+                    <Image style={{width: width * 0.75, aspectRatio: 819/488}} source={{uri: 'https://imgur.com/2Y21sse.png'}} />
+                    <TextLato italic style={styles.title}>{text.description}</TextLato>
                 </View>
 
                 {/* Home Ads */}
                 <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('HomeAds')} style={styles.adContainer}>
-                    <TextLato bold style={styles.typeTitle}>Home Page Header Ad</TextLato>
-                    <TextLato italic style={styles.adTitle}>An ad that is front and center in the app's view. It is the first thing you are welcomed to when opening the app, and is the most accessible ad type.</TextLato>
+                    <TextLato bold style={styles.typeTitle}>{text.homeAd}</TextLato>
+                    <TextLato italic style={styles.adTitle}>{text.homeAdDescription}</TextLato>
                     <View style={{alignItems: 'center', marginTop: height * 0.02}}>
                         <Image source={{uri: adImage_0}} style={styles.typeImage} />
                     </View>
@@ -42,8 +35,8 @@ const StoreAds = ({navigation}) => {
 
                 {/* Banner Ads */}
                 <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('BannerAds')} style={styles.adContainer}>
-                    <TextLato bold style={styles.typeTitle}>Home Page Banner Ad</TextLato>
-                    <TextLato italic style={styles.adTitle}>An ad that is viewed to whoever is most relevantly associated with your product type. </TextLato>
+                    <TextLato bold style={styles.typeTitle}>{text.bannerAd}</TextLato>
+                    <TextLato italic style={styles.adTitle}>{text.bannerAdDescription}</TextLato>
                     <View style={{alignItems: 'center', marginTop: height * 0.02}}>
                         <Image source={{uri: adImage_1}} style={styles.typeImage} />
                     </View>
@@ -51,15 +44,15 @@ const StoreAds = ({navigation}) => {
 
                 {/* Deal of the Day */}
                 <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('DealsOfTheDay')} style={styles.adContainer}>
-                    <TextLato bold style={styles.typeTitle}>Deal of the Day</TextLato>
-                    <TextLato italic style={styles.adTitle}>A one-day deal on one of your products, no promo code needed. (Starts the following day and ends on 11:59 pm Cairo time)</TextLato>
+                    <TextLato bold style={styles.typeTitle}>{text.dealOfTheDay}</TextLato>
+                    <TextLato italic style={styles.adTitle}>{text.dealOfTheDayDescription}</TextLato>
                     <View style={{alignItems: 'center', marginTop: height * 0.02}}>
                         <Image source={{uri: adImage_2}} style={styles.typeImage} />
                     </View>
                 </TouchableOpacity>
 
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TouchableNativeFeedback, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
@@ -15,6 +15,7 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
     const [pick, setPick] = useState(pickedProduct);
     const [loading, setLoading] = useState(true);
     const language = useLanguage();
+    const en = language === 'en';
     const [search, setSearch] = useState('');
     useEffect(() => {
         searchItems();
@@ -32,14 +33,14 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
     return (
         <View style={{...styles.container, ...style}}>
             <ScrollView contentContainerStyle={{alignItems: 'center', justifyContent: 'center', width: '100%'}} nestedScrollEnabled={true}>
-                <TextInput placeholder={'Search products...'} style={styles.input} value={search} onChangeText={val => setSearch(val)} />
+                <TextInput placeholder={en ? 'Search products...' : 'البحث عن المنتجات...'} style={{...styles.input, textAlign: en ? 'left' : 'right', fontFamily: 'Cairo'}} value={search} onChangeText={val => setSearch(val)} />
                 {loading ? 
                     <View style={styles.loadingContainer}><ActivityIndicator size={RFPercentage(5)} color={'white'} /></View>
                     :
                     products.map(product => {
                         const picked = pick && product._id === pick._id;
                         return (
-                            <TouchableOpacity key={Math.random()} activeOpacity={0.7} onPress={() => {setPick(product);setPickedProduct(product);}} style={{...styles.product, backgroundColor: picked ? gStyles.color_2 : 'white'}}>
+                            <TouchableOpacity key={Math.random()} activeOpacity={0.7} onPress={() => {setPick(product);setPickedProduct(product);}} style={{...styles.product, backgroundColor: picked ? gStyles.color_2 : 'white', flexDirection: en ? 'row' : 'row-reverse'}}>
                             <Image style={styles.image} source={{uri: product.images[0]}} />
                             <View style={{width: '50%'}}>
                                 <TextLato style={{color: picked ? 'white' : 'black'}} bold>{product.title[language]}</TextLato>

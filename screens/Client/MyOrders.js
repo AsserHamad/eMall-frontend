@@ -1,16 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import { Animated, Dimensions, Image, ImageBackground, Modal, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Dimensions, Image, Modal, SafeAreaView, StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Icon from '../../components/utils/Icon';
 import {useLanguage, useLanguageText} from '../../hooks/language';
 import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
 import Constants from 'expo-constants';
 import { ScrollView, TextInput, TouchableNativeFeedback, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import Header from '../../components/Header';
+import CustomModal from '../../components/utils/CustomModal';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const MyOrders = ({navigation}) => {
+const MyOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const token = useSelector(state => state.authReducer.token);
@@ -28,15 +30,7 @@ const MyOrders = ({navigation}) => {
     }, [])
     return (
         <SafeAreaView style={styles.container}>
-            <View style={[styles.topContainer, {flexDirection: en ? 'row' : 'row-reverse'}]}>
-                <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-                    <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(4)} color="black" />
-                </TouchableOpacity>
-                <View style={styles.title}>
-                    {/* <Icon style={{alignItems: 'center'}} type={'FontAwesome5'} name={'truck-moving'} size={width * 0.06} color={'black'} /> */}
-                    <TextLato style={{marginLeft: width * 0.03, color: 'black', fontSize: RFPercentage(2.6)}}>{text.myOrders}</TextLato>
-                </View>
-            </View>
+            <Header details={{title: text.myOrders}} />
             {loading ? loadingView : (
                 <ScrollView contentContainerStyle={{paddingVertical: height * 0.03, paddingBottom: height * 0.05}}>
                     <View style={styles.orders}>
@@ -53,7 +47,6 @@ const loadingView = <View style={{justifyContent: 'center', alignItems: 'center'
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: Constants.statusBarHeight,
         backgroundColor: gStyles.background,
     },
     topContainer: {
@@ -98,9 +91,9 @@ const Order = ({order, en, text}) => {
             default: return 
         }
     }
-    const date = `${_date.getDay()}-${_date.getMonth()}-${_date.getFullYear()}, ${_date.getUTCHours()}:${_date.getUTCMinutes()}`
+    const date = `${_date.getDay()}-${_date.getMonth()}-${_date.getFullYear()}, ${('0' + _date.getUTCHours()).slice(-2)}:${('0' + _date.getUTCMinutes()).slice(-2)}`
     
-    const [status, setStatus] = useState(getStatus(order.status));
+    const status = getStatus(order.status);
     const language = useLanguage();
     const [cancelled, setCancelled] = useState(order.status === -1);
     const completed = order.status === 5;
@@ -130,16 +123,12 @@ const Order = ({order, en, text}) => {
     }
     return (
         <View key={Math.random()} style={orderStyles.orderContainer}>
-            <ReviewModal modalVisible={reviewVisible} setModalVisible={setReviewVisible} order={order} />
+            <ReviewModal modalVisible={reviewVisible} setModalVisible={setReviewVisible} order={order} text={text} />
             <View style= {{alignItems: en ? 'flex-start' : 'flex-end'}}>
                 <View>
-                    <TextLato bold style={orderStyles.title}>{text.order} #: {order.code}</TextLato>
-                    {/* <TextLato style={orderStyles.title} italic>{order.storeOrders.length} items</TextLato> */}
+                    <TextLato bold style={orderStyles.title}>{text.order} # : {order.code}</TextLato>
                     <TextLato style={{...orderStyles.date, textAlign: en ? 'left' : 'right'}}>{date}</TextLato>
                 </View>
-                {/* <View style={{alignItems: 'flex-end', flex: 1}}>
-                    <Image source={{uri: order.storeOrders[0].product.images[0]}} style={orderStyles.imageStyle} />
-                </View> */}
             {cancelled ? <TextLato bold style={orderStyles.cancelText}>{text.cancelled}</TextLato> :
             <TextLato style={orderStyles.statusText}>{status}</TextLato>}
 
@@ -153,13 +142,17 @@ const Order = ({order, en, text}) => {
             {completed && (
                 <View style={{flexDirection: en ? 'row' : 'row-reverse', marginTop: height * 0.02}}>
                     <TouchableNativeFeedback style={orderStyles.completeButtons} onPress={() => setReviewVisible(true)}>
-                        <TextLato bold style={{fontSize: RFPercentage(2)}}>Review</TextLato>
+                        <TextLato bold style={{fontSize: RFPercentage(2)}}>{text.review}</TextLato>
                     </TouchableNativeFeedback>
                     {/* <TouchableNativeFeedback style={orderStyles.completeButtons}>
-                        <TextLato bold style={{fontSize: RFPercentage(2)}}>Complain</TextLato>
+                        <TextLato bold style={{fontSize: RFPercentage(2)}}>Return</TextLato>
                     </TouchableNativeFeedback> */}
                 </View>
             )}
+            <TextLato bold style={{marginVertical: height * 0.03, fontSize: RFPercentage(3), color: gStyles.color_2}}>
+                {order.total} 
+                <TextLato style={{fontSize: RFPercentage(2), color: gStyles.color_3}}>  {en ? 'EGP' : 'ج.م'}</TextLato>
+            </TextLato>
             </View>
 
             {/* 
@@ -175,7 +168,14 @@ const Order = ({order, en, text}) => {
                                 return (
                                     <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: height * 0.01}} key={Math.random()}>
                                         <Image style={{width: width * 0.1, aspectRatio: 1, marginRight: width * 0.05}} source={{uri: product.images[0]}} />
-                                        <TextLato style={{width: width * 0.5, marginRight: width * 0.05}} italic>{product.title[language]} x{order.quantity}</TextLato>
+                                        <View style={{width: width * 0.5, marginRight: width * 0.05}}>
+                                            <TextLato italic>{product.title[language]} x{order.quantity}</TextLato>
+                                            {order.options.map(option => {
+                                                const x = order.product.options.filter(op => op._id === option.option)[0];
+                                                const pick = x.options.filter(op => op._id === option.pick)[0];
+                                                return (<TextLato key={Math.random()} italic style={{color: '#666'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
+                                            })}
+                                        </View>
                                         {status >= 1 ? 
                                         <Icon color={gStyles.color_2} type={'AntDesign'} name={'checkcircle'} size={RFPercentage(3)} />:
                                         <Icon color={gStyles.color_3} type={'FontAwesome'} name={'circle-o'} size={RFPercentage(3)} />}
@@ -333,7 +333,7 @@ const orderStyles = StyleSheet.create({
     }
 })
 
-const ReviewModal = ({modalVisible, setModalVisible, order}) => {
+const ReviewModal = ({modalVisible, setModalVisible, order, text}) => {
     const language = useLanguage();
     const en = language === 'en';
     const products = order.storeOrders.map(storeOrder => {
@@ -364,27 +364,24 @@ const ReviewModal = ({modalVisible, setModalVisible, order}) => {
         })
     }
     return (
-        <View style={modalStyles.centeredView}>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          onRequestClose={close}
-          visible={modalVisible}>
-            <View style={modalStyles.modalView}>
-              <TextLato>Choose a product to review</TextLato>
-              {products.map(product => {
-                  const picked = pick === product._id;
-                  return (
-                      <TouchableOpacity
-                        key={Math.random()}
-                        activeOpacity={0.7}
-                        onPress={() => setPick(product._id)}
-                        style={{paddingVertical: height * 0.01, paddingHorizontal: width * 0.02, backgroundColor: picked ? gStyles.color_2:gStyles.color_3, borderRadius: 10, marginVertical: height * 0.01}}>
-                          <TextLato style={{color: 'white'}} italic>{product.title[language]}</TextLato>
-                      </TouchableOpacity>
-                  )
-              })}
-              <View style={{flexDirection: 'row', marginTop: height * 0.05}}>
+        <CustomModal modalVisible={modalVisible} setModalVisible={setModalVisible} confirm={submitReview}>
+            <View style={modalStyles.centeredView}>
+                <TextLato>{text.reviewTitle}</TextLato>
+                <ScrollView style={{maxHeight: height * 0.4, width: '100%', marginTop: height * 0.02}} contentContainerStyle={{alignItems: 'center'}}>
+                    {products.map(product => {
+                        const picked = pick === product._id;
+                        return (
+                            <TouchableOpacity
+                            key={Math.random()}
+                            activeOpacity={0.7}
+                            onPress={() => setPick(product._id)}
+                            style={{paddingVertical: height * 0.01, paddingHorizontal: width * 0.02, backgroundColor: picked ? gStyles.color_2:gStyles.color_3, borderRadius: 10, marginVertical: height * 0.01, width: '90%', alignItems: 'center'}}>
+                                <TextLato style={{color: 'white'}} italic>{product.title[language]}</TextLato>
+                            </TouchableOpacity>
+                        )
+                    })}
+                </ScrollView>
+                <View style={{flexDirection: 'row', marginTop: height * 0.05}}>
                 <TouchableOpacity onPress={() => setStars(1)}>
                     <Icon type="AntDesign" name={stars >= 1 ? 'star' : 'staro'} color={'#EED555'} size={RFPercentage(5)} />
                 </TouchableOpacity>
@@ -400,28 +397,17 @@ const ReviewModal = ({modalVisible, setModalVisible, order}) => {
                 <TouchableOpacity onPress={() => setStars(5)}>
                     <Icon type="AntDesign" name={stars >= 5 ? 'star' : 'staro'} color={'#EED555'} size={RFPercentage(5)} />
                 </TouchableOpacity>
-              </View>
-              <TextInput 
+                </View>
+                <TextInput 
                 multiline
                 value={review} 
                 onChangeText={val => setReview(val)} placeholder={en ? 'Write Review' : 'أكتب مراجعة'}
-                style={{width: '90%', borderBottomWidth: 2, borderColor: 'red', marginVertical: height * 0.02}} />
+                style={{width: '90%', borderBottomWidth: 2, borderColor: 'red', marginVertical: height * 0.02, fontFamily: 'Cairo'}} />
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity
-                        style={{ ...modalStyles.openButton, backgroundColor: '#9DB68C' }}
-                        onPress={submitReview}>
-                        <Icon type={'Entypo'} name={'check'} color="white" size={RFPercentage(4)} />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{ ...modalStyles.openButton, backgroundColor: gStyles.color_1 }}
-                        onPress={close}>
-                        <Icon type={'Entypo'} name={'cross'} color="white" size={RFPercentage(4)} />
-                    </TouchableOpacity>
 
                 </View>
-            </View>
-        </Modal>
-      </View>
+              </View>
+        </CustomModal>
     );
 }
   
@@ -462,7 +448,13 @@ const modalStyles = StyleSheet.create({
       borderBottomWidth: 2,
       borderBottomColor: gStyles.color_1,
       marginBottom: height * 0.01,
-      height: height * 0.05
+      height: height * 0.05,
+      fontFamily: 'Cairo'
+  },
+  centeredView: {
+      width: width * 0.7,
+      alignItems: 'center',
+      justifyContent: 'center'
   }
 });
 

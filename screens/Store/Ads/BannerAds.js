@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, KeyboardAvoidingView, StyleSheet, Switch, Text, View } from 'react-native';
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator, Dimensions, Image, KeyboardAvoidingView, StyleSheet, Switch, View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
 import { SafeAreaView } from 'react-navigation';
 import { useSelector } from 'react-redux';
 import TextLato from '../../../components/utils/TextLato';
+import Header from '../../../components/Header';
 import { gStyles } from '../../../global.style';
 import { funcs } from '../../../global.funcs';
 import ProductPicker from '../../../components/utils/ProductPicker';
 import useCredit from '../../../hooks/credit';
 import Icon from '../../../components/utils/Icon';
+import { useLanguage, useLanguageText } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -24,11 +26,14 @@ const BannerAds = () => {
     const credit = useCredit(loading);
     const token = useSelector(state => state.authReducer.token);
 
+    const text = useLanguageText('sellerBannerAds');
+
     const fetchBanners = () => {
         setLoading(true);
         fetch(`${Constants.manifest.extra.apiUrl}/advertisement/banner`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
+            console.log(res)
             setLoading(false);
             setAds(res);
         })
@@ -63,13 +68,14 @@ const BannerAds = () => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+            <Header details={{title: text.title}} />
             <ScrollView contentContainerStyle={{paddingVertical: height * 0.04}}>
                 <KeyboardAvoidingView style={{marginHorizontal: width * 0.05}}>
                             {/* Active Ads */}
-                            <TextLato style={{fontSize: RFPercentage(3)}} bold>Active Ads</TextLato>
-                            <TextLato style={{fontSize: RFPercentage(1.8), marginTop: height * 0.005, marginBottom: height * 0.02}} italic>These ads are shown to the most appropriate clients that would have a higher probability of being interested in them.</TextLato>
-                                <TextLato italic style={{fontSize: RFPercentage(1.7)}}>Renewal Rate: <Text style={{color: 'red'}}>20 EGP/week</Text></TextLato>
+                            <TextLato style={{fontSize: RFPercentage(3)}} bold>{text.active}</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.8), marginTop: height * 0.005, marginBottom: height * 0.02}} italic>{text.activeDescription}</TextLato>
+                                <TextLato italic style={{fontSize: RFPercentage(1.7)}}>{text.renewalRate} <TextLato style={{color: 'red'}}>20 {text.rate}</TextLato></TextLato>
 
                             {loading ? (
 
@@ -81,22 +87,22 @@ const BannerAds = () => {
                             ads.map(ad => {
                                 
                                 // * Active Ads View
-                                return <BannerAd ad={ad} />
+                                return <BannerAd key={Math.random()} text={text} ad={ad} />
                             }) : (
 
                                 // ! No Active Ads View
                                 <View style={{backgroundColor: gStyles.color_0, justifyContent: 'center', alignItems: 'center', paddingVertical: height * 0.07, marginTop: height * 0.02}}>
-                                    <TextLato italic style={{color: 'white'}}>You do not currently have any active ads :(</TextLato>
+                                    <TextLato italic style={{color: 'white'}}>{text.noAds}</TextLato>
                                 </View>
                             )}
                             
                             {/* Header */}
-                            <TextLato style={{fontSize: RFPercentage(3), marginTop: height * 0.03}} bold>Add an Ad</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(3), marginTop: height * 0.03}} bold>{text.addAd}</TextLato>
 
                             {/* Detailss */}
                             <View style={{marginTop: height * 0.01}}>
-                                <TextLato style={{fontSize: RFPercentage(1.7)}}>Store Credit: <Text style={{color: gStyles.color_0}}>{credit} EGP</Text></TextLato>
-                                <TextLato italic style={{fontSize: RFPercentage(1.7)}}>Ad Price: <Text style={{color: 'red'}}>20 EGP/week</Text></TextLato>
+                                <TextLato style={{fontSize: RFPercentage(1.7)}}>Store Credit: <TextLato style={{color: gStyles.color_0}}>{credit} EGP</TextLato></TextLato>
+                                <TextLato italic style={{fontSize: RFPercentage(1.7)}}>Ad Price: <TextLato style={{color: 'red'}}>20 EGP/week</TextLato></TextLato>
                             </View>
 
                             {/* Image Picker */}
@@ -120,7 +126,7 @@ const BannerAds = () => {
                                         <TextLato style={{color: 'white'}}>Store</TextLato>
                                     </TouchableOpacity>
                                 </View>
-                                {adType === 0 && <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} style={{marginTop: height * 0.03}} />}
+                                {adType === 0 && <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} style={{marginTop: height * 0.03,height: height * 0.5}} />}
                             </View>
 
                             {/* Purchase button */}
@@ -129,15 +135,17 @@ const BannerAds = () => {
                             </TouchableOpacity>
                     </KeyboardAvoidingView>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 
-const BannerAd = ({ad}) => {
+const BannerAd = ({ad, text}) => {
     const [banner, setBanner] = useState(ad);
     const [renew, setRenew] = useState(ad.renew);
-    const date = new Date(banner.created_at);
-    const nextWeek = new Date(Date.now() + 6.048e+8);
+    const date = new Date(banner.lastRenew);
+    const language = useLanguage();
+    const en = language === 'en';
+    const nextWeek = new Date(date + 2*7);
     const token = useSelector(state => state.authReducer.token);
 
     const updateBanner = (val) => {
@@ -165,11 +173,11 @@ const BannerAd = ({ad}) => {
     return (
         <View style={styles.adContainer}>
             <Image style={styles.highestImage} source={{uri: banner.image}} />
-            <TextLato italic style={{fontSize: RFPercentage(2), color: '#777', marginTop: height * 0.007}}>Active since {date.getDate()}-{date.getMonth() + 1}-{date.getFullYear()}</TextLato>
-            <TextLato italic style={{fontSize: RFPercentage(2), color: 'red', marginTop: height * 0.007}}>Renewal on {nextWeek.getDate()}-{nextWeek.getMonth() + 1}-{nextWeek.getFullYear()}</TextLato>
-            <View style={{flexDirection: 'row', marginVertical: height * 0.02, alignItems: 'center'}}>
-                <TextLato style={{fontSize: RFPercentage(2), marginRight: width * 0.02}}>Auto-renewal</TextLato>
-                <Icon name={'refresh-ccw'} type={'Feather'} size={RFPercentage(2)} style={{marginRight: width * 0.05}} />
+            <TextLato italic style={{fontSize: RFPercentage(2), color: '#777', marginTop: height * 0.007}}>{text.lastRenewal} {date.getDate()}-{date.getMonth() + 1}-{date.getFullYear()}</TextLato>
+            <TextLato italic style={{fontSize: RFPercentage(2), color: 'red', marginTop: height * 0.007}}>{text.renewalOn} {nextWeek.getDate()}-{nextWeek.getMonth() + 1}-{nextWeek.getFullYear()}</TextLato>
+            <View style={{flexDirection: en ? 'row' : 'row-reverse', marginVertical: height * 0.02, alignItems: 'center'}}>
+                <TextLato style={{fontSize: RFPercentage(2), marginRight: width * 0.02}}>{text.autoRenewal}</TextLato>
+                <Icon name={'refresh-ccw'} type={'Feather'} size={RFPercentage(2)} style={{marginHorizontal: width * 0.05}} />
                 <Switch
                     trackColor={{ false: '#ccc', true: "#0FA2FE" }}
                     thumbColor={'#f4f3f4'}

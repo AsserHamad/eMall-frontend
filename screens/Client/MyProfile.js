@@ -12,6 +12,7 @@ import { gStyles } from '../../global.style';
 import { useLanguage, useLanguageText } from '../../hooks/language';
 import Toast from 'react-native-easy-toast';
 import { updateAccount } from '../../src/actions/auth';
+import Header from '../../components/Header';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
@@ -58,13 +59,8 @@ const MyProfile = () => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Header details={{title: en ? 'My Profile' : 'ملفي'}} />
         <Toast ref={_toast => toast.current = _toast} />
-        <View style={[styles.topContainer, {flexDirection: en ? 'row' : 'row-reverse'}]}>
-            <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-                <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(4)} color="black" />
-            </TouchableOpacity>
-            <TextLato style={{marginHorizontal: width * 0.03, color: 'black', fontSize: RFPercentage(2.6)}}>{en ? 'My Profile' : 'ملفي'}</TextLato>
-        </View>
         <ScrollView>
             {/* <Input title={text.email} value={email} setValue={setEmail} /> */}
             <Input title={text.firstName} value={firstName} setValue={setFirstName} />
@@ -99,7 +95,6 @@ const Input = ({title, value, setValue}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: Constants.statusBarHeight,
         backgroundColor: gStyles.background,
     },
     topContainer: {

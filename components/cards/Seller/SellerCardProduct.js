@@ -187,71 +187,78 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
 
     return (
         <View style={{...style, zIndex: 9}}>
-            <CustomModal modalVisible={modalVisible} setModalVisible={setModalVisible} confirm={addToCartHelper}>
-                <ScrollView style={{ width: width * 0.65, maxHeight: height * 0.4}}>
-                    {product.options.length > 0 && (
-                        <View>
-                                {product.options.map(option => {
-                                    return (
-                                        <View key={Math.random()}>
-                                            <TextLato bold style={mainStyles.optionsSubtitle}>{option.title[language]}</TextLato>
-                                            <ScrollView horizontal>
-                                                <View style={{flexDirection: 'row', marginBottom: height * 0.02, width: '100%'}}>
-                                                    {option.options.map(optionPick => {
-                                                        if(optionPick.stock === 0) return;
-                                                        
-                                                        const picked = picks.filter(pick => pick.pick === optionPick._id).length ? true : false;
-                                                        return (
-                                                            <TouchableOpacity key={Math.random()} activeOpacity={0.4} onPress={() => {
-                                                                changePick(option, optionPick)
-                                                            }}>
-                                                                <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_2 : '#aaa'}}>
-                                                                    <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.color_2 : '#aaa'}}>{optionPick.title[language]}</TextLato>
-                                                                </View>
-                                                            </TouchableOpacity>
-                                                        )
-                                                    })}
-                                                </View>
-                                            </ScrollView>
-                                        </View>
-                                    )
-                                })}
+            {modalVisible && (
+                            <CustomModal modalVisible={modalVisible} setModalVisible={setModalVisible} confirm={addToCartHelper}>
+                            <ScrollView style={{ width: width * 0.65, maxHeight: height * 0.4}}>
+                                {product.options.length > 0 && (
+                                    <View>
+                                            {product.options.map(option => {
+                                                return (
+                                                    <View key={Math.random()}>
+                                                        <TextLato bold style={mainStyles.optionsSubtitle}>{option.title[language]}</TextLato>
+                                                        <ScrollView horizontal>
+                                                            <View style={{flexDirection: 'row', marginBottom: height * 0.02, width: '100%'}}>
+                                                                {option.options.map(optionPick => {
+                                                                    if(optionPick.stock === 0) return;
+                                                                    
+                                                                    const picked = picks.filter(pick => pick.pick === optionPick._id).length ? true : false;
+                                                                    return (
+                                                                        <TouchableOpacity key={Math.random()} activeOpacity={0.4} onPress={() => {
+                                                                            changePick(option, optionPick)
+                                                                        }}>
+                                                                            <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_2 : '#aaa'}}>
+                                                                                <TextLato style={{...mainStyles.optionOptions, color: picked ? gStyles.color_2 : '#aaa'}}>{optionPick.title[language]}</TextLato>
+                                                                            </View>
+                                                                        </TouchableOpacity>
+                                                                    )
+                                                                })}
+                                                            </View>
+                                                        </ScrollView>
+                                                    </View>
+                                                )
+                                            })}
+                                            </View>
+                                )}
+                                {(product.extraText) && (
+                                    <View>
+                                        <TextLato style={{fontSize: RFPercentage(2), color: 'black'}} bold>This product requires an input:</TextLato>
+                                        <TextInput
+                                            value={extraText}
+                                            onChangeText={(val) => setExtraText(val)}
+                                            style={mainStyles.input}
+                                            placeholder={'Enter text here'} />
+                                    </View>
+                                )}
+                                {(product.extraImage) && (
+                                    <View style={{marginBottom: height * 0.05}}>
+                                        <TextLato style={{fontSize: RFPercentage(2), color: 'black'}} bold>This product requires an image:</TextLato>
+                                        <TouchableOpacity onPress={() => funcs.chooseImage(setExtraImage)} style={{alignItems: 'center'}}>
+                                            <Image 
+                                                source={{uri: extraImage || 'https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg'}}
+                                                style={{width: '80%', aspectRatio: 1, maxHeight: height * 0.4, resizeMode: 'contain', borderRadius: 5, marginVertical: height * 0.01}}/>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            </ScrollView>
+                                <View style={{alignItems: 'center', justifyContent: 'center', marginTop: height * 0.05}}>
+                                    <TextLato bold>Total Price</TextLato>
+                                    <TextLato>{calculatePrice()}</TextLato>
                                 </View>
-                    )}
-                    {(product.extraText) && (
-                        <View>
-                            <TextLato style={{fontSize: RFPercentage(2), color: 'black'}} bold>This product requires an input:</TextLato>
-                            <TextInput
-                                value={extraText}
-                                onChangeText={(val) => setExtraText(val)}
-                                style={mainStyles.input}
-                                placeholder={'Enter text here'} />
-                        </View>
-                    )}
-                    {(product.extraImage) && (
-                        <View style={{marginBottom: height * 0.05}}>
-                            <TextLato style={{fontSize: RFPercentage(2), color: 'black'}} bold>This product requires an image:</TextLato>
-                            <TouchableOpacity onPress={() => funcs.chooseImage(setExtraImage)} style={{alignItems: 'center'}}>
-                                <Image 
-                                    source={{uri: extraImage || 'https://complianz.io/wp-content/uploads/2019/03/placeholder-300x202.jpg'}}
-                                    style={{width: '80%', aspectRatio: 1, maxHeight: height * 0.4, resizeMode: 'contain', borderRadius: 5, marginVertical: height * 0.01}}/>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                </ScrollView>
-                    <View style={{alignItems: 'center', justifyContent: 'center', marginTop: height * 0.05}}>
-                        <TextLato bold>Total Price</TextLato>
-                        <TextLato>{calculatePrice()}</TextLato>
-                    </View>
-            </CustomModal>
-            {product.dealOfTheDay && <Image source={{uri: 'https://imgur.com/qIJjuUY.gif'}} style={{position: 'absolute', top: -height * 0.05,right: 0, width: width * 0.25, aspectRatio: 612/453, zIndex: 2, transform: en ? [] : [{scaleX: -1}]}} />}
+                        </CustomModal>
+            )}
+
+            {product.dealOfTheDay && product.dealOfTheDay.active && (
+                <View style={{position: 'absolute', top: '60%', left: 0, zIndex: 10, transform: en ? [] : [{scaleX: -1}]}}>
+                    <Image source={{uri: 'https://imgur.com/qIJjuUY.gif'}} style={{width: width * 0.17, aspectRatio: 1, resizeMode: 'contain'}} />
+                </View>
+            )}
             <TouchableOpacity
                 style={[styles.container, {flexDirection: en ? 'row' : 'row-reverse', transform: en ? [] : [{scaleX: -1}], height: en ? height * 0.18 : height * 0.24}]} 
                 activeOpacity={1}
                 onPress={() => type !== 'store' ? navigation.push('Product', {product: product}) : null}>
                 <View>
                     {product.discount && <TextLato style={styles.discountContainer}>{Math.floor(product.discount * 100)}% {en ? 'OFF' : 'خصم'}</TextLato>}
-                    {product.dealOfTheDay && <TextLato style={{...styles.discountContainer, backgroundColor: 'black'}}>{Math.floor(product.dealOfTheDay.discount)}% {en ? 'OFF' : 'خصم'}</TextLato>}
+                    {product.dealOfTheDay && product.dealOfTheDay.active && <TextLato style={{...styles.discountContainer, backgroundColor: 'black'}}>{Math.floor(product.dealOfTheDay.discount)}% {en ? 'OFF' : 'خصم'}</TextLato>}
                     <Image style={styles.image} source={{uri: product.images[0]}} />
                 </View>
 
@@ -259,7 +266,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
                 <View style={styles.details}>
                     <TextLato bold style={styles.title}>{product.title[language]}</TextLato>
                     <TextLato style={styles.description}>{product.description[language].substr(0, 100)}...</TextLato>
-                    {(product.discount || product.dealOfTheDay) ? 
+                    {(product.discount || (product.dealOfTheDay && product.dealOfTheDay.active)) ? 
                         <View key={Math.random()} style={{marginTop: height * 0.02}}>
                             <TextLato italic style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.color_3, marginLeft: RFPercentage(0.7)}}>{product.price} {en ? 'EGP' : 'ج.م'}</TextLato>
                             <TextLato bold style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.color_2}}>{calculatePrice()} {en ? 'EGP' : 'ج.م'}</TextLato>

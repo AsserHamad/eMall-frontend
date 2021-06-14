@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
@@ -14,13 +14,11 @@ import { useLanguage } from '../../../hooks/language';
 import { Constants } from 'react-native-unimodules';
 
 const SellerCard = ({ seller, showToast }) => {
-    const [aspectRatio, setAspectRatio] = useState(4/3);
     const navigation = useNavigation();
     const [reviews, setReviews] = useState({average: 0, number: 0})
     const language = useLanguage();
     const en = language === 'en';
     useEffect(() => {
-        Image.getSize(seller.logo, (width, height) => setAspectRatio(width/height));
         fetch(`${Constants.manifest.extra.apiUrl}/store/reviews/overview/${seller._id}`)
         .then(res => res.json())
         .then(res => {
@@ -31,7 +29,7 @@ const SellerCard = ({ seller, showToast }) => {
             <View style={styles.container}>
                 <View style={{...styles.logoContainer, left: en ? width * 0.02 : null, right: en ? null : width * 0.02}}>
                     <TouchableOpacity onPress={() => navigation.push('Store', {store: seller})} >
-                            <Image source={{uri: seller.logo}} style={{...styles.logo, aspectRatio}} />
+                            <Image source={{uri: seller.logo}} style={{...styles.logo, aspectRatio: 1}} />
                     </TouchableOpacity>
                 </View>
                 <View style={{...headerStyles.container, alignItems: en ? 'flex-start' : 'flex-end', paddingHorizontal:width * 0.27}}>
@@ -48,13 +46,17 @@ const SellerCard = ({ seller, showToast }) => {
                             return num > 0.5 ? 
                                 <Icon type="FontAwesome" key={Math.random()} name="star" size={RFPercentage(1.3)} color="#ffe234" /> : num > 0 ?
                                 <Icon type="FontAwesome" key={Math.random()} name="star-half" size={RFPercentage(1.3)} color="#ffe234" /> :
-                                null
+                                <Icon type="FontAwesome" key={Math.random()} name="star" size={RFPercentage(1.3)} color="#aaa" />
                         })}
                         <TextLato style={styles.reviewNumber}>({reviews.number})</TextLato>
                     </View>
                 </View>
-                <ScrollView style={{marginTop: height * 0.01, transform: en ? [] : [{scaleX: -1}]}} horizontal>
-                    {seller.products.map(product => <SellerCardProduct showToast={showToast} style={{marginHorizontal: width * 0.02, marginBottom: height * 0.01, marginVertical: height * 0.04}} key={Math.random()} product={product} />)}
+                <ScrollView style={{transform: en ? [] : [{scaleX: -1}]}} horizontal showsHorizontalScrollIndicator={false}>
+                    {seller.products.map(product => <SellerCardProduct showToast={showToast} style={{marginHorizontal: width * 0.02, marginVertical: height * 0.04}} key={Math.random()} product={product} />)}
+                    <TouchableOpacity style={styles.moreButton} onPress={() => navigation.push('Store', {store: seller, state: 1})}>
+                        <Icon type={'Feather'} name={en ? 'arrow-right' : 'arrow-left'} color={gStyles.color_3} size={RFPercentage(3)} />
+                        <TextLato style={{color: gStyles.color_3, fontSize: RFPercentage(1.4), marginTop: height * 0.01}}>{en ? 'View More' : 'عرض المزيد'}</TextLato>
+                    </TouchableOpacity>
                 </ScrollView>
             </View>
     )
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
-        elevation: 3,
+        elevation: 6,
     },
     logoContainer: {
         width: width * 0.23,
@@ -88,15 +90,15 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 3.84,
         elevation: 5,
-        borderRadius: 100,
+        borderRadius: 200,
         position: 'absolute',
         top: height * -0.025,
         left: width * 0.02,
         backgroundColor: 'white',
     },
     logo: {
-        backgroundColor: 'white',
-        width: width * 0.15,
+        width: width * 0.23,
+        borderRadius: 200
     },
     reviewsContainer: {
         flexDirection: 'row',
@@ -121,6 +123,18 @@ const styles = StyleSheet.create({
         backgroundColor: gStyles.color_3,
         marginRight: width * 0.01,
         marginTop: height * 0.005,
+    },
+    moreButton: {
+        marginHorizontal: width * 0.02,
+        marginBottom: height * 0.01,
+        marginVertical: height * 0.04,
+        height: height * 0.18,
+        backgroundColor: '#ebebeb',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+        width: width * 0.3
+
     }
 });
 

@@ -1,10 +1,11 @@
 import React from 'react';
-import { Alert, Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Alert, Dimensions, Image, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants';
 import { gStyles } from '../../../global.style';
 import { Entypo, AntDesign } from '@expo/vector-icons';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import TextLato from '../../../components/utils/TextLato';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
@@ -15,11 +16,11 @@ function SellerLoginSuccess(props) {
     <View style={styles.container}>
         <Image source={{uri: store.logo}} style={{width: 200, aspectRatio: 1}} />
         {/* <Entypo name="hour-glass" size={RFValue(130)} color={gStyles.secondary} /> */}
-        <Text style={styles.welcomeText}>Greetings, {seller.name}</Text>
+        <TextLato style={styles.welcomeText}>Greetings, {seller.name}</TextLato>
         <View style={styles.subtitle}>
-            <Text style={{fontSize: RFPercentage(2.5), fontWeight: 'bold', color: gStyles.color_0}}>{store.title}</Text>
-            <Text style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center'}}>Is still pending approval from our administrators, please regularly check your email for any updates.</Text>
-            <Text style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center', marginTop: height * 0.02}}>In the meantime, you can check out our selection of shops and browse the app to your content.</Text>
+            <TextLato style={{fontSize: RFPercentage(2.5), fontWeight: 'bold', color: gStyles.color_0}}>{store.title}</TextLato>
+            <TextLato style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center'}}>Is still pending approval from our administrators, please regularly check your email for any updates.</TextLato>
+            <TextLato style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center', marginTop: height * 0.02}}>In the meantime, you can check out our selection of shops and browse the app to your content.</TextLato>
         </View>
         <View style={{flexDirection: 'row'}}>
             <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.popToTop()}>

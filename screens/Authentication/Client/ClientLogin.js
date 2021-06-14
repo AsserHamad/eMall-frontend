@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, View } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
-import { AntDesign } from '@expo/vector-icons';
 import * as Facebook from 'expo-facebook';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import { useFonts } from 'expo-font';
 import * as Google from 'expo-google-app-auth';
 import { useLanguage, useLanguageText } from '../../../hooks/language';
 
 // Redux
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { login } from '../../../src/actions/auth';
 import { setCart } from '../../../src/actions/cart';
+import { changeFirstTime } from '../../../src/actions/general';
 import DisabledButton from '../DisabledButton';
 import Icon from '../../../components/utils/Icon';
 import { setWishlist } from '../../../src/actions/wishlist';
 import TextLato from '../../../components/utils/TextLato';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingPage from '../../../components/utils/LoadingPage';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
     const [email, setEmail] = useState('asserhamad96@gmail.com');
     const [errors, setErrors] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState('Abcd1234');
     const language = useLanguage();
+    const firstTime = useSelector(state => state.generalReducer.firstTime);
     const en = language === 'en';
     const languageText = useLanguageText('clientAuth');
     
     const login = () => {
+        setLoading(true);
         fetch(`${Constants.manifest.extra.apiUrl}/client/login`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -37,23 +40,29 @@ const ClientLogin = (props) => {
         })
         .then(res => res.json())
         .then(res => {
+            setLoading(false);
             if(!res.status){
                 setErrors([]);
                 if(res.client.verified){
                     AsyncStorage.setItem('@token', JSON.stringify({type: 'client', token: res.token}));
+                    AsyncStorage.setItem('@firstTime', 'true');
+                    console.log(res.client);
                     props.setCart(res.client.cart);
                     props.setWishlist(res.client.wishlist);
+                    props.changeFirstTime(true);
                     props.login(res);
                  }
                  else props.navigation.replace('ClientLoginSuccess', {account: res.client})
             }
             else {
                 setErrors(res.message ? [res.message] : res.errors)
+                setLoading(false);
             }
         });
     }
 
     const facebookLogin = async () => {
+        setLoading(true);
         await Facebook.initializeAsync(
             {
               autoLogAppEvents: true,
@@ -80,18 +89,21 @@ const ClientLogin = (props) => {
                     .then(res => res.json())
                     .then(res => {
                         setCart(res.client.cart);
-                        props.login(res)
+                        props.login(res);
+                        setLoading(false);
                     })
                 })
-                .catch(e => console.log(e))
+                .catch(e => {setLoading(false);console.log(e)})
             }
         }
         catch ({ message }) {
+            setLoading(false);
             alert(`Facebook login error: ${message}`)
         }
     }
 
     const GoogleLogin = async () => {
+        setLoading(true);
         const config = {
             androidClientId: "202581872046-r45t047pgp795ur78o6tmeqvi9hn0dih.apps.googleusercontent.com",
             webClientId: '202581872046-b17q9altfm5bgi2kp2lp1011pm93bu2f.apps.googleusercontent.com',
@@ -100,8 +112,9 @@ const ClientLogin = (props) => {
         const { type, accessToken, user } = await Google.logInAsync(config);
 
         if(type === 'success') {
+            setLoading(false);
             console.log(accessToken, user)
-        }
+        };
     }
 
     useEffect(() => {
@@ -110,12 +123,13 @@ const ClientLogin = (props) => {
     }, []);
 
     return (
-        <View style={styles.container}>
-            <View style={[styles.backContainer, {alignItems: en ? 'baseline' : 'flex-end'}]}>
+        <ScrollView contentContainerStyle={styles.container}>
+            <StatusBar backgroundColor={gStyles.background} barStyle={'dark-content'} />
+            {firstTime && <View style={[styles.backContainer, {alignItems: en ? 'baseline' : 'flex-end'}]}>
                 <TouchableOpacity onPress={() => props.navigation.openDrawer()}>
                     <Icon type="FontAwesome5" name="bars" size={RFValue(25)} color={gStyles.secondary} />
                 </TouchableOpacity>
-            </View>
+            </View>}
             <Image style={styles.image} source={{uri: 'https://imgur.com/hLnp9Kc.png'}} />
             <View style={styles.headerContainer}>
                 <TextLato bold style={{color: 'black', fontSize: RFPercentage(3), textAlign: 'center'}}>{languageText.welcome}</TextLato>
@@ -151,13 +165,13 @@ const ClientLogin = (props) => {
                 <TouchableOpacity onPress={facebookLogin}>
                     <View style={{...styles.alternativeLoginButton, flexDirection: en ? 'row' : 'row-reverse'}}>
                         <Icon style={{width: '30%', alignItems: 'center'}} type={'FontAwesome'} name="facebook-f" size={RFValue(15)} color="white" />
-                        <TextLato style={{color: 'white', textAlign: en ? 'left' : 'right', width: '70%'}}>{languageText.loginF}</TextLato>
+                        <TextLato style={styles.loginButtonText}>{languageText.loginF}</TextLato>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity>
                     <View style={{...styles.alternativeLoginButton, flexDirection: en ? 'row' : 'row-reverse', backgroundColor: '#EA4335'}}>
                         <Icon type={'AntDesign'} style={{width: '30%', alignItems: 'center'}} name="google" size={RFValue(15)} color="white" />
-                        <TextLato style={{color: 'white', textAlign: en ? 'left' : 'right', width: '70%'}}>{languageText.loginG}</TextLato>
+                        <TextLato style={styles.loginButtonText}>{languageText.loginG}</TextLato>
                     </View>
                 </TouchableOpacity>
             </SafeAreaView>
@@ -183,19 +197,19 @@ const ClientLogin = (props) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-
-        </View>
+            {loading && <LoadingPage />}
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        height,
+        // height,
         alignItems: 'center',
         paddingTop: Constants.statusBarHeight,
         flexDirection: 'column',
-        backgroundColor: gStyles.background
-        // flex: 1
+        backgroundColor: gStyles.background,
+        flex: 1
     },
     backContainer: {
         width,
@@ -203,7 +217,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width * 0.05,
     },
     image: {
-        height: height * 0.17,
+        height: height * 0.2,
         aspectRatio: 820/433
     },
     headerContainer: {
@@ -245,8 +259,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: width * 0.3,
         height: height * 0.04,
-        borderRadius: 2,
-        marginTop: height * 0.03
+        borderRadius: 2
     },
     bottomContainer: {
     },
@@ -258,12 +271,14 @@ const styles = StyleSheet.create({
     },
     alternativeLogins: {
         width,
-        marginTop: height * 0.03,
+        marginTop: height * 0.04,
+        marginBottom: height * 0.07,
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
     },
     alternativeLoginButton: {
-        width: width * 0.6,
+        width: width * 0.43,
         // aspectRatio: 1,
         // paddingHorizontal: width * 0.05,
         paddingVertical: height * 0.02,
@@ -271,9 +286,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
-        marginBottom: height * 0.02,
+        marginHorizontal: width * 0.03,
         borderRadius: 100
     },
+    loginButtonText: {
+        color: 'white',
+        width: '70%',
+        fontSize: RFPercentage(1.3)}
 })
 
 
@@ -289,7 +308,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         login: (account) => dispatch(login(account)),
         setCart: (cart) => dispatch(setCart(cart)),
-        setWishlist: (wishlist) => dispatch(setWishlist(wishlist))
+        setWishlist: (wishlist) => dispatch(setWishlist(wishlist)),
+        changeFirstTime: (firstTime) => dispatch(changeFirstTime(firstTime))
     }
 }
 

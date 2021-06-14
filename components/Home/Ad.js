@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { RFPercentage } from 'react-native-responsive-fontsize';

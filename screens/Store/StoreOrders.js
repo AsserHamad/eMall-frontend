@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, ScrollableView, StyleSheet, Dimensions, Text, KeyboardAvoidingView, ImageBackground } from 'react-native';
-import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
 
-import { SafeAreaView } from 'react-navigation';
 import { useSelector } from 'react-redux';
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar';
-import Icon from '../../components/utils/Icon';
 import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
-import { useLanguage } from '../../hooks/language';
+import { useLanguage, useLanguageText } from '../../hooks/language';
 import * as WebBrowser from 'expo-web-browser';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
@@ -42,6 +40,8 @@ const StoreOrders = () => {
     const [status, setStatus] = useState(0);
     const token = useSelector(state => state.authReducer.token);
     const language = useLanguage();
+    const en = language === 'en';
+    const text = useLanguageText('sellerOrders');
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/orders`, {
             headers: {token}
@@ -80,16 +80,16 @@ const StoreOrders = () => {
     }, [status, orders])
     return (
         <View style={styles.container}>
-            <StoreNavbar title={'Orders'} />
+            <StoreNavbar title={text.title} />
             {/* STATUS BUTTON */}
-            <ScrollView style={{height: height * 0.08}} horizontal showsHorizontalScrollIndicator={false}>
+            <ScrollView style={{height: height * 0.08, transform: en ? [] : [{scaleX: -1}]}} horizontal showsHorizontalScrollIndicator={false}>
                 {statuses.map(stat => {
                 return (
                     <TouchableOpacity
                         activeOpacity={0.5}
                         key={Math.random()}
                         onPress={() => setStatus(stat.status)} 
-                        style={{...styles.statusButton, backgroundColor: stat.status === status ? gStyles.color_2: gStyles.color_0}}>
+                        style={{...styles.statusButton, backgroundColor: stat.status === status ? gStyles.color_2: gStyles.color_0, transform: en ? [] : [{scaleX: -1}]}}>
                         <TextLato style={{color: 'white'}}>{stat[language]}</TextLato>
                     </TouchableOpacity>
                 )
@@ -98,12 +98,12 @@ const StoreOrders = () => {
             <ScrollView style={{height: '100%'}} contentContainerStyle={{paddingBottom: height * 0.03}}>
                 {displayedOrders.length === 0 ? (
                     <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', height}}>
-                        <TextLato italic style={{fontSize: RFPercentage(2)}}>There's Nothing Here</TextLato>
+                        <TextLato italic style={{fontSize: RFPercentage(2)}}>{text.nothing}</TextLato>
                         <Image 
-                            source={{uri: 'https://imgur.com/lUVPfJM.png'}}
+                            source={{uri: 'https://imgur.com/6w3sn3U.png'}}
                             style={{width, aspectRatio: 1, marginTop: height * 0.01}} />
                     </View>
-                ) : displayedOrders.map(order => <Order order={order} changeOrderStatus={changeOrderStatus} key={Math.random()} />)}
+                ) : displayedOrders.map(order => <Order order={order} changeOrderStatus={changeOrderStatus} key={Math.random()} text={text} />)}
             </ScrollView>
         </View>
     )
@@ -124,8 +124,9 @@ const styles = StyleSheet.create({
 
 
 // ? ORDER CONTAINERS
-const Order = ({order, changeOrderStatus}) => {
+const Order = ({order, changeOrderStatus, text}) => {
     const language = useLanguage();
+    const en = language === 'en';
     const [expanded, setExpanded] = useState(false);
     const [revenue, setRevenue] = useState('Calculating...');
     const [discount, setDiscount] = useState(0);
@@ -157,28 +158,30 @@ const Order = ({order, changeOrderStatus}) => {
             <TextLato bold style={{color: '#888', marginVertical: height * 0.003}}>
                 {`${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}  ${date.getHours()}:${date.getMinutes()}`}
             </TextLato>
-            <TextLato bold style={{color: '#888', marginVertical: height * 0.01}}>{order.orders.length} items</TextLato>
+            <TextLato bold style={{color: '#888', marginVertical: height * 0.01}}>{order.orders.length} {text.items}</TextLato>
             {order.orders.map(order => (
-            <View style={{marginBottom: height * 0.02}}>
-                <TextLato key={Math.random()} italic>
+            <View key={Math.random()} style={{marginBottom: height * 0.02}}>
+                <TextLato italic>
                     {order.product.title[language]}  x{order.quantity} (stock: {order.product.stock})
                 </TextLato>
                 {order.options.map(option => {
                     const x = order.product.options.filter(op => op._id === option.option)[0];
                     const pick = x.options.filter(op => op._id === option.pick)[0];
-                    return (<TextLato italic style={{color: '#aaa'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
+                    return (<TextLato key={Math.random()} italic style={{color: '#aaa'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
                 })}
                 {order.text && 
                     <View style={{marginTop: height * 0.01}}>
-                        <TextLato style={{color: '#1184e8', fontSize: RFPercentage(2.5)}} italic>Text provided: </TextLato>
+                        <TextLato style={{color: gStyles.color_2, fontSize: RFPercentage(2.5)}} italic>{text.text}: </TextLato>
                         <TextLato style={{color: 'black', fontSize: RFPercentage(1.8)}}>{order.text}</TextLato>
                     </View>
                 }
                 {order.image && 
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{marginTop: height * 0.03}}>
+                        <TextLato style={{color: gStyles.color_2, fontSize: RFPercentage(2.5)}} italic>{text.image}: </TextLato>
+                        <Image source={{uri: order.image}} style={orderStyles.image} />
                         <TouchableOpacity onPress={() => _handlePressButtonAsync(order.image)}>
                             <View style={orderStyles.downloadButton}>
-                                <TextLato style={{color: 'white'}} bold>Download Image</TextLato>
+                                <TextLato style={{color: 'white'}} bold>{text.image}</TextLato>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -186,31 +189,31 @@ const Order = ({order, changeOrderStatus}) => {
             </View>))}
 
             <View key={Math.random()} style={orderStyles.expandedView}>
-                <TextLato bold style={{marginBottom: height * 0.005}}>Delivery address</TextLato>
+                <TextLato bold style={{marginBottom: height * 0.005}}>{text.address}</TextLato>
                 <TextLato>
                     {order.address.governate}, {order.address.city}, {order.address.street}, {order.address.building}, {order.address.apartment}, {order.address.extra} 
                 </TextLato>
             </View>
 
             {/* Revenue */}
-            <View style={{flexDirection: 'row', marginTop: height * 0.01, alignItems: 'flex-end'}}>
+            <View style={{flexDirection: en ? 'row' : 'row-reverse', marginTop: height * 0.01, alignItems: 'flex-end'}}>
                 <TextLato bold style={{fontSize: RFPercentage(2)}}>{revenue}</TextLato>
-                <TextLato italic style={{fontSize: RFPercentage(1.6)}}> EGP</TextLato>
+                <TextLato italic style={{fontSize: RFPercentage(1.6)}}> {text.egp}</TextLato>
             </View>
             
-            <TextLato style={{marginTop: height * 0.01}}>Total after discount</TextLato>
+            <TextLato style={{marginTop: height * 0.01}}>{text.totalAfterDiscount}</TextLato>
             {/* Discount */}
-            <View style={{flexDirection: 'row', alignItems: 'flex-end'}}>
+            <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'flex-end'}}>
                 <TextLato bold style={{fontSize: RFPercentage(2)}}>{discount}</TextLato>
-                <TextLato italic style={{fontSize: RFPercentage(1.6)}}> EGP</TextLato>
+                <TextLato italic style={{fontSize: RFPercentage(1.6)}}> {text.egp}</TextLato>
             </View>
 
-            <View style={{flexDirection: 'row', marginTop: height * 0.02}}>
+            <View style={{flexDirection: en ? 'row' : 'row-reverse', marginTop: height * 0.02}}>
                 {order.status === 0 && <TouchableOpacity onPress={() => changeOrderStatus(1, order._id)} style={orderStyles.confirmButton}>
-                    <TextLato style={{color: 'white'}}>Confirm Order</TextLato>
+                    <TextLato style={{color: 'white'}}>{text.confirm}</TextLato>
                 </TouchableOpacity>}
                 {(order.status === 0 || order.status === 1) && <TouchableOpacity onPress={() => changeOrderStatus(-1, order._id)} style={orderStyles.cancelButton}>
-                    <TextLato style={{color: 'white'}}>Cancel Order</TextLato>
+                    <TextLato style={{color: 'white'}}>{text.cancel}</TextLato>
                 </TouchableOpacity>}
             </View> 
         </View>
@@ -245,7 +248,7 @@ const orderStyles = StyleSheet.create({
         paddingHorizontal: width * 0.05,
         paddingVertical: height * 0.01,
         backgroundColor: gStyles.color_2,
-        marginRight: width * 0.02,
+        marginHorizontal: width * 0.02,
         borderRadius: 10,
 
     },
@@ -260,8 +263,17 @@ const orderStyles = StyleSheet.create({
         paddingHorizontal: width * 0.02,
         paddingVertical: height * 0.01,
         marginTop: height * 0.02,
-        backgroundColor: '#1184e8',
-        borderRadius: 15
+        backgroundColor: gStyles.color_2,
+        borderRadius: 15,
+        width: width * 0.4,
+        alignItems: 'center'
+    },
+    image: {
+        width: width * 0.4,
+        borderRadius: 3,
+        aspectRatio: 1.5,
+        resizeMode: 'contain',
+        marginTop: height * 0.01
     }
 })
 

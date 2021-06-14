@@ -1,18 +1,25 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, View } from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
-import StoreCard from '../cards/Seller/SellerCard';
-import { gStyles } from '../../global.style';
+import SellerCard from '../cards/Seller/SellerCard';
 import { useSelector } from 'react-redux';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import TextLato from './TextLato';
+import { useNavigation } from '@react-navigation/native';
+import { gStyles } from '../../global.style';
+import { useLanguage } from '../../hooks/language';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
-const SellerCardsList = ({url, body, refresh, showToast}) => {
+const SellerCardsList = ({url, body, refresh, showToast, title}) => {
     const token = useSelector(state => state.authReducer.token);
+    const language = useLanguage();
+    const en = language === 'en';
+    const navigation = useNavigation();
     const [sellers, setSellers] = useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
+        console.log('the body', body)
         setLoading(true);
         fetch(url, {
             method: 'post',
@@ -35,7 +42,10 @@ const SellerCardsList = ({url, body, refresh, showToast}) => {
     </View>;
 
     return (<View style={{width, backgroundColor: 'white', alignItems: 'center', paddingTop: height * 0.04}}>
-        {sellers.map(seller => <StoreCard key={Math.random()} showToast={showToast} key={Math.random()} seller={seller} />)}
+        {sellers.map(seller => <SellerCard key={Math.random()} showToast={showToast} key={Math.random()} seller={seller} />)}
+        <TouchableOpacity onPress={() => navigation.push('ViewAllStores', {url: `${url}/full`, body, title: title})} style={{paddingVertical: height * 0.02, alignItems: 'center', borderRadius: 10, backgroundColor: gStyles.color_2, width: width * 0.95, marginBottom: height * 0.02}}>
+            <TextLato bold style={{color: 'white'}}>{en ? 'View All Stores' : 'عرض جميع المتاجر'}</TextLato>
+        </TouchableOpacity>
     </View>)
     // return (
     //     <FlatList

@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import TextLato from '../../utils/TextLato';
 import { LineChart } from "react-native-chart-kit";
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { gStyles } from '../../../global.style';
@@ -10,7 +9,7 @@ import TotalSales from './TotalSales';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const SalesGraph = (props) => {
+const SalesGraph = () => {
     const token = useSelector(state => state.authReducer.token);
     const [data, setData] = useState([0,0,0]);
     useEffect(() => {
@@ -27,12 +26,8 @@ const SalesGraph = (props) => {
             {/* <TextLato style={styles.title} bold>Monthly Sales</TextLato> */}
             <LineChart
                 data={{
-                labels: ["Jan", "Feb", "Mar"],
-                datasets: [
-                    {
-                    data
-                    }
-                ]
+                    labels: ["Jan", "Feb", "Mar"],
+                    datasets: [{data}]
                 }}
                 width={width} // from react-native
                 height={300}

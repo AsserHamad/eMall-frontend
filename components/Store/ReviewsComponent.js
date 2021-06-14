@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, Dimensions, ScrollView, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Constants from 'expo-constants';
 
-import SellerCardProduct from '../cards/Seller/SellerCardProduct'
-import { useNavigation } from '@react-navigation/native';
 import TextLato from '../utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Reviews from '../utils/Reviews';
@@ -76,9 +74,9 @@ const ReviewsComponent = ({ id, en, text }) => {
                 </View>
             </CustomModal>
             {loggedIn && <TouchableOpacity onPress={() => setVisible(true)} style={styles.addButton}>
-                <TextLato bold style={{color: 'white', fontSize: RFPercentage(2.5)}}>{text.addReview}</TextLato>
+                <TextLato bold style={{color: 'white', fontSize: RFPercentage(2)}}>{text.addReview}</TextLato>
             </TouchableOpacity>}
-            {reviews.map(review => {
+            {reviews.length > 0 ? reviews.map(review => {
                 return (
                     <View style={{...styles.reviewContainer, alignItems: en ? 'flex-start' : 'flex-end'}} key={Math.random()}>
                         <View style={{...styles.titleContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
@@ -97,7 +95,12 @@ const ReviewsComponent = ({ id, en, text }) => {
                         <TextLato style={styles.helpful}>{review.helpful.length} {text.helpful}</TextLato>
                     </View>
                 )
-            })}
+            }) : (
+                <View style={{alignItems: 'center', marginTop: height * 0.04}}>
+                    <TextLato bold style={{fontSize: RFPercentage(2)}}>This store has no reviews yet!</TextLato>
+                    <Image source={{uri: 'https://imgur.com/ZooLIwj.png'}} style={{width: '80%', aspectRatio: 1}} />
+                </View>
+            )}
         </ScrollView>
     )
 }
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
         marginHorizontal: width * 0.05,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: height * 0.03,
+        paddingVertical: height * 0.014,
         borderRadius: 10,
         backgroundColor: gStyles.color_2,
         marginBottom: height * 0.02

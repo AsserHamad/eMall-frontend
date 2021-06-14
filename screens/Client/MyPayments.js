@@ -1,17 +1,12 @@
-import { useNavigation } from '@react-navigation/native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Dimensions, ImageBackground, StyleSheet, View } from 'react-native';
-import { ScrollView, TextInput, TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
-import { SafeAreaView } from 'react-navigation';
-import { useDispatch, useSelector } from 'react-redux';
-import Icon from '../../components/utils/Icon';
+import { useSelector } from 'react-redux';
 import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
-import { useLanguage, useLanguageText } from '../../hooks/language';
-import Toast from 'react-native-easy-toast';
-import { updateAccount } from '../../src/actions/auth';
+import { useLanguageText } from '../../hooks/language';
 import Header from '../../components/Header';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
@@ -24,6 +19,7 @@ const MyPayments = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/payments`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
+            console.log(res);
             setPayments(res);
         })
     }, []);

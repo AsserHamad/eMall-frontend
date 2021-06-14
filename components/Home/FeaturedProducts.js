@@ -1,11 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
-import { gStyles } from '../../global.style';
 import { useLanguage } from '../../hooks/language';
 import TextLato from '../utils/TextLato';
 
@@ -23,7 +22,7 @@ const FeaturedProducts = () => {
         <View>
             <TextLato bold style={styles.title}>{en ? 'Featured Products' : 'منتجات مميزة'}</TextLato>
             <View style={styles.productsContainer}>
-                {products.map(prod => {
+                {products.length > 0 ? products.map(prod => {
                     const product = prod.product;
                     return (
                         <View key={Math.random()} style={styles.product}>
@@ -35,6 +34,14 @@ const FeaturedProducts = () => {
                                     <TextLato style={{textAlign: en ? 'left' : 'right', marginTop: height * 0.04}}>{product.price} {en ? 'EGP' : 'ج.م'}</TextLato>
                                 </View>
                             </TouchableOpacity>
+                        </View>
+                    )
+                }) : [1,2,3,4].map(num => {
+                    return (
+                        <View key={Math.random()} style={styles.product}>
+                            <View style={styles.innerProductWait}>
+                                <ActivityIndicator color={'white'} size={RFPercentage(3.5)} />
+                            </View>
                         </View>
                     )
                 })}
@@ -51,6 +58,7 @@ const styles = StyleSheet.create({
     },
     productsContainer: {
         flexDirection: 'row',
+        marginHorizontal: width * 0.02,
         flexWrap: 'wrap'
     },
     product: {
@@ -73,6 +81,25 @@ const styles = StyleSheet.create({
         shadowRadius: 1.41,
         elevation: 3,
         borderRadius: 10
+    },
+    innerProductWait: {
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.20,
+        shadowRadius: 1.41,
+        elevation: 3,
+        borderRadius: 10,
+        height: height * 0.05,
+        backgroundColor: '#aaa',
+        width: '100%',
+        height: height * 0.3
+
     },
     productImage: {
         width: '100%',

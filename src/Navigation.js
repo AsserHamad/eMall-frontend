@@ -59,6 +59,10 @@ import DeleteProduct from '../screens/Store/Products/DeleteProduct';
 import Gallery from '../screens/Gallery';
 import Deals from '../screens/Deals';
 import DealsOfTheDayScreen from '../screens/DealsOfTheDayScreen';
+import Welcome from '../screens/Welcome';
+import ViewAllProducts from '../screens/ViewAllProducts';
+import ViewAllStores from '../screens/ViewAllStores';
+import { Image } from 'react-native';
 
 
 const Drawers = createDrawerNavigator();
@@ -69,6 +73,7 @@ const OrdersStack = createStackNavigator();
 const CategoriesStack = createStackNavigator();
 const DealsStack = createStackNavigator();
 const DealsOfTheDayStack = createStackNavigator();
+const FirstTimeStack = createStackNavigator();
 
 const HomeStackScreen = () => (
   <HomeStack.Navigator>
@@ -83,8 +88,10 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Gallery" component={Gallery} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="ProductsList" component={ProductsListPage} options={({ route }) => ({headerShown: false})} />
-    <HomeStack.Screen name="Payment" component={Payment}/>
-    <HomeStack.Screen name="Order" component={ConfirmPurchase} options={({ route }) => ({title: 'Order Complete'})} />
+    <HomeStack.Screen name="ViewAllProducts" component={ViewAllProducts} options={({ route }) => ({headerShown: false})} />
+    <HomeStack.Screen name="ViewAllStores" component={ViewAllStores} options={({ route }) => ({headerShown: false})} />
+    <HomeStack.Screen name="Payment" component={Payment} options={({ route }) => ({headerShown: false})}/>
+    <HomeStack.Screen name="Order" component={ConfirmPurchase} options={({ route }) => ({headerShown: false})} />
     <HomeStack.Screen name="Store" component={Store} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Profile" component={Profile} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Addresses" component={MyAddresses} options={({ route }) => ({ headerShown: false })} />
@@ -141,7 +148,7 @@ const CategoriesStackScreen = (props) => (
   </CategoriesStack.Navigator>
 )
 
-const DealsStackScreen = (props) => (
+const DealsStackScreen = () => (
   <DealsStack.Navigator>
     <DealsStack.Screen name="Deals" component={Deals} options={({ route }) => ({headerShown: false})} />
     <DealsStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
@@ -149,12 +156,26 @@ const DealsStackScreen = (props) => (
   </DealsStack.Navigator>
 )
 
-const DealsOfTheDayStackScreen = (props) => (
+const DealsOfTheDayStackScreen = () => (
   <DealsOfTheDayStack.Navigator>
     <DealsOfTheDayStack.Screen name="DealsOfTheDay" component={DealsOfTheDayScreen} options={({ route }) => ({headerShown: false})} />
     <DealsOfTheDayStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
     <DealsOfTheDayStack.Screen name="Gallery" component={Gallery} options={({ route }) => ({ headerShown: false })} />
   </DealsOfTheDayStack.Navigator>
+)
+
+const FirstTimeStackScreen = () => (
+  <FirstTimeStack.Navigator>
+    <FirstTimeStack.Screen name="Welcome" component={Welcome} options={{headerShown: false}} />
+    <FirstTimeStack.Screen name="ClientLogin" component={ClientLogin} options={{headerShown: false}} />
+    <FirstTimeStack.Screen name="ForgotPassword" component={ForgotPassword} options={{headerShown: false}} />
+    <FirstTimeStack.Screen name="ClientRegister" component={ClientRegister} options={{headerShown: false}} />
+    <FirstTimeStack.Screen name="ClientLoginSuccess" component={ClientLoginSuccess} options={{headerShown: false}} />
+    <FirstTimeStack.Screen name="SellerLogin" component={SellerLogin} options={{headerShown: false}} />
+    <FirstTimeStack.Screen name="SellerRegister" component={SellerRegister} options={{headerShown: false}} />
+    <FirstTimeStack.Screen name="SellerStoreRegister" component={SellerStoreRegister} options={{headerShown: false}}/>
+    <FirstTimeStack.Screen name="SellerLoginSuccess" component={SellerLoginSuccess} options={{headerShown: false}} />
+  </FirstTimeStack.Navigator>
 )
 
 const ClientDrawer = () => {
@@ -211,10 +232,10 @@ const ClientDrawer = () => {
       ]
     }
       <Drawers.Screen
-          key={Math.random()}
+            key={Math.random()}
             headerShown="false"
             options={{
-              title: en ? 'Deals of the Day' : 'عروض اليوم',
+              title: en ? 'DealsOfTheDay' : 'عروض اليوم',
               drawerIcon: ({tintColor}) => <Icon type="Entypo" name="megaphone" size={16} color={tintColor} />
             }}
             name="DealsOfTheDay"
@@ -237,7 +258,7 @@ const ClientDrawer = () => {
                   headerShown="false"
                   options={{
                     title: category.name[language],
-                    drawerIcon: ({tintColor}) => <Icon type={category.iconType} name={category.icon} size={16} color={tintColor} />
+                    drawerIcon: ({tintColor}) => <Image source={{uri: category.image}} style={{width: 16, aspectRatio: 1}} color={tintColor} />
                   }}
                   name={category.name[language]}
                   component={CategoriesStackScreen}
@@ -260,7 +281,7 @@ const StorePaymentsStack = createStackNavigator();
 const StoreStackScreen = () => (
   <StoreStack.Navigator>
     <StoreStack.Screen name="Home" component={StoreHome} options={{headerShown: false}} />
-    <StoreStack.Screen name="RequestWithdrawal" component={RequestWithdrawal} options={{title: 'Request Withdrawal'}} />
+    <StoreStack.Screen name="RequestWithdrawal" component={RequestWithdrawal} options={{headerShown: false}} />
   </StoreStack.Navigator>
 )
 
@@ -290,48 +311,49 @@ const StoreOrdersStackScreen = () => (
 const StoreAdsStackScreen = () => (
   <StoreAdsStack.Navigator>
     <StoreAdsStack.Screen name="Ads" component={StoreAds} options={{headerShown: false}} />
-    <StoreAdsStack.Screen name="HomeAds" component={HomeAds} options={{title: 'Home Ads'}} />
-    <StoreAdsStack.Screen name="BannerAds" component={BannerAds} options={{title: 'Banner Ads'}} />
-    <StoreAdsStack.Screen name="DealsOfTheDay" component={DealsOfTheDayAd} options={{title: 'Deal Of The Day'}} />
+    <StoreAdsStack.Screen name="HomeAds" component={HomeAds} options={{headerShown: false}} />
+    <StoreAdsStack.Screen name="BannerAds" component={BannerAds} options={{headerShown: false}} />
+    <StoreAdsStack.Screen name="DealsOfTheDay" component={DealsOfTheDayAd} options={{headerShown: false}} />
   </StoreAdsStack.Navigator>
 )
 
 const StoreMembersStackScreen = () => (
   <StoreMembersStack.Navigator>
     <StoreMembersStack.Screen name="Members" component={StoreMembers} options={{headerShown: false}} />
-    <StoreMembersStack.Screen name="AddMember" component={AddMembers} options={{title: 'Add a Member'}} />
+    <StoreMembersStack.Screen name="AddMember" component={AddMembers} options={{headerShown: false}} />
   </StoreMembersStack.Navigator>
 )
 
 const StorePaymentsStackScreen = () => (
   <StorePaymentsStack.Navigator>
     <StorePaymentsStack.Screen name="Payments" component={StorePayments} options={{headerShown: false}} />
-    <StorePaymentsStack.Screen name="RequestWithdrawal" component={RequestWithdrawal} options={{title: 'Request Withdrawal'}} />
+    <StorePaymentsStack.Screen name="RequestWithdrawal" component={RequestWithdrawal} options={{headerShown: false}} />
   </StorePaymentsStack.Navigator>
 )
 
 const StoreDrawer = () => {
   const language = useLanguage();
+  const en = language === 'en';
   return (
   <Drawers.Navigator
     edgeWidth={0}
-    drawerPosition={language === 'ar' ? 'right' : 'left'}
+    drawerPosition={en ? 'left' : 'right'}
     drawerStyle={{backgroundColor: gStyles.background}}
     initialRouteName="Home"
     drawerContent={props => <StoreSidebar {...props} />}>
       <Drawers.Screen 
           headerShown="false"
           options={{
-            title: 'Dashboard',
+            title: en ? 'Dashboard' : 'الرئيسية',
             drawerIcon: ({tintColor}) => <Icon type="Feather" name="log-in" size={16} color={tintColor} />
           }}
           name="Home"
           component={StoreStackScreen}
       />
-      <Drawers.Screen 
+      <Drawers.Screen
           headerShown="false"
           options={{
-            title: 'Products',
+            title: en ? 'Products' : 'المنتجات',
             drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="box" size={16} color={tintColor} />
           }}
           name="Products"
@@ -340,7 +362,7 @@ const StoreDrawer = () => {
       <Drawers.Screen 
           headerShown="false"
           options={{
-            title: 'Orders',
+            title: en ? 'Orders' : 'الطلبات',
             drawerIcon: ({tintColor}) => <Icon type="FontAwesome5" name="truck" size={16} color={tintColor} />
           }}
           name="Orders"
@@ -349,7 +371,7 @@ const StoreDrawer = () => {
       <Drawers.Screen 
           headerShown="false"
           options={{
-            title: 'Page Layout',
+            title: en ? 'Page Layout' : 'شكل الصفحة',
             drawerIcon: ({tintColor}) => <Icon type="AntDesign" name="layout" size={16} color={tintColor} />
           }}
           name="Page"
@@ -358,7 +380,7 @@ const StoreDrawer = () => {
       <Drawers.Screen 
           headerShown="false"
           options={{
-            title: 'Advertisements',
+            title: en ? 'Advertisements' : 'الاعلانات',
             drawerIcon: ({tintColor}) => <Icon type="Entypo" name="megaphone" size={16} color={tintColor} />
           }}
           name="Ads"
@@ -367,7 +389,7 @@ const StoreDrawer = () => {
       <Drawers.Screen 
           headerShown="false"
           options={{
-            title: 'Members',
+            title: en ? 'Members' : 'الموظفين',
             drawerIcon: ({tintColor}) => <Icon type="AntDesign" name="adduser" size={16} color={tintColor} />
           }}
           name="Members"
@@ -376,7 +398,7 @@ const StoreDrawer = () => {
       <Drawers.Screen 
           headerShown="false"
           options={{
-            title: 'Payments',
+            title: en ? 'Payments' : 'المدفوعات',
             drawerIcon: ({tintColor}) => <Icon type="Feather" name="dollar-sign" size={16} color={tintColor} />
           }}
           name="Payments"
@@ -386,11 +408,25 @@ const StoreDrawer = () => {
   )
 }
 
+const FirstTimeDrawer = () => {
+  return (
+      <Drawers.Navigator initialRouteName="Welcome" drawerContent={props => <SideBar {...props} />}>
+      <Drawers.Screen 
+          headerShown="false"
+          name="Welcome"
+          component={FirstTimeStackScreen}
+      />
+      </Drawers.Navigator>
+    )
+}
+
 const Navigation = () => {
   const type = useSelector(state => state.authReducer.type);
+  const firstTime = useSelector(state => state.generalReducer.firstTime);
+  console.log('first time', firstTime)
   return (
     <NavigationContainer>
-      {(!type || type === 'client') ? <ClientDrawer /> : <StoreDrawer />}
+      {(!firstTime) ? <FirstTimeDrawer /> : (type === 'store') ?  <StoreDrawer /> : <ClientDrawer />}
     </NavigationContainer>
 )};
 

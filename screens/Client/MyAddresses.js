@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Dimensions, Image, ImageBackground, Modal, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from '../../components/utils/Icon';
@@ -8,11 +8,11 @@ import { useLanguage, useLanguageText } from '../../hooks/language';
 import { gStyles } from '../../global.style';
 import Constants from 'expo-constants';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
 import { updateAccount } from '../../src/actions/auth';
+import Header from '../../components/Header';
+import CustomModal from '../../components/utils/CustomModal';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
-const MyAddresses = (props) => {
-    const navigation = useNavigation();
+const MyAddresses = () => {
     const addresses = useSelector(state => state.authReducer.account.addresses);
     const token = useSelector(state => state.authReducer.token);
     const dispatch = useDispatch();
@@ -23,7 +23,6 @@ const MyAddresses = (props) => {
     const text = useLanguageText('myAddresses');
 
     const deleteAddress = (id) => {
-        let wasActive = false;
         const newAddresses = addresses.filter(address => {
             if(address._id === id && address.active)
                 wasActive = true;
@@ -65,16 +64,8 @@ const MyAddresses = (props) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Header details={{title: text.myAddresses}} />
             <InputModal modalVisible={modalVisible} setModalVisible={setModalVisible} addresses={addresses} edited={edited} setEdited={setEdited} text={text} en={en} />
-            <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', paddingVertical: height * 0.02, paddingHorizontal: width * 0.02}}>
-                <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-                    <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(4)} color="black" />
-                </TouchableOpacity>
-                <TextLato style={{textTransform: 'uppercase', marginLeft: width * 0.01, color: 'black', fontSize: RFPercentage(2.6)}}>{text.myAddresses}</TextLato>
-                {/* <View style={styles.title}> */}
-                    {/* <Icon style={{alignItems: 'center'}} type={'Entypo'} name={'address'} size={width * 0.08} color={'white'} /> */}
-                {/* </View> */}
-            </View>
             <ScrollView style={{marginTop: height * 0.03}} contentContainerStyle={{alignItems: 'center'}}>
                 {addresses.map(address => {
                     return (
@@ -120,7 +111,6 @@ const MyAddresses = (props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: Constants.statusBarHeight,
         backgroundColor: gStyles.background,
     },
     backContainer: {
@@ -135,7 +125,7 @@ const styles = StyleSheet.create({
     },
     addNew: {
         width: width * 0.8,
-        backgroundColor: gStyles.color_1,
+        backgroundColor: gStyles.color_0,
         paddingVertical: height * 0.03,
         shadowColor: gStyles.color_0,
         shadowOffset: {
@@ -154,7 +144,7 @@ const styles = StyleSheet.create({
         width: width * 0.8,
         backgroundColor: gStyles.color_2,
         paddingVertical: height * 0.03,
-        shadowColor: gStyles.color_0,
+        shadowColor: gStyles.color_2,
         shadowOffset: {
             width: 0,
             height: 9,
@@ -168,7 +158,7 @@ const styles = StyleSheet.create({
     },
     addressContainer: {
         width: width * 0.8,
-        backgroundColor: gStyles.color_3,
+        backgroundColor: gStyles.color_0,
         paddingVertical: height * 0.03,
         shadowColor: gStyles.color_0,
         shadowOffset: {
@@ -214,6 +204,11 @@ const InputModal = ({modalVisible, setModalVisible, addresses, oldValues, edited
     const dispatch = useDispatch();
 
     const close = () => {
+        setGovernate('');
+        setCity('');
+        setBuilding('');
+        setApartment('');
+        setExtra('');
         setEdited(undefined);
         setModalVisible(false);
     }
@@ -268,67 +263,47 @@ const InputModal = ({modalVisible, setModalVisible, addresses, oldValues, edited
         }
     }, [edited])
     return (
-        <View style={modalStyles.centeredView}>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          onRequestClose={close}
-          visible={modalVisible}>
-            <View style={modalStyles.modalView}>
-              <TextLato style={modalStyles.modalText}>{text.enterAddress}</TextLato>
-              <TextInput 
-                multiline 
-                value={governate}    
-                onChangeText={value => setGovernate(value)} 
-                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
-                placeholder={text.governate} />
-              <TextInput 
-                multiline 
-                value={city}         
-                onChangeText={value => setCity(value)} 
-                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
-                placeholder={text.city} />
-              <TextInput 
-                multiline 
-                value={street}       
-                onChangeText={value => setStreet(value)} 
-                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
-                placeholder={text.street} />
-              <TextInput 
-                multiline 
-                value={building}     
-                onChangeText={value => setBuilding(value)} 
-                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
-                placeholder={text.building} />
-              <TextInput 
-                multiline 
-                value={apartment}    
-                onChangeText={value => setApartment(value)} 
-                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
-                placeholder={text.apartment} />
-              <TextInput 
-                multiline 
-                value={extra}        
-                onChangeText={value => setExtra(value)} 
-                style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
-                placeholder={text.extra} />
-  
-            <View style={{flexDirection: 'row', marginTop: height * 0.05}}>
-                <TouchableOpacity
-                    style={{ ...modalStyles.openButton, backgroundColor: gStyles.color_0, marginRight: width * 0.05, }}
-                    onPress={() => loading ? null : addOrChangeAddress()}>
-                    {loading ? <ActivityIndicator color={'white'} size={RFPercentage(4)} /> : <Icon type={'Feather'} name={'check'} color="white" size={RFPercentage(4)} />}
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={{ ...modalStyles.openButton, backgroundColor: gStyles.color_1 }}
-                    onPress={close}>
-                    <Icon type={'Entypo'} name={'cross'} color="white" size={RFPercentage(4)} />
-                </TouchableOpacity>
-                
+        <CustomModal confirm={() => loading ? null : addOrChangeAddress()} modalVisible={modalVisible} setModalVisible={setModalVisible} close={close}>
+            <View style={{width: width * 0.7}}>
+                <TextLato bold style={modalStyles.modalText}>{text.enterAddress}</TextLato>
+                <TextInput 
+                    multiline 
+                    value={governate}    
+                    onChangeText={value => setGovernate(value)} 
+                    style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                    placeholder={text.governate} />
+                <TextInput 
+                    multiline 
+                    value={city}         
+                    onChangeText={value => setCity(value)} 
+                    style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                    placeholder={text.city} />
+                <TextInput 
+                    multiline 
+                    value={street}       
+                    onChangeText={value => setStreet(value)} 
+                    style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                    placeholder={text.street} />
+                <TextInput 
+                    multiline 
+                    value={building}     
+                    onChangeText={value => setBuilding(value)} 
+                    style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                    placeholder={text.building} />
+                <TextInput 
+                    multiline 
+                    value={apartment}    
+                    onChangeText={value => setApartment(value)} 
+                    style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                    placeholder={text.apartment} />
+                <TextInput 
+                    multiline 
+                    value={extra}        
+                    onChangeText={value => setExtra(value)} 
+                    style={{...modalStyles.input, textAlign: en ? 'left' : 'right', fontFamily: en ? 'Lato' : 'Cairo'}} 
+                    placeholder={text.extra} />
             </View>
-            </View>
-        </Modal>
-      </View>
+        </CustomModal>
     );
 }
   
@@ -364,10 +339,10 @@ const modalStyles = StyleSheet.create({
     textAlign: 'center',
   },
   input: {
-      width: '80%',
+      width: '100%',
       borderBottomWidth: 2,
       borderBottomColor: gStyles.color_1,
-      marginBottom: height * 0.01,
+      marginBottom: height * 0.02,
       height: height * 0.05
   }
 });

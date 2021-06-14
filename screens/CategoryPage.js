@@ -57,9 +57,9 @@ const CategoryPage = (props) => {
                 </ScrollView>
             )} */}
                 <TextLato style={styles.title} bold>{en ? 'Stores' : 'البائعون'}</TextLato>
-                <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-category`} body={{category: details._id}} />
+                <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-category`} body={{category: details._id}} title={details.name[language]} />
                 <TextLato style={{...styles.title, marginTop: height * 0.05}} bold>{en ? 'Products' : 'المنتجات'}</TextLato>
-                <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/category`} body={{id: details._id}} />
+                <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/category`} body={{id: details._id}} title={details.name[language]} />
             </ScrollView>
         </View>
     )
@@ -139,10 +139,13 @@ const SubcategoriesScroll = ({details}) => {
     }, []);
     if(!subcategories.length)
         return (
-            <View style={{flexDirection: 'row', width}}>
-                {[1,2,3,4].map(() => (
-                    <View key={Math.random()} style={{ width: width * 0.18, aspectRatio: 1, backgroundColor: '#aaa', marginLeft: 5, borderRadius: 10, justifyContent: 'center', alignItems: 'center', paddingVertical: height * 0.01}}>
-                        <ActivityIndicator color={'white'} />
+            <View style={{flexDirection: 'row', width, minHeight: height * 0.15, justifyContent: 'center', paddingVertical: height * 0.01, marginTop: height * 0.01}}>
+                {[1,2,3,4, 5].map(() => (
+                    <View key={Math.random()}>
+                        <View style={{...subcategoryStyles.container, backgroundColor: '#aaa'}}>
+                            <ActivityIndicator color={'white'} />
+                        </View>
+                        <TextLato bold style={{fontSize: RFPercentage(1.5), textAlign: 'center', color: 'black', marginTop: height * 0.01}}>...</TextLato>
                     </View>
                 ))}
             </View>
@@ -159,7 +162,7 @@ const SubcategoriesScroll = ({details}) => {
                     <View key={subcategory._id} style={subcategoryStyles.container}>
                         <Image style={{width: width * 0.10, aspectRatio: 1}} source={{uri: subcategory.image}} />
                     </View>
-                    <TextLato bold style={{fontSize: RFPercentage(1.5), textAlign: 'center', color: 'black', marginTop: height * 0.01}}>{subcategory.name[language]}</TextLato>
+                    <TextLato bold style={{fontSize: RFPercentage(1.5), textAlign: 'center', color: 'black', marginTop: height * 0.01, width: width * 0.18, textTransform: 'capitalize'}}>{subcategory.name[language]}</TextLato>
                 </TouchableOpacity>
             ))}
         </ScrollView>
@@ -168,6 +171,7 @@ const SubcategoriesScroll = ({details}) => {
 
 const subcategoryStyles = StyleSheet.create({
     touchableBlock: {
+        alignItems: 'center'
         // paddingVertical: height * 0.05
     },
     container: {
@@ -189,6 +193,7 @@ const subcategoryStyles = StyleSheet.create({
     },
     scrollView: {
         width,
-        marginTop: height * 0.01
+        marginTop: height * 0.01,
+        paddingHorizontal: 3.5
     }
 })

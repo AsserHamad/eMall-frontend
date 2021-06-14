@@ -16,15 +16,18 @@ import Icon from '../../../components/utils/Icon';
 import { useLanguage } from '../../../hooks/language';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../../components/Header';
+import LoadingPage from '../../../components/utils/LoadingPage';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const SellerLogin = (props) => {
     const [email, setEmail] = useState('asserhamad96@gmail.com');
     const [errors, setErrors] = useState([]);
     const [password, setPassword] = useState('Abcd1234');
+    const [loading, setLoading] = useState(false);
     const language = useLanguage();
     const en = language === 'en';
     const login = () => {
+        setLoading(true);
         fetch(`${Constants.manifest.extra.apiUrl}/seller/login`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -32,6 +35,7 @@ const SellerLogin = (props) => {
         })
         .then(res => res.json())
         .then(res => {
+            setLoading(false);
             if(res && !res.status){
                 setErrors([]);
                 if(res.store.approved){
@@ -46,6 +50,7 @@ const SellerLogin = (props) => {
     }
 
     const facebookLogin = async () => {
+        setLoading(true);
         await Facebook.initializeAsync(
             {
               autoLogAppEvents: true,
@@ -61,6 +66,7 @@ const SellerLogin = (props) => {
                 declinedPermissions 
             } = await Facebook.logInWithReadPermissionsAsync({appId: '322777442117432', permissions: ['public_profile', 'email']});
             if(type === 'success') {
+                setLoading(false);
                 fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,picture.height(500)`)
                 .then(res => res.json())
                 .then(data => {
@@ -88,7 +94,8 @@ const SellerLogin = (props) => {
     }
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <Header details={{title: ''}} />
+        {loading && <LoadingPage />}
+        <Header details={{title: ''}} />
         <Image style={styles.image} source={{uri: 'https://imgur.com/CoPeD7N.png'}} />
             <View style={styles.headerContainer}>
                 <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>Seller Dashboard</TextLato>

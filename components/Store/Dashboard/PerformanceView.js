@@ -3,7 +3,6 @@ import TextLato from '../../utils/TextLato';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { gStyles } from '../../../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import Icon from '../../utils/Icon';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector } from 'react-redux';
 import { Constants } from 'react-native-unimodules';
@@ -11,7 +10,7 @@ import AnimatedProgressWheel from 'react-native-progress-wheel';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const PerformanceView = (props) => {
+const PerformanceView = () => {
     const token = useSelector(state => state.authReducer.token);
     const [performance, setPerformance] = useState(undefined);
     useEffect(() => {

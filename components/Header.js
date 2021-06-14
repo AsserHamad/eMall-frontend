@@ -45,8 +45,8 @@ export default ({ details, cart }) => {
 const styles = StyleSheet.create({
     container: {
         paddingTop: Constants.statusBarHeight + 5,
-        width,
-        backgroundColor: gStyles.background,
+        zIndex: 1,
+        width
     },
     topContainer: {
         width,

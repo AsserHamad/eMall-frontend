@@ -1,11 +1,11 @@
 import React from 'react';
-import { Modal, StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native';
+import { Modal, StyleSheet, View, Dimensions, TouchableOpacity } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { gStyles } from '../../global.style';
 import Icon from './Icon';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const CustomModal = ({children, modalVisible, setModalVisible, confirm = () => {}}) => {
+const CustomModal = ({children, modalVisible, setModalVisible, confirm = () => {}, close = () => {setModalVisible(false)}}) => {
 
     return (
         <View>
@@ -21,13 +21,13 @@ const CustomModal = ({children, modalVisible, setModalVisible, confirm = () => {
                   {children}
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: height * 0.02}}>
                     <TouchableOpacity
-                        style={{ ...modalStyles.openButton, backgroundColor: '#9DB68C' }}
+                        style={{ ...modalStyles.openButton, backgroundColor: gStyles.color_2 }}
                         onPress={confirm}>
                         <Icon type={'Entypo'} name={'check'} color="white" size={RFPercentage(4)} />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={{ ...modalStyles.openButton, backgroundColor: gStyles.color_1 }}
-                        onPress={() => setModalVisible(false)}>
+                        style={{ ...modalStyles.openButton, backgroundColor: gStyles.color_3 }}
+                        onPress={close}>
                         <Icon type={'Entypo'} name={'cross'} color="white" size={RFPercentage(4)} />
                     </TouchableOpacity>
 
@@ -61,6 +61,7 @@ const modalStyles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    maxHeight: height * 0.85
   },
   openButton: {
     backgroundColor: '#F194FF',

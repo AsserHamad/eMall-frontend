@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { gStyles } from '../global.style';
 
 function Loading(){

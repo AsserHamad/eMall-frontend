@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, ImageBackground, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
 import TextLato from '../components/utils/TextLato';
@@ -8,6 +8,7 @@ import { useLanguage } from '../hooks/language';
 import CountDown from 'react-native-countdown-component';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import Icon from '../components/utils/Icon';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const image = 'https://imgur.com/3Wt1bLn.png';
@@ -77,10 +78,18 @@ function DealOfTheDay(){
                 </View>
             </View>
                 <ScrollView showsHorizontalScrollIndicator={false} horizontal contentContainerStyle={[styles.listContainer]} style={{transform: en ? [] : [{scaleX: -1}]}}>
-                <View style={{flexWrap: 'wrap', marginHorizontal: width * 0.06, height: height * 0.8}}>
+                <View style={{flexWrap: 'wrap', marginHorizontal: width * 0.01, height: height * 0.8}}>
                     {products.map(product => {
                         return <Deal navigation={navigation} key={Math.random()} product={product} language={language} en={en} />
                     })}
+                    <View style={styles.productContainer}>
+                        <TouchableOpacity onPress={() => navigation.navigate('DealsOfTheDay')} activeOpacity={0.8}>
+                            <View style={{...styles.innerContainer, width: '100%', backgroundColor: 'white', justifyContent: 'center', alignItems: 'center'}}>
+                                <TextLato style={{color: 'black', fontSize: RFPercentage(2.5), textAlign: 'center'}}>View All Deals</TextLato>
+                                <Icon type="AntDesign" name="plus" color="black" size={RFPercentage(4)} style={{marginTop: height * 0.01}} />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </ScrollView>
         </View>
@@ -93,16 +102,16 @@ const Deal = ({product, navigation, language, en}) => {
             <View style={styles.innerContainer}>
                 <TouchableOpacity onPress={() => navigation.push('Product', {product: product.product})}>
                     <Image source={{uri: product.product.images[0]}} style={{height: height * 0.1, aspectRatio: 16/9}} />
-                    <TextLato style={{fontSize: RFPercentage(1.8), textAlign: en ? 'left' : 'right', marginTop: height * 0.01}}>{product.product.title[language]}</TextLato>
+                    <TextLato bold style={{fontSize: RFPercentage(1.8), textAlign: en ? 'left' : 'right', marginTop: height * 0.01}}>{product.product.title[language]}</TextLato>
                     <View style={{borderBottomColor: gStyles.color_2, borderBottomWidth: 2, width: '30%', marginVertical: height * 0.006}} />
-                    <TextLato bold style={{fontSize: RFPercentage(1.3), textAlign: en ? 'left' : 'right', marginTop: height * 0.004}}>{en ? 'By' : 'من'}: {product.store.title}</TextLato>
+                    <TextLato italic style={{fontSize: RFPercentage(1.3), textAlign: en ? 'left' : 'right', marginTop: height * 0.004}}>{en ? 'By' : 'من'}: {product.store.title}</TextLato>
                     <View style={{marginTop: height * 0.04, alignItems: en ? 'baseline' : 'flex-end'}}>
                         <TextLato style={{textDecorationLine: 'line-through', fontSize: RFPercentage(1.5), color: gStyles.color_0}}>{product.product.price.toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato> 
                         <TextLato style={{fontSize: RFPercentage(1.8), color: gStyles.color_1}}>{(product.product.price * (1 - product.discount/100)).toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato>
                     </View>
                 </TouchableOpacity>
                 <ImageBackground source={{uri: bubbles[getColors(product.discount)]}} style={{...styles.innerDiscountBubble, left: en ? null : 0, transform: [{translateY: height * 0.015}, {translateX:  en ? width * 0.02 : width * -0.02}]}}>
-                    <TextLato style={{fontSize: RFPercentage(3), textAlign: 'center', color: 'white'}}>{product.discount}<Text style={{fontSize: RFPercentage(2)}}>%</Text></TextLato>
+                    <TextLato style={{fontSize: RFPercentage(3), textAlign: 'center', color: 'white'}}>{product.discount}<TextLato style={{fontSize: RFPercentage(2)}}>%</TextLato></TextLato>
                     <TextLato style={{fontSize: en ? RFPercentage(1) : RFPercentage(1.2), textAlign: 'center', color: 'white'}}>{en ? 'D I S C O U N T' : 'تخفيض'}</TextLato>
                 </ImageBackground>
             </View>

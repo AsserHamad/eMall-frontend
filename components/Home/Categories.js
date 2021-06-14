@@ -3,7 +3,6 @@ import Constants from 'expo-constants';
 import { ActivityIndicator, Dimensions, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { gStyles } from '../../global.style';
 import CategoryCard from '../cards/CategoryCard';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useLanguage } from '../../hooks/language';
 import Icon from '../utils/Icon';
 import TextLato from '../utils/TextLato';
@@ -62,7 +61,7 @@ const styles = StyleSheet.create({
     cardContainer: {
         height: Dimensions.get('window').width * 0.3,
         aspectRatio: 1,
-        backgroundColor: gStyles.color_3,
+        backgroundColor: gStyles.color_0,
         borderRadius: 2,
         borderWidth: 0,
         alignItems: 'center',

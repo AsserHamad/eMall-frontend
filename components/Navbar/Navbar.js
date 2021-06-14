@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import Searchbar from './Searchbar';
 import Constants from 'expo-constants';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { gStyles } from '../../global.style';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useLanguageText, useLanguage } from '../../hooks/language';
 import { useNavigation } from '@react-navigation/native';
 import TextLato from '../utils/TextLato';
@@ -14,7 +14,6 @@ const width = Dimensions.get('window').width;
 function Navbar(props){
     const [disabled, setDisabled] = useState(false);
     const language = useLanguage();
-    const languageText = useLanguageText('navbar');
     const navigation = useNavigation();
     const cartProducts = useSelector(state => state.cartReducer.cart.products);
 

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Dimensions, Text, KeyboardAvoidingView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, View, TextInput, Dimensions, KeyboardAvoidingView } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import TextLato from '../utils/TextLato';
@@ -20,7 +19,6 @@ function Searchbar(){
     const navigation = useNavigation();
     const [text, setText] = useState('');
     const [show, setShow] = useState(false);
-    const [loading, setLoading] = useState(true);
     const [stores, setStores] = useState([]);
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -83,7 +81,10 @@ function Searchbar(){
                     <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}}>
                         <TextLato style={searchStyles.title}>{languageText.stores}</TextLato>
                         {stores.map(store => {
-                            return <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{store.title}</TextLato>;
+                            return (
+                            <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Store', {store: {_id: store._id}})}>
+                                <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{store.title}</TextLato>
+                            </TouchableOpacity>);
                         })}
                         <TextLato style={searchStyles.etcText}>{languageText.searchStores}</TextLato>
                     </View>

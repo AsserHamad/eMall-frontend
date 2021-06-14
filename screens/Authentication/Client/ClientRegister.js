@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
 import { useFonts } from 'expo-font';
 import RegisterInputAndError from '../RegisterInputAndError';
+import Header from '../../../components/Header';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const ClientRegister = (props) => {
@@ -82,6 +83,7 @@ const ClientRegister = (props) => {
 
     return (
         <View style={styles.container}>
+            <Header details={{title: ''}} />
             <View style={styles.headerContainer}>
                 <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>{languageText.register}</TextLato>
                 <TextLato italic style={{color: 'black', fontSize: RFValue(12), marginTop: height * 0.01}}>{languageText.registerDescription}</TextLato>

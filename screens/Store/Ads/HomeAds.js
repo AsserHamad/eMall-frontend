@@ -10,6 +10,8 @@ import { gStyles } from '../../../global.style';
 import { funcs } from '../../../global.funcs';
 import ProductPicker from '../../../components/utils/ProductPicker';
 import useCredit from '../../../hooks/credit';
+import Header from '../../../components/Header';
+import { useLanguage, useLanguageText } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -18,14 +20,16 @@ const HomeAds = () => {
     const [loading, setLoading] = useState(true);
     const [current, setCurrent] = useState({});
     const [highestBid, setHighestBid] = useState({});
-    const [pickedImage, setPickedImage] = useState(false);
     const [bid, setBid] = useState("0");
     const [disabled, setDisabled] = useState(true);
-    const [image, setImage] = useState('https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png');
+    const [image, setImage] = useState(undefined);
     const [adType, setAdType] = useState(0);
     const [pickedProduct, setPickedProduct] = useState(null);
     const credit = useCredit(loading);
     const token = useSelector(state => state.authReducer.token);
+    const text = useLanguageText('sellerHomeAds');
+    const language = useLanguage();
+    const en = language === 'en';
 
     const getPageAd = () => {
         setLoading(true);
@@ -39,19 +43,22 @@ const HomeAds = () => {
     }
 
     const updateBid = () => {
-        fetch(`${Constants.manifest.extra.apiUrl}/advertisement/home/bid`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json', token},
-            body: JSON.stringify({
-                page,
-                adType,
-                image: 'https://impakter.com/wp-content/uploads/2018/07/body-shop-banner-1.png',
-                product: pickedProduct ? pickedProduct._id : null,
-                bid: Number(bid),
-                page
+        funcs.uploadImage(image, 'home_ad_', token)
+        .then(res => {
+            fetch(`${Constants.manifest.extra.apiUrl}/advertisement/home/bid`, {
+                method: 'post',
+                headers: {'Content-Type': 'application/json', token},
+                body: JSON.stringify({
+                    page,
+                    adType,
+                    image: res.location,
+                    product: pickedProduct ? pickedProduct._id : null,
+                    bid: Number(bid),
+                    page
+                })
             })
+            .then(() => getPageAd())
         })
-        .then(() => getPageAd())
     }
     
     useEffect(() => {
@@ -59,17 +66,18 @@ const HomeAds = () => {
     }, [page]);
 
     useEffect(() => {
-        setDisabled(!(pickedImage && (!highestBid || bid >= highestBid.bid + 10) && bid <= credit && (adType || pickedProduct)))
-    }, [bid, adType, pickedProduct, pickedImage, loading]);
+        setDisabled(!(image && (!highestBid || bid >= highestBid.bid + 10) && bid <= credit && (adType || pickedProduct)))
+    }, [bid, adType, pickedProduct, image, loading]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <ScrollView contentContainerStyle={{paddingBottom: height * 0.04}}>
+                <Header details={{title: text.homeHeader}} />
                 <View style={{marginHorizontal: width * 0.05, marginTop: height * 0.02}}>
-                    <TextLato style={{fontSize: RFPercentage(2), color: '#777'}}>Choose the page which you would like to bid on</TextLato>
-                    <TextLato italic style={{fontSize: RFPercentage(1.7), marginTop: height * 0.01}}>*This ad type works on a bidding system. Bid the highest number to get the following week's spot on your preferred page.</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(2), color: '#777'}}>{text.homeTitle}</TextLato>
+                    <TextLato italic style={{fontSize: RFPercentage(1.7), marginTop: height * 0.01}}>{text.homeSubtitle}</TextLato>
                 </View>
-                <View style={styles.buttonsContainer}>
+                <View style={{...styles.buttonsContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                     {[0, 1, 2, 3, 4].map(pageNo => {
                         const samePage = pageNo === page;
                         return (
@@ -84,64 +92,64 @@ const HomeAds = () => {
                 ) : highestBid ?
                 (
                 <View style={styles.mainContainer}>
-                    <TextLato bold>Current Highest Bidder</TextLato>
+                    <TextLato bold>{text.highestBidder}</TextLato>
                     <Image source={{uri: highestBid.image}} style={styles.highestImage} />
                     <TextLato style={{marginTop: height * 0.01, fontSize: RFPercentage(3), color: gStyles.color_1}} bold >{highestBid.store.title}</TextLato>
-                    <TextLato style={{marginTop: height * 0.01, fontSize: RFPercentage(2.2)}} >Bid Amount:  {highestBid.bid} EGP</TextLato>
+                    <TextLato style={{marginTop: height * 0.01, fontSize: RFPercentage(2.2)}} >{text.bidAmount}  {highestBid.bid} {text.egp}</TextLato>
                     
                 </View>  
                 ) : (
                 <View style={{backgroundColor: '#aaa', justifyContent: 'center', alignItems: 'center', paddingVertical: height * 0.05, paddingHorizontal: width * 0.1, borderRadius: 5, marginHorizontal: width * 0.05, marginVertical: height * 0.03}}>
-                    <TextLato style={{fontSize: RFPercentage(2), textAlign: 'center', color: 'white'}}>No Currently Placed Bids, Claim Your Spot Now!</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(2), textAlign: 'center', color: 'white'}}>{text.noBids}</TextLato>
                 </View> 
                 )}
                 <KeyboardAvoidingView style={{marginHorizontal: width * 0.05}}>
-                            <TextLato style={{fontSize: RFPercentage(3)}} bold>Bid{highestBid && ' Higher'}</TextLato>
-                            <TextLato style={{fontSize: RFPercentage(1.8), marginTop: height * 0.005}} italic>You have to bid at least 10 EGP higher than the highest bid. You cannot bid more than your store credit.</TextLato>
-                            <TextLato>Store Credit: {credit} EGP</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(3)}} bold>{text.bid}{highestBid && text.higher}</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.8), marginTop: height * 0.005}} italic>{text.bidHigherDescription}</TextLato>
+                            <TextLato>{text.storeCredit}: {credit} {text.egp}</TextLato>
 
                             {/* Input */}
-                            <View style={{flexDirection: 'row', alignItems: 'center', marginTop: height * 0.03}}>
+                            <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', marginTop: height * 0.03}}>
                                 <TextInput 
                                     keyboardType={'number-pad'}
                                     value={bid}
                                     placeholder={"0.00"}
                                     onChangeText={input => input.match(/^[0-9]*$/) ? setBid(input) : null}
-                                    style={styles.input} />
-                                <TextLato italic style={{fontSize: RFPercentage(3), marginHorizontal: width * 0.02}}>EGP</TextLato>
+                                    style={{...styles.input, textAlign: en ? 'left' : "right"}} />
+                                <TextLato italic style={{fontSize: RFPercentage(3), marginHorizontal: width * 0.02}}>{text.egp}</TextLato>
                             </View>
 
                             {/* Image Picker */}
                             <View>
-                                <TextLato bold style={{marginTop: height * 0.03}}>Pick an image for your Ad</TextLato>
+                                <TextLato bold style={{marginTop: height * 0.03}}>{text.pickImage}</TextLato>
                                 <View style={styles.profilePictureContainer}>
                                     <TouchableOpacity onPress={() => funcs.chooseImage(setImage, [2.5, 1])}>
-                                        <Image source={{ uri: image }} style={{ width: '100%', aspectRatio: 2.5 }} />
+                                        <Image source={{ uri: image || 'https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png' }} style={{ width: '100%', aspectRatio: 2.5 }} />
                                     </TouchableOpacity>
                                 </View>
                             </View>
 
                             {/* Ad Type */}
                             <View>
-                                <TextLato bold style={{marginTop: height * 0.03}}>What are you advertising</TextLato>
-                                <View style={{flexDirection: 'row', marginTop: height * 0.02}}>
+                                <TextLato bold style={{marginTop: height * 0.03}}>{text.type}</TextLato>
+                                <View style={{flexDirection: en ? 'row' : 'row-reverse', marginTop: height * 0.02}}>
                                     <TouchableOpacity activeOpacity={0.8} key={Math.random()} style={{...styles.adButton, backgroundColor: adType === 0 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(0)}>
-                                        <TextLato style={{color: 'white'}}>Product</TextLato>
+                                        <TextLato style={{color: 'white'}}>{text.product}</TextLato>
                                     </TouchableOpacity>
                                     <TouchableOpacity activeOpacity={0.8} key={Math.random()} style={{...styles.adButton, backgroundColor: adType === 1 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(1)}>
-                                        <TextLato style={{color: 'white'}}>Store</TextLato>
+                                        <TextLato style={{color: 'white'}}>{text.store}</TextLato>
                                     </TouchableOpacity>
                                 </View>
-                                {adType === 0 && <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} style={{marginTop: height * 0.03}} />}
+                                {adType === 0 && <ScrollView style={{maxHeight: height * 0.7, marginTop: height * 0.04}}><ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} style={{marginTop: height * 0.03}} /></ScrollView>}
                             </View>
 
                             {/* Bid button */}
-                            <TouchableOpacity onPress={() => !disabled ? updateBid() : null} activeOpacity={0.8} style={{...styles.submitButton, backgroundColor: disabled ? gStyles.color_0 : gStyles.color_1}}>
-                                <TextLato style={{color: 'white'}}>BID</TextLato>
+                            <TouchableOpacity onPress={() => !disabled ? updateBid() : null} activeOpacity={0.8} style={{...styles.submitButton, backgroundColor: disabled ? '#aaa' : gStyles.color_2}}>
+                                <TextLato style={{color: 'white'}}>{text.bidButton}</TextLato>
                             </TouchableOpacity>
                     </KeyboardAvoidingView>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 

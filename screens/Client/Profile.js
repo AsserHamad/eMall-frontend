@@ -9,6 +9,7 @@ import { gStyles } from '../../global.style';
 import Constants from 'expo-constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import Header from '../../components/Header';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const Profile = ({navigation, route}) => {
     const account = useSelector(state => state.authReducer.account);
@@ -18,10 +19,11 @@ const Profile = ({navigation, route}) => {
     const text = useLanguageText('profile');
     return (
         <View style={styles.container}>
-            <ImageBackground imageStyle={{opacity: 0.6}} source={{uri: 'https://imgur.com/3XlqWj1.png'}} style={styles.topContainer}>
-            <TouchableOpacity style={[styles.backContainer, {alignItems: en ? 'flex-start' : 'flex-end'}]} onPress={() => navigation.goBack()}>
+            <ImageBackground imageStyle={{opacity: 0.6}} source={{uri: 'https://imgur.com/zf7vpAW.png'}} style={styles.topContainer}>
+            <Header details={{title: ''}} />
+            {/* <TouchableOpacity style={[styles.backContainer, {alignItems: en ? 'flex-start' : 'flex-end'}]} onPress={() => navigation.goBack()}>
                 <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(5)} color="black" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             </ImageBackground>
             <View style={styles.profileContainer}>
                 <View style={{justifyContent: 'center', flexDirection: 'row'}}>
@@ -62,7 +64,6 @@ const ListItem = ({type, name, text, destination, reverse}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: Constants.statusBarHeight,
         backgroundColor: gStyles.background
     },
     backContainer: {
@@ -71,8 +72,8 @@ const styles = StyleSheet.create({
     },
     topContainer: {
         width: '100%',
-        height: height * 0.4,
-        backgroundColor: gStyles.color_0
+        height: height * 0.45,
+        backgroundColor: gStyles.color_1
     },
     profileContainer: {
         backgroundColor: gStyles.background,

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
-import { SafeAreaView } from 'react-navigation';
+import Header from '../../../components/Header';
 import { useSelector } from 'react-redux';
 import TextLato from '../../../components/utils/TextLato';
 import { gStyles } from '../../../global.style';
 import ProductPicker from '../../../components/utils/ProductPicker';
 import useCredit from '../../../hooks/credit';
-import { useLanguage } from '../../../hooks/language';
+import { useLanguage, useLanguageText } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -23,6 +23,9 @@ const DealOfTheDayAd = () => {
     const [discount, setDiscount] = useState("20");
     const [disabled, setDisabled] = useState(true);
     const language = useLanguage();
+    const en = language === 'en';
+    const scroll = useRef();
+    const text = useLanguageText('sellerDealsOfTheDay');
     
     const fetchProducts = () => {
         setLoading(true);
@@ -43,6 +46,7 @@ const DealOfTheDayAd = () => {
         .then(res => res.json())
         .then(res => {
             setRefresh(refresh => !refresh);
+            scroll.current.scrollTo({y:0, animated: true})
             fetchProducts();
         });
 
@@ -55,11 +59,12 @@ const DealOfTheDayAd = () => {
     }, [discount, pickedProduct]);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={{paddingBottom: height * 0.05}}>
+        <View style={styles.container}>
+            <Header details={{title: text.title}} />
+            <ScrollView ref={scroll} contentContainerStyle={{paddingBottom: height * 0.05}}>
                 <View style={{marginHorizontal: width * 0.05, marginTop: height * 0.02, alignItems: 'center'}}>
-                    <TextLato style={{fontSize: RFPercentage(2.5)}} bold>Active Deals</TextLato>
-                    <TextLato style={{fontSize: RFPercentage(1.8)}} italic>These are the products you have deals for today</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(2.5)}} bold>{text.active}</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(1.8)}} italic>{text.activeDescription}</TextLato>
                 </View>
                 {loading ? (
                     <View style={{height: height * 0.5, alignItems: 'center', justifyContent: 'center'}}><ActivityIndicator size={RFPercentage(5)} color={gStyles.color_0} /></View>
@@ -68,13 +73,13 @@ const DealOfTheDayAd = () => {
                         {products.map(prod => {
                             const product = prod.product;
                             return (
-                                <View style={styles.productContainer} key={Math.random()}>
+                                <View style={[styles.productContainer, {flexDirection: en ? 'row' : 'row-reverse'}]} key={Math.random()}>
                                     <Image source={{uri: product.images[0]}} style={styles.productImage} />
                                     <View>
                                         <TextLato bold>{product.title[language]}</TextLato>
-                                        <TextLato style={{fontSize: RFPercentage(1.8), marginTop: height * 0.02}} >Status: {prod.active ? <TextLato bold style={{color: 'red'}}>Active</TextLato> : <TextLato bold style={{color: '#aaa'}}>Will Become Active Tomorrow</TextLato>}</TextLato>
-                                        <TextLato style={{fontSize: RFPercentage(1.8)}} >Clicks: {prod.orders.length}</TextLato>
-                                        <TextLato style={{fontSize: RFPercentage(1.8)}} >Purchases: {prod.clicks.length}</TextLato>
+                                        <TextLato style={{fontSize: RFPercentage(1.8), marginTop: height * 0.02}} >{text.status} {prod.active ? <TextLato bold style={{color: 'red'}}>{text.activeStatus}</TextLato> : <TextLato bold style={{color: '#aaa'}}>{text.inactive}</TextLato>}</TextLato>
+                                        <TextLato style={{fontSize: RFPercentage(1.8)}} >{text.clicks} {prod.orders.length}</TextLato>
+                                        <TextLato style={{fontSize: RFPercentage(1.8)}} >{text.purchases} {prod.clicks.length}</TextLato>
                                     </View>
                                 </View>
                             )
@@ -82,20 +87,20 @@ const DealOfTheDayAd = () => {
                         </View>
                     ) : (
                         <View style={{backgroundColor: gStyles.color_0, justifyContent: 'center', alignItems: 'center', paddingVertical: height * 0.07, marginTop: height * 0.02, marginHorizontal: width * 0.05, paddingHorizontal: width * 0.1}}>
-                            <TextLato italic style={{color: 'white', textAlign: 'center'}}>You do not currently have any deals on any products :(</TextLato>
+                            <TextLato italic style={{color: 'white', textAlign: 'center'}}>{text.noDeals}</TextLato>
                         </View>
                 )}
                 <View style={{marginHorizontal: width * 0.05, marginTop: height * 0.03}}>
-                    <TextLato style={{fontSize: RFPercentage(2.5)}} bold>Add a Deal</TextLato>
-                    <TextLato style={{fontSize: RFPercentage(1.8)}} italic>Add one of your products to the Deals of the Day list</TextLato>
-                    <TextLato style={{fontSize: RFPercentage(1.8), color: 'red', marginTop: height * 0.01}} bold>Costs 50 EGP</TextLato>
-                    <TextLato style={{fontSize: RFPercentage(1.8), color: gStyles.color_1, marginBottom: height * 0.03}} italic>Current Store Credit: {credit} EGP</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(2.5)}} bold>{text.add}</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(1.8)}} italic>{text.addDescription}</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(1.8), color: 'red', marginTop: height * 0.01}} bold>{text.costs} 50 {text.egp}</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(1.8), color: gStyles.color_1, marginBottom: height * 0.03}} italic>{text.storeCredit} {credit} EGP</TextLato>
                     <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} style={{height: height * 0.5}} />
                     {pickedProduct && (
                         <View style={{marginTop: height * 0.03}}>
-                            <TextLato style={{fontSize: RFPercentage(2.5)}} bold>Percent Value</TextLato>
-                            <TextLato style={{fontSize: RFPercentage(1.8), marginBottom: height * 0.02}} italic>*Must be between 20% and 100%</TextLato>
-                            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                            <TextLato style={{fontSize: RFPercentage(2.5)}} bold>{text.discount}</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(1.8), marginBottom: height * 0.02}} italic>{text.discountDescription}</TextLato>
+                            <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center'}}>
                                 <TextInput 
                                     keyboardType={'number-pad'}
                                     placeholder={'%'}
@@ -103,20 +108,20 @@ const DealOfTheDayAd = () => {
                                     onChangeText={input => {
                                         Number.isNaN(Number(input)) || input >= 100 ? null : setDiscount(input)
                                     }}
-                                    style={styles.input} />
+                                    style={[styles.input, {textAlign: en ? 'left' : 'right'}]} />
                                 <TextLato style={{fontSize: RFPercentage(3.3)}}>%</TextLato>
                             </View>
-                            <TextLato style={{fontSize: RFPercentage(2.2), marginTop: height * 0.03}} italic>Product Price: {pickedProduct.price.toFixed(2)} EGP</TextLato>
-                            <TextLato style={{fontSize: RFPercentage(2.2), marginTop: height * 0.01}} bold>Discounted Price: {(pickedProduct.price * (1 - Number(discount)/100)).toFixed(2)} EGP</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(2.2), marginTop: height * 0.03}} italic>{text.productPrice}: {pickedProduct.price.toFixed(2)} {text.egp}</TextLato>
+                            <TextLato style={{fontSize: RFPercentage(2.2), marginTop: height * 0.01}} bold>{text.discountedPrice}: {(pickedProduct.price * (1 - Number(discount)/100)).toFixed(2)} {text.egp}</TextLato>
                         </View>
                     )}
                     {/* Purchase button */}
                     <TouchableOpacity onPress={addDeal} activeOpacity={0.8} style={{...styles.submitButton, backgroundColor: disabled ? gStyles.color_0 : gStyles.color_1}}>
-                        <TextLato style={{color: 'white'}}>ADD DEAL</TextLato>
+                        <TextLato style={{color: 'white'}}>{text.addDeal}</TextLato>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -144,7 +149,7 @@ const styles = StyleSheet.create({
     productImage: {
         width: width * 0.15,
         aspectRatio: 1,
-        marginRight: width * 0.04
+        marginHorizontal: width * 0.02
     },
     productContainer: {
         shadowColor: "#000",
@@ -161,7 +166,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: width * 0.05,
         backgroundColor: 'white',
         borderRadius: 10,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center'
     }
 })
 

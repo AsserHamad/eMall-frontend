@@ -2,9 +2,9 @@ import React, {useState, useEffect} from 'react';
 import TextLato from '../../utils/TextLato';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import Icon from '../../utils/Icon';
 import { useSelector } from 'react-redux';
 import { Constants } from 'react-native-unimodules';
+import { useLanguageText } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
@@ -12,6 +12,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const PendingFunds = () => {
     const token = useSelector(state => state.authReducer.token);
     const [funds, setFunds] = useState('-');
+    const text = useLanguageText('sellerDashboard');
 
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/pending-funds`, {headers: {token}})
@@ -22,9 +23,9 @@ const PendingFunds = () => {
     }, []);
     return (
         <View style={styles.container}>
-        <TextLato bold style={styles.salesTitle}>Pending Funds</TextLato>
-        <TextLato italic style={styles.salesSubtitle}>Funds that will become two weeks after they were added.</TextLato>
-        <TextLato bold style={styles.sales}>{funds} EGP</TextLato>
+        <TextLato bold style={styles.salesTitle}>{text.pending}</TextLato>
+        <TextLato italic style={styles.salesSubtitle}>{text.pendingDescription}</TextLato>
+        <TextLato bold style={styles.sales}>{funds} {text.egp}</TextLato>
         {/* <Icon style={styles.dollar} color={'rgba(255, 255, 255, 0.2)'} type="FontAwesome" size={RFPercentage(10)} name="dollar" /> */}
         </View>
     )

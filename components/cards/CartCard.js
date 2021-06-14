@@ -1,12 +1,12 @@
 import React from 'react';
-import { ActivityIndicator, Dimensions, Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 
-import { connect, useDispatch, useSelector } from 'react-redux';
-import { addToCart, removeFromCart, increaseQuantity, decreaseQuantity, setCart } from '../../src/actions/cart';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCart } from '../../src/actions/cart';
 import Icon from '../utils/Icon';
-import { useLanguage } from '../../hooks/language';
+import { useLanguage, useLanguageText } from '../../hooks/language';
 import TextLato from '../utils/TextLato';
 import { Constants } from 'react-native-unimodules';
 import { useState } from 'react';
@@ -15,14 +15,6 @@ import { useEffect } from 'react';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
-const image = 'https://www.pikpng.com/pngl/b/46-461447_deal-of-the-day-png-deal-day-clipart.png';
-
-const bubbles = [
-    'https://imgur.com/G27hm50.png',
-    'https://imgur.com/Jd0bH1o.png',
-    'https://imgur.com/FnOaCd8.png',
-    'https://imgur.com/5AcEkKV.png',
-];
 
 const getColors = (discount) => {
     discount = Number(discount);
@@ -42,6 +34,7 @@ function CartCard({item, setRefresh}){
     const [quantity, setQuantity] = useState(item.quantity);
     const language = useLanguage();
     const en = language === 'en';
+    const text = useLanguageText('cart');
     const dispatch = useDispatch();
     const token = useSelector(state => state.authReducer.token);
     const navigation = useNavigation();
@@ -136,7 +129,7 @@ function CartCard({item, setRefresh}){
             <View style={styles.imageContainer}>
                 <Image style={styles.itemImage} source={{uri: product.images[0]}} />
             </View>
-            <View style={{alignItems: en ? 'flex-start' : 'flex-end'}}>
+            <View style={{alignItems: en ? 'flex-start' : 'flex-end', paddingHorizontal: width * 0.05}}>
                 
                 {/* Title */}
                 <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.push('Product', {product: {_id: product._id}})}>
@@ -152,7 +145,7 @@ function CartCard({item, setRefresh}){
 
                 {/* Seller */}
                 <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', marginTop: height * 0.01}}>
-                    <TextLato style={{fontSize: RFPercentage(1.8)}}>{en ? 'Sold By' : 'البائع'}:</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(1.8)}}>{text.seller}:</TextLato>
                     <TouchableOpacity onPress={() => {navigation.push('Store', {store: {_id: product.store._id}})}}>
                         <TextLato bold style={{paddingHorizontal: 5, color: gStyles.secondary, fontSize: RFPercentage(1.8)}}>{product.store.title}</TextLato>
                     </TouchableOpacity>
@@ -160,7 +153,7 @@ function CartCard({item, setRefresh}){
                 
                 {/* Quantity */}
                 <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', height: 50}}>
-                    <TextLato style={{fontSize: RFPercentage(1.8)}}>{en ? 'Quantity' : 'الكمية'}:</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(1.8)}}>{text.quantity}:</TextLato>
                     <TouchableOpacity onPress={() => decreaseQuantity()}>
                         <Icon type="AntDesign" color={gStyles.color_0} style={{marginHorizontal: 5}} size={15} name="minuscircle" />
                     </TouchableOpacity>
@@ -177,7 +170,7 @@ function CartCard({item, setRefresh}){
                 {/* Text And Image */}
                 {item.text && (
                     <View style={{marginVertical: height * 0.035}}>
-                        <TextLato bold>{en ? 'Provided Text' : 'الكلام المضاف'}:</TextLato>
+                        <TextLato bold>{text.text}:</TextLato>
                         <TextLato>{item.text}</TextLato>
                     </View>
                 )}
@@ -185,10 +178,10 @@ function CartCard({item, setRefresh}){
                 {/* Text And Image */}
                 {item.image && (
                     <View style={{marginVertical: height * 0.035}}>
-                        <TextLato bold>{en ? 'Provided Image' : 'الصورة المضافة'}:</TextLato>
+                        <TextLato bold>{text.image}:</TextLato>
                         <TouchableOpacity onPress={() => navigation.push('Gallery', {images: [item.image]})}>
                             <View style={styles.downloadButton}>
-                                <TextLato style={{color: 'white'}} bold>View Image</TextLato>
+                                <TextLato style={{color: 'white'}} bold>{text.imageView}</TextLato>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -201,20 +194,20 @@ function CartCard({item, setRefresh}){
                     <View style={{width: '73%'}}>
                         {/* Discount thingy */}
                         <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center'}}>
-                            <TextLato style={{textDecorationLine: 'line-through', fontSize: RFPercentage(2), marginHorizontal: 10}}>{calculatePricePreDiscount().toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato>
+                            <TextLato style={{textDecorationLine: 'line-through', fontSize: RFPercentage(2), marginHorizontal: 10}}>{calculatePricePreDiscount().toFixed(2)} {text.egp}</TextLato>
                             {product.discount && <View style={styles.discountContainer}>
                                 <TextLato bold style={{color: 'white', fontSize: RFPercentage(1.6)}}>{product.discount * 100}%</TextLato>
                             </View>}
                             {product.dealOfTheDay && <View style={{...styles.discountContainer, backgroundColor: 'black'}}>
                                 <TextLato bold style={{color: 'white', fontSize: RFPercentage(1.6)}}>{product.dealOfTheDay.discount}%</TextLato>
                             </View>}
-                            <TextLato style={{color: gStyles.active, fontSize: RFPercentage(2)}} italic>{en ? 'OFF' : 'خصم'}</TextLato>
+                            <TextLato style={{color: gStyles.active, fontSize: RFPercentage(2)}} italic>{text.off}</TextLato>
                         </View>
 
-                        <TextLato bold style={{fontSize: RFPercentage(2), marginHorizontal: 10}}>{calculatePrice().toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato>
+                        <TextLato bold style={{fontSize: RFPercentage(2), marginHorizontal: 10}}>{calculatePrice().toFixed(2)} {text.egp}</TextLato>
                     </View> 
                     :
-                    <TextLato bold style={{fontSize: RFPercentage(2), width: '73%'}}>{calculatePrice()} {en ? 'EGP' : 'ج.م'}</TextLato>
+                    <TextLato bold style={{fontSize: RFPercentage(2), width: '73%'}}>{calculatePrice()} {text.egp}</TextLato>
                     }
 
                     {/* Delete */}
@@ -268,7 +261,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     imageContainer: {
-        width: width * 0.28
+        width: width * 0.28,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     itemImage: {
         width: 100,

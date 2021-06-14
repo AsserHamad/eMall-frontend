@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { connect } from 'react-redux';
 import { addToCart, removeFromCart } from '../../../src/actions/cart';
@@ -21,7 +21,7 @@ const SimilarProductCard = (props) => {
         <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.push('Product', {product})}>
             <View style={{...styles.container, transform: en ? [] : [{scaleX: -1}]}}>
                 <View>
-                    {product.discount && <Text style={styles.discountContainer}>{Math.floor(product.discount * 100)}% Off</Text>}
+                    {product.discount && <TextLato style={styles.discountContainer}>{Math.floor(product.discount * 100)}% Off</TextLato>}
                     <Image style={styles.image} source={{uri: product.images[0]}} />
                 </View>
 

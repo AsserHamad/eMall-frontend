@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { RFValue } from "react-native-responsive-fontsize";
 import TextLato from '../../components/utils/TextLato';

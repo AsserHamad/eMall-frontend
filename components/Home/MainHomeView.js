@@ -11,7 +11,6 @@ import Constants from 'expo-constants';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import DealsOfTheDay from '../../screens/DealsOfTheDay';
-import SellerCardProduct from '../cards/Seller/SellerCardProduct';
 import FeaturedProducts from './FeaturedProducts';
 
 function MainHomeView(props){
@@ -27,7 +26,7 @@ function MainHomeView(props){
             <ScrollView>
                 <TopAds />
                 <Categories />
-                <ScrollCards title={language && language.titlePop} cards={getMostPopularStores()} />
+                {/* <ScrollCards title={language && language.titlePop} cards={getMostPopularStores()} /> */}
                 {ads[0] && <Ad ad={ads[0]} />}
                 <FeaturedProducts />
                 {ads[1] && <Ad ad={ads[1]} />}

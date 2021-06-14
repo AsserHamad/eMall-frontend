@@ -16,34 +16,36 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 const StoreProductOptions = ({navigation}) => {
     const [pickedProduct, setPickedProduct] = useState({});
-    const [variants, setVariants] = useState([]);
+    const [type, setType] = useState(0);
     const token = useSelector(state => state.authReducer.token);
-    useEffect(() => {
-        if(pickedProduct === '') return;
-        // fetch(`${Constants.manifest.extra.apiUrl}/product/product-variant/${pickedProduct._id}`)
-        // .then(res => res.json())
-        // .then(res => {
-        //     console.log('prod variant', res);
-        // })
-    }, [pickedProduct]);
+    const options = [
+        <Variants token={token} id={pickedProduct._id} />,
+        <Options token={token} id={pickedProduct._id} />,
+        <Specs token={token} id={pickedProduct._id} />
+    ];
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: gStyles.background}}>
             <Header details={{title: ''}} />
             <ScrollView style={styles.container}>
-                {!Object.keys(pickedProduct).length && [
-                <TextLato bold style={{fontSize: RFPercentage(2.5), marginVertical: height * 0.02, textAlign: 'center'}}>Pick a Product</TextLato>,
-                <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} />
-                ]}
-                
-                {/* SPECIFICATIONS */}
-                {Object.keys(pickedProduct).length > 0 && [<Specs token={token} id={pickedProduct._id} />, <Options token={token} id={pickedProduct._id} />]}
-                {/* OPTIONS */}
-                {/* <TextLato>Options</TextLato>
-                <View>
-                    <TouchableOpacity onPress={() => {}}>
-                        <TextLato>Add Option</TextLato>
-                    </TouchableOpacity>
-                </View> */}
+
+                {!Object.keys(pickedProduct).length ? [
+                    <TextLato bold style={{fontSize: RFPercentage(2.5), marginVertical: height * 0.02, textAlign: 'center'}}>Pick a Product</TextLato>,
+                    <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} />
+                ] : [
+                    <View style={styles.buttonsContainer}>
+                        <TouchableOpacity style={{...styles.topButton, backgroundColor: type === 0 ? gStyles.color_2 : gStyles.color_0}} onPress={() => setType(0)}>
+                            <TextLato style={styles.topButtonText}>Variants</TextLato>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{...styles.topButton, backgroundColor: type === 1 ? gStyles.color_2 : gStyles.color_0}} onPress={() => setType(1)}>
+                            <TextLato style={styles.topButtonText}>Options</TextLato>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{...styles.topButton, backgroundColor: type === 2 ? gStyles.color_2 : gStyles.color_0}} onPress={() => setType(2)}>
+                            <TextLato style={styles.topButtonText}>Specifications</TextLato>
+                        </TouchableOpacity>
+                    </View>,
+                    options[type]
+                ]
+                }
             </ScrollView>
         </View>
     )
@@ -79,6 +81,21 @@ const styles = StyleSheet.create({
         fontSize: RFPercentage(1.7),
         textAlign: 'center',
         marginTop: height * 0.02,
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        marginBottom: height * 0.04
+    },
+    topButton: {
+        marginHorizontal: width * 0.01,
+        borderRadius: 20,
+        backgroundColor: gStyles.color_0,
+        paddingVertical: height * 0.015,
+        paddingHorizontal: width * 0.03
+    },
+    topButtonText: {
+        color: 'white',
+        fontSize: RFPercentage(2)
     }
 })
 
@@ -338,7 +355,7 @@ const Options = ({id, token}) => {
         return <View style={{height: height * 0.1, justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator color={gStyles.color_2} size={RFPercentage(3)} /></View>
     
     return (
-        <View style={{marginTop: height * 0.05}}>
+        <View>
             <CustomModal modalVisible={visible} setModalVisible={setVisible} confirm={innerOption ? updateOptionParam : addOptionParam}>
                 <TextLato bold style={{textAlign: 'center', marginVertical: height * 0.03, fontSize: RFPercentage(2.7)}}>{innerOption ? 'Updating Option' : 'Add Option'}</TextLato>
                 <View>
@@ -462,6 +479,234 @@ const optionsStyles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: height * 0.02,
         borderRadius: 10
+    }
+})
+
+const Variants = ({id, token}) => {
+    const [loading, setLoading] = useState(true);
+    const [variants, setVariants] = useState(null);
+    const [enTitle, setEnTitle] = useState('Color');
+    const [arTitle, setArTitle] = useState('اللون');
+    const [enVariantTitle, setEnVariantTitle] = useState('Red');
+    const [arVariantTitle, setArVariantTitle] = useState('احمر');
+    const [visible, setVisible] = useState(false);
+    
+    const [editId, setEditId] = useState(null);
+    const [pickedProduct, setPickedProduct] = useState(null);
+    const [pickedProductEnTitle, setPickedProductEnTitle] = useState('');
+    const [pickedProductArTitle, setPickedProductArTitle] = useState('');
+    useEffect(() => {
+        fetchVariants();
+    }, []);
+    
+    const fetchVariants = () => {
+        setLoading(true);
+        fetch(`${Constants.manifest.extra.apiUrl}/product/variant/${id}`)
+        .then(res => res.json())
+        .then(res => {
+            setLoading(false);
+            setVariants(res);
+            console.log(res);
+        })
+    }
+
+    const createVariant = () => {
+        setLoading(true);
+        fetch(`${Constants.manifest.extra.apiUrl}/product/variant/`, {
+                method: 'post',
+                headers: {'Content-Type': "application/json", token},
+                body: JSON.stringify({title: {en: enTitle, ar: arTitle}, product: id, variant: {en: enVariantTitle, ar: arVariantTitle}})
+            }
+        )
+        .then(res => {
+            fetchVariants();
+        });
+    }
+
+    const updateOrCreate = () => {
+        console.log(variants, pickedProduct._id, editId, pickedProductEnTitle, pickedProductArTitle);
+        setLoading(true);
+        if(editId){
+            fetch(`${Constants.manifest.extra.apiUrl}/product/variant/`, {
+                    method: 'put',
+                    headers: {'Content-Type': "application/json", token},
+                    body: JSON.stringify({
+                        _id: variants._id,
+                        variantId: editId,
+                        variant: {
+                            en: pickedProductEnTitle,
+                            ar: pickedProductArTitle
+                        },
+                        product: pickedProduct._id
+                    })
+                }
+            )
+            .then(res => {
+                console.log(res);
+                setVisible(false);
+                fetchVariants();
+            });
+        } else {
+            fetch(`${Constants.manifest.extra.apiUrl}/product/variant/add`, {
+                method: 'put',
+                headers: {'Content-Type': "application/json", token},
+                body: JSON.stringify({
+                    _id: variants._id,
+                    variant: {
+                        en: pickedProductEnTitle,
+                        ar: pickedProductArTitle
+                    },
+                    product: pickedProduct._id
+                })
+            })
+            .then(res => {
+                console.log(res);
+                setVisible(false);
+                fetchVariants();
+            });
+        }
+    }
+
+    const removeVariant = (variantId) => {
+        setLoading(true);
+        fetch(`${Constants.manifest.extra.apiUrl}/product/variant`, {
+            method: 'delete',
+            headers: {'Content-Type': "application/json", token},
+            body: JSON.stringify({
+                _id: variants._id,
+                variantId
+            })
+        })
+        .then(res => {
+            console.log(res);
+            fetchVariants();
+        });
+    }
+
+    if(loading)
+        return <View><ActivityIndicator color={gStyles.color_2} size={RFPercentage(2.5)} /></View>
+    if(variants === null)
+    return (
+        <View>
+            <TextLato bold style={{textAlign: 'center', fontSize: RFPercentage(2.5)}}>Variants</TextLato>
+            <View style={variantStyles.formContainer}>
+                <TextLato style={variantStyles.inputTitle} bold>Set as a Variant</TextLato>
+                <TextInput style={variantStyles.input} value={enTitle} onChangeText={val => setEnTitle(val)} placeholder={'English Title (e.g. Color)'} />
+                <TextInput style={variantStyles.input} value={arTitle} onChangeText={val => setArTitle(val)} placeholder={'Arabic Title (e.g. اللون)'} />
+                
+                <TextLato style={variantStyles.inputTitle} bold>Product variant title</TextLato>
+                <TextInput style={variantStyles.input} value={enVariantTitle} onChangeText={val => setEnVariantTitle(val)} placeholder={'English Title (e.g. Red)'} />
+                <TextInput style={variantStyles.input} value={arVariantTitle} onChangeText={val => setArVariantTitle(val)} placeholder={'Arabic Title (e.g. احمر)'} />
+            </View>
+            <TouchableOpacity style={variantStyles.buttonContainer} onPress={createVariant}>
+                <TextLato style={{color: 'white', fontSize: RFPercentage(2)}}>Initiate Variant</TextLato>
+            </TouchableOpacity>
+        </View>
+    )
+    return (
+        <View>
+            <TextLato bold style={variantStyles.title}>{variants.title.en}/{variants.title.ar}</TextLato>
+            <View style={{alignItems: 'center', marginTop: height * 0.05, backgroundColor: 'white', paddingVertical: height * 0.02}}>
+                <View style={{flexDirection: 'row', width: width * 0.98, alignItems: 'center', justifyContent: 'center', marginBottom: height * 0.02}}>
+                    <TextLato bold style={{width: '25%', textAlign: 'center'}}>Variant</TextLato>
+                    <TextLato bold style={{width: '25%', textAlign: 'center'}}>Product</TextLato>
+                    <TextLato bold style={{width: '25%', textAlign: 'center'}}>Image</TextLato>
+                    <TextLato bold style={{width: '25%', textAlign: 'center'}}>Actions</TextLato>
+                </View>
+                {variants.products.map(product => {
+                    
+                    return (
+                        <View style={{flexDirection: 'row', width: width * 0.98, alignItems: 'center', justifyContent: 'center', marginVertical: height * 0.015}}>
+                            <TextLato style={{width: '25%', textAlign: 'center', fontSize: RFPercentage(1.5)}}>{product.variant.en}</TextLato>
+                            <TextLato style={{width: '25%', textAlign: 'center', fontSize: RFPercentage(1.5)}}>{product.product.title.en}</TextLato>
+                            <Image source={{uri: product.product.images[0]}} style={{width: '25%', height: height * 0.1}} />
+                            <View style={{width: '25%', justifyContent: 'center', alignItems: 'center'}}>
+                                <TouchableOpacity onPress={() => {
+                                    setPickedProduct(product.product);
+                                    setEditId(product._id);
+                                    setPickedProductEnTitle(product.variant.en);
+                                    setPickedProductArTitle(product.variant.ar);
+                                    setVisible(true);
+                                }} style={variantStyles.actionButtons}>
+                                    <Icon type="Feather" name="edit" size={RFPercentage(2)} color={'white'} />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => removeVariant(product._id)} style={variantStyles.actionButtons}>
+                                    <Icon type="AntDesign" name="delete" size={RFPercentage(2)} color={'white'} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )
+                })}
+            </View>
+            <TouchableOpacity onPress={() => {
+                setEditId(null);
+                setPickedProduct({});
+                setPickedProductEnTitle('');
+                setPickedProductArTitle('');
+                setVisible(true);
+            }} style={variantStyles.buttonContainer}>
+                <TextLato style={{color: 'white'}}>Add Product to Variant</TextLato>
+            </TouchableOpacity>
+            <CustomModal modalVisible={visible} setModalVisible={setVisible} close={() => {
+                setEditId(null);
+                setPickedProduct({});
+                setPickedProductEnTitle('');
+                setPickedProductArTitle('');
+                setVisible(false);
+            }}
+            confirm={updateOrCreate}>
+                <View style={{height: height * 0.7, width: width * 0.77}}>
+                    <TextLato bold style={{textAlign: 'center'}}>{variants.title.en}/{variants.title.ar}</TextLato>
+                    <TextLato style={variantStyles.inputTitle} bold>Product variant title</TextLato>
+                    <TextInput style={variantStyles.input} value={pickedProductEnTitle} onChangeText={val => setPickedProductEnTitle(val)} placeholder={'English Title (e.g. Red)'} />
+                    <TextInput style={variantStyles.input} value={pickedProductArTitle} onChangeText={val => setPickedProductArTitle(val)} placeholder={'Arabic Title (e.g. احمر)'} />
+                    <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} style={{height: height * 0.1}} />
+                </View>
+            </CustomModal>
+        </View>
+    )
+}
+
+const variantStyles = StyleSheet.create({
+    title: {
+        textAlign: 'center',
+        fontSize: RFPercentage(3),
+        fontFamily: 'Cairo'
+    },
+    formContainer: {
+        marginHorizontal: width * 0.04,
+        marginTop: height * 0.01
+    },
+    inputTitle: {
+        fontSize: RFPercentage(2.5),
+        marginVertical: height * 0.02
+    },
+    input: {
+        fontSize: RFPercentage(2),
+        fontFamily: 'Cairo',
+        marginBottom: height * 0.02,
+        paddingVertical: height * 0.01,
+        borderBottomWidth: 1.5,
+        borderColor: gStyles.color_2
+    },
+    buttonContainer: {
+        width: width * 0.8,
+        marginHorizontal: width * 0.1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: gStyles.color_2, 
+        paddingVertical: height * 0.02,
+        borderRadius: 100,
+        marginTop: height * 0.05
+    },
+    actionButtons: {
+        backgroundColor: gStyles.color_2,
+        paddingVertical: width * 0.02,
+        aspectRatio: 1,
+        borderRadius: 100,
+        marginBottom: height * 0.01,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
 

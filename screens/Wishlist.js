@@ -15,12 +15,12 @@ function Wishlist(props){
     return (
     <View style={styles.container}>
         <Navbar />
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
             <TextLato style={styles.headerText}>{text.myWishlist}</TextLato>
             <Image source={{uri: 'https://imgur.com/IUXbbOB.png'}} style={{width: width * 0.35, aspectRatio: 783/553}} />
             <TextLato italic style={{textAlign: 'center', color: 'black', width: '60%', fontSize: RFPercentage(1.5)}}>{text.wishlistDescription}</TextLato>
         </View>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
             {props.wishlist.products.map(item => {
                 return <WishlistCard key={item._id} item={item} />
             })}

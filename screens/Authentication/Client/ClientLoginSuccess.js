@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Alert, Dimensions, StyleSheet, View } from 'react-native';
 import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import { gStyles } from '../../../global.style';
@@ -9,6 +9,9 @@ import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
+import { changeFirstTime } from '../../../src/actions/general';
+import TextLato from '../../../components/utils/TextLato';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
@@ -35,7 +38,10 @@ function ClientLoginSuccess(props) {
         })
         .then(res => {
             props.login(res);
-            props.navigation.navigate('Home');
+            console.log(res);
+            AsyncStorage.setItem('@firstTime', 'true');
+            props.changeFirstTime(true);
+            // props.navigation.navigate('Home');
         })
         .catch(err => Alert.alert(
             "Problem with Verification",
@@ -45,11 +51,11 @@ function ClientLoginSuccess(props) {
     return (
     <View style={styles.container}>
         <Feather name="check-circle" size={RFValue(130)} color={gStyles.color_0} />
-        <Text style={styles.welcomeText}>Greetings, {account.firstName}</Text>
+        <TextLato style={styles.welcomeText}>Greetings, {account.firstName}</TextLato>
         <View style={styles.subtitle}>
-            <Text style={{fontSize: RFPercentage(1.6)}}>An email has been sent to your email account</Text>
-            <Text  style={{fontSize: RFPercentage(1.6), fontWeight: 'bold', color: gStyles.color_0}}>{account.email}</Text>
-            <Text style={{fontSize: RFPercentage(1.6)}}>Please enter the code that was provided in the email</Text>
+            <TextLato style={{fontSize: RFPercentage(1.6)}}>An email has been sent to your email account</TextLato>
+            <TextLato  style={{fontSize: RFPercentage(1.6), fontWeight: 'bold', color: gStyles.color_0}}>{account.email}</TextLato>
+            <TextLato style={{fontSize: RFPercentage(1.6)}}>Please enter the code that was provided in the email</TextLato>
         </View>
         <InputOneCharacter
             input0={input0} setInput0={setInput0}
@@ -58,7 +64,7 @@ function ClientLoginSuccess(props) {
             input3={input3} setInput3={setInput3}
             input4={input4} setInput4={setInput4} />
         <TouchableOpacity activeOpacity={0.9} onPress={submitOtp}>
-            <Text style={styles.backButton}>Submit</Text>
+            <TextLato style={styles.backButton}>Submit</TextLato>
         </TouchableOpacity>
     </View>
     )
@@ -107,7 +113,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        login: (account) => dispatch(login(account))
+        login: (account) => dispatch(login(account)),
+        changeFirstTime: (firstTime) => dispatch(changeFirstTime(firstTime))
     }
 }
 

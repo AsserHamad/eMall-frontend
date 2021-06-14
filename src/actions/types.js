@@ -1,4 +1,5 @@
 export const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE';
+export const CHANGE_FIRST_TIME = 'CHANGE_FIRST_TIME';
 
 export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';

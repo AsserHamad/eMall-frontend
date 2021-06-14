@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Dimensions, Text } from 'react-native';
+import { StyleSheet, View, TextInput, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';

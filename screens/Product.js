@@ -236,10 +236,10 @@ const Product = (props) => {
                         {/* STORE */}
                         <View style={{...mainStyles.storeContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                             <TextLato bold style={mainStyles.soldBy}>{text.soldBy}</TextLato>
-                            <View style={mainStyles.storeViewContainer}>
+                            <TouchableOpacity onPress={() => navigation.push('Store', {store: {_id: product.store._id}})} style={mainStyles.storeViewContainer}>
                                 <TextLato style={mainStyles.storeTitle}>{product.store.title}</TextLato>
                                 <Image style={{...mainStyles.storeLogo, aspectRatio: logoAspectRatio }} source={{uri: product.store.logo}} />
-                            </View>
+                            </TouchableOpacity>
                         </View>
 
                         {/* OPTIONS */}
@@ -298,10 +298,10 @@ const Product = (props) => {
                         </View>}
 
                         {/* DESCRIPTION */}
-                        <View style={mainStyles.descriptionContainer}>
+                        {product.description.en !== '' && <View style={mainStyles.descriptionContainer}>
                             <TextLato bold style={mainStyles.descriptionTitle}>{text.overview}</TextLato>
                             <TextLato style={{fontSize: RFPercentage(1.7)}}>{product.description[language]}</TextLato>
-                        </View>
+                        </View>}
 
 
                         {/* EXTRA IMAGE AND TEXT */}
@@ -370,7 +370,7 @@ const Product = (props) => {
                         }
 
                         {/* SPECIFICATIONS */}
-                        {product.specifications.length !== 0 && <View style={mainStyles.specificationsContainer}>
+                        {product.specifications && product.specifications.length !== 0 && <View style={mainStyles.specificationsContainer}>
                             <TextLato bold style={mainStyles.specificationTitle}>{text.specifications}</TextLato>
                             <View>
                                 {product.specifications.map(spec => {
@@ -407,7 +407,7 @@ const Product = (props) => {
                             />
 
                         {/* MORE ITEMS */}
-                        <ScrollCards style={{width}} title={text.similarStores} cards={similarStores.map(store => <StoreCard key={Math.random()} store={store} />)} />
+                        {/* <ScrollCards style={{width}} title={text.similarStores} cards={similarStores.map(store => <StoreCard key={Math.random()} store={store} />)} /> */}
                 </ScrollView>
         </View>
     )

@@ -10,8 +10,11 @@ function ScrollCards(props){
     const language = useLanguage();
     const en = language === 'en';
     if(!props.cards.length) return (
-        <View style={styles.loadingContainer}>
-            <ActivityIndicator size={RFPercentage(4)} color={'white'} />
+        <View style={{...styles.container, ...props.style}}>
+            <TextLato bold style={styles.title}>{title}</TextLato>
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size={RFPercentage(4)} color={'white'} />
+            </View>
         </View>
     );
     return (
@@ -27,9 +30,8 @@ function ScrollCards(props){
 const styles = StyleSheet.create({
     loadingContainer: {
         height: height * 0.2,
+        width,
         backgroundColor: '#aaa',
-        marginVertical: height * 0.02,
-        marginTop: height * 0.07,
         justifyContent: 'center',
         alignItems: 'center'
     },

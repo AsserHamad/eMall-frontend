@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 import TextLato from '../utils/TextLato';
 import { useLanguage } from '../../hooks/language';
-import Icon from '../utils/Icon';
 import { useNavigation } from '@react-navigation/native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
@@ -41,7 +40,7 @@ const styles = StyleSheet.create({
     icon: {
     },
     title: {
-        color: 'white',
+        color: 'black',
         fontSize: RFPercentage(1.5),
         textAlign: 'center',
         marginTop: height * 0.01,

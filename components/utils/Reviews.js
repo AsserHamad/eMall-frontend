@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Dimensions } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { gStyles } from '../../global.style';
 import Icon from './Icon';
 import TextLato from './TextLato';
@@ -11,7 +11,7 @@ export default ({reviews, size, style, number}) => {
         return num > 0.5 ? 
             <Icon type="FontAwesome" key={Math.random()} name="star" size={size} color={gStyles.starColor} /> : num > 0 ?
             <Icon type="FontAwesome" key={Math.random()} name="star-half" size={size} color={gStyles.starColor} /> :
-            null
+            <Icon type="FontAwesome" key={Math.random()} name="star" size={size} color={'#aaa'} />
     })
     return (
         <View style={{flexDirection: 'row', alignItems: 'center', ...style}}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 import { AntDesign } from '@expo/vector-icons';
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     itemImage: {
         width: width * 0.2,
         aspectRatio: 1,
-        // marginHorizontal: width * 0.02
+        marginHorizontal: width * 0.02
     },
     itemTitle: {
         fontSize: RFPercentage(2),
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         width: width * 0.6
     },
     buttonsContainer: {
-        width: '50%',
+        width: '40%',
         justifyContent: 'center'
     },
     button: {

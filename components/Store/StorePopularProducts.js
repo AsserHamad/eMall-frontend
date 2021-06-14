@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet, Dimensions, ActivityIndicator, ImageBackground } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native';
 import Constants from 'expo-constants';
 
-import SellerCardProduct from '../cards/Seller/SellerCardProduct'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import TextLato from '../utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';

@@ -8,7 +8,7 @@
     "facebookScheme": "fb1213603305321250",
     "splash": {
       "image": "./assets/splash.png",
-      "backgroundColor": "#FA1B1C"
+      "backgroundColor": "#FFFFFF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -35,17 +35,18 @@
       "favicon": "./assets/logoM.png"
     },
     "extra": {
-      "apiUrl": "http://192.168.8.177:5000/api",
-      "home": "192.168.8.177",
-      "home(wifi)": "192.168.8.156",
-      "mobile": "192.168.43.69",
-      "clubhouse": "192.168.0.131",
-      "yaraIphone": "172.20.10.4",
-      "x's": "192.168.1.6",
-      "rawaj:": "25.122.141.35",
-      "hardee's": "100.64.138.131",
+      "apiUrl": "http://192.168.8.171:5000/api",
+      "home": "192.168.8.177:5000",
+      "home(wifi)": "192.168.8.155:5000",
+      "mobile": "192.168.43.69:5000",
+      "mahmoud-hotspot": "172.20.10.13:5000",
+      "clubhouse": "192.168.0.131:5000",
+      "yaraIphone": "172.20.10.4:5000",
+      "x's": "192.168.1.6:5000",
+      "rawaj:": "25.122.141.35:5000",
+      "hardee's": "100.64.138.131:5000",
       "server": "3.143.23.248",
-      "moar": "192.168.1.36"
+      "moar": "192.168.1.3:50006"
     }
   }
 }

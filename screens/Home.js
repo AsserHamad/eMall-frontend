@@ -1,11 +1,8 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { ScrollView, StyleSheet, View, Dimensions } from 'react-native';
-import { useFonts } from 'expo-font';
-import AnimatedSplash from "react-native-animated-splash-screen";
 
 import Navbar from '../components/Navbar/Navbar';
 
-import Constants from 'expo-constants';
 import MainHomeView from '../components/Home/MainHomeView';
 import { gStyles } from '../global.style';
 import { StatusBar } from 'expo-status-bar';

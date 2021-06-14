@@ -3,20 +3,24 @@ import { View, Dimensions, StyleSheet, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import TextLato from '../../components/utils/TextLato';
+import Header from '../../components/Header';
 import { gStyles } from '../../global.style';
+import { useLanguageText } from '../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const ConfirmPurchase = ({navigation, route}) => {
+    const text = useLanguageText('confirmPayment');
     return (
         <View style={styles.container}>
+            <Header details={{title: text.title}} />
             <Image style={styles.titleImage} source={{uri: 'https://img.icons8.com/bubbles/2x/purchase-order.png'}} />
-            <TextLato bold style={styles.title}>Order Placed</TextLato>
-            <TextLato style={styles.subtitle}>Sit back and relax. Your order will be reviewed by the store owners and will be back to you in no time!</TextLato>
-            <TextLato italic style={styles.title}>Order #: {route.params.code}</TextLato>
+            <TextLato bold style={styles.title}>{text.orderPlaced}</TextLato>
+            <TextLato style={styles.subtitle}>{text.subtitle}</TextLato>
+            <TextLato italic style={styles.title}>{text.order} {route.params.code}</TextLato>
             <TouchableOpacity onPress={() => navigation.popToTop()} activeOpacity={0.6} style={{width: width * 0.8, marginTop: height * 0.1}}>
                 <View style={styles.buttonContainer}>
-                    <TextLato bold style={styles.buttonText}>GO HOME</TextLato>
+                    <TextLato bold style={styles.buttonText}>{text.home}</TextLato>
                 </View>
             </TouchableOpacity>
         </View>

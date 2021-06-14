@@ -4,10 +4,9 @@ import Constants from 'expo-constants';
 
 import SellerCardProduct from '../cards/Seller/SellerCardProduct'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useLinkBuilder, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { gStyles } from '../../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { useLanguage } from '../../hooks/language';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 const HomeComponent = ({ homeAds, showToast, en = true }) => {

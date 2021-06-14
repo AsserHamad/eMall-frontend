@@ -3,20 +3,20 @@ import TextLato from '../../utils/TextLato';
 import { ActivityIndicator, Dimensions, Image, KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { gStyles } from '../../../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import Icon from '../../utils/Icon';
 import useCredit from '../../../hooks/credit';
-import { SafeAreaView } from 'react-navigation';
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { useLanguage } from '../../../hooks/language';
+import Header from '../../Header';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { useLanguage, useLanguageText } from '../../../hooks/language';
 import { Constants } from 'react-native-unimodules';
 import { useSelector } from 'react-redux';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 
-const RequestWithdrawal = (props) => {
+const RequestWithdrawal = () => {
     const credit = useCredit();
     const language = useLanguage();
+    const text = useLanguageText('requestWithdrawal');
     const [disabled, setDisabled] = useState(true);
     const token = useSelector(state => state.authReducer.token);
     const [loading, setLoading] = useState(false);
@@ -48,6 +48,7 @@ const RequestWithdrawal = (props) => {
     if(confirmed) {
         return (
             <View style={styles.container}>
+                <Header details={{title: text.title}} />
                 <Image style={styles.image} source={{uri: 'https://i.imgur.com/nXxOuMw.png'}} />
                 <View style={styles.mainContainer}>
                     <TextLato bold style={{...styles.title, textAlign: 'center'}}>Request Submitted Successfully!</TextLato>
@@ -59,30 +60,33 @@ const RequestWithdrawal = (props) => {
         )
     }
     return (
-        <ScrollView style={styles.container}>
-            <KeyboardAvoidingView>
-                <Image style={styles.image} source={{uri: 'https://i.imgur.com/OBA7YQN.png'}} />
-                <View style={styles.mainContainer}>
-                    <TextLato bold style={styles.title}>Request Withdrawal of Store Credit</TextLato>
-                    <TextLato style={styles.subtitle}>Current Credit:</TextLato>
-                    <TextLato bold style={styles.funds}>{credit} EGP</TextLato>
-                    {/* <TextLato italic style={styles.subtitle}>Please enter the amount you would like to withdraw below</TextLato> */}
-                    <TextLato italic style={styles.subtitle}>*You will be withdrawing your entire balance, leaving you with 0 credit</TextLato>
-                    {/* <TextInput
-                        style={{...styles.input, fontFamily: language === 'en' ? 'Lato' : 'Cairo'}}
-                        keyboardType={'number-pad'}
-                        value={value}
-                        onChangeText={input => setValue(input)}
-                    /> */}
-                </View>
-            </KeyboardAvoidingView>
-            <TouchableOpacity
-                activeOpacity={0.7}
-                style={{...styles.submitButton, backgroundColor: disabled ? gStyles.color_0 : "#2C62FF"}}
-                onPress={() => disabled ? null : requestWidthrawal()}>
-                <TextLato style={{color: 'white'}}>SUBMIT REQUEST</TextLato>
-            </TouchableOpacity>
-        </ScrollView>
+        <View style={styles.container}>
+            <Header details={{title: text.title}} />
+            <ScrollView>
+                <KeyboardAvoidingView>
+                    <Image style={styles.image} source={{uri: 'https://imgur.com/vc604zy.png'}} />
+                    <View style={styles.mainContainer}>
+                        <TextLato bold style={styles.title}>{text.request}</TextLato>
+                        <TextLato style={styles.subtitle}>{text.credit}</TextLato>
+                        <TextLato bold style={styles.funds}>{credit} {text.egp}</TextLato>
+                        {/* <TextLato italic style={styles.subtitle}>Please enter the amount you would like to withdraw below</TextLato> */}
+                        <TextLato italic style={styles.subtitle}>{text.subtitle}</TextLato>
+                        {/* <TextInput
+                            style={{...styles.input, fontFamily: language === 'en' ? 'Lato' : 'Cairo'}}
+                            keyboardType={'number-pad'}
+                            value={value}
+                            onChangeText={input => setValue(input)}
+                        /> */}
+                    </View>
+                </KeyboardAvoidingView>
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={{...styles.submitButton, backgroundColor: disabled ? gStyles.color_0 : gStyles.color_2}}
+                    onPress={() => disabled ? null : requestWidthrawal()}>
+                    <TextLato style={{color: 'white'}}>{text.submit}</TextLato>
+                </TouchableOpacity>
+            </ScrollView>
+        </View>
     )
 }
 
@@ -116,7 +120,7 @@ const styles = StyleSheet.create({
         fontSize: RFPercentage(4),
         marginTop: height * 0.01,
         // textAlign: 'center',
-        color: '#2C62FF'
+        color: gStyles.color_2
     },
     mainContainer: {
         marginHorizontal: width * 0.07,

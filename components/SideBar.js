@@ -1,7 +1,7 @@
 import React from 'react';
 import { DrawerContentScrollView , DrawerItemList } from '@react-navigation/drawer';
 import Constants from 'expo-constants';
-import { Dimensions, Image, ImageBackground, StyleSheet,Text,View } from 'react-native';
+import { Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
 import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { gStyles } from '../global.style';
 import { connect } from 'react-redux';
