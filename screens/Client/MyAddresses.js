@@ -14,6 +14,7 @@ import CustomModal from '../../components/utils/CustomModal';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const MyAddresses = () => {
     const addresses = useSelector(state => state.authReducer.account.addresses);
+    console.log(addresses);
     const token = useSelector(state => state.authReducer.token);
     const dispatch = useDispatch();
     const [edited, setEdited] = useState(undefined);
@@ -74,9 +75,7 @@ const MyAddresses = () => {
                             <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.city}</TextLato>
                             <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.street}</TextLato>
                             <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.building}, {address.apartment}</TextLato>
-                            {address.extra && 
                             <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} italic>{address.extra}</TextLato>
-                            }
                             <View style={{marginTop: height * 0.02, flexDirection: en ? 'row' : 'row-reverse'}}>
                                 {address.active ? 
                                     <View style={{...styles.activeButton, backgroundColor: 'white'}}>

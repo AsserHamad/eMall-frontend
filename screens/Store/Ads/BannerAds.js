@@ -145,7 +145,7 @@ const BannerAd = ({ad, text}) => {
     const date = new Date(banner.lastRenew);
     const language = useLanguage();
     const en = language === 'en';
-    const nextWeek = new Date(date + 2*7);
+    const nextWeek = new Date(date.getTime() + 7 * 24 * 60 * 60 * 1000);
     const token = useSelector(state => state.authReducer.token);
 
     const updateBanner = (val) => {

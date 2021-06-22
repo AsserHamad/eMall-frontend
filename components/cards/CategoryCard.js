@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     container: {
         height: Dimensions.get('window').width * 0.3,
         aspectRatio: 1,
-        backgroundColor: gStyles.color_1,
+        backgroundColor: 'white',
         borderRadius: 2,
         borderWidth: 0,
         alignItems: 'center',

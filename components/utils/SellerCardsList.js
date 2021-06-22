@@ -19,7 +19,6 @@ const SellerCardsList = ({url, body, refresh, showToast, title}) => {
     const [sellers, setSellers] = useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        console.log('the body', body)
         setLoading(true);
         fetch(url, {
             method: 'post',

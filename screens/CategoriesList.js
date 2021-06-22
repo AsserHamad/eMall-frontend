@@ -41,9 +41,9 @@ const styles = StyleSheet.create({
     card: {
         width: width * 0.48,
         marginHorizontal: width * 0.005,
-        backgroundColor: gStyles.color_2,
+        backgroundColor: 'white',
         justifyContent: 'center',
-        borderRadius: 10,
+        borderRadius: 5,
         alignItems: 'center',
         paddingVertical: height * 0.03,
         marginTop: height * 0.005,

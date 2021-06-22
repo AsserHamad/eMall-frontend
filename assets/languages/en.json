@@ -232,7 +232,7 @@
         "rate": "EGP/week",
         "noAds": "You do not currently have any active ads :(",
         "lastRenewal": "Last Renewal ",
-        "renewalOn": "Renewal On ",
+        "renewalOn": "Ends On ",
         "autoRenewal": "Auto-Renewal",
         "addAd": "Add an Ad",
         "storeCredit": "Store Credit",

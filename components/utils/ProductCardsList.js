@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, View } from 'react-native';
+import { ActivityIndicator, Dimensions, View, FlatList } from 'react-native';
 import { gStyles } from '../../global.style';
 import { useSelector } from 'react-redux';
 import SellerCardProduct from '../cards/Seller/SellerCardProduct';
@@ -33,21 +33,26 @@ const ProductCardsList = ({url, body, refresh, showToast, method = 'post', title
     }, [refresh]);
 
     if(loading) return <View style={{width, height: height * 0.8, justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator size={height * 0.1} color={gStyles.color_0} /></View>;
-    return (
-        <View style={{width, backgroundColor: 'white', paddingVertical: height * 0.03, alignItems: 'center'}}>
-            {products.map(prod => <SellerCardProduct showToast={showToast} key={Math.random()} product={prod} style={{width: '95%', marginBottom: height * 0.03, transform: en ? [] : [{scaleX: -1}]}} />)}
-            <TouchableOpacity onPress={() => navigation.push('ViewAllProducts', {url: `${url}/full`, body, title: title})} style={{paddingVertical: height * 0.02, alignItems: 'center', borderRadius: 10, backgroundColor: gStyles.color_2, width: width * 0.95, marginBottom: height * 0.02}}>
-                <TextLato bold style={{color: 'white'}}>{en ? 'View All Products' : 'عرض جميع المنتجات'}</TextLato>
-            </TouchableOpacity>
-        </View>)
     // return (
-    //     <FlatList
-    //         data={products}
-    //         showsVerticalScrollIndicator={false}
-    //         renderItem={({ item }) => <SellerCardProduct key={item._id*Math.random()} product={item} />}
-    //         keyExtractor={() => `${Math.random()}`}
-    //     />
-    // )
+    //     <View style={{width, backgroundColor: 'white', paddingVertical: height * 0.03, alignItems: 'center'}}>
+    //         {products.map(prod => <SellerCardProduct showToast={showToast} key={Math.random()} product={prod} style={{width: '95%', marginBottom: height * 0.03, transform: en ? [] : [{scaleX: -1}]}} />)}
+    //         <TouchableOpacity onPress={() => navigation.push('ViewAllProducts', {url: `${url}/full`, body, title: title})} style={{paddingVertical: height * 0.02, alignItems: 'center', borderRadius: 10, backgroundColor: gStyles.color_2, width: width * 0.95, marginBottom: height * 0.02}}>
+    //             <TextLato bold style={{color: 'white'}}>{en ? 'View All Products' : 'عرض جميع المنتجات'}</TextLato>
+    //         </TouchableOpacity>
+    //     </View>)
+    return (
+        <View style={{alignItems: 'center'}}>
+            <FlatList
+                data={products}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => <SellerCardProduct key={item._id*Math.random()} style={{width: width * 0.95}} product={item} />}
+                keyExtractor={() => `${Math.random()}`}
+            />
+            <TouchableOpacity onPress={() => navigation.push('ViewAllProducts', {url: `${url}/full`, body, title: title})} style={{paddingVertical: height * 0.02, alignItems: 'center', borderRadius: 3, backgroundColor: gStyles.color_2, width: width * 0.95, marginBottom: height * 0.02}}>
+               <TextLato bold style={{color: 'white'}}>{en ? 'View All Products' : 'عرض جميع المنتجات'}</TextLato>
+            </TouchableOpacity>
+        </View>
+    )
 }
 
 export default ProductCardsList;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Dimensions, Image, Modal, SafeAreaView, StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Dimensions, Image, SafeAreaView, StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useSelector } from 'react-redux';
 import Icon from '../../components/utils/Icon';
@@ -150,7 +150,7 @@ const Order = ({order, en, text}) => {
                 </View>
             )}
             <TextLato bold style={{marginVertical: height * 0.03, fontSize: RFPercentage(3), color: gStyles.color_2}}>
-                {order.total} 
+                {order.total.toFixed(2)} 
                 <TextLato style={{fontSize: RFPercentage(2), color: gStyles.color_3}}>  {en ? 'EGP' : 'ج.م'}</TextLato>
             </TextLato>
             </View>

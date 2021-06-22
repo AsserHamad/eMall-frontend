@@ -19,6 +19,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 
 const SellerCardProduct = ({product, style, seller, showToast}) => {
+    console.log('PRODUCT', product)
     const language = useLanguage();
     const en = language === 'en';
     const navigation = useNavigation();
@@ -259,7 +260,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
                 <View>
                     {product.discount && <TextLato style={styles.discountContainer}>{Math.floor(product.discount * 100)}% {en ? 'OFF' : 'خصم'}</TextLato>}
                     {product.dealOfTheDay && product.dealOfTheDay.active && <TextLato style={{...styles.discountContainer, backgroundColor: 'black'}}>{Math.floor(product.dealOfTheDay.discount)}% {en ? 'OFF' : 'خصم'}</TextLato>}
-                    <Image style={styles.image} source={{uri: product.images[0]}} />
+                    <Image style={styles.image} source={{uri: `https://picsum.photos/200?random=${Math.ceil(Math.random() * 20)}`}} />
                 </View>
 
                 {/* Details */}
@@ -333,7 +334,8 @@ const styles = StyleSheet.create({
     },
     image: {
         width: width * 0.23,
-        aspectRatio: 1
+        aspectRatio: 1,
+        borderRadius: 3
     },
     details: {
         width: width * 0.4,

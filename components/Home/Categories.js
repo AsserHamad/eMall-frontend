@@ -40,7 +40,7 @@ function Categories(){
                 ))}
                 <TouchableOpacity onPress={() => navigation.push('Categories')} activeOpacity={0.8} style={{borderWidth: 0, width: width * 0.32, alignItems: 'center'}}>
                     <View style={styles.cardContainer}>
-                        <Icon type={'AntDesign'} size={40} color={'white'} name={'plus'} style={styles.icon} />
+                        <Icon type={'AntDesign'} size={40} color={'black'} name={'plus'} style={styles.icon} />
                         <TextLato style={styles.title}>{en ? 'View All' : 'الكل'}</TextLato>
                     </View>
                 </TouchableOpacity>
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     cardContainer: {
         height: Dimensions.get('window').width * 0.3,
         aspectRatio: 1,
-        backgroundColor: gStyles.color_0,
+        backgroundColor: 'white',
         borderRadius: 2,
         borderWidth: 0,
         alignItems: 'center',
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     icon: {
     },
     title: {
-        color: 'white',
+        color: 'black',
         fontSize: RFPercentage(1.5),
         textAlign: 'center',
         marginTop: height * 0.01,

@@ -39,9 +39,9 @@ function TopAds(){
                     <Image style={styles.swiperImage} source={{uri: ad.image}} />
                 </TouchableOpacity>
             )) : <ImageBackground style={styles.swiperImageContainer} imageStyle={styles.swiperImage} source={{uri: "https://image.freepik.com/free-vector/red-oriental-chinese-seamless-pattern-illustration_193606-43.jpg"}}>
-                    <View style={styles.innerImage}>
+                    {/* <View style={styles.innerImage}>
                         <Text>Welcome to</Text>
-                    </View>
+                    </View> */}
                 </ImageBackground>}
         </Swiper>
     )
