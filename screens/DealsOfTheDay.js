@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
         paddingTop: height * 0.014,
         paddingBottom: height * 0.05,
         paddingLeft: width * 0.04,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        width
     },
     discountBubble: {
         position: 'absolute',

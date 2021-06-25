@@ -13,18 +13,19 @@ import { loginSeller } from '../../../src/actions/auth';
 import DisabledButton from '../DisabledButton';
 import TextLato from '../../../components/utils/TextLato';
 import Icon from '../../../components/utils/Icon';
-import { useLanguage } from '../../../hooks/language';
+import { useLanguage, useLanguageText } from '../../../hooks/language';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../../components/Header';
 import LoadingPage from '../../../components/utils/LoadingPage';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const SellerLogin = (props) => {
-    const [email, setEmail] = useState('asserhamad96@gmail.com');
+    const [email, setEmail] = useState('inyourshoe@gmail.com');
     const [errors, setErrors] = useState([]);
-    const [password, setPassword] = useState('Abcd1234');
+    const [password, setPassword] = useState('emall.321!');
     const [loading, setLoading] = useState(false);
     const language = useLanguage();
+    const text = useLanguageText('sellerLogin');
     const en = language === 'en';
     const login = () => {
         setLoading(true);
@@ -98,8 +99,8 @@ const SellerLogin = (props) => {
         <Header details={{title: ''}} />
         <Image style={styles.image} source={{uri: 'https://imgur.com/CoPeD7N.png'}} />
             <View style={styles.headerContainer}>
-                <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>Seller Dashboard</TextLato>
-                <TextLato italic style={{color: 'black', fontSize: RFValue(11)}}>Please login to access your dashboard</TextLato>
+                <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>{text.sellerDashboard}</TextLato>
+                <TextLato italic style={{color: 'black', fontSize: RFValue(11)}}>{text.sellerSubtitle}</TextLato>
             </View>
             <View style={styles.errorContainer}>
                 {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={Math.random()}>{err.msg ? err.msg : err}</TextLato>)}
@@ -123,7 +124,7 @@ const SellerLogin = (props) => {
                     onChangeText={(val) => setPassword(val)}
                     style={{...styles.input, textAlign: en ? 'left' : 'right'}} />
                 <TouchableOpacity onPress={() => props.navigation.push('ForgotPassword', {route: 'seller'})}>
-                    <TextLato style={{color: gStyles.color_0, fontSize: RFValue(10)}}>Forgot Password</TextLato>
+                    <TextLato style={{color: gStyles.color_0, fontSize: RFValue(10)}}>{text.forgotPassword}</TextLato>
                 </TouchableOpacity>
             </View>
                 {/* Other Logins */}
@@ -131,24 +132,24 @@ const SellerLogin = (props) => {
                     <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButton}>
                             <Icon style={{width: '30%', alignItems: 'center'}} type={'FontAwesome'} name="facebook-f" size={RFValue(18)} color="white" />
-                            <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>Login with Facebook</TextLato>
+                            <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>{text.loginWithFacebook}</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <View style={[styles.alternativeLoginButton, {backgroundColor: '#EA4335'}]}>
                             <Icon type={'AntDesign'} style={{width: '30%', alignItems: 'center'}} name="google" size={RFValue(18)} color="white" />
-                            <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>Login with Google</TextLato>
+                            <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>{text.loginWithGoogle}</TextLato>
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>
             <DisabledButton onPressIfActive={login} array={[email, password]} errors={errors}>
-                    <TextLato style={{color: 'white', fontSize: RFValue(12)}}>Login</TextLato>
+                    <TextLato style={{color: 'white', fontSize: RFValue(12)}}>{text.login}</TextLato>
             </DisabledButton>
                 {/* Register Now */}
                 <View style={{flexDirection: 'row', marginTop: height * 0.02}}>
-                    <TextLato style={{color: 'black', fontSize: RFValue(12)}}>Don't have an account?</TextLato>
+                    <TextLato style={{color: 'black', fontSize: RFValue(12)}}>{text.dontHaveAccount}</TextLato>
                     <TouchableOpacity onPress={() => props.navigation.push('SellerRegister')}>
-                        <TextLato bold style={{marginLeft: 5, color: gStyles.color_2, fontSize: RFValue(11)}}>Sign Up Now</TextLato>
+                        <TextLato bold style={{marginLeft: 5, color: gStyles.color_2, fontSize: RFValue(11)}}>{text.signUp}</TextLato>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

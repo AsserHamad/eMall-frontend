@@ -6,21 +6,22 @@ import { Entypo, AntDesign } from '@expo/vector-icons';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import TextLato from '../../../components/utils/TextLato';
+import { useLanguageText } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 function SellerLoginSuccess(props) {
     const store = props.route.params.store;
     const seller = props.route.params.seller;
+    const text = useLanguageText('sellerLoginSuccess');
     return (
     <View style={styles.container}>
-        <Image source={{uri: store.logo}} style={{width: 200, aspectRatio: 1}} />
-        {/* <Entypo name="hour-glass" size={RFValue(130)} color={gStyles.secondary} /> */}
-        <TextLato style={styles.welcomeText}>Greetings, {seller.name}</TextLato>
+        <Image source={{uri: store.logo}} style={{width: 200, aspectRatio: 1, marginVertical: 10}} />
+        <TextLato bold style={styles.welcomeText}>{text.greetings}{seller.name}</TextLato>
         <View style={styles.subtitle}>
-            <TextLato style={{fontSize: RFPercentage(2.5), fontWeight: 'bold', color: gStyles.color_0}}>{store.title}</TextLato>
-            <TextLato style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center'}}>Is still pending approval from our administrators, please regularly check your email for any updates.</TextLato>
-            <TextLato style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center', marginTop: height * 0.02}}>In the meantime, you can check out our selection of shops and browse the app to your content.</TextLato>
+            <TextLato bold style={{fontSize: RFPercentage(2.5), color: gStyles.color_0}}>{store.title}</TextLato>
+            <TextLato style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center'}}>{text.pending}</TextLato>
+            <TextLato style={{fontSize: RFPercentage(1.8), color: 'black', textAlign: 'center', marginTop: height * 0.02}}>{text.meantime}</TextLato>
         </View>
         <View style={{flexDirection: 'row'}}>
             <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.popToTop()}>
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
     welcomeText: {
         fontSize: RFPercentage(4),
         width: width * 0.8,
-        fontWeight: 'bold',
         textAlign: 'center',
     },
     subtitle: {

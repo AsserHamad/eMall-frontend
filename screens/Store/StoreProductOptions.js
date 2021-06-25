@@ -506,7 +506,6 @@ const Variants = ({id, token}) => {
         .then(res => {
             setLoading(false);
             setVariants(res);
-            console.log(res);
         })
     }
 
@@ -524,7 +523,6 @@ const Variants = ({id, token}) => {
     }
 
     const updateOrCreate = () => {
-        console.log(variants, pickedProduct._id, editId, pickedProductEnTitle, pickedProductArTitle);
         setLoading(true);
         if(editId){
             fetch(`${Constants.manifest.extra.apiUrl}/product/variant/`, {
@@ -542,7 +540,6 @@ const Variants = ({id, token}) => {
                 }
             )
             .then(res => {
-                console.log(res);
                 setVisible(false);
                 fetchVariants();
             });
@@ -560,7 +557,6 @@ const Variants = ({id, token}) => {
                 })
             })
             .then(res => {
-                console.log(res);
                 setVisible(false);
                 fetchVariants();
             });
@@ -578,7 +574,6 @@ const Variants = ({id, token}) => {
             })
         })
         .then(res => {
-            console.log(res);
             fetchVariants();
         });
     }

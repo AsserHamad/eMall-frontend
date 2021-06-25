@@ -37,7 +37,7 @@ function SideBar(props) {
             </TouchableWithoutFeedback>
             ) : (
                 <ImageBackground source={{uri: 'https://image.freepik.com/free-vector/red-geometrical-halftone-curved-star-pattern-background_1164-1624.jpg'}} style={styles.topViewU} imageStyle={{opacity: 0.6}}>
-                    <TextLato bold style={styles.topTitle}>Welcome to eMall</TextLato>
+                    <TextLato bold style={styles.topTitle}>{language === 'en' ? 'Welcome to eMall': 'مرحبا بكم في eMall' }</TextLato>
                 </ImageBackground>
             )}
             <ScrollView>

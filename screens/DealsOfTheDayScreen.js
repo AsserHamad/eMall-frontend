@@ -22,7 +22,6 @@ const DealsOfTheDayScreen = () => {
         .then(res => res.json())
         .then(res => {
             res = res.map(prod => prod.product);
-            console.log(res);
             setProducts(res);
         })
     }, []);

@@ -8,7 +8,6 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const ProductsList = ({products, showToast}) => {
     const language = useLanguage();
     const en = language === 'en';
-    console.log(products)
     return (
         <FlatList
             data={products}

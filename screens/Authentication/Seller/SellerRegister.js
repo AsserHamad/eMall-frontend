@@ -13,6 +13,7 @@ import { login } from '../../../src/actions/auth';
 import RegisterInputAndError from '../RegisterInputAndError';
 import DisabledButton from '../DisabledButton';
 import TextLato from '../../../components/utils/TextLato';
+import { useLanguageText } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerRegister = (props) => {
@@ -23,6 +24,7 @@ const SellerRegister = (props) => {
     const [phone, setPhone] = useState('+201140008042');
     const [title, setTitle] = useState('CEO of Madness');
     const [facebookId, setFacebookId] = useState(undefined);
+    const text = useLanguageText('sellerRegister');
     
     function registerSeller() {
         fetch(`${Constants.manifest.extra.apiUrl}/seller/verify`, {
@@ -87,8 +89,8 @@ const SellerRegister = (props) => {
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>Seller Data</TextLato>
-                <TextLato italic style={{color: 'black', fontSize: RFValue(12), marginTop: height * 0.01}}>Fill this form with your personal information</TextLato>
+                <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>{text.sellerData}</TextLato>
+                <TextLato italic style={{color: 'black', fontSize: RFValue(12), marginTop: height * 0.01}}>{text.fillForm}</TextLato>
             </View>
             <KeyboardAvoidingView style={styles.formContainer}>
                 <RegisterInputAndError errors={errors} value={name} type={'name'} set={setName} />
@@ -98,7 +100,7 @@ const SellerRegister = (props) => {
                 <RegisterInputAndError errors={errors} value={password} secureTextEntry type={'password'} set={setPassword} />
             </KeyboardAvoidingView>
             <DisabledButton onPressIfActive={registerSeller} array={[name, phone, email, password]} errors={errors}>
-                    <TextLato style={{color: 'white', fontSize: RFValue(12), marginRight: RFValue(6)}}>NEXT</TextLato>
+                    <TextLato style={{color: 'white', fontSize: RFValue(12), marginRight: RFValue(6)}}>{text.next}</TextLato>
                     <AntDesign size={RFValue(12)} color="white" name="arrowright" />
             </DisabledButton>
                 {/* Other Logins */}
@@ -106,13 +108,13 @@ const SellerRegister = (props) => {
                     <TouchableOpacity onPress={facebookRegister}>
                         <View style={styles.alternativeLoginButtonF}>
                             <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
-                            <TextLato style={{color: 'white', fontSize: RFValue(12), width: width * 0.45}}>Fetch Data From Facebook</TextLato>
+                            <TextLato style={{color: 'white', fontSize: RFValue(12), width: width * 0.45}}>{text.fetchFB}</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity>
                         <View style={styles.alternativeLoginButtonG}>
                             <AntDesign style={{marginRight: width * 0.2}} name="google" size={RFValue(25)} color="white" />
-                            <TextLato style={{color: 'white', fontSize: RFValue(12), width: width * 0.45}}>Fetch Data From Google</TextLato>
+                            <TextLato style={{color: 'white', fontSize: RFValue(12), width: width * 0.45}}>{text.fetchGoogle}</TextLato>
                         </View>
                     </TouchableOpacity>
                 </SafeAreaView>}

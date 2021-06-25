@@ -19,7 +19,6 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 
 const SellerCardProduct = ({product, style, seller, showToast}) => {
-    console.log('PRODUCT', product)
     const language = useLanguage();
     const en = language === 'en';
     const navigation = useNavigation();
@@ -67,6 +66,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
     }, [picks]);
     
     const addToCartHelper = () => {
+        console.log('adding to cart');
         if(!loggedIn) return showToast('You must be logged in to add to your cart!');
         if(product.extraText && extraText === '') return showToast('You must input the text specified by this product!');
         if(product.extraImage && extraImage === undefined) return showToast('You must select an image as specified by this product!');
@@ -98,6 +98,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
             })
             .then(res => res.json())
             .then(res => {
+                console.log('res iiis', res)
                 setCartLoading(false);
                 showToast(`Added to Cart Successfully!`);
                 dispatch(setCart(res));
@@ -260,7 +261,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
                 <View>
                     {product.discount && <TextLato style={styles.discountContainer}>{Math.floor(product.discount * 100)}% {en ? 'OFF' : 'خصم'}</TextLato>}
                     {product.dealOfTheDay && product.dealOfTheDay.active && <TextLato style={{...styles.discountContainer, backgroundColor: 'black'}}>{Math.floor(product.dealOfTheDay.discount)}% {en ? 'OFF' : 'خصم'}</TextLato>}
-                    <Image style={styles.image} source={{uri: `https://picsum.photos/200?random=${Math.ceil(Math.random() * 20)}`}} />
+                    <Image style={styles.image} source={{uri: product.images[0]}} />
                 </View>
 
                 {/* Details */}

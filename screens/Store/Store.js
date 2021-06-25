@@ -36,7 +36,6 @@ const Store = (props) => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/${props.route.params.store._id}`)
         .then(res => res.json())
         .then(res => {
-            console.log('store page', res);
             if(res.page.homeAds.length === 0) setViewState(1);
             setStore(res)
         });

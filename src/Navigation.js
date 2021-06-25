@@ -423,7 +423,6 @@ const FirstTimeDrawer = () => {
 const Navigation = () => {
   const type = useSelector(state => state.authReducer.type);
   const firstTime = useSelector(state => state.generalReducer.firstTime);
-  console.log('first time', firstTime)
   return (
     <NavigationContainer>
       {(!firstTime) ? <FirstTimeDrawer /> : (type === 'store') ?  <StoreDrawer /> : <ClientDrawer />}

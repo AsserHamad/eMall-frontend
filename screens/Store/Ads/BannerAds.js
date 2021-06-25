@@ -33,7 +33,6 @@ const BannerAds = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/advertisement/banner`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
-            console.log(res)
             setLoading(false);
             setAds(res);
         })

@@ -34,7 +34,6 @@ export default ({route, navigation}) => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log('and res is ', res)
             setLoading(false);
             if(!res.length)
                 return setNewStuff(false);

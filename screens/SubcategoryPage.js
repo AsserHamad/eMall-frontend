@@ -93,7 +93,6 @@ const FiltersScroll = ({details, selected, setSelected, language}) => {
         .then(res => res.json())
         .then(res => {
             setLoading(false);
-            console.log('filters', res)
             setFilters(res)
         })
     }, [])

@@ -16,7 +16,7 @@ import RegisterInputAndError from '../RegisterInputAndError';
 import DisabledButton from '../DisabledButton';
 import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import TextLato from '../../../components/utils/TextLato';
-import { useLanguage } from '../../../hooks/language';
+import { useLanguage, useLanguageText } from '../../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerStoreRegister = (props) => {
@@ -32,6 +32,7 @@ const SellerStoreRegister = (props) => {
     const [showAlert, setShowAlert] = useState(true);
     const language = useLanguage();
     const en = language === 'en';
+    const text = useLanguageText('storeRegister')
 
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/category`)
@@ -102,12 +103,12 @@ const SellerStoreRegister = (props) => {
         <ScrollView>
         <KeyboardAvoidingView keyboardVerticalOffset={headerHeight} behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles.container}>
             <View style={styles.headerContainer}>
-                <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>Store Data</TextLato>
-                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(12), marginTop: height * 0.01}}>Fill this form with your store's information</TextLato>
+                <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>{text.storeData}</TextLato>
+                <TextLato style={{color: gStyles.color_1, fontSize: RFValue(12), marginTop: height * 0.01}}>{text.fillForm}</TextLato>
             </View>
             <View style={styles.formContainer}>
-                <TextLato style={{fontSize: RFValue(20), textAlign: 'center'}} bold>Logo</TextLato>
-                <TextLato style={{fontSize: RFValue(10), textAlign: 'center'}} italic>Preferably a transparent.png image</TextLato>
+                <TextLato style={{fontSize: RFValue(20), textAlign: 'center'}} bold>{text.logo}</TextLato>
+                <TextLato style={{fontSize: RFValue(10), textAlign: 'center'}} italic>{text.logoSubtitle}</TextLato>
                 <View style={styles.profilePictureContainer}>
                     <TouchableOpacity onPress={() => funcs.chooseImage(setImage, [1,1])}>
                         <Image source={{ uri: image }} style={{ width: width * 0.3, height: width * 0.3, borderRadius: 10 }} />
@@ -115,8 +116,8 @@ const SellerStoreRegister = (props) => {
                 </View>
                 <RegisterInputAndError errors={errors} value={title} type={'storeTitle'} set={setTitle} />
                 <RegisterInputAndError multiline={true} errors={errors} value={description} type={'storeDescription'} set={setDescription} />
-                <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>Categories</TextLato>
-                <TextLato style={{color: 'black', fontSize: RFValue(11), marginVertical: height * 0.01}}>Please select the most appropriate categories regarding your store's products</TextLato>
+                <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>{text.categories}</TextLato>
+                <TextLato style={{color: 'black', fontSize: RFValue(11), marginVertical: height * 0.01}}>{text.categoryTitle}</TextLato>
             <View style={styles.categoryContainer}>
                 {categories.map(category => {
                     return(
@@ -130,8 +131,8 @@ const SellerStoreRegister = (props) => {
                         >
                             <View style={!includes(selectedCategories, category._id) ? styles.categoryButton : styles.selectedCategoryButton} 
                                 >
-                                <TextLato bold style={!includes(selectedCategories, category._id) ? styles.categoryTitle : styles.selectedCategoryTitle}>{category.name.en}</TextLato>
-                                {returnIconType(category, !includes(selectedCategories, category._id))}
+                                <TextLato bold style={!includes(selectedCategories, category._id) ? styles.categoryTitle : styles.selectedCategoryTitle}>{category.name[language]}</TextLato>
+                                <Image source={{uri: category.image}} style={{...styles.categoryImage, tintColor: !includes(selectedCategories, category._id) ? 'black' : 'white'}} />
                             </View>
                         </TouchableOpacity>
                     )
@@ -143,12 +144,12 @@ const SellerStoreRegister = (props) => {
                     onPress={() => setOther(other => !other)}
                 >
                     <View style={!other ? styles.categoryButton : styles.selectedCategoryButton}>
-                        <TextLato bold style={{color: other ? 'white' : gStyles.color_3, fontSize: RFPercentage(2.5)}}>Other</TextLato>
+                        <TextLato bold style={{color: other ? 'white' : gStyles.color_3, fontSize: RFPercentage(2.5)}}>{text.other}</TextLato>
                     </View>
                 </TouchableOpacity>
-                {other && <TextInput style={{marginVertical: height * 0.05, fontFamily: 'Cairo'}} placeholder={'Please enter the other category name here'} value={otherCategory} onChangeText={(value) => setOtherCategory(value)} />}
+                {other && <TextInput style={{marginVertical: height * 0.05, fontFamily: 'Cairo'}} placeholder={text.enter} value={otherCategory} onChangeText={(value) => setOtherCategory(value)} />}
             <DisabledButton onPressIfActive={register} array={[title, description]} errors={errors}>
-                    <TextLato style={{color: 'white', fontSize: RFValue(12)}}>REGISTER</TextLato>
+                    <TextLato style={{color: 'white', fontSize: RFValue(12)}}>{text.register}</TextLato>
             </DisabledButton>
             {Alert}
         </KeyboardAvoidingView>
@@ -193,11 +194,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    categoryImage: {
+        width: 35,
+        aspectRatio: 1
+    },
     selectedCategoryButton: {
         width: width * 0.28,
         aspectRatio: 1,
         backgroundColor: gStyles.color_3,
         borderRadius: 100,
+        textAlign: 'center',
         marginHorizontal: width * 0.01,
         marginVertical: width * 0.02,
         justifyContent: 'center',
@@ -205,6 +211,8 @@ const styles = StyleSheet.create({
     },
     categoryTitle: {
         color: gStyles.color_3,
+        width: '80%',
+        textAlign: 'center',
         marginBottom: RFPercentage(1),
         fontSize: RFPercentage(1.2)
     },
@@ -221,17 +229,6 @@ const styles = StyleSheet.create({
         color: 'white',
     }
 })
-
-const returnIconType = (details, selected) => {
-    const style= selected ? styles.icon : styles.selectedIcon;
-    switch(details.iconType){
-        case 'Ionicons': return <Ionicons name={details.icon} style={style} size={35} />;
-        case 'MaterialCommunityIcons': return <MaterialCommunityIcons name={details.icon} style={style} size={35} />;
-        case 'Feather': return <Feather name={details.icon} style={style} size={35} />;
-        case 'FontAwesome5': return <FontAwesome5 name={"tv"} style={style} size={35} />;
-        case 'AntDesign': return <AntDesign name={details.icon} style={style} size={35} />;
-    }
-}
 
 const includes = (array, element) => {
     return array.filter(el => el === element).length > 0;

@@ -38,7 +38,6 @@ function ClientLoginSuccess(props) {
         })
         .then(res => {
             props.login(res);
-            console.log(res);
             AsyncStorage.setItem('@firstTime', 'true');
             props.changeFirstTime(true);
             // props.navigation.navigate('Home');

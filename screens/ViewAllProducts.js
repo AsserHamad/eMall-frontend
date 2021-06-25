@@ -47,7 +47,6 @@ export default ({route, navigation}) => {
             setProducts(prods => {
                 if(concat)
                     return prods.concat(res)
-                console.log('ayy returning reees', res)
                 return res;
             });
         })

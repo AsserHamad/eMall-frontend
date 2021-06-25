@@ -61,7 +61,6 @@ export default () => {
         .then(resp => {
           if(resp.status || resp === null) throw new Error('invalid token');
           if(token.type === 'client'){
-            console.log(resp.client);
             store.dispatch(setCart(resp.client.cart));
             store.dispatch(setWishlist(resp.client.wishlist));
             store.dispatch(login(resp));

@@ -46,7 +46,6 @@ const ClientLogin = (props) => {
                 if(res.client.verified){
                     AsyncStorage.setItem('@token', JSON.stringify({type: 'client', token: res.token}));
                     AsyncStorage.setItem('@firstTime', 'true');
-                    console.log(res.client);
                     props.setCart(res.client.cart);
                     props.setWishlist(res.client.wishlist);
                     props.changeFirstTime(true);
@@ -93,7 +92,7 @@ const ClientLogin = (props) => {
                         setLoading(false);
                     })
                 })
-                .catch(e => {setLoading(false);console.log(e)})
+                .catch(e => setLoading(false))
             }
         }
         catch ({ message }) {
@@ -113,7 +112,6 @@ const ClientLogin = (props) => {
 
         if(type === 'success') {
             setLoading(false);
-            console.log(accessToken, user)
         };
     }
 

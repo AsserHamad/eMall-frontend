@@ -16,7 +16,7 @@ const FeaturedProducts = () => {
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/advertisement/featured-products`)
         .then(res => res.json())
-        .then(res => setProducts([...res,...res,...res,...res]))
+        .then(res => setProducts(res))
     }, []);
     return (
         <View>

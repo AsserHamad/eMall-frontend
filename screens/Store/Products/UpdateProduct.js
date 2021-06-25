@@ -112,7 +112,6 @@ const StoreProductsAdd = ({route, navigation}) => {
     }, [pickedSubcategory])
     
     const submitProduct = () => {
-        console.log('gon do this shiet')
         const imgs = images.map(image => image.uri);
         funcs.uploadMultipleImages(imgs)
         .then(res => {
@@ -143,7 +142,6 @@ const StoreProductsAdd = ({route, navigation}) => {
             })
             .then(res => res.json(res))
             .then(res => {
-                console.log(res);
                 if(res.status || res.errors){
                     scroll.current.scrollTo({y: 0, animated: true})
                     setEnTitleErr('')

@@ -19,7 +19,6 @@ const MyPayments = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/payments`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             setPayments(res);
         })
     }, []);

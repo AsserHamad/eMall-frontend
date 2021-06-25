@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
         width: 80,
         aspectRatio: 1,
         resizeMode: 'contain',
+        borderRadius: 500
     },
     logoutContainer: {
         paddingVertical: height * 0.02,

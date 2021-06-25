@@ -12,7 +12,7 @@ const BrowseComponent = ({id, showToast, en}) => {
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/product/store/${id}`)
         .then(res => res.json())
-        .then(res => {console.log(res.map(p => p.images)); setProducts(res.slice(0, 32))})
+        .then(res => setProducts(res.slice(0, 32)))
         .catch(err => console.log(err));
     }, [])
     if(!products.length)

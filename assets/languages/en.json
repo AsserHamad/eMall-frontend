@@ -17,6 +17,39 @@
         "logout": "Logout",
         "changeLanguage": "العربية"
     },
+    "sellerLogin": {
+        "sellerDashboard": "Seller Dashboard",
+        "sellerSubtitle": "Please login to access your dashboard",
+        "forgotPassword": "Forgot Password",
+        "loginWithFacebook": "Login With Facebook",
+        "loginWithGoogle": "Login With Google",
+        "login": "Login",
+        "dontHaveAnAccount": "Don't have an account?",
+        "signUp": "Sign Up Now"
+    },
+    "sellerLoginSuccess": {
+        "greetings": "Greetins, ",
+        "pending": "Is still pending approval from our administrators, please regularly check your email for any updates",
+        "meantime": "In the meantime, you can check out our selection of shops and browse the app to your content"
+    },
+    "sellerRegister": {
+        "sellerData": "Seller Data",
+        "fillForm": "Fill this form with your personal information",
+        "next": "Next",
+        "fetchFB": "Fetch Data from Facebook",
+        "fetchGoogle": "Fetch Data from Google"
+    },
+    "storeRegister": {
+        "storeData": "Store Data",
+        "fillData": "Fill this form with your store's information",
+        "logo": "Logo",
+        "logoSubtitle": "Preferably a transparent .png image",
+        "categories": "Categories",
+        "categoryTitle": "Please select the most appropriate categories regarding your store's products",
+        "other": "Other",
+        "enter": "Please enter the other category name here",
+        "register": "Register"
+    },
     "cart": {
         "title": "Cart",
         "nothing": "It seems you're lost, log in to continue...",
