@@ -350,22 +350,6 @@ const StoreProductsAdd = ({route, navigation}) => {
                 })}
                 </ScrollView>
                 }
-            
-                {/* SPECIFICATIONS */}
-                {/* <TextLato style={styles.label}>Specifications
-                <TextLato italic style={{fontSize: RFPercentage(1.7), color: gStyles.color_1}}>   (weight, model, etc..)</TextLato></TextLato>
-                <View>
-                    {specifications.map(specification => {
-                        const index = specifications.indexOf(specification);
-                        return <Specification setSpecfications={setSpecfications} titleEn={specification.titleEn} index={index} />
-                    })}
-                    <TouchableOpacity 
-                        onPress={() => setSpecfications(specifications => specifications.concat({titleEn: '', titleAr: ''}))} 
-                        style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, backgroundColor: gStyles.color_0, margin: 20, padding: 10}}>
-                        <Icon type="AntDesign" name="plus" size={RFPercentage(3)} color={'white'} />
-                    </TouchableOpacity>
-                </View>
-                 */}
 
                  {/* CHECKS */}
                  <View style={{flexDirection: 'row', marginHorizontal: 20, alignItems: 'center', marginTop: height * 0.02}}>
