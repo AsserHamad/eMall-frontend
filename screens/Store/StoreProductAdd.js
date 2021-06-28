@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ImageBackground, Switch } from 'react-native';
+import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ImageBackground, Switch, Image } from 'react-native';
 import TextLato from '../../components/utils/TextLato';
 import Constants from 'expo-constants';
 import { gStyles } from '../../global.style';
@@ -265,8 +265,8 @@ const StoreProductsAdd = () => {
                             style={{...styles.category, backgroundColor: pickedCategory === category._id ? gStyles.color_0 : gStyles.color_3}}
                             onPress={() => setPickedCategory(category._id)}
                         >
-                            <Icon type={category.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={category.icon} />
-                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{category.name.en}</TextLato>
+                            <Image source={{uri: category.image}} style={{marginBottom: height * 0.01, width: RFPercentage(5), aspectRatio: 1, tintColor: 'white'}} />
+                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6), width: '80%'}}>{category.name.en}</TextLato>
                         </TouchableOpacity>)
                     })}
                 </ScrollView>
@@ -284,8 +284,8 @@ const StoreProductsAdd = () => {
                                 style={{...styles.category, backgroundColor: pickedSubcategory === subcategory._id ? gStyles.color_0 : gStyles.color_3}} 
                                 onPress={() => setPickedSubcategory(subcategory._id)}
                             >
-                                <Icon type={subcategory.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={subcategory.icon} />
-                                <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{subcategory.name.en}</TextLato>
+                                <Image source={{uri: subcategory.image}} style={{marginBottom: height * 0.01, width: RFPercentage(5), aspectRatio: 1, tintColor: 'white'}} />
+                                <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6), width: '80%'}}>{subcategory.name.en}</TextLato>
                             </TouchableOpacity>)
                     })}
                     </ScrollView>
@@ -304,8 +304,7 @@ const StoreProductsAdd = () => {
                             style={{...styles.category, backgroundColor: pickedFilter === filter._id ? gStyles.color_0 : gStyles.color_3}} 
                             onPress={() => setPickedFilter(filter._id)}
                         >
-                            <Icon type={filter.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={filter.icon} />
-                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{filter.name.en}</TextLato>
+                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6), width: '80%'}}>{filter.name.en}</TextLato>
                         </TouchableOpacity>)
                 })}
                 </ScrollView>

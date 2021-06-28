@@ -23,6 +23,7 @@ const MyOrders = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/orders`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
+            console.log('order is', res)
             setLoading(false);
             setOrders(res);
         })
@@ -336,6 +337,7 @@ const orderStyles = StyleSheet.create({
 const ReviewModal = ({modalVisible, setModalVisible, order, text}) => {
     const language = useLanguage();
     const en = language === 'en';
+    console.log(order)
     const products = order.storeOrders.map(storeOrder => storeOrder.orders.map(storeOrderOrder => storeOrderOrder.product)).flat();
     const [pick, setPick] = useState('');
     const [stars, setStars] = useState(0);

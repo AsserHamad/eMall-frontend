@@ -86,13 +86,12 @@ const StoreProductsAdd = ({route, navigation}) => {
             setPickedFilter(res.filter);
             setExtraImage(res.extraImage || false);
             setExtraText(res.extraText || false);
+            fetch(`${Constants.manifest.extra.apiUrl}/category`)
+            .then(res => res.json())
+            .then(res => setCategories(res))
+            .catch(err => console.log(err))
         })
-    }, []);
-    
-    useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/category`)
-        .then(res => res.json())
-        .then(res => setCategories(res));
+        .catch(err => console.log(err))
     }, []);
     
     useEffect(() => {
@@ -100,6 +99,7 @@ const StoreProductsAdd = ({route, navigation}) => {
             fetch(`${Constants.manifest.extra.apiUrl}/subcategory/find-by-category/${pickedCategory}`)
             .then(res => res.json())
             .then(res => {setSubcategories(res)})
+            .catch(err => console.log(err))
         }
     }, [pickedCategory])
     
@@ -108,6 +108,7 @@ const StoreProductsAdd = ({route, navigation}) => {
             fetch(`${Constants.manifest.extra.apiUrl}/subcategory/filters/${pickedSubcategory}`)
             .then(res => res.json())
             .then(res => {setFilters(res)})
+            .catch(err => console.log(err))
         }
     }, [pickedSubcategory])
     
@@ -305,8 +306,8 @@ const StoreProductsAdd = ({route, navigation}) => {
                             style={{...styles.category, backgroundColor: pickedCategory === category._id ? gStyles.color_0 : gStyles.color_3}}
                             onPress={() => setPickedCategory(category._id)}
                         >
-                            <Icon type={category.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={category.icon} />
-                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{category.name.en}</TextLato>
+                            <Image source={{uri: category.image}} style={{marginBottom: height * 0.01, width: RFPercentage(5), aspectRatio: 1, tintColor: 'white'}} />
+                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6), width: '80%'}}>{category.name.en}</TextLato>
                         </TouchableOpacity>)
                     })}
                 </ScrollView>
@@ -324,8 +325,8 @@ const StoreProductsAdd = ({route, navigation}) => {
                                 style={{...styles.category, backgroundColor: pickedSubcategory === subcategory._id ? gStyles.color_0 : gStyles.color_3}} 
                                 onPress={() => setPickedSubcategory(subcategory._id)}
                             >
-                                <Icon type={subcategory.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={subcategory.icon} />
-                                <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{subcategory.name.en}</TextLato>
+                                <Image source={{uri: subcategory.image}} style={{marginBottom: height * 0.01, width: RFPercentage(5), aspectRatio: 1, tintColor: 'white'}} />
+                                <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6), width: '80%'}}>{subcategory.name.en}</TextLato>
                             </TouchableOpacity>)
                     })}
                     </ScrollView>
@@ -344,8 +345,7 @@ const StoreProductsAdd = ({route, navigation}) => {
                             style={{...styles.category, backgroundColor: pickedFilter === filter._id ? gStyles.color_0 : gStyles.color_3}} 
                             onPress={() => setPickedFilter(filter._id)}
                         >
-                            <Icon type={filter.iconType} color="white" size={RFPercentage(5)} style={{marginBottom: height * 0.01}} name={filter.icon} />
-                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6)}}>{filter.name.en}</TextLato>
+                            <TextLato style={{textAlign: 'center', color: 'white', fontSize: RFPercentage(1.6), width: '80%'}}>{filter.name.en}</TextLato>
                         </TouchableOpacity>)
                 })}
                 </ScrollView>

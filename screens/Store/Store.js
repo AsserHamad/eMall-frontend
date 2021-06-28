@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Image, ScrollableView, StyleSheet, Dimensions, ActivityIndicator, ImageBackground } from 'react-native';
+import { View, Image, StyleSheet, Dimensions, ActivityIndicator, ImageBackground } from 'react-native';
 import Header from '../../components/Header';
 import TextLato from '../../components/utils/TextLato';
 import Constants from 'expo-constants';
 import { gStyles } from '../../global.style';
-import Icon from '../../components/utils/Icon';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Reviews from '../../components/utils/Reviews';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
