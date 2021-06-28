@@ -22,10 +22,10 @@ import LoadingPage from '../../../components/utils/LoadingPage';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
-    const [email, setEmail] = useState('asserhamad96@gmail.com');
+    const [email, setEmail] = useState('');
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [password, setPassword] = useState('Abcd1234');
+    const [password, setPassword] = useState('');
     const language = useLanguage();
     const firstTime = useSelector(state => state.generalReducer.firstTime);
     const en = language === 'en';
@@ -159,7 +159,7 @@ const ClientLogin = (props) => {
                 </TouchableOpacity>
             </View>
             {/* Other Logins */}
-            <SafeAreaView style={styles.alternativeLogins}>
+            {/* <SafeAreaView style={styles.alternativeLogins}>
                 <TouchableOpacity onPress={facebookLogin}>
                     <View style={{...styles.alternativeLoginButton, flexDirection: en ? 'row' : 'row-reverse'}}>
                         <Icon style={{width: '30%', alignItems: 'center'}} type={'FontAwesome'} name="facebook-f" size={RFValue(15)} color="white" />
@@ -172,7 +172,7 @@ const ClientLogin = (props) => {
                         <TextLato style={styles.loginButtonText}>{languageText.loginG}</TextLato>
                     </View>
                 </TouchableOpacity>
-            </SafeAreaView>
+            </SafeAreaView> */}
 
             {/* Login Button */}
             <DisabledButton onPressIfActive={login} array={[email, password]}>

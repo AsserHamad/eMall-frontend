@@ -71,6 +71,7 @@
         "building": "Building:",
         "apartment": "Apartment Number",
         "changeAddress": "Change Address",
+        "addAddress": "+ Add New Address",
         "review": "Review",
         "quantity": "Quantity",
         "subtotal": "Subtotal",

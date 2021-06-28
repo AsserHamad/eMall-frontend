@@ -25,6 +25,7 @@ const BannerAds = () => {
     const [pickedProduct, setPickedProduct] = useState(null);
     const credit = useCredit(loading);
     const token = useSelector(state => state.authReducer.token);
+    const { bannerAd } = useSelector(state => state.generalReducer.variables);
 
     const text = useLanguageText('sellerBannerAds');
 
@@ -74,7 +75,7 @@ const BannerAds = () => {
                             {/* Active Ads */}
                             <TextLato style={{fontSize: RFPercentage(3)}} bold>{text.active}</TextLato>
                             <TextLato style={{fontSize: RFPercentage(1.8), marginTop: height * 0.005, marginBottom: height * 0.02}} italic>{text.activeDescription}</TextLato>
-                                <TextLato italic style={{fontSize: RFPercentage(1.7)}}>{text.renewalRate} <TextLato style={{color: 'red'}}>20 {text.rate}</TextLato></TextLato>
+                                <TextLato italic style={{fontSize: RFPercentage(1.7)}}>{text.renewalRate} <TextLato style={{color: 'red'}}>{bannerAd} {text.rate}</TextLato></TextLato>
 
                             {loading ? (
 
@@ -101,7 +102,7 @@ const BannerAds = () => {
                             {/* Detailss */}
                             <View style={{marginTop: height * 0.01}}>
                                 <TextLato style={{fontSize: RFPercentage(1.7)}}>Store Credit: <TextLato style={{color: gStyles.color_0}}>{credit} EGP</TextLato></TextLato>
-                                <TextLato italic style={{fontSize: RFPercentage(1.7)}}>Ad Price: <TextLato style={{color: 'red'}}>20 EGP/week</TextLato></TextLato>
+                                <TextLato italic style={{fontSize: RFPercentage(1.7)}}>Ad Price: <TextLato style={{color: 'red'}}>{bannerAd} EGP/week</TextLato></TextLato>
                             </View>
 
                             {/* Image Picker */}

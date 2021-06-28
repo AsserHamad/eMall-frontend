@@ -13,6 +13,7 @@ import { loginSeller } from '../../../src/actions/auth';
 import DisabledButton from '../DisabledButton';
 import TextLato from '../../../components/utils/TextLato';
 import Icon from '../../../components/utils/Icon';
+import { changeFirstTime } from '../../../src/actions/general';
 import { useLanguage, useLanguageText } from '../../../hooks/language';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../../components/Header';
@@ -41,6 +42,8 @@ const SellerLogin = (props) => {
                 setErrors([]);
                 if(res.store.approved){
                     AsyncStorage.setItem('@token', JSON.stringify({type: 'store', token: res.token}));
+                    AsyncStorage.setItem('@firstTime', 'true');
+                    props.changeFirstTime(true);
                     props.loginSeller(res); 
                 } else props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
             }
@@ -128,7 +131,7 @@ const SellerLogin = (props) => {
                 </TouchableOpacity>
             </View>
                 {/* Other Logins */}
-                <SafeAreaView style={styles.alternativeLogins}>
+                {/* <SafeAreaView style={styles.alternativeLogins}>
                     <TouchableOpacity onPress={facebookLogin}>
                         <View style={styles.alternativeLoginButton}>
                             <Icon style={{width: '30%', alignItems: 'center'}} type={'FontAwesome'} name="facebook-f" size={RFValue(18)} color="white" />
@@ -141,7 +144,7 @@ const SellerLogin = (props) => {
                             <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>{text.loginWithGoogle}</TextLato>
                         </View>
                     </TouchableOpacity>
-                </SafeAreaView>
+                </SafeAreaView> */}
             <DisabledButton onPressIfActive={login} array={[email, password]} errors={errors}>
                     <TextLato style={{color: 'white', fontSize: RFValue(12)}}>{text.login}</TextLato>
             </DisabledButton>
@@ -242,7 +245,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loginSeller: (account) => dispatch(loginSeller(account))
+        loginSeller: (account) => dispatch(loginSeller(account)),
+        changeFirstTime: (firstTime) => dispatch(changeFirstTime(firstTime))
     }
 }
 

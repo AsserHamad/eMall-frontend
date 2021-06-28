@@ -104,7 +104,7 @@ const SellerRegister = (props) => {
                     <AntDesign size={RFValue(12)} color="white" name="arrowright" />
             </DisabledButton>
                 {/* Other Logins */}
-                {!facebookId && <SafeAreaView style={styles.alternativeLogins}>
+                {/* {!facebookId && <SafeAreaView style={styles.alternativeLogins}>
                     <TouchableOpacity onPress={facebookRegister}>
                         <View style={styles.alternativeLoginButtonF}>
                             <AntDesign style={{marginRight: width * 0.2}} name="facebook-square" size={RFValue(25)} color="white" />
@@ -117,7 +117,7 @@ const SellerRegister = (props) => {
                             <TextLato style={{color: 'white', fontSize: RFValue(12), width: width * 0.45}}>{text.fetchGoogle}</TextLato>
                         </View>
                     </TouchableOpacity>
-                </SafeAreaView>}
+                </SafeAreaView>} */}
         </View>
     )
 }

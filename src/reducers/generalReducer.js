@@ -1,9 +1,15 @@
-import { CHANGE_LANGUAGE, CHANGE_FIRST_TIME } from '../actions/types';
+import { CHANGE_LANGUAGE, CHANGE_FIRST_TIME, CHANGE_VARIABLES } from '../actions/types';
     
 // 0: English
 const initialState = {
     language: 0,
-    firstTime: true
+    firstTime: true,
+    variables: {
+        shipping: 80,
+        homeAd: 20,
+        bannerAd: 20,
+        dealOfTheDay: 30
+    }
 }
 
 const generalReducer = (state = initialState, action) => {
@@ -17,6 +23,11 @@ const generalReducer = (state = initialState, action) => {
             return {
                 ...state,
                 firstTime: action.firstTime
+            }
+        case CHANGE_VARIABLES:
+            return {
+                ...state,
+                variables: action.variables
             }
         default:
             return state;

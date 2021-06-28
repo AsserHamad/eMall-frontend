@@ -336,16 +336,12 @@ const orderStyles = StyleSheet.create({
 const ReviewModal = ({modalVisible, setModalVisible, order, text}) => {
     const language = useLanguage();
     const en = language === 'en';
-    const products = order.storeOrders.map(storeOrder => {
-            return storeOrder.orders.map(storeOrderOrder => storeOrderOrder.product);
-        }).flat();
+    const products = order.storeOrders.map(storeOrder => storeOrder.orders.map(storeOrderOrder => storeOrderOrder.product)).flat();
     const [pick, setPick] = useState('');
     const [stars, setStars] = useState(0);
     const [review, setReview] = useState('');
     const token = useSelector(state => state.authReducer.token);
-    const close = () => {
-        setModalVisible(false);
-    }
+    const close = () => setModalVisible(false);
 
     const submitReview = () => {
         if(review === '' || pick === '' || stars === 0) return;
@@ -370,6 +366,7 @@ const ReviewModal = ({modalVisible, setModalVisible, order, text}) => {
                 <ScrollView style={{maxHeight: height * 0.4, width: '100%', marginTop: height * 0.02}} contentContainerStyle={{alignItems: 'center'}}>
                     {products.map(product => {
                         const picked = pick === product._id;
+                        console.log(product)
                         return (
                             <TouchableOpacity
                             key={Math.random()}

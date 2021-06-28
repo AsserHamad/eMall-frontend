@@ -16,7 +16,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const Payment = () => {
     const [cart, _setCart] = useState([]);
     const account = useSelector(state => state.authReducer.account);
-    const address = account.addresses.filter(address => address.active)[0];
+    const address = account.addresses.length ? account.addresses.filter(address => address.active)[0] : undefined;
     const [subtotal, setSubtotal] = useState(0);
     const [shipping, setShipping] = useState(0);
     const [total, setTotal] = useState(0);
@@ -43,7 +43,7 @@ const Payment = () => {
                 setTotal(res.total)
                 setDisabled(false);
             })
-    }, [])
+    }, []);
 
     const order = () => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/place-order`, {headers: {token}})
@@ -60,17 +60,24 @@ const Payment = () => {
             <View>
                 <ScrollView showsVerticalScrollIndicator={false} style={{maxHeight: height * 0.65}}>
                 <TextLato style={styles.deliveringTo}>{text.deliveringTo}</TextLato>
-                <View style={styles.addressContainer}>
-                    <TextLato bold style={{fontSize: RFPercentage(2.5)}}>{address.governate}, {address.city}</TextLato>
-                    <TextLato style={styles.addressDetails}>{address.street}</TextLato>
-                    <TextLato style={styles.addressDetails}>{text.building} {address.building}</TextLato>
-                    <TextLato style={styles.addressDetails}>{text.apartment} {address.apartment}</TextLato>
-                    <TextLato style={styles.addressDetails} italic>{address.extra}</TextLato>
-                    <TextLato bold style={{fontSize: RFPercentage(2.5), marginTop: height * 0.05}}>{account.phone}</TextLato>
+                {address ? (
+                    <View style={styles.addressContainer}>
+                        <TextLato bold style={{fontSize: RFPercentage(2.5)}}>{address.governate}, {address.city}</TextLato>
+                        <TextLato style={styles.addressDetails}>{address.street}</TextLato>
+                        <TextLato style={styles.addressDetails}>{text.building} {address.building}</TextLato>
+                        <TextLato style={styles.addressDetails}>{text.apartment} {address.apartment}</TextLato>
+                        <TextLato style={styles.addressDetails} italic>{address.extra}</TextLato>
+                        <TextLato bold style={{fontSize: RFPercentage(2.5), marginTop: height * 0.05}}>{account.phone}</TextLato>
+                        <TouchableOpacity onPress={() => navigation.push('Addresses')}>
+                            <TextLato style={{color: gStyles.color_0, marginTop: height * 0.005}}>{text.changeAddress}</TextLato>
+                        </TouchableOpacity>
+                    </View>
+                ) : (
                     <TouchableOpacity onPress={() => navigation.push('Addresses')}>
-                        <TextLato style={{color: gStyles.color_0, marginTop: height * 0.005}}>{text.changeAddress}</TextLato>
+                        <TextLato style={{color: gStyles.color_0, marginTop: height * 0.02}}>{text.addAddress}</TextLato>
                     </TouchableOpacity>
-                </View>
+                )
+                }
                 <TextLato style={{marginTop: height * 0.03, fontSize: RFPercentage(1.7)}}>{text.review}</TextLato>
                 <View style={styles.addressContainer}>
                     {cart.map(item => {
@@ -103,10 +110,10 @@ const Payment = () => {
                     <TextLato style={{fontSize: RFPercentage(1.8), width: width * 0.4, textAlign: 'center', color: gStyles.color_0}}>{total.toFixed(2)} {text.egp}</TextLato>
                 </View>
                 <TouchableOpacity onPress={() => {
-                    if(!disabled){
+                    if(!disabled && address){
                         order()
                     }}}>
-                    <View style={{...styles.buttonContainer, backgroundColor: disabled ? '#777' : gStyles.color_0}}>
+                    <View style={{...styles.buttonContainer, backgroundColor: disabled || !address ? '#777' : gStyles.color_0}}>
                         <TextLato bold style={{color: 'white', fontSize: RFPercentage(2), width: width * 0.4, textAlign: 'center'}}>{text.confirm}</TextLato>
                     </View>
                 </TouchableOpacity>

@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { changeLanguage, changeFirstTime } from './src/actions/general';
 import { Constants } from 'react-native-unimodules';
 import { setCart } from './src/actions/cart';
+import { changeVariables } from './src/actions/general';
 import { setWishlist } from './src/actions/wishlist';
 import { login, loginSeller } from './src/actions/auth';
 import * as Updates from 'expo-updates';
@@ -39,6 +40,7 @@ export default () => {
   const [languageLoaded, setLanguageLoaded] = useState(false);
   const [accountLoaded, setAccountLoaded] = useState(false);
   const [firstTimeLoaded, setFirstTimeLoaded] = useState(false);
+  const [variablesLoaded, setVariablesLoaded] = useState(false);
   useEffect(() => {
     // AsyncStorage.removeItem('@firstTime')
 
@@ -70,10 +72,12 @@ export default () => {
           setAccountLoaded(true);
         })
         .catch(err => {
+          console.log(err);
           setAccountLoaded(true)
         });
       })
       .catch(err => {
+        console.log(err);
         setAccountLoaded(true);
       });
 
@@ -82,6 +86,13 @@ export default () => {
         store.dispatch(changeFirstTime(firstTime? true : false));
         setFirstTimeLoaded(true)
       })
+
+      fetch(`${Constants.manifest.extra.apiUrl}/variables`)
+      .then(res => res.json())
+      .then(res => {
+        store.dispatch(changeVariables(res));
+      })
+      .catch(err => console.log(err));
     }
     const init = async () => {
       const update = await Updates.checkForUpdateAsync();

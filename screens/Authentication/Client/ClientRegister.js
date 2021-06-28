@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import React, { useState} from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
-import { AntDesign } from '@expo/vector-icons';
 import * as Facebook from 'expo-facebook';
 import { RFValue } from "react-native-responsive-fontsize";
-import { useHeaderHeight } from '@react-navigation/stack';
 import TextLato from '../../../components/utils/TextLato';
-import Icon from '../../../components/utils/Icon';
-import { useLanguage, useLanguageText } from '../../../hooks/language';
+import { useLanguageText } from '../../../hooks/language';
 
 // Redux
 import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
-import { useFonts } from 'expo-font';
 import RegisterInputAndError from '../RegisterInputAndError';
 import Header from '../../../components/Header';
 
@@ -98,7 +94,7 @@ const ClientRegister = (props) => {
                 <RegisterInputAndError errors={errors} value={password} type={'password'} set={setPassword} secureTextEntry />
             </View>
             {/* Other Logins */}
-            <SafeAreaView style={styles.alternativeLogins}>
+            {/* <SafeAreaView style={styles.alternativeLogins}>
                 <TouchableOpacity onPress={facebookRegister}>
                     <View style={styles.alternativeLoginButton}>
                         <Icon type={'FontAwesome'} name="facebook" size={RFValue(17)} color="white" style={{width: '30%', alignItems: 'center'}} />
@@ -111,7 +107,7 @@ const ClientRegister = (props) => {
                         <TextLato style={{color: 'white', textAlign: 'left', width: '70%'}}>Register with Google</TextLato>
                     </View>
                 </TouchableOpacity>
-            </SafeAreaView>
+            </SafeAreaView> */}
             <TouchableOpacity onPress={() => register()}>
                 <View style={styles.submitButton}>
                     <TextLato style={{color: 'white', fontSize: RFValue(12)}}>{languageText.register}</TextLato>

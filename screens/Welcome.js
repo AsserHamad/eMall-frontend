@@ -83,7 +83,7 @@ export default ({navigation, route}) => {
             </Animated.View>
             <Animated.View style={{opacity: textOpacity, height: height * 0.3}}>
                 {state === 0 ? [
-                    <TouchableOpacity key={Math.random()} onPress={fadeTextToBlackThenBack} style={styles.touchableContainer}>
+                    <TouchableOpacity key={Math.random()} onPress={() => navigation.push('ClientRegister')} style={styles.touchableContainer}>
                         <TextLato style={styles.touchableText}>{en ? 'Are you a new customer?' : 'هل انت زبون جديد؟'}</TextLato>
                     </TouchableOpacity>,
 
