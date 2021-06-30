@@ -28,9 +28,9 @@ function MainHomeView(props){
                 <Categories />
                 {/* <ScrollCards title={language && language.titlePop} cards={getMostPopularStores()} /> */}
                 {ads[0] && <Ad ad={ads[0]} />}
-                <FeaturedProducts />
-                {ads[1] && <Ad ad={ads[1]} />}
                 <DealsOfTheDay />
+                {ads[1] && <Ad ad={ads[1]} />}
+                <FeaturedProducts />
                 {ads[2] && <Ad ad={ads[2]} />}
                 <Footer />
             </ScrollView>

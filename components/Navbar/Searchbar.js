@@ -78,40 +78,53 @@ function Searchbar(){
             </View>
             {show && <ScrollView style={searchStyles.container}>
                 <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={height * 0.2}>
+
+                    {/* Stores */}
                     <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}}>
                         <TextLato style={searchStyles.title}>{languageText.stores}</TextLato>
                         {stores.map(store => {
                             return (
-                            <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Store', {store: {_id: store._id}})}>
-                                <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{store.title}</TextLato>
+                            <TouchableOpacity style={searchStyles.linkContainer} key={Math.random()} onPress={() => navigation.push('Store', {store: {_id: store._id}})}>
+                                <TextLato bold style={searchStyles.linkStyle}>{store.title}</TextLato>
                             </TouchableOpacity>);
                         })}
                         <TextLato style={searchStyles.etcText}>{languageText.searchStores}</TextLato>
                     </View>
+
+                    {/* Products */}
                     <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}}>
                         <TextLato style={searchStyles.title}>{languageText.products}</TextLato>
                         {products.map(product => {
-                            return  <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Product', {product})}>
-                                        <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{product.title[language]}</TextLato>
-                                    </TouchableOpacity>
+                            return (
+                            <TouchableOpacity key={Math.random()} style={searchStyles.linkContainer} key={Math.random()} onPress={() => navigation.push('Product', {product})}>
+                                <TextLato bold style={searchStyles.linkStyle}>{product.title[language]}</TextLato>
+                            </TouchableOpacity>);
                         })}
-                        <TouchableOpacity key={Math.random()} onPress={() => navigation.push('ProductsList', {criteria: text})}>
+                        <TouchableOpacity onPress={() => navigation.push('ProductsList', {criteria: text})}>
                             <TextLato style={searchStyles.etcText}>{languageText.searchProducts}</TextLato>
                         </TouchableOpacity>
                     </View>
+
+                    {/* Categories */}
                     <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}}>
                         <TextLato style={searchStyles.title}>{languageText.categories}</TextLato>
                         {categories.map(category => {
-                            return <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Category', category)}>
-                                        <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{category.name[language]}</TextLato>
-                                    </TouchableOpacity>
+                            return (
+                            <TouchableOpacity style={searchStyles.linkContainer} key={Math.random()} onPress={() => navigation.push('Category', category)}>
+                                <TextLato bold style={searchStyles.linkStyle}>{category.name[language]}</TextLato>
+                            </TouchableOpacity>);
                         })}
                         <TextLato style={searchStyles.etcText}>{languageText.searchCategories}</TextLato>
                     </View>
+
+                    {/* Subcategories */}
                     <View style={{...searchStyles.subContainer, alignItems: en ? 'flex-start' : 'flex-end'}} onPress={() => navigation.push('Subcategory', subcategory)}>
                         <TextLato style={searchStyles.title}>{languageText.subcategories}</TextLato>
                         {subcategories.map(subcategory => {
-                            return <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{subcategory.name[language]}</TextLato>
+                            return (
+                            <TouchableOpacity style={searchStyles.linkContainer} key={Math.random()} onPress={() => navigation.push('Subcategory', subcategory)}>
+                                <TextLato bold style={searchStyles.linkStyle}>{subcategory.name[language]}</TextLato>
+                            </TouchableOpacity>);
                         })}
                         <TextLato style={searchStyles.etcText}>{languageText.searchSubcategories}</TextLato>
                     </View>
@@ -166,6 +179,14 @@ const searchStyles = StyleSheet.create({
     title: {
         fontSize: RFPercentage(2.5),
         marginBottom: height * 0.01,
+    },
+    linkContainer: {
+        paddingVertical: height * 0.005,
+        marginVertical: 3,
+    },
+    linkStyle: {
+        fontSize: RFPercentage(2),
+        color: gStyles.color_1
     }
 })
 

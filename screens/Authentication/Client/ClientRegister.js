@@ -28,7 +28,7 @@ const ClientRegister = (props) => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/register`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email, password, firstName, lastName, phone: `+20${phone}`})
+            body: JSON.stringify({email, password, firstName, lastName, phone})
         })
         .then(res => res.json())
         .then(res => {

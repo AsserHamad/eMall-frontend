@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     cartNumberContainer: {
-        backgroundColor: gStyles.color_0,
+        backgroundColor: gStyles.color_2,
         minWidth: 18,
         height: 18,
         borderRadius: 50,

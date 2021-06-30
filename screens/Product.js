@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Alert, Dimensions, Image, ImageBackground, Linking, Platform, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
 import Header from '../components/Header';
 import { useLanguage, useLanguageText } from '../hooks/language';
 import Swiper from 'react-native-swiper/src';
 import { gStyles } from '../global.style';
 import { funcs } from '../global.funcs';
-import { ScrollView, TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Reviews from '../components/utils/Reviews';
 import TextLato from '../components/utils/TextLato';
 import Icon from '../components/utils/Icon';
 import ScrollCards from '../components/ScrollCards';
-import StoreCard from '../components/cards/StoreCard';
-import SimilarProductCard from '../components/cards/Product/SimilarProductCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCart } from '../src/actions/cart';
 import ProductReviewCard from '../components/cards/Product/ProductReviewCard';
@@ -24,12 +22,6 @@ import SellerCardProduct from '../components/cards/Seller/SellerCardProduct';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const image = 'https://imgur.com/qIJjuUY.gif';
-const bubbles = [
-    'https://imgur.com/G27hm50.png',
-    'https://imgur.com/Jd0bH1o.png',
-    'https://imgur.com/FnOaCd8.png',
-    'https://imgur.com/5AcEkKV.png',
-];
 
 
 const getColors = (discount) => {

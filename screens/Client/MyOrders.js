@@ -130,6 +130,13 @@ const Order = ({order, en, text}) => {
                     <TextLato bold style={orderStyles.title}>{text.order} # : {order.code}</TextLato>
                     <TextLato style={{...orderStyles.date, textAlign: en ? 'left' : 'right'}}>{date}</TextLato>
                 </View>
+            <View>
+                <View style={styles.statusBall} />
+                <TextLato 
+                    style={cancelled ? orderStyles.cancelText : orderStyles.statusText}>
+                        {cancelled ? text.cancelled : status}
+                </TextLato>
+            </View>
             {cancelled ? <TextLato bold style={orderStyles.cancelText}>{text.cancelled}</TextLato> :
             <TextLato style={orderStyles.statusText}>{status}</TextLato>}
 
@@ -145,9 +152,9 @@ const Order = ({order, en, text}) => {
                     <TouchableNativeFeedback style={orderStyles.completeButtons} onPress={() => setReviewVisible(true)}>
                         <TextLato bold style={{fontSize: RFPercentage(2)}}>{text.review}</TextLato>
                     </TouchableNativeFeedback>
-                    {/* <TouchableNativeFeedback style={orderStyles.completeButtons}>
-                        <TextLato bold style={{fontSize: RFPercentage(2)}}>Return</TextLato>
-                    </TouchableNativeFeedback> */}
+                    <TouchableNativeFeedback style={orderStyles.completeButtons}>
+                        <TextLato bold style={{fontSize: RFPercentage(2)}}>{text.refund}</TextLato>
+                    </TouchableNativeFeedback>
                 </View>
             )}
             <TextLato bold style={{marginVertical: height * 0.03, fontSize: RFPercentage(3), color: gStyles.color_2}}>
@@ -190,18 +197,12 @@ const Order = ({order, en, text}) => {
                             <View style={{...orderStyles.dot, backgroundColor: order.status >= 0 ? gStyles.color_2 : gStyles.color_0}} />
                             <View style={{...orderStyles.line, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.color_0}} />
                             <View style={{...orderStyles.dot, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.color_0}} />
-                            <View style={{...orderStyles.line, backgroundColor: order.status >= 2 ? gStyles.color_2 : gStyles.color_0}} />
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 2 ? gStyles.color_2 : gStyles.color_0}} />
-                            <View style={{...orderStyles.line, backgroundColor: order.status >= 3 ? gStyles.color_2 : gStyles.color_0}} />
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 3 ? gStyles.color_2 : gStyles.color_0}} />
                             <View style={{...orderStyles.line, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.color_0}} />
                             <View style={{...orderStyles.dot, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.color_0}} />
                         </View>
                         <View style={orderStyles.detailsContainer}>
                             <DetailContainer textActive={order.status === 0} active={order.status >= 0} title={text.orderPlaced} subtitle={`${text.orderPlacedDescription} ${date}`} type={'FontAwesome5'} name={'feather'} />
                             <DetailContainer textActive={order.status === 1} active={order.status >= 1} title={text.orderConfirmed} subtitle={text.orderConfirmedDescription} type={'Feather'} name={'check-circle'} />
-                            <DetailContainer textActive={order.status === 2} active={order.status >= 2} title={text.orderProcessing} subtitle={text.orderProcessingDescription} type={'FontAwesome5'} name={'brain'} />
-                            <DetailContainer textActive={order.status === 3} active={order.status >= 3} title={text.orderReadyToShip} subtitle={text.orderReadyToShipDescription} type={'FontAwesome5'} name={'box'} />
                             <DetailContainer textActive={order.status === 4} active={order.status >= 4} title={text.orderOutForDelivery} subtitle={text.orderOutForDeliveryDescription} type={'MaterialCommunityIcons'} name={'truck-check'} />
                         </View>
                     </View>

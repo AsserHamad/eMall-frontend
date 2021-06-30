@@ -1,16 +1,9 @@
 import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { RFPercentage } from 'react-native-responsive-fontsize';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Header from '../components/Header';
-import { gStyles } from '../global.style';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 import Constants from 'expo-constants';
 import { useLanguage } from '../hooks/language';
-import TextLato from '../components/utils/TextLato';
-import { useNavigation } from '@react-navigation/native';
 import SellerCardsList from '../components/utils/SellerCardsList';
 
 const SearchPage = (props) => {

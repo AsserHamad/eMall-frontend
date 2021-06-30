@@ -12,8 +12,6 @@ import { useLanguage } from '../hooks/language';
 import TextLato from '../components/utils/TextLato';
 import { useNavigation } from '@react-navigation/native';
 import SellerCardsList from '../components/utils/SellerCardsList';
-import Icon from '../components/utils/Icon';
-import CustomModal from '../components/utils/CustomModal';
 import ProductCardsList from '../components/utils/ProductCardsList';
 import Toast from 'react-native-easy-toast';
 
@@ -22,7 +20,6 @@ const CategoryPage = (props) => {
     const language = useLanguage();
     const en = language === 'en';
     const toast = useRef();
-    const [sortVisible, setSortVisible] = useState(false);
 
     const showToast = message => {
         toast.current.show(message);
@@ -34,28 +31,6 @@ const CategoryPage = (props) => {
             <Header search details={{title: details.name[language]}} />
             <ScrollView>
             <SubcategoriesScroll details={details} />
-            {/* <TouchableOpacity onPress={() => setSortVisible(m => !m)}>
-                <Icon type={'FontAwesome'} name={'sort-amount-asc'} size={RFPercentage(3)} style={styles.sortContainer} />
-            </TouchableOpacity>
-            {sortVisible && (
-                <ScrollView horizontal contentContainerStyle={{paddingHorizontal: width * 0.03, paddingVertical: height * 0.02}}>
-                    <TouchableOpacity style={styles.sortChoice}>
-                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Price: High to Low</TextLato>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.sortChoice}>
-                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Price: Low to High</TextLato>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.sortChoice}>
-                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Popularity</TextLato>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.sortChoice}>
-                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Newest Arrivals</TextLato>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.sortChoice}>
-                        <TextLato style={{fontSize: RFPercentage(1.3)}}>Rating</TextLato>
-                    </TouchableOpacity>
-                </ScrollView>
-            )} */}
                 <TextLato style={styles.title} bold>{en ? 'Stores' : 'البائعون'}</TextLato>
                 <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-category`} body={{category: details._id}} title={details.name[language]} />
                 <TextLato style={{...styles.title, marginTop: height * 0.05}} bold>{en ? 'Products' : 'المنتجات'}</TextLato>

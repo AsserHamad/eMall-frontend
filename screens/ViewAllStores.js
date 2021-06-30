@@ -34,11 +34,13 @@ export default ({route, navigation}) => {
         })
         .then(res => res.json())
         .then(res => {
+            const sellerStores = res.filter(seller => seller.products.length);
+            console.log(sellerStores);
             setLoading(false);
             if(!res.length)
                 return setNewStuff(false);
             setSkip(skip => skip + 10);
-            setSellers(sellers => sellers.concat(res));
+            setSellers(sellers => sellers.concat(sellerStores));
         })
     }
 

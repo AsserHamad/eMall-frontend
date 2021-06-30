@@ -17,7 +17,7 @@ import Toast from 'react-native-easy-toast';
 
 const SubcategoryPage = (props) => {
     const details = props.route.params;
-    const [filter, setFilter] = useState('');
+    const [filter, setFilter] = useState(undefined);
     const language = useLanguage();
     
     const toast = useRef();
@@ -33,7 +33,7 @@ const SubcategoryPage = (props) => {
             <ScrollView>
                 <FiltersScroll details={details} selected={filter} setSelected={setFilter} language={language} />
                 <TextLato style={styles.title} bold>Stores</TextLato>
-                <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-subcategory`} body={{subcategory: details, filter}} refresh={filter} />
+                <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-subcategory`} body={{subcategory: details, filter}} refresh={filter} title={details.name[language]} />
                 <TextLato style={{...styles.title, marginTop: height * 0.05}} bold>Products</TextLato>
                 <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/subcategory`} body={{id: details._id, filter}} refresh={filter} title={details.name[language]} />
             </ScrollView>
