@@ -63,6 +63,7 @@ import Welcome from '../screens/Welcome';
 import ViewAllProducts from '../screens/ViewAllProducts';
 import ViewAllStores from '../screens/ViewAllStores';
 import { Image } from 'react-native';
+import SearchPage from '../screens/Search/SearchPage';
 
 
 const Drawers = createDrawerNavigator();
@@ -88,6 +89,7 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Product" component={Product} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Gallery" component={Gallery} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="ProductsList" component={ProductsListPage} options={({ route }) => ({headerShown: false})} />
+    <HomeStack.Screen name="SearchPage" component={SearchPage} options={({ route }) => ({headerShown: false})} />
     <HomeStack.Screen name="ViewAllProducts" component={ViewAllProducts} options={({ route }) => ({headerShown: false})} />
     <HomeStack.Screen name="ViewAllStores" component={ViewAllStores} options={({ route }) => ({headerShown: false})} />
     <HomeStack.Screen name="Payment" component={Payment} options={({ route }) => ({headerShown: false})}/>

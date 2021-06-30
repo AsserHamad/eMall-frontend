@@ -56,14 +56,14 @@ const SellerCard = ({ seller, showToast }) => {
                 </View>
                 <FlatList
                     data={seller.products}
-                    renderItem={product => <SellerCardProduct showToast={showToast} style={{marginHorizontal: width * 0.02, marginVertical: height * 0.03}} key={Math.random()} product={product.item} />}
+                    renderItem={product => <SellerCardProduct showToast={showToast} style={{marginHorizontal: width * 0.02, marginVertical: height * 0.015}} key={Math.random()} product={product.item} />}
                     keyExtractor={() => `${Math.random()}`}
                     style={{transform: en ? [] : [{scaleX: -1}]}}
                     horizontal
                 />
-                {/* <TouchableOpacity style={styles.moreButton} onPress={() => navigation.push('Store', {store: seller, state: 1})}>
-                    <TextLato style={{color: gStyles.color_3, fontSize: RFPercentage(1.4), marginTop: height * 0.01}}>{en ? 'View More' : 'عرض المزيد'}</TextLato>
-                </TouchableOpacity> */}
+                <TouchableOpacity style={styles.moreButton} onPress={() => navigation.push('Store', {store: seller, state: 1})}>
+                    <TextLato style={{color: gStyles.color_3, fontSize: RFPercentage(2)}}>{en ? 'View More' : 'عرض المزيد'}</TextLato>
+                </TouchableOpacity>
             </View>
     )
 }

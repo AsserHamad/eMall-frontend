@@ -32,7 +32,8 @@ const ProductsListPage = ({route}) => {
         <SafeAreaView style={{flex: 1}}>
             <Toast ref={_toast => toast.current = _toast} />
             <Header details={{title: 'Products'}} />
-            <TextLato bold style={{marginHorizontal: width * 0.05, marginVertical: height * 0.02}}>Search Results For: {criteria}</TextLato>
+            <TextLato bold style={{marginHorizontal: width * 0.05, marginVertical: height * 0.01}}>Search Results For: {criteria}</TextLato>
+            <TextLato bold style={{marginHorizontal: width * 0.05, marginVertical: height * 0.01}}>{products.length} results</TextLato>
             <ProductsList showToast={showToast} products={products} />
         </SafeAreaView>
 

@@ -6,9 +6,9 @@
         "categories": "Categories",
         "subcategories": "Subcategories",
         "searchStores": "Search for more stores...",
-        "searchProducts": "Search for more stores...",
-        "searchCategories": "Search for more stores...",
-        "searchSubcategories": "Search for more stores..."
+        "searchProducts": "Search for more products...",
+        "searchCategories": "Search for more categories...",
+        "searchSubcategories": "Search for more subcategories..."
     },
     "sidebar": {
         "home": "Home",

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Dimensions, SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useSelector } from 'react-redux';
@@ -24,7 +23,7 @@ export default ({ details, cart }) => {
         <SafeAreaView style={styles.container}>
             <View style={{...styles.topContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                 <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
-                    <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(3)} color="black" />
+                    <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(4)} color="black" />
                 </TouchableOpacity>
                 <TextLato style={{...styles.title, textAlign: en ? 'left' : 'right'}}>{details.title}</TextLato>
                 {cart && <TouchableOpacity

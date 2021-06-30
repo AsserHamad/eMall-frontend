@@ -17,7 +17,6 @@ export default function CategoryCard(props){
         <TouchableOpacity onPress={() => navigation.push('Category', details)} activeOpacity={0.8} style={{borderWidth: 0, width: width * 0.32, alignItems: 'center'}}>
             <View style={styles.container}>
                 <Image source={{uri: details.image}} style={{height: '40%', aspectRatio: 1}} />
-                {/* <Icon type={details.iconType} size={40} color={'white'} name={details.icon} style={styles.icon} /> */}
                 <TextLato style={styles.title}>{details.name[language]}</TextLato>
             </View>
         </TouchableOpacity>

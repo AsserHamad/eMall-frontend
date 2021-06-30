@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TextInput } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { gStyles } from '../../../global.style';
 import { funcs } from '../../../global.funcs';
-import { TouchableOpacity, TouchableNativeFeedback } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import TextLato from '../../utils/TextLato';
 import Icon from '../../utils/Icon';
 import CustomModal from '../../utils/CustomModal';
@@ -13,8 +13,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Constants } from 'react-native-unimodules';
 import { setCart } from '../../../src/actions/cart';
 import { setWishlist } from '../../../src/actions/wishlist';
-import { useRef } from 'react';
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 
@@ -66,7 +64,6 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
     }, [picks]);
     
     const addToCartHelper = () => {
-        console.log('adding to cart');
         if(!loggedIn) return showToast('You must be logged in to add to your cart!');
         if(product.extraText && extraText === '') return showToast('You must input the text specified by this product!');
         if(product.extraImage && extraImage === undefined) return showToast('You must select an image as specified by this product!');
@@ -98,7 +95,6 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
             })
             .then(res => res.json())
             .then(res => {
-                console.log('res iiis', res)
                 setCartLoading(false);
                 showToast(`Added to Cart Successfully!`);
                 dispatch(setCart(res));
@@ -334,7 +330,7 @@ const styles = StyleSheet.create({
         height: height * 0.18
     },
     image: {
-        width: width * 0.23,
+        width: width * 0.18,
         aspectRatio: 1,
         borderRadius: 3
     },

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import React from 'react';
+import { Dimensions, StyleSheet, View, TextInput, TouchableOpacity } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Icon from './utils/Icon';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];

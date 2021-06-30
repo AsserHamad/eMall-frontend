@@ -25,6 +25,7 @@ function Searchbar(){
     const [subcategories, setSubcategories] = useState([]);
     const inputRef = useRef();
     const en = language === 'en';
+    const apiUrl = Constants.manifest.extra.apiUrl;
 
     useEffect(() => {
         if(!text.length)
@@ -35,7 +36,7 @@ function Searchbar(){
         if(!text.length)
             setResults([[], [], [], []]);
         else
-            fetch(`${Constants.manifest.extra.apiUrl}/search/input`, {
+            fetch(`${apiUrl}/search/input`, {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({criteria: text})
@@ -88,7 +89,9 @@ function Searchbar(){
                                 <TextLato bold style={searchStyles.linkStyle}>{store.title}</TextLato>
                             </TouchableOpacity>);
                         })}
-                        <TextLato style={searchStyles.etcText}>{languageText.searchStores}</TextLato>
+                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `${apiUrl}/store/search`, type: 'Store'})}>
+                            <TextLato style={searchStyles.etcText}>{languageText.searchStores}</TextLato>
+                        </TouchableOpacity>
                     </View>
 
                     {/* Products */}
@@ -100,7 +103,7 @@ function Searchbar(){
                                 <TextLato bold style={searchStyles.linkStyle}>{product.title[language]}</TextLato>
                             </TouchableOpacity>);
                         })}
-                        <TouchableOpacity onPress={() => navigation.push('ProductsList', {criteria: text})}>
+                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `${apiUrl}/product/search`, type: 'Product', skipRequest: 30})}>
                             <TextLato style={searchStyles.etcText}>{languageText.searchProducts}</TextLato>
                         </TouchableOpacity>
                     </View>
@@ -114,7 +117,9 @@ function Searchbar(){
                                 <TextLato bold style={searchStyles.linkStyle}>{category.name[language]}</TextLato>
                             </TouchableOpacity>);
                         })}
-                        <TextLato style={searchStyles.etcText}>{languageText.searchCategories}</TextLato>
+                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `${apiUrl}/category/search`, type: 'Category', skipRequest: 20})}>
+                            <TextLato style={searchStyles.etcText}>{languageText.searchCategories}</TextLato>
+                        </TouchableOpacity>
                     </View>
 
                     {/* Subcategories */}
@@ -126,7 +131,9 @@ function Searchbar(){
                                 <TextLato bold style={searchStyles.linkStyle}>{subcategory.name[language]}</TextLato>
                             </TouchableOpacity>);
                         })}
-                        <TextLato style={searchStyles.etcText}>{languageText.searchSubcategories}</TextLato>
+                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `${apiUrl}/subcategory/search`, type: 'Subcategory', skipRequest: 20})}>
+                            <TextLato style={searchStyles.etcText}>{languageText.searchSubcategories}</TextLato>
+                        </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>}
