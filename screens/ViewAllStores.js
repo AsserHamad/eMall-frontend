@@ -8,6 +8,7 @@ import { useLanguage } from '../hooks/language';
 import { ActivityIndicator, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import SellerCard from '../components/cards/Seller/SellerCard';
+import Empty from '../components/utils/Empty';
 
 export default ({route}) => {
     const [sellers, setSellers] = useState([]);
@@ -17,6 +18,7 @@ export default ({route}) => {
     const language = useLanguage();
     const en = language === 'en';
     const [loading, setLoading] = useState(false);
+    const [initialLoad, setInitialLoad] = useState(true);
     const ref = useRef();
 
     const showToast = message => {
@@ -33,12 +35,12 @@ export default ({route}) => {
         .then(res => res.json())
         .then(res => {
             const sellerStores = res.filter(seller => seller.products.length);
-            console.log(sellerStores);
             setLoading(false);
             if(!res.length)
                 return setNewStuff(false);
             setSkip(skip => skip + 10);
             setSellers(sellers => sellers.concat(sellerStores));
+            setInitialLoad(false);
         })
     }
 
@@ -49,28 +51,34 @@ export default ({route}) => {
         <SafeAreaView style={{flex: 1, backgroundColor: gStyles.background}}>
             <Toast ref={_toast => toast.current = _toast} />
             <Header details={{title: route.params.title}} />
-            <FlatList
-                ref={ref}
-                data={sellers}
-                initialNumToRender = {10}
-                onEndReachedThreshold = {0.1}
-                onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
-                showsVerticalScrollIndicator={false}
-                renderItem={(seller) => <SellerCard key={Math.random()} showToast={showToast} key={Math.random()} seller={seller.item} />}
-                keyExtractor={() => `${Math.random()}`}
-                style={{transform: en ? [] : [{scaleX: -1}]}}
-                contentContainerStyle={{alignItems: 'center', paddingTop: 20}}
-                onEndReached={() => {
-                    if (!ref.current.onEndReachedCalledDuringMomentum && newStuff) {
-                        fetchSellers();
-                        ref.current.onEndReachedCalledDuringMomentum = true;
-                    }
-                }}
-            />
-            {loading && (
-                <View style={{backgroundColor: 'black', width: '100%', height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0}}>
-                    <ActivityIndicator color={gStyles.color_2} size={RFPercentage(3)} />
-                </View>
+            {sellers.length > 0 ? (
+                <>
+                <FlatList
+                    ref={ref}
+                    data={sellers}
+                    initialNumToRender = {10}
+                    onEndReachedThreshold = {0.1}
+                    onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={(seller) => <SellerCard key={Math.random()} showToast={showToast} key={Math.random()} seller={seller.item} />}
+                    keyExtractor={() => `${Math.random()}`}
+                    style={{transform: en ? [] : [{scaleX: -1}]}}
+                    contentContainerStyle={{alignItems: 'center', paddingTop: 20}}
+                    onEndReached={() => {
+                        if (!ref.current.onEndReachedCalledDuringMomentum && newStuff) {
+                            fetchSellers();
+                            ref.current.onEndReachedCalledDuringMomentum = true;
+                        }
+                    }}
+                />
+                {loading && (
+                    <View style={{backgroundColor: 'black', width: '100%', height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0}}>
+                        <ActivityIndicator color={gStyles.color_2} size={RFPercentage(3)} />
+                    </View>
+                )}
+                </>
+            ) : (
+                <Empty height={'70%'} />
             )}
         </SafeAreaView>
 

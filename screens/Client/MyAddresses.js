@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const InputModal = ({modalVisible, setModalVisible, addresses, oldValues, edited, setEdited, en, text}) => {
+const InputModal = ({modalVisible, setModalVisible, addresses, edited, setEdited, en, text}) => {
     const [governate, setGovernate] = useState('');
     const [city, setCity] = useState('');
     const [street, setStreet] = useState('');
@@ -228,7 +228,7 @@ const InputModal = ({modalVisible, setModalVisible, addresses, oldValues, edited
             });
         }
         else {
-            newAddresses = addresses.concat({governate, city, street, building, apartment, extra, active: false})
+            newAddresses = addresses.concat({governate, city, street, building, apartment, extra, active: true})
         }
         fetch(`${Constants.manifest.extra.apiUrl}/client`, {
             method: 'put',

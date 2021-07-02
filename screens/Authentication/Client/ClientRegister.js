@@ -19,7 +19,6 @@ const ClientRegister = (props) => {
     const [errors, setErrors] = useState([]);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('+20');
     const languageText = useLanguageText('clientAuth');
@@ -28,10 +27,11 @@ const ClientRegister = (props) => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/register`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email, password, firstName, lastName, phone})
+            body: JSON.stringify({phone, password, firstName, lastName})
         })
         .then(res => res.json())
         .then(res => {
+            console.log('register shiet', res)
             if(!res.status){
                 setErrors([]);
                 props.navigation.replace('ClientLoginSuccess', {account: res})
@@ -90,7 +90,7 @@ const ClientRegister = (props) => {
                     <RegisterInputAndError errors={errors} value={lastName} type={'lastName'} set={setLastName} inputStyle={{width: width * 0.42}} />
                 </View>
                 <RegisterInputAndError errors={errors} value={phone} type={'phone'} set={setPhone} numeric keyboardType={'numeric'} />
-                <RegisterInputAndError errors={errors} value={email} type={'email'} set={setEmail} keyboardType={'email-address'} />
+                {/* <RegisterInputAndError errors={errors} value={email} type={'email'} set={setEmail} keyboardType={'email-address'} /> */}
                 <RegisterInputAndError errors={errors} value={password} type={'password'} set={setPassword} secureTextEntry />
             </View>
             {/* Other Logins */}

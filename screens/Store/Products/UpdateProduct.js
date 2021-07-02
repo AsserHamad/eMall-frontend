@@ -135,7 +135,7 @@ const StoreProductsAdd = ({route, navigation}) => {
                 extraText,
                 currency: 'EGP',
                 images: res
-            }
+            };
             fetch(`${Constants.manifest.extra.apiUrl}/product`, {
                 method: 'put',
                 headers: {'Content-Type': 'application/json', token},
@@ -144,14 +144,14 @@ const StoreProductsAdd = ({route, navigation}) => {
             .then(res => res.json(res))
             .then(res => {
                 if(res.status || res.errors){
-                    scroll.current.scrollTo({y: 0, animated: true})
-                    setEnTitleErr('')
-                    setArTitleErr('')
-                    setPickedCategoryErr('')
-                    setPickedSubcategoryErr('')
-                    setPickedFilterErr('')
-                    setStockErr('')
-                    setPriceErr('')
+                    scroll.current.scrollTo({y: 0, animated: true});
+                    setEnTitleErr('');
+                    setArTitleErr('');
+                    setPickedCategoryErr('');
+                    setPickedSubcategoryErr('');
+                    setPickedFilterErr('');
+                    setStockErr('');
+                    setPriceErr('');
                     res.errors.map(err => {
                         switch(err.param){
                             case 'product.title.en': setEnTitleErr(err.msg); break;

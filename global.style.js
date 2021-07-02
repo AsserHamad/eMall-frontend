@@ -8,6 +8,8 @@ exports.gStyles =  {
   color_3: '#0d0c0a',
   color_4: '#FE5F55',
   active: '#F57429',
+  success: '#4bb543',
+  inactive: '#d3d3d3',
   background: '#ebebeb',
   starColor: '#FCC201',
   lightPrimary: '#FF9E9E',

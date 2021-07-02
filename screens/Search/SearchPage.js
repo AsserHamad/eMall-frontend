@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-navigation';
 import Toast from 'react-native-easy-toast';
 import { gStyles } from '../../global.style';
 import { FlatList } from 'react-native-gesture-handler';
-import { useLanguage } from '../../hooks/language';
+import { useLanguage, useLanguageText } from '../../hooks/language';
 import { ActivityIndicator, Dimensions, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import SellerCard from '../../components/cards/Seller/SellerCard';
@@ -25,6 +25,7 @@ const SearchPage = ({route}) => {
     const en = language === 'en';
     const [loading, setLoading] = useState(false);
     const ref = useRef();
+    const text = useLanguageText('search');
 
     const showToast = message => {
         toast.current.show(message);
@@ -59,8 +60,8 @@ const SearchPage = ({route}) => {
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: gStyles.background}}>
             <Toast ref={_toast => toast.current = _toast} />
-            <Header details={{ title: `${type} Search Results`}} />
-            <TextLato bold style={{marginHorizontal: width * 0.05, marginBottom: height * 0.02}}>Searching for: {criteria}</TextLato>
+            <Header details={{ title: `${text.title} ${text[type]}`}} />
+            <TextLato bold style={{marginHorizontal: width * 0.05, marginBottom: height * 0.02}}>{text.searchingFor} {criteria}</TextLato>
             <FlatList
                 ref={ref}
                 data={data}

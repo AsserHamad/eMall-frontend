@@ -10,6 +10,14 @@
         "searchCategories": "Search for more categories...",
         "searchSubcategories": "Search for more subcategories..."
     },
+    "search": {
+        "title": "Search Results for",
+        "searchingFor": "Searching For: ",
+        "Product": "Products",
+        "Store": "Stores",
+        "Categoory": "Categories",
+        "Subcategory": "Subcategories"
+    },
     "sidebar": {
         "home": "Home",
         "deals": "Deals",
@@ -33,6 +41,7 @@
         "meantime": "In the meantime, you can check out our selection of shops and browse the app to your content"
     },
     "sellerRegister": {
+        "sellerRegister": "Seller Registration",
         "sellerData": "Seller Data",
         "fillForm": "Fill this form with your personal information",
         "next": "Next",
@@ -40,6 +49,7 @@
         "fetchGoogle": "Fetch Data from Google"
     },
     "storeRegister": {
+        "storeRegister": "Store Registration",
         "storeData": "Store Data",
         "fillData": "Fill this form with your store's information",
         "logo": "Logo",
@@ -78,12 +88,13 @@
         "shipping": "Shipping",
         "total": "Total",
         "egp": "EGP",
-        "confirm": "Confirm Purchase"
+        "confirm": "Confirm Purchase",
+        "addAddressToast": "Please add an active address first."
     },
     "confirmPayment":{
         "title": "Order Placed",
         "orderPlaced":"Order Placed",
-        "subtitle": "Sit back and relax. Your order will be reviewed by the store owners and will be back to you in no time!",
+        "subtitle": "Sit back and relax. We will be in contact with you in no time!",
         "order": "Order #:",
         "home": "GO HOME"
     },
@@ -161,8 +172,8 @@
         "orderComplete": "Complete",
         "viewFullDetails": "View Full Details",
         "viewFewerDetails": "View Fewer Details",
-        "review": "Review",
-        "refund": "Refund",
+        "review": "Review Order",
+        "refund": "Refund Order",
         "reviewTitle": "Choose a product to review"
     },
     "myAddresses": {

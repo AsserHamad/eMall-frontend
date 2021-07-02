@@ -19,6 +19,7 @@ export default (props) => {
                 autoCapitalize={'characters'}
                 blurOnSubmit={false}
                 returnKeyType={'next'}
+                keyboardType={'numeric'}
                 onSubmitEditing={() => ref_input1.current.focus()}
                 onChangeText={(input) => {props.setInput0(input); input ? ref_input1.current.focus() : null}}
                 value={props.input0}
@@ -31,6 +32,7 @@ export default (props) => {
                 onChangeText={(input) => {props.setInput1(input); input ? ref_input2.current.focus() : null}}
                 blurOnSubmit={false}
                 returnKeyType={'next'}
+                keyboardType={'numeric'}
                 value={props.input1}
                 maxLength={1}
                 style={styles.input}
@@ -42,6 +44,7 @@ export default (props) => {
                 onChangeText={(input) => {props.setInput2(input); input ? ref_input3.current.focus() : null}}
                 blurOnSubmit={false}
                 returnKeyType={'next'}
+                keyboardType={'numeric'}
                 value={props.input2}
                 maxLength={1}
                 style={styles.input}
@@ -53,6 +56,7 @@ export default (props) => {
                 onChangeText={(input) => {props.setInput3(input); input ? ref_input4.current.focus() : null}}
                 blurOnSubmit={false}
                 returnKeyType={'next'}
+                keyboardType={'numeric'}
                 value={props.input3}
                 maxLength={1}
                 style={styles.input}
@@ -63,6 +67,7 @@ export default (props) => {
                 ref={ref_input4}
                 onChangeText={(input) => props.setInput4(input)}
                 returnKeyType={'done'}
+                keyboardType={'numeric'}
                 value={props.input4}
                 maxLength={1}
                 style={styles.input}

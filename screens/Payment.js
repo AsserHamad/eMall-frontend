@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Dimensions, StyleSheet, Image } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
@@ -10,6 +10,7 @@ import Header from '../components/Header';
 import { gStyles } from '../global.style';
 import { useLanguage, useLanguageText } from '../hooks/language';
 import { setCart } from '../src/actions/cart';
+import Toast from 'react-native-easy-toast';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
@@ -54,9 +55,15 @@ const Payment = () => {
             navigation.push('Order', {code: res.code});
         })
     }
+    const toast = useRef();
+
+    const showToast = message => {
+        toast.current.show(text.addAddressToast, 3500);
+    }
     return (
         <View style={styles.container}>
             <Header details={{title: text.title}} />
+            <Toast fadeInDuration={200} fadeOutDuration={200} ref={_toast => toast.current = _toast} />
             <View>
                 <ScrollView showsVerticalScrollIndicator={false} style={{maxHeight: height * 0.65}}>
                 <TextLato style={styles.deliveringTo}>{text.deliveringTo}</TextLato>
@@ -112,7 +119,10 @@ const Payment = () => {
                 <TouchableOpacity onPress={() => {
                     if(!disabled && address){
                         order()
-                    }}}>
+                    } else {
+                        if(!address) showToast('Please add an active address first.')
+                    }
+                    }}>
                     <View style={{...styles.buttonContainer, backgroundColor: disabled || !address ? '#777' : gStyles.color_0}}>
                         <TextLato bold style={{color: 'white', fontSize: RFPercentage(2), width: width * 0.4, textAlign: 'center'}}>{text.confirm}</TextLato>
                     </View>

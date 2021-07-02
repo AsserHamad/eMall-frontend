@@ -110,17 +110,17 @@ const AuthStackScreen = () => (
     <AuthStack.Screen 
         name="ClientRegister"
         component={ClientRegister} 
-        options={{title: '', headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}} 
+        options={{title: '', headerShown: false}} 
     />
     <AuthStack.Screen name="ClientLoginSuccess" component={ClientLoginSuccess} options={{headerShown: false}} />
     <AuthStack.Screen name="SellerLogin" component={SellerLogin} options={({ route }) => ({ headerShown: false })} />
     <AuthStack.Screen name="SellerRegister" 
         component={SellerRegister}
-        options={{title: '', headerBackTitleVisible: false, headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}}
+        options={{title: '', elevation: 0, shadowOpacity: 0, headerShown: false}}
     />
     <AuthStack.Screen name="SellerStoreRegister" 
         component={SellerStoreRegister}
-        options={{title: '', headerBackTitleVisible: false, headerStyle: {backgroundColor: gStyles.background, elevation: 0, shadowOpacity: 0}}}
+        options={{title: '', headerBackTitleVisible: false, headerShown: false}}
     />
     <AuthStack.Screen name="SellerLoginSuccess" component={SellerLoginSuccess} options={{headerShown: false}} />
   </AuthStack.Navigator>

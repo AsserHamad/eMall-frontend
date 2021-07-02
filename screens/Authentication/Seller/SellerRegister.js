@@ -14,6 +14,8 @@ import RegisterInputAndError from '../RegisterInputAndError';
 import DisabledButton from '../DisabledButton';
 import TextLato from '../../../components/utils/TextLato';
 import { useLanguageText } from '../../../hooks/language';
+import Header from '../../../components/Header';
+import HTTP from '../../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerRegister = (props) => {
@@ -27,32 +29,24 @@ const SellerRegister = (props) => {
     const text = useLanguageText('sellerRegister');
     
     function registerSeller() {
-        fetch(`${Constants.manifest.extra.apiUrl}/seller/verify`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({name, email, password, phone})
-        })
-        .then(res => res.json())
-        .then(res => {
-            if(res.status){
-                setErrors(res.errors);
+        HTTP.post(`/seller/verify`, {name, email, password, phone})
+        .then(({data}) => {
+            console.log(data);
+            setErrors([]);
+            const seller = {
+                name,
+                phone,
+                email,
+                title,
+                password
             }
-            else {
-                setErrors([]);
-                const seller = {
-                    name,
-                    phone,
-                    email,
-                    title,
-                    password
-                }
-                if(facebookId)
-                    seller.facebookId = facebookId;
-                props.navigation.push('SellerStoreRegister', {seller});
-            }
+            if(facebookId)
+                seller.facebookId = facebookId;
+            console.log('uuh hello?')
+            props.navigation.push('SellerStoreRegister', {seller});
         })
         .catch(err => {
-            setErrors(err.errors);
+            setErrors(err.response.data.errors);
         })
     }
 
@@ -88,6 +82,7 @@ const SellerRegister = (props) => {
     }
     return (
         <View style={styles.container}>
+            <Header details={{title: text.sellerRegister}} />
             <View style={styles.headerContainer}>
                 <TextLato bold style={{color: 'black', fontSize: RFValue(20)}}>{text.sellerData}</TextLato>
                 <TextLato italic style={{color: 'black', fontSize: RFValue(12), marginTop: height * 0.01}}>{text.fillForm}</TextLato>
@@ -125,7 +120,7 @@ const SellerRegister = (props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: gStyles.background,
-        paddingTop: Constants.statusBarHeight,
+        // paddingTop: Constants.statusBarHeight,
         alignItems: 'center',
         flexDirection: 'column',
         flex: 1

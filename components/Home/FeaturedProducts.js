@@ -26,7 +26,7 @@ const FeaturedProducts = () => {
                     const product = prod.product;
                     return (
                         <View key={Math.random()} style={styles.product}>
-                            <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.push('Product', {product: {_id: product._id}})} style={styles.innerProduct}>
+                            <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Product', {product: {_id: product._id}})} style={styles.innerProduct}>
                                 <Image source={{uri: product.images[0]}} style={styles.productImage} />
                                 <View style={{width: '100%', marginVertical: height * 0.02, paddingHorizontal: width * 0.03}}>
                                     <TextLato style={{textAlign: en ? 'left' : 'right'}} bold>{product.title[language]}</TextLato>

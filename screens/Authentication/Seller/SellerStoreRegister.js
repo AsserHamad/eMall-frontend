@@ -17,6 +17,7 @@ import DisabledButton from '../DisabledButton';
 import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import TextLato from '../../../components/utils/TextLato';
 import { useLanguage, useLanguageText } from '../../../hooks/language';
+import Header from '../../../components/Header';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerStoreRegister = (props) => {
@@ -100,10 +101,11 @@ const SellerStoreRegister = (props) => {
     )
 
     return (
-        <ScrollView>
+        <ScrollView contentContainerStyle={{backgroundColor: gStyles.background}}>
+        <Header details={{title: text.storeRegister}} />
         <KeyboardAvoidingView keyboardVerticalOffset={headerHeight} behavior={Platform.OS === 'ios' ? 'padding' : null} style={styles.container}>
             <View style={styles.headerContainer}>
-                <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>{text.storeData}</TextLato>
+                {/* <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>{text.storeData}</TextLato> */}
                 <TextLato style={{color: gStyles.color_1, fontSize: RFValue(12), marginTop: height * 0.01}}>{text.fillForm}</TextLato>
             </View>
             <View style={styles.formContainer}>
@@ -137,8 +139,6 @@ const SellerStoreRegister = (props) => {
                         </TouchableOpacity>
                     )
                 })}
-            </View>
-            </View>
                 <TouchableOpacity
                     activeOpacity={0.9}
                     onPress={() => setOther(other => !other)}
@@ -147,6 +147,8 @@ const SellerStoreRegister = (props) => {
                         <TextLato bold style={{color: other ? 'white' : gStyles.color_3, fontSize: RFPercentage(2.5)}}>{text.other}</TextLato>
                     </View>
                 </TouchableOpacity>
+            </View>
+            </View>
                 {other && <TextInput style={{marginVertical: height * 0.05, fontFamily: 'Cairo'}} placeholder={text.enter} value={otherCategory} onChangeText={(value) => setOtherCategory(value)} />}
             <DisabledButton onPressIfActive={register} array={[title, description]} errors={errors}>
                     <TextLato style={{color: 'white', fontSize: RFValue(12)}}>{text.register}</TextLato>

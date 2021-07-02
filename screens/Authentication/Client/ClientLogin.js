@@ -19,13 +19,14 @@ import { setWishlist } from '../../../src/actions/wishlist';
 import TextLato from '../../../components/utils/TextLato';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingPage from '../../../components/utils/LoadingPage';
+import HTTP from '../../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
-    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('01140008042');
+    const [password, setPassword] = useState('Abcd1234!');
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [password, setPassword] = useState('');
     const language = useLanguage();
     const firstTime = useSelector(state => state.generalReducer.firstTime);
     const en = language === 'en';
@@ -33,31 +34,35 @@ const ClientLogin = (props) => {
     
     const login = () => {
         setLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/client/login`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email, password})
-        })
-        .then(res => res.json())
-        .then(res => {
+        HTTP.post(`/client/login`, {phone, password})
+        .then(({data}) => {
+            console.log(data)
             setLoading(false);
-            if(!res.status){
-                setErrors([]);
-                if(res.client.verified){
-                    AsyncStorage.setItem('@token', JSON.stringify({type: 'client', token: res.token}));
-                    AsyncStorage.setItem('@firstTime', 'true');
-                    props.setCart(res.client.cart);
-                    props.setWishlist(res.client.wishlist);
-                    props.changeFirstTime(true);
-                    props.login(res);
-                 }
-                 else props.navigation.replace('ClientLoginSuccess', {account: res.client})
-            }
-            else {
-                setErrors(res.message ? [res.message] : res.errors)
-                setLoading(false);
-            }
-        });
+            setErrors([]);
+            if(data.client.verified){
+                AsyncStorage.setItem('@access_token', JSON.stringify({type: 'client', token: data.token}));
+                HTTP.interceptors.request.use(
+                    function (config) {
+                    config.headers.authorization = data.token;
+                    return config;
+                    },
+                    function (error) {
+                    return Promise.reject(error);
+                    }
+                );
+                AsyncStorage.setItem('@firstTime', 'true');
+                props.setCart(data.client.cart);
+                props.setWishlist(data.client.wishlist);
+                props.changeFirstTime(true);
+                props.login(data);
+                }
+                else props.navigation.replace('ClientLoginSuccess', {account: data.client})
+        })
+        .catch(err => {
+            console.log(err.response.data);
+            setErrors(err.response.data.errors)
+            setLoading(false);
+        })
     }
 
     const facebookLogin = async () => {
@@ -115,11 +120,6 @@ const ClientLogin = (props) => {
         };
     }
 
-    useEffect(() => {
-        if(props.route.params && props.route.params.store)
-            props.navigation.push('SellerLogin')
-    }, []);
-
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <StatusBar backgroundColor={gStyles.background} barStyle={'dark-content'} />
@@ -138,12 +138,13 @@ const ClientLogin = (props) => {
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
-                    value={email}
-                    textContentType={"emailAddress"}
-                    autoCompleteType={"email"}
-                    placeholder={en ? 'Email' : 'بريد الالكتروني'}
+                    value={phone}
+                    textContentType={"telephoneNumber"}
+                    autoCompleteType={"tel"}
+                    keyboardType={'phone-pad'}
+                    placeholder={en ? 'Phone' : 'رقم الهاتف'}
                     placeholderTextColor={"#ffc6c6"}
-                    onChangeText={(val) => setEmail(val)}
+                    onChangeText={(val) => setPhone(val)}
                     style={{...styles.input, textAlign: en ? 'left' : 'right'}} />
                 <TextInput 
                     value={password}
@@ -175,7 +176,7 @@ const ClientLogin = (props) => {
             </SafeAreaView> */}
 
             {/* Login Button */}
-            <DisabledButton onPressIfActive={login} array={[email, password]}>
+            <DisabledButton onPressIfActive={login} array={[phone, password]}>
                     <TextLato bold style={{color: 'white', fontSize: RFValue(12)}}>{languageText.login}</TextLato>
             </DisabledButton>
 
@@ -225,7 +226,8 @@ const styles = StyleSheet.create({
     },
     errorContainer: {
         width: width * 0.9,
-        height: height * 0.03,
+        height: height * 0.06,
+        justifyContent: 'center',
         textAlign: 'left'
     },
     formContainer: {

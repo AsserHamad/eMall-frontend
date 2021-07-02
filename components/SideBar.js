@@ -45,7 +45,7 @@ function SideBar(props) {
                     <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold reverse>{languageText && languageText.changeLanguage}</TextLato>
                 </TouchableOpacity>
                 {props.loggedIn && 
-                    <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});AsyncStorage.removeItem('@token');props.logout()}}>
+                    <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});AsyncStorage.removeItem('@access_token');props.logout()}}>
                         <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold>{languageText.logout}</TextLato>
                     </TouchableOpacity>
                 }

@@ -10,35 +10,47 @@ import Constants from 'expo-constants';
 import { ScrollView, TextInput, TouchableNativeFeedback, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Header from '../../components/Header';
 import CustomModal from '../../components/utils/CustomModal';
+import HTTP from '../../src/utils/axios';
+import Empty from '../../components/utils/Empty';
+import useFocus from '../../hooks/focus';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const MyOrders = () => {
+const MyOrders = ({navigation}) => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-    const token = useSelector(state => state.authReducer.token);
     const language = useLanguage();
     const en = language === 'en';
     const text = useLanguageText('myOrders');
-    useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/orders`, {headers: {token}})
-        .then(res => res.json())
-        .then(res => {
-            console.log('order is', res)
+    const onFocus = () => {
+        setLoading(true);
+        fetchOrders();
+    }
+
+    useFocus(onFocus, navigation);
+
+    const fetchOrders = () => {
+        HTTP(`/client/orders`)
+        .then(({data}) => {
             setLoading(false);
-            setOrders(res);
+            setOrders(data);
         })
         .catch(err => console.log(err))
-    }, [])
+
+    }
     return (
         <SafeAreaView style={styles.container}>
             <Header details={{title: text.myOrders}} />
-            {loading ? loadingView : (
-                <ScrollView contentContainerStyle={{paddingVertical: height * 0.03, paddingBottom: height * 0.05}}>
-                    <View style={styles.orders}>
-                        {orders.map(order => <Order key={Math.random()} order={order} en={en} text={text} />)}
-                    </View>
-                </ScrollView>
-            )}
+            {/* <ComponentWithFocus onFocus={fetchOrders}> */}
+                {loading ? loadingView : orders.length > 0 ? (
+                    <ScrollView contentContainerStyle={{paddingVertical: height * 0.03, paddingBottom: height * 0.05}}>
+                        <View style={styles.orders}>
+                            {orders.map(order => <Order key={Math.random()} order={order} en={en} text={text} />)}
+                        </View>
+                    </ScrollView>
+                ) : (
+                    <Empty uri={'https://imgur.com/RM5iVCD.png'} aspectRatio={14/9} height={'70%'} text={`There's a world of possibility waiting for you! All you have to do is order something`} />
+                )}
+            {/* </ComponentWithFocus> */}
         </SafeAreaView>
     )
 }
@@ -104,20 +116,14 @@ const Order = ({order, en, text}) => {
     const [reviewVisible, setReviewVisible] = useState(false);
 
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/order-products/${order.code}`, {headers: {token}})
-        .then(res => res.json())
-        .then(res => {
-            setOrders(res)
+        HTTP(`/client/order-products/${order.code}`)
+        .then(({data}) => {
+            setOrders(data)
         });
     }, []);
 
     const cancelOrder = () => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/cancel-order`, {
-            method: 'put',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({order})
-        })
-        .then(res => res.json())
+        HTTP.put(`/client/cancel-order`, {order})
         .then(res => {
             setCancelled(res);
         })
@@ -130,38 +136,36 @@ const Order = ({order, en, text}) => {
                     <TextLato bold style={orderStyles.title}>{text.order} # : {order.code}</TextLato>
                     <TextLato style={{...orderStyles.date, textAlign: en ? 'left' : 'right'}}>{date}</TextLato>
                 </View>
-            <View>
-                <View style={styles.statusBall} />
-                <TextLato 
-                    style={cancelled ? orderStyles.cancelText : orderStyles.statusText}>
-                        {cancelled ? text.cancelled : status}
-                </TextLato>
-            </View>
-            {cancelled ? <TextLato bold style={orderStyles.cancelText}>{text.cancelled}</TextLato> :
-            <TextLato style={orderStyles.statusText}>{status}</TextLato>}
 
-            {/*
-                CANCEL BUTTON 
-            */}
-            {!cancelled && !completed && <TouchableOpacity activeOpacity={0.8} style={orderStyles.cancelContainer} onPress={cancelOrder}>
-                <Icon type={'Entypo'} name={'circle-with-cross'} color={'white'} size={RFPercentage(2)} />
-                <TextLato bold style={{color: 'white', fontSize: RFPercentage(2), marginLeft: width * 0.02}}>{text.cancelOrder}</TextLato>
-            </TouchableOpacity>}
-            {completed && (
-                <View style={{flexDirection: en ? 'row' : 'row-reverse', marginTop: height * 0.02}}>
-                    <TouchableNativeFeedback style={orderStyles.completeButtons} onPress={() => setReviewVisible(true)}>
-                        <TextLato bold style={{fontSize: RFPercentage(2)}}>{text.review}</TextLato>
-                    </TouchableNativeFeedback>
-                    <TouchableNativeFeedback style={orderStyles.completeButtons}>
-                        <TextLato bold style={{fontSize: RFPercentage(2)}}>{text.refund}</TextLato>
-                    </TouchableNativeFeedback>
-                </View>
-            )}
-            <TextLato bold style={{marginVertical: height * 0.03, fontSize: RFPercentage(3), color: gStyles.color_2}}>
-                {order.total.toFixed(2)} 
+            <View style={orderStyles.confirmedCancelled}> 
+            {cancelled ? [
+                    <Icon type={'AntDesign'} name={'closecircle'} color={gStyles.color_2} size={RFPercentage(2.5)} />,
+                    <TextLato bold style={orderStyles.cancelText}>{text.cancelled}</TextLato>
+                ] : completed ?
+                [
+                    <Icon type={'AntDesign'} name={'checkcircle'} color={gStyles.success} size={RFPercentage(2.5)} />,
+                    <TextLato bold style={orderStyles.statusText}>{status}</TextLato>
+                ] : null
+             }
+             </View>
+            <TextLato bold style={{marginVertical: height * 0.02, fontSize: RFPercentage(3), color: gStyles.color_3}}>
+                {order.total.toFixed(2)}
                 <TextLato style={{fontSize: RFPercentage(2), color: gStyles.color_3}}>  {en ? 'EGP' : 'ج.م'}</TextLato>
             </TextLato>
             </View>
+                    
+            {completed && (
+                <View>
+                    <TouchableOpacity activeOpacity={0.8} style={orderStyles.reviewContainer} onPress={() => setReviewVisible(true)}>
+                        <Icon type={'MaterialIcons'} name={'rate-review'} color={'white'} size={RFPercentage(2)} />
+                        <TextLato bold style={{color: 'white', fontSize: RFPercentage(2), marginLeft: width * 0.02}}>{text.review}</TextLato>
+                    </TouchableOpacity>
+                    {/* <TouchableOpacity activeOpacity={0.8} style={orderStyles.refundContainer}>
+                        <Icon type={'MaterialCommunityIcons'} name={'cash-refund'} color={'white'} size={RFPercentage(2)} />
+                        <TextLato bold style={{color: 'white', fontSize: RFPercentage(2), marginLeft: width * 0.02}}>{text.refund}</TextLato>
+                    </TouchableOpacity> */}
+                </View>
+            )}
 
             {/* 
                 EXPANDED VIEW
@@ -194,11 +198,11 @@ const Order = ({order, en, text}) => {
                     </View>
                     <View style={orderStyles.expandedContainer}>
                         <View style={orderStyles.diagramContainer}>
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 0 ? gStyles.color_2 : gStyles.color_0}} />
-                            <View style={{...orderStyles.line, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.color_0}} />
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.color_0}} />
-                            <View style={{...orderStyles.line, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.color_0}} />
-                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.color_0}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 0 ? gStyles.color_2 : gStyles.inactive}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.inactive}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.inactive}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.inactive}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.inactive}} />
                         </View>
                         <View style={orderStyles.detailsContainer}>
                             <DetailContainer textActive={order.status === 0} active={order.status >= 0} title={text.orderPlaced} subtitle={`${text.orderPlacedDescription} ${date}`} type={'FontAwesome5'} name={'feather'} />
@@ -206,6 +210,14 @@ const Order = ({order, en, text}) => {
                             <DetailContainer textActive={order.status === 4} active={order.status >= 4} title={text.orderOutForDelivery} subtitle={text.orderOutForDeliveryDescription} type={'MaterialCommunityIcons'} name={'truck-check'} />
                         </View>
                     </View>
+
+                    {/*
+                        CANCEL BUTTON 
+                    */}
+                    {!cancelled && !completed && order.status < 4 && <TouchableOpacity activeOpacity={0.8} style={orderStyles.cancelContainer} onPress={cancelOrder}>
+                        <Icon type={'Entypo'} name={'circle-with-cross'} color={'white'} size={RFPercentage(2)} />
+                        <TextLato bold style={{color: 'white', fontSize: RFPercentage(2), marginLeft: width * 0.02}}>{text.cancelOrder}</TextLato>
+                    </TouchableOpacity>}
                 </View>
             )}
             {!expanded ? 
@@ -226,7 +238,7 @@ const Order = ({order, en, text}) => {
 
 const DetailContainer = ({type, name, active, textActive, title, subtitle}) => (
     <View style={orderStyles.detail}>
-        <View style={{...orderStyles.iconContainer, backgroundColor: active ? gStyles.color_2 : gStyles.color_0}}>
+        <View style={{...orderStyles.iconContainer, backgroundColor: active ? gStyles.color_2 : gStyles.inactive}}>
             <Icon type={type} name={name} color={'white'} size={25} />
         </View>
         <View style={{width: width * 0.45}}>
@@ -259,23 +271,51 @@ const orderStyles = StyleSheet.create({
         color: '#838383',
     },
     cancelText: {
-        color: 'red',
-        marginVertical: height * 0.02,
-        fontSize: RFPercentage(2.5)
+        fontSize: RFPercentage(2.5),
+        marginHorizontal: 10,
+        color: gStyles.color_2
+    },
+    statusText: {
+        // marginTop: height * 0.02,
+        fontSize: RFPercentage(2.5),
+        marginHorizontal: 10,
+        color: gStyles.success
     },
     cancelContainer: {
-        backgroundColor: 'red',
+        backgroundColor: gStyles.color_2,
         paddingVertical: height * 0.013,
-        width: width * 0.35,
+        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: height * 0.02,
         borderRadius: 5,
         flexDirection: 'row'
     },
-    statusText: {
-        marginTop: height * 0.02,
-        color: gStyles.color_2
+    refundContainer: {
+        backgroundColor: gStyles.color_0,
+        paddingVertical: height * 0.013,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: height * 0.01,
+        borderRadius: 5,
+        flexDirection: 'row'
+    },
+    reviewContainer: {
+        backgroundColor: gStyles.color_2,
+        paddingVertical: height * 0.013,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: height * 0.01,
+        borderRadius: 5,
+        flexDirection: 'row'
+    },
+    confirmedCancelled: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10
     },
     arrow: {
         
@@ -338,26 +378,15 @@ const orderStyles = StyleSheet.create({
 const ReviewModal = ({modalVisible, setModalVisible, order, text}) => {
     const language = useLanguage();
     const en = language === 'en';
-    console.log(order)
     const products = order.storeOrders.map(storeOrder => storeOrder.orders.map(storeOrderOrder => storeOrderOrder.product)).flat();
     const [pick, setPick] = useState('');
     const [stars, setStars] = useState(0);
     const [review, setReview] = useState('');
-    const token = useSelector(state => state.authReducer.token);
     const close = () => setModalVisible(false);
 
     const submitReview = () => {
         if(review === '' || pick === '' || stars === 0) return;
-        fetch(`${Constants.manifest.extra.apiUrl}/client/product-review`, {
-            method: 'post',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                product: pick,
-                stars,
-                review
-            })
-        })
-        .then(res => res.json())
+        HTTP.post(`/client/product-review`, {product: pick, stars, review})
         .then(res => {
             close();
         })
@@ -369,7 +398,6 @@ const ReviewModal = ({modalVisible, setModalVisible, order, text}) => {
                 <ScrollView style={{maxHeight: height * 0.4, width: '100%', marginTop: height * 0.02}} contentContainerStyle={{alignItems: 'center'}}>
                     {products.map(product => {
                         const picked = pick === product._id;
-                        console.log(product)
                         return (
                             <TouchableOpacity
                             key={Math.random()}

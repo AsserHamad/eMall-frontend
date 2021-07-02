@@ -41,7 +41,7 @@ const SellerLogin = (props) => {
             if(res && !res.status){
                 setErrors([]);
                 if(res.store.approved){
-                    AsyncStorage.setItem('@token', JSON.stringify({type: 'store', token: res.token}));
+                    AsyncStorage.setItem('access_@token', JSON.stringify({type: 'store', token: res.token}));
                     AsyncStorage.setItem('@firstTime', 'true');
                     props.changeFirstTime(true);
                     props.loginSeller(res); 

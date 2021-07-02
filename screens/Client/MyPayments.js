@@ -25,12 +25,12 @@ const MyPayments = () => {
     return (
         <View style={styles.container}>
             <Header details={{title: text.payments}} />
-            <ImageBackground source={{uri: 'https://image.freepik.com/free-vector/red-oriental-chinese-seamless-pattern-illustration_193606-43.jpg'}} style={{width}}>
+            {/* <ImageBackground source={{uri: 'https://image.freepik.com/free-vector/red-oriental-chinese-seamless-pattern-illustration_193606-43.jpg'}} style={{width}}>
                 <View style={styles.creditContainer}>
                     <TextLato style={{color: 'white', fontSize: RFPercentage(1.5), marginBottom: height * 0.01}}>TOTAL BALANCE</TextLato>
                     <TextLato bold style={{color: 'white', fontSize: RFPercentage(3), letterSpacing: 3}}> 300.00 EGP</TextLato>
                 </View>
-            </ImageBackground>
+            </ImageBackground> */}
             <ScrollView style={{marginTop: height * 0.02}}>
                 {payments.map(payment => {
                     const date = new Date(payment.created_at);

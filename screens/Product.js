@@ -19,21 +19,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useRef } from 'react';
 import Toast from 'react-native-easy-toast';
 import SellerCardProduct from '../components/cards/Seller/SellerCardProduct';
+import HTTP from '../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const image = 'https://imgur.com/qIJjuUY.gif';
 
-
-const getColors = (discount) => {
-    discount = Number(discount);
-    if(discount < 40)
-        return 0;
-    if(discount < 60)
-        return 1;
-    if(discount < 80)
-        return 2
-    return 3;
-}
 
 const Product = (props) => {
     const [product, setProduct] = useState(null);
@@ -60,11 +50,8 @@ const Product = (props) => {
 
     useEffect(() => {
         fetchProduct(props.route.params.product._id);
-        fetch(`${Constants.manifest.extra.apiUrl}/product/reviews/${props.route.params.product._id}`)
-        .then(res => res.json())
-        .then(res => {
-            setReviews(res);
-        })
+        HTTP(`/product/reviews/${props.route.params.product._id}`)
+        .then(({data}) => setReviews(data))
     }, []);
 
     useEffect(() => {
@@ -93,37 +80,27 @@ const Product = (props) => {
     }
 
     const fetchProduct = (product) => {
-        fetch(`${Constants.manifest.extra.apiUrl}/product/${product}`)
-        .then(res => res.json())
-        .then(res => {
-            setPicks(res.options.map(option => ({
+        HTTP(`/product/${product}`)
+        .then(({data}) => {
+            setPicks(data.options.map(option => ({
                 option: option._id,
                 pick: option.options[0]._id,
                 extraPrice: option.options[0].extraPrice ? option.options[0].extraPrice : 0
             })))
-            res.reviewAverage = {average: 5, number: 4730};
-            res.store.logo = res.store.logo ? res.store.logo : "https://logos-world.net/wp-content/uploads/2020/11/The-Body-Shop-Logo.png";
-            Image.getSize(res.store.logo, (width, height) => setLogoAspectRatio(width/height));
-            setProduct(res);
+            data.reviewAverage = {average: 5, number: 4730};
+            data.store.logo = data.store.logo ? data.store.logo : "https://logos-world.net/wp-content/uploads/2020/11/The-Body-Shop-Logo.png";
+            Image.getSize(data.store.logo, (width, height) => setLogoAspectRatio(width/height));
+            setProduct(data);
 
-            fetch(`${Constants.manifest.extra.apiUrl}/store/find-similar-stores`, {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({store: res.store})
-            })
-            .then(resp => resp.json())
-            .then(stores => {
-                setSimilarStores(stores);
-            })
+            HTTP.post(`/store/find-similar-stores`, {store: data.store})
+            .then(({data}) => {
+                setSimilarStores(data);
+            });
 
-            fetch(`${Constants.manifest.extra.apiUrl}/product/more-from-seller`, {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(res)
-            })
-            .then(resp => resp.json())
-            .then(products => {
-                setSimilarProducts(products);
+            HTTP.post(`/product/more-from-seller`, data)
+            .then(({data}) => {
+                console.log(data)
+                setSimilarProducts(data);
             })
         });
     }
@@ -178,7 +155,6 @@ const Product = (props) => {
 
     if(!product)
         return (
-            
             <View style={{...styles.container}}>
                 <Header search={false} details={{title: product ? product.title[language] : ''}} />
                 <View style={{height: height * 0.8, justifyContent: 'center'}}>
@@ -362,7 +338,7 @@ const Product = (props) => {
                         }
 
                         {/* SPECIFICATIONS */}
-                        {product.specifications && product.specifications.length !== 0 && <View style={mainStyles.specificationsContainer}>
+                        {product.specifications && product.specifications.length > 0 && <View style={mainStyles.specificationsContainer}>
                             <TextLato bold style={mainStyles.specificationTitle}>{text.specifications}</TextLato>
                             <View>
                                 {product.specifications.map(spec => {
@@ -392,25 +368,17 @@ const Product = (props) => {
                         </View>}
                     </View>
                         {/* MORE FROM STORE */}
-                        <ScrollCards 
+                        {similarProducts.length > 0 && <ScrollCards 
                             style={{width}}
                             title={`${text.moreFrom} ${product.store.title}`}
                             cards={similarProducts.map(product => <SellerCardProduct showToast={showToast} key={Math.random()} product={product} style={{marginHorizontal: width * 0.02}} />)}
-                            />
+                            />}
 
                         {/* MORE ITEMS */}
                         {/* <ScrollCards style={{width}} title={text.similarStores} cards={similarStores.map(store => <StoreCard key={Math.random()} store={store} />)} /> */}
                 </ScrollView>
         </View>
     )
-}
-
-const SwiperImage = (image) => {
-    const [aspectRatio, setAspectRatio] = useState(1);
-    useEffect(() => {
-        Image.getSize(image, (width, height) => setAspectRatio(width/height))
-    }, []);
-    return <Image style={{...styles.swiperImage, aspectRatio}} source={{uri: image}} key={Math.random()} />
 }
 
 const styles = StyleSheet.create({

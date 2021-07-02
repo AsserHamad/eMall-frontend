@@ -1,24 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Dimensions, Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, View } from 'react-native';
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import { Button, Dimensions, Image, StyleSheet, View, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { gStyles } from '../../../global.style';
-import Constants from 'expo-constants';
-import { AntDesign } from '@expo/vector-icons';
-import * as Facebook from 'expo-facebook';
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
-import { useFonts } from 'expo-font';
-import * as Google from 'expo-google-app-auth';
-import { useLanguage, useLanguageText } from '../../../hooks/language';
+import { RFPercentage } from "react-native-responsive-fontsize";
+import { useLanguage } from '../../../hooks/language';
+import HTTP from '../../../src/utils/axios';
 
 // Redux
-import { connect } from 'react-redux';
-import { login } from '../../../src/actions/auth';
-import { setCart } from '../../../src/actions/cart';
-import DisabledButton from '../DisabledButton';
 import Icon from '../../../components/utils/Icon';
-import { setWishlist } from '../../../src/actions/wishlist';
 import TextLato from '../../../components/utils/TextLato';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../../components/Header';
 import { useNavigation } from '@react-navigation/native';
 
@@ -27,41 +16,35 @@ const ForgotPassword = (props) => {
     const language = useLanguage();
     const route = props.route.params.route;
     const en = language === 'en';
-    const [email, setEmail] = useState('asserhamad96@gmail.com');
+    const [phone, setPhone] = useState('');
     const [step, setStep] = useState(0);
     const [otp, setOtp] = useState('');
         
     switch(step) {
-        case 0 : return <EnterEmail email={email} setEmail={setEmail} en={en} setStep={setStep} route={route} />;
-        case 1 : return <EnterPassword email={email} en={en} otp={otp} setOtp={setOtp} setStep={setStep} route={route} />;
-        case 2 : return <EnterNewPassword email={email} otp={otp} en={en} setStep={setStep} route={route} />;
+        case 0 : return <EnterPhone phone={phone} setPhone={setPhone} en={en} setStep={setStep} route={route} />;
+        case 1 : return <EnterPassword phone={phone} en={en} otp={otp} setOtp={setOtp} setStep={setStep} route={route} />;
+        case 2 : return <EnterNewPassword phone={phone} otp={otp} en={en} setStep={setStep} route={route} />;
         case 3 : return <ConfirmPasswordChange en={en} />
     }
 }
     
-const EnterEmail = ({email, setEmail, en, setStep, route}) => {
+const EnterPhone = ({phone, setPhone, en, setStep, route}) => {
         const submit = () => {
-            if(email === '') return;
-            fetch(`${Constants.manifest.extra.apiUrl}/${route}/forgot-password`, {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({email})
-            })
-            .then(res => res.json())
-            .then(confirmed => {
-                setStep(1);
-            })
+            if(!(phone.match(/^\+20[0-9]{10}$/) || phone.match(/^0[0-9]{10}$/)))
+                return '';
+            HTTP.post(`/${route}/forgot-password`, {phone})
+            .then(() => setStep(1));
         }
         return (
             <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}}>
                 <Header details={{title: en ? 'Forgot Password' : 'نسيت كلمة السر'}} />
                 <Image source={{uri: 'https://i.imgur.com/2ZZJXSk.png'}} style={styles.image} />
-                <TextLato bold style={{marginTop: height * 0.1,marginBottom: height * 0.03, fontSize: RFPercentage(3)}}>Forgot Your Password?</TextLato>
+                <TextLato bold style={{marginTop: height * 0.1, marginBottom: height * 0.03, fontSize: RFPercentage(3)}}>Forgot Your Password?</TextLato>
                 <TextInput
-                    placeholder={en ? 'Type Your Email' : 'اكتب بريدك الإلكتروني'}
+                    placeholder={en ? 'Type Your Phone' : 'اكتب رقم هاتفك'}
                     style={styles.input}
-                    value={email}
-                    onChangeText={val => setEmail(val)}
+                    value={phone}
+                    onChangeText={val => setPhone(val)}
                     />
     
                 <TouchableOpacity style={styles.button} onPress={submit}>
@@ -72,17 +55,12 @@ const EnterEmail = ({email, setEmail, en, setStep, route}) => {
             )
 }
 
-const EnterPassword = ({email, en, setStep, otp, setOtp, route}) => {
+const EnterPassword = ({phone, en, setStep, otp, setOtp, route}) => {
     const submit = () => {
         if(otp === '') return;
-        fetch(`${Constants.manifest.extra.apiUrl}/${route}/forgot-password/check-otp`, {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({email, otp})
-            })
-            .then(res => res.json())
-            .then(res => {
-                if(res.confirmed){
+        HTTP.post(`/${route}/forgot-password/check-otp`, {phone, otp})
+            .then(({data}) => {
+                if(data.confirmed){
                     setStep(2);
                 }
                 })
@@ -91,8 +69,8 @@ const EnterPassword = ({email, en, setStep, otp, setOtp, route}) => {
         <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}}>
             <Header details={{title: en ? 'Enter OTP' : 'أدخل OTP'}} />
             <Image source={{uri: 'https://i.imgur.com/GnDpI1L.png'}} style={styles.image} />
-            <TextLato bold style={{marginTop: height * 0.1, fontSize: RFPercentage(3)}}>An email has been sent!</TextLato>
-            <TextLato style={{marginTop: height * 0.01, marginHorizontal: width * 0.1, textAlign: 'center', marginBottom: height * 0.03, fontSize: RFPercentage(1.7)}}>Please check your email and enter the password the has been sent to you</TextLato>
+            <TextLato bold style={{marginTop: height * 0.1, fontSize: RFPercentage(3)}}>An SMS has been sent!</TextLato>
+            <TextLato style={{marginTop: height * 0.01, marginHorizontal: width * 0.1, textAlign: 'center', marginBottom: height * 0.03, fontSize: RFPercentage(1.7)}}>Please wait for the message to arrive</TextLato>
             <TextInput
                 placeholder={en ? 'Enter PIN' : 'ادخل الكود'}
                 style={styles.input}
@@ -108,21 +86,15 @@ const EnterPassword = ({email, en, setStep, otp, setOtp, route}) => {
     )
 }
 
-const EnterNewPassword = ({email, otp, en, setStep, route}) => {
+const EnterNewPassword = ({phone, otp, en, setStep, route}) => {
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
     const disabled = password === '' || password !== confirm || !/^.{8,35}$/.test(password);
     const submit = () => {
         if(disabled) return;
-        fetch(`${Constants.manifest.extra.apiUrl}/${route}/change-password`, {
-                method: 'post',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({email, otp, password})
-            })
-            .then(res => res.json())
-            .then(confirmed => {
-                    setStep(3);
-                })
+        HTTP.post(`/${route}/change-password`, {phone, otp, password})
+            .then(() => {setStep(3);})
+            .catch(err => console.log(err))
     }
     return (
         <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}}>

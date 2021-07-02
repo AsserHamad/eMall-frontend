@@ -14,6 +14,7 @@ import { setWishlist } from './src/actions/wishlist';
 import { login, loginSeller } from './src/actions/auth';
 import * as Updates from 'expo-updates';
 import * as firebase from 'firebase';
+import HTTP from './src/utils/axios';
 
 const store = configureStore();
 var firebaseConfig = {
@@ -54,25 +55,32 @@ export default () => {
         setLanguageLoaded(true);
       });
   
-      AsyncStorage.getItem('@token')
+      AsyncStorage.getItem('@access_token')
       .then(token => {
+        if(!token) {setAccountLoaded(true); return;}
         token = JSON.parse(token);
         const url = token.type === 'client' ? 'client' : 'seller';
-        fetch(`${Constants.manifest.extra.apiUrl}/${url}/login/token`, {headers: {token: token.token}})
-        .then(resp => resp.json())
-        .then(resp => {
-          if(resp.status || resp === null) throw new Error('invalid token');
+        HTTP.interceptors.request.use(
+          function (config) {
+            config.headers.authorization = token.token;
+            return config;
+          },
+          function (error) {
+            return Promise.reject(error);
+          }
+        );
+        HTTP.get(`/${url}/login/token`)
+        .then(({data}) => {
           if(token.type === 'client'){
-            store.dispatch(setCart(resp.client.cart));
-            store.dispatch(setWishlist(resp.client.wishlist));
-            store.dispatch(login(resp));
+            store.dispatch(setCart(data.client.cart));
+            store.dispatch(setWishlist(data.client.wishlist));
+            store.dispatch(login(data));
           } else {
-            store.dispatch(loginSeller(resp));
+            store.dispatch(loginSeller(data));
           }
           setAccountLoaded(true);
         })
         .catch(err => {
-          console.log(err);
           setAccountLoaded(true)
         });
       })
@@ -87,8 +95,7 @@ export default () => {
         setFirstTimeLoaded(true)
       })
 
-      fetch(`${Constants.manifest.extra.apiUrl}/variables`)
-      .then(res => res.json())
+      HTTP(`/variables`)
       .then(res => {
         store.dispatch(changeVariables(res));
       })
@@ -97,7 +104,7 @@ export default () => {
     const init = async () => {
       const update = await Updates.checkForUpdateAsync();
       if (update.isAvailable) {
-        Updates.fetchUpdateAsync().then(() => Updates.reloadAsync());
+        Updates.fetchUpdateAsync().then(() => setTimeout(Updates.reloadAsync, 5000));
       } else {
         getItems();
       }
