@@ -36,22 +36,10 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
     }, [])
     
     // ** Helper Functions
-    
-    const containsItem = (product) => {
-        return cartProducts.filter(cartProduct => {
-            return cartProduct.product._id === product._id
-        }).length;
-    }
-    
-    const containsItemWishlist = (product) => {
-        return wishlist.filter(wishlistProduct => {
-            return wishlistProduct._id === product._id
-        }).length;
-    }
 
-    const [wishlistButton, setWishlistButton] = useState(!containsItemWishlist(product));
+    const [wishlistButton, setWishlistButton] = useState(true);
     const [wishlistLoading, setWishlistLoading] = useState(false);
-    const [cartButton, setCartButton] = useState(!containsItem(product));
+    const [cartButton, setCartButton] = useState(true);
     const [cartLoading, setCartLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [picks, setPicks] = useState([]);
@@ -88,6 +76,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
                 .catch(err => console.log(err))
             });
         } else {
+            console.log('welp our token is', token)
             fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
                 method: 'post',
                 headers: {token, 'Content-Type': 'application/json'},
@@ -169,11 +158,6 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
         const discount = product.discount ? 1 - product.discount : 1;
         return ((product.price + addedPrice) * dealOfTheDay * discount).toFixed(2);
     }
-
-    useEffect(() => {
-        setCartButton(!containsItem(product));
-        setWishlistButton(!containsItemWishlist(product));
-    }, [cartProducts, wishlist])
 
     if(!product)
     return (

@@ -24,10 +24,11 @@ function ClientLoginSuccess(props) {
     const account = props.route.params.account;
     const submitOtp = () => {
         HTTP.post(`/client/login/otp`, {...props.route.params.account, otp: `${input0}${input1}${input2}${input3}${input4}`})
-        .then(({data}) => {
+        .then(data => {
             props.login(data);
             AsyncStorage.setItem('@firstTime', 'true');
-            AsyncStorage.setItem('@access_token', JSON.stringify({type: 'client', token: data.token}));
+            AsyncStorage.setItem('@accessToken', JSON.stringify({type: 'client', token: data.accessToken}));
+            AsyncStorage.setItem('@refreshToken', data.refreshToken);
             props.changeFirstTime(true);
             // props.navigation.navigate('Home');
         })

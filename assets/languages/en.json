@@ -151,12 +151,35 @@
         "firstName": "FIRST NAME",
         "lastName": "LAST NAME",
         "phone": "PHONE NUMBER",
-        "update": "UPDATE"
+        "update": "UPDATE",
+        "changePhoneNumber": "CHANGE PHONE NUMBER",
+        "changePassword": "CHANGE PASSWORD"
+    },
+    "changePhone": {
+        "title": "Change Phone Number",
+        "enterNumber": "Enter your new phone number",
+        "placeholder": "New phone number",
+        "next": "Next",
+        "toast": "Please enter a proper phone number +20...",
+        "smsSent": "An SMS has been sent to your new number",
+        "enterCode": "Please enter the code that was provided in the message",
+        "submit": "SUBMIT",
+        "otpError": "Incorrect PIN"
+    },
+    "changePassword": {
+        "title": "Change Password",
+        "enterPassword": "Enter your password information",
+        "currentPlaceholder": "Enter current password",
+        "newPlaceholder": "Enter new password",
+        "confirmPlaceholder": "Confirm new password",
+        "success": "Password Changed Successfully!",
+        "goBack": "Go Back"
     },
     "myOrders": {
         "myOrders": "My Orders",
         "order": "Order",
         "awaitingConfirmation": "Awaiting Confirmation",
+        "expectedArrival": "Expected Arrival Date: ",
         "cancelled": "Cancelled",
         "cancelOrder": "Cancel Order",
         "orderPlaced": "Order Placed",
@@ -169,6 +192,8 @@
         "orderReadyToShipDescription": "Your order is getting ready to be shipped.",
         "orderOutForDelivery": "Out for Delivery",
         "orderOutForDeliveryDescription": "Your order is on its way to you right now!",
+        "orderDelivered": "Delivery Complete!",
+        "orderDeliveredDescription": "Your order has been successfully received by you!",
         "orderComplete": "Complete",
         "viewFullDetails": "View Full Details",
         "viewFewerDetails": "View Fewer Details",

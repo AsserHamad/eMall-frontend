@@ -24,7 +24,7 @@ import HTTP from '../../../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
     const [phone, setPhone] = useState('01140008042');
-    const [password, setPassword] = useState('Abcd1234!');
+    const [password, setPassword] = useState('Abcd1234');
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
     const language = useLanguage();
@@ -35,12 +35,13 @@ const ClientLogin = (props) => {
     const login = () => {
         setLoading(true);
         HTTP.post(`/client/login`, {phone, password})
-        .then(({data}) => {
+        .then(data => {
             console.log(data)
             setLoading(false);
             setErrors([]);
             if(data.client.verified){
-                AsyncStorage.setItem('@access_token', JSON.stringify({type: 'client', token: data.token}));
+                AsyncStorage.setItem('@accessToken', JSON.stringify({type: 'client', token: data.accessToken}));
+                AsyncStorage.setItem('@refreshToken', data.refreshToken);
                 HTTP.interceptors.request.use(
                     function (config) {
                     config.headers.authorization = data.token;

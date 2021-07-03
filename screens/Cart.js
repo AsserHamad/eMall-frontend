@@ -12,6 +12,9 @@ import Header from '../components/Header';
 import TextLato from '../components/utils/TextLato';
 import { gStyles } from '../global.style';
 import { useLanguage, useLanguageText } from '../hooks/language';
+import HTTP from '../src/utils/axios';
+
+
 
 function Cart(){
     const loggedIn = useSelector(state => state.authReducer.loggedIn);
@@ -19,7 +22,6 @@ function Cart(){
     const en = language === 'en';
     const text = useLanguageText('cart');
     const navigation = useNavigation();
-    const token = useSelector(state => state.authReducer.token);
     const [loading, setLoading] = useState(true);
     if(!loggedIn)
         return (
@@ -41,24 +43,22 @@ function Cart(){
     const [disabled, setDisabled] = useState(true);
     const [refresh, setRefresh] = useState(false);
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {headers: {token}})
-        .then(res => res.json())
-        .then(res => {
+        HTTP('/client/cart')
+        .then(data => {
+            console.log('cart data', data);
             setLoading(false);
-            setProducts(res.products);
+            setProducts(data.products);
         })
+        .catch(err => console.log(err));
         
         fetchSubtotal();
     }, [refresh]);
 
     const fetchSubtotal = () => {
         setSubtotal(null)
-        fetch(`${Constants.manifest.extra.apiUrl}/client/subtotal`, {
-            headers: {token}
-        })
-        .then(res => res.json())
-        .then(res => {
-            setSubtotal(res.subtotal);
+        HTTP('/client/subtotal')
+        .then(data => {
+            setSubtotal(data.subtotal);
             setDisabled(false);
         })
     }

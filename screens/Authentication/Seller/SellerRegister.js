@@ -30,7 +30,7 @@ const SellerRegister = (props) => {
     
     function registerSeller() {
         HTTP.post(`/seller/verify`, {name, email, password, phone})
-        .then(({data}) => {
+        .then(data => {
             console.log(data);
             setErrors([]);
             const seller = {

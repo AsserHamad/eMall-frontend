@@ -30,7 +30,7 @@ const MyOrders = ({navigation}) => {
 
     const fetchOrders = () => {
         HTTP(`/client/orders`)
-        .then(({data}) => {
+        .then(data => {
             setLoading(false);
             setOrders(data);
         })
@@ -93,6 +93,8 @@ const styles = StyleSheet.create({
 
 const Order = ({order, en, text}) => {
     let _date = new Date(order.created_at);
+    let eta_date = new Date(_date.getTime() + 3 * 24 * 60 * 60 * 1000);
+    console.log(eta_date)
     const getStatus = (status) => {
         switch(status){
             case 0: return text.awaitingConfirmation;
@@ -105,19 +107,19 @@ const Order = ({order, en, text}) => {
         }
     }
     const date = `${_date.getDay()}-${_date.getMonth()}-${_date.getFullYear()}, ${('0' + _date.getUTCHours()).slice(-2)}:${('0' + _date.getUTCMinutes()).slice(-2)}`
+    const etaDate = `${eta_date.getDay()}-${eta_date.getMonth()}-${eta_date.getFullYear()}`
     
     const status = getStatus(order.status);
     const language = useLanguage();
     const [cancelled, setCancelled] = useState(order.status === -1);
     const completed = order.status === 5;
-    const token = useSelector(state => state.authReducer.token);
     const [expanded, setExpanded] = useState(false);
     const [orders, setOrders] = useState([]);
     const [reviewVisible, setReviewVisible] = useState(false);
 
     useEffect(() => {
         HTTP(`/client/order-products/${order.code}`)
-        .then(({data}) => {
+        .then(data => {
             setOrders(data)
         });
     }, []);
@@ -135,6 +137,7 @@ const Order = ({order, en, text}) => {
                 <View>
                     <TextLato bold style={orderStyles.title}>{text.order} # : {order.code}</TextLato>
                     <TextLato style={{...orderStyles.date, textAlign: en ? 'left' : 'right'}}>{date}</TextLato>
+                    <TextLato style={{...orderStyles.date, textAlign: en ? 'left' : 'right'}}>{text.expectedArrival} {etaDate}</TextLato>
                 </View>
 
             <View style={orderStyles.confirmedCancelled}> 
@@ -145,7 +148,7 @@ const Order = ({order, en, text}) => {
                 [
                     <Icon type={'AntDesign'} name={'checkcircle'} color={gStyles.success} size={RFPercentage(2.5)} />,
                     <TextLato bold style={orderStyles.statusText}>{status}</TextLato>
-                ] : null
+                ] : <TextLato bold style={orderStyles.normalStatusText}>{status}</TextLato>
              }
              </View>
             <TextLato bold style={{marginVertical: height * 0.02, fontSize: RFPercentage(3), color: gStyles.color_3}}>
@@ -203,11 +206,14 @@ const Order = ({order, en, text}) => {
                             <View style={{...orderStyles.dot, backgroundColor: order.status >= 1 ? gStyles.color_2 : gStyles.inactive}} />
                             <View style={{...orderStyles.line, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.inactive}} />
                             <View style={{...orderStyles.dot, backgroundColor: order.status >= 4 ? gStyles.color_2 : gStyles.inactive}} />
+                            <View style={{...orderStyles.line, backgroundColor: order.status == 5 ? gStyles.color_2 : gStyles.inactive}} />
+                            <View style={{...orderStyles.dot, backgroundColor: order.status == 5 ? gStyles.color_2 : gStyles.inactive}} />
                         </View>
                         <View style={orderStyles.detailsContainer}>
                             <DetailContainer textActive={order.status === 0} active={order.status >= 0} title={text.orderPlaced} subtitle={`${text.orderPlacedDescription} ${date}`} type={'FontAwesome5'} name={'feather'} />
                             <DetailContainer textActive={order.status === 1} active={order.status >= 1} title={text.orderConfirmed} subtitle={text.orderConfirmedDescription} type={'Feather'} name={'check-circle'} />
                             <DetailContainer textActive={order.status === 4} active={order.status >= 4} title={text.orderOutForDelivery} subtitle={text.orderOutForDeliveryDescription} type={'MaterialCommunityIcons'} name={'truck-check'} />
+                            <DetailContainer textActive={order.status === 5} active={order.status >= 5} title={text.orderDelivered} subtitle={text.orderDeliveredDescription} type={'Entypo'} name={'check'} />
                         </View>
                     </View>
 
@@ -267,7 +273,7 @@ const orderStyles = StyleSheet.create({
         fontSize: RFPercentage(2.3)
     },
     date: {
-        fontSize: RFPercentage(2.1),
+        fontSize: RFPercentage(1.8),
         color: '#838383',
     },
     cancelText: {
@@ -280,6 +286,11 @@ const orderStyles = StyleSheet.create({
         fontSize: RFPercentage(2.5),
         marginHorizontal: 10,
         color: gStyles.success
+    },
+    normalStatusText: {
+        fontSize: RFPercentage(2),
+        color: gStyles.color_3
+
     },
     cancelContainer: {
         backgroundColor: gStyles.color_2,

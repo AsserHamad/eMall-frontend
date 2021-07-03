@@ -152,12 +152,35 @@
         "firstName": "الاسم الاول",
         "lastName": "اسم العائلة",
         "phone": "رقم التليفون",
-        "update": "تحديث"
+        "update": "تحديث",
+        "changePhoneNumber": "غير رقم هانفك",
+        "changePassword": "غير كلمة السر"
+    },
+    "changePhone": {
+        "title": "غير رقم الهاتف",
+        "enterNumber": "أدخل رقم هاتفك الجديد",
+        "placeholder": "رقم هاتف جديد",
+        "next": "التالي",
+        "toast": "الرجاء إدخال رقم هاتف مناسب +20 ...",
+        "smsSent": "تم إرسال رسالة نصية قصيرة إلى رقمك الجديد",
+        "enterCode": "الرجاء إدخال الرمز الذي تم توفيره في الرسالة",
+        "submit": "إرسال",
+        "otpError": "رقم التعريف الشخصي غير صحيح"
+    },
+    "changePassword": {
+        "title": "تغيير كلمة المرور",
+        "enterPassword": "أدخل معلومات كلمة المرور الخاصة بك",
+        "currentPlaceholder": "إدخل كلمة السر الحالية",
+        "newPlaceholder": "أدخل كلمة مرور جديدة",
+        "confirmPlaceholder": "تأكيد كلمة المرور الجديدة",
+        "success": "تم تغيير الرقم السري بنجاح!",
+        "goBack": "العوده"
     },
     "myOrders": {
         "myOrders": "طلباتي",
         "order": "طلب",
         "awaitingConfirmation": "بانتظار التأكيد",
+        "expectedArrival": "تاريخ الوصول المتوقع:",
         "cancelled": "ملغى",
         "cancelOrder": "الغاء الطلب",
         "orderPlaced": "تم الطلب",
@@ -170,6 +193,8 @@
         "orderReadyToShipDescription": "طلبك جاهز للشحن.",
         "orderOutForDelivery": "خارج للتوصيل",
         "orderOutForDeliveryDescription": "طلبك في طريقه إليك الآن!",
+        "orderDelivered": "اكتمل التسليم!",
+        "orderDeliveredDescription": "لقد تم استلام طلبك بنجاح!",
         "orderComplete": "طلبك تم تنفيذه!",
         "viewFullDetails": "عرض التفاصيل الكاملة",
         "viewFewerDetails": "عرض تفاصيل أقل",

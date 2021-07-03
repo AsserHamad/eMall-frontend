@@ -55,23 +55,33 @@ export default () => {
         setLanguageLoaded(true);
       });
   
-      AsyncStorage.getItem('@access_token')
-      .then(token => {
-        if(!token) {setAccountLoaded(true); return;}
-        token = JSON.parse(token);
-        const url = token.type === 'client' ? 'client' : 'seller';
-        HTTP.interceptors.request.use(
-          function (config) {
-            config.headers.authorization = token.token;
-            return config;
-          },
-          function (error) {
-            return Promise.reject(error);
-          }
-        );
-        HTTP.get(`/${url}/login/token`)
-        .then(({data}) => {
-          if(token.type === 'client'){
+      // ? Get Access Token
+      // ? First we get the stored access token in case the client/store was logged in before
+
+      AsyncStorage.getItem('@accessToken')
+      .then(accessToken => {
+        if(!accessToken) {setAccountLoaded(true); return;}
+        accessToken = JSON.parse(accessToken);
+        const url = accessToken.type === 'client' ? 'client' : 'seller';
+
+        // ? We check if the token is still valid
+
+        HTTP.get(`/${url}/login/token`, {headers: {Authorization: accessToken.token}})
+        .then(data => {
+
+          // * If the token is valid, we set it in our interceptors to use in our future requests, and then set the store states
+          
+          HTTP.interceptors.request.use(
+            function (config) {
+              config.headers.authorization = accessToken.token;
+              return config;
+            },
+            function (error) {
+              return Promise.reject(error);
+            }
+          );
+          data.accessToken = accessToken.token;
+          if(accessToken.type === 'client'){
             store.dispatch(setCart(data.client.cart));
             store.dispatch(setWishlist(data.client.wishlist));
             store.dispatch(login(data));
@@ -81,7 +91,51 @@ export default () => {
           setAccountLoaded(true);
         })
         .catch(err => {
-          setAccountLoaded(true)
+          
+          //! If not valid, use our Refresh Token to get a new access token
+          
+          AsyncStorage.getItem('@refreshToken')
+          .then(refreshToken => {
+            console.log('aight cool refresh bro, lets see if its valid', refreshToken)
+            HTTP.get(`/${url}/login/token/refresh`, {headers: {Authorization: refreshToken}})
+            .then(data => {
+
+              // * If the refresh token was valid, we set the result as the new access token
+              
+              console.log('AWESOME, new access token!', data);
+              AsyncStorage.setItem('@accessToken', JSON.stringify(data));
+              HTTP.interceptors.request.use(
+                function (config) {
+                  config.headers.authorization = data.token;
+                  return config;
+                },
+                function (error) {
+                  return Promise.reject(error);
+                }
+              );
+
+              data.accessToken = data.token;
+              if(accessToken.type === 'client'){
+                store.dispatch(setCart(data.client.cart));
+                store.dispatch(setWishlist(data.client.wishlist));
+                store.dispatch(login(data));
+              } else {
+                store.dispatch(loginSeller(data));
+              }
+              setAccountLoaded(true);
+
+            })
+            .catch(err => {
+
+              // ! Otherwise we just remove the local storage for those items
+            
+              console.log('true trash, get this shit out of here', err)
+              AsyncStorage.removeItem(`@accessToken`);
+              AsyncStorage.removeItem(`@refreshToken`);
+              setAccountLoaded(true);
+            })
+
+          })
         });
       })
       .catch(err => {

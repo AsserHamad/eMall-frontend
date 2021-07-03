@@ -51,7 +51,7 @@ const Product = (props) => {
     useEffect(() => {
         fetchProduct(props.route.params.product._id);
         HTTP(`/product/reviews/${props.route.params.product._id}`)
-        .then(({data}) => setReviews(data))
+        .then(data => setReviews(data))
     }, []);
 
     useEffect(() => {
@@ -81,7 +81,7 @@ const Product = (props) => {
 
     const fetchProduct = (product) => {
         HTTP(`/product/${product}`)
-        .then(({data}) => {
+        .then(data => {
             setPicks(data.options.map(option => ({
                 option: option._id,
                 pick: option.options[0]._id,
@@ -93,12 +93,12 @@ const Product = (props) => {
             setProduct(data);
 
             HTTP.post(`/store/find-similar-stores`, {store: data.store})
-            .then(({data}) => {
+            .then(data => {
                 setSimilarStores(data);
             });
 
             HTTP.post(`/product/more-from-seller`, data)
-            .then(({data}) => {
+            .then(data => {
                 console.log(data)
                 setSimilarProducts(data);
             })

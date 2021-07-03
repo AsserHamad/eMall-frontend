@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import HTTP from '../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
@@ -41,12 +42,7 @@ function CartCard({item, setRefresh}){
 
     const increaseQuantity = () => {
         setQuantityLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
-            method: 'put',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product: item.product, options: item.options, quantity: quantity + 1})
-        })
-        .then(res => res.json())
+        HTTP.put('/client/cart', {product: item.product, options: item.options, quantity: quantity + 1})
         .then(res => {
             setQuantityLoading(false);
             setQuantity(quantity + 1);
@@ -60,12 +56,7 @@ function CartCard({item, setRefresh}){
         if(quantity <= 1) 
             return;
         setQuantityLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
-            method: 'put',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product: item.product, options: item.options, quantity: quantity - 1})
-        })
-        .then(res => res.json())
+        HTTP.put('/client/cart', {product: item.product, options: item.options, quantity: quantity - 1})
         .then(res => {
             setQuantityLoading(false);
             setQuantity(quantity - 1);
@@ -77,12 +68,7 @@ function CartCard({item, setRefresh}){
 
     const removeFromCartHelper = () => {
         setDeleteLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
-            method: 'delete',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product: item})
-        })
-        .then(res => res.json())
+        HTTP.delete('/client/cart', {product: item})
         .then(res => {
             dispatch(setCart(res));
             setRefresh(refresh => !refresh);

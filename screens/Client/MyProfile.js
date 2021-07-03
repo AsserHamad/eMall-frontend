@@ -13,31 +13,26 @@ import { useLanguage, useLanguageText } from '../../hooks/language';
 import Toast from 'react-native-easy-toast';
 import { updateAccount } from '../../src/actions/auth';
 import Header from '../../components/Header';
+import HTTP from '../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const MyProfile = () => {
+const MyProfile = ({navigation}) => {
     const text = useLanguageText('myProfile');
     const language = useLanguage();
-    const navigation = useNavigation();
     const en = language === 'en';
-    const token = useSelector(state => state.authReducer.token);
-    const [email, setEmail] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [phone, setPhone] = useState('+20');
     const toast = useRef();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/profile`, {headers: {token}})
-        .then(res => res.json())
+        HTTP('/client/profile')
         .then(res => {
-            setEmail(res.email);
             setFirstName(res.firstName);
             setLastName(res.lastName);
-            setPhone(res.phone || '+20');
-        });
+        })
+        .catch(err => console.log(err));
     }, []);
     
     const showToast = message => {
@@ -45,12 +40,7 @@ const MyProfile = () => {
     }
 
     const updateProfile = () => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/profile`, {
-            method: 'put',
-            body: JSON.stringify({firstName, lastName, phone}),
-            headers: {token, 'Content-Type': 'application/json'}
-        })
-        .then(res => res.json())
+        HTTP.put('/client/profile', {firstName, lastName})
         .then(res => {
             dispatch(updateAccount(res));
             showToast(en ? 'Successfully updated profile!' : 'تم تحديث الملف الشخصي بنجاح!');
@@ -61,15 +51,26 @@ const MyProfile = () => {
         <SafeAreaView style={styles.container}>
             <Header details={{title: en ? 'My Profile' : 'ملفي'}} />
         <Toast ref={_toast => toast.current = _toast} />
-        <ScrollView>
+        <ScrollView contentContainerStyle={{justifyContent: 'center'}}>
             {/* <Input title={text.email} value={email} setValue={setEmail} /> */}
             <Input title={text.firstName} value={firstName} setValue={setFirstName} />
             <Input title={text.lastName} value={lastName} setValue={setLastName} />
-            <Input title={text.phone} value={phone} setValue={setPhone} />
             <View style={styles.buttonView}>
-                <TouchableNativeFeedback style={styles.button} onPress={updateProfile}>
+                <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={updateProfile}>
                     <TextLato bold style={{color: 'white'}}>{text.update}</TextLato>
-                </TouchableNativeFeedback>
+                </TouchableOpacity>
+            <View style={styles.separator} />
+            </View>
+            {/* <Input title={text.phone} value={lastName} setValue={setLastName} /> */}
+            <View style={styles.buttonView}>
+                <TouchableOpacity activeOpacity={0.8} style={styles.changeButton} onPress={() => navigation.push('ChangePhone')}>
+                    <TextLato bold style={{color: 'white'}}>{text.changePhoneNumber}</TextLato>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.buttonView}>
+                <TouchableOpacity activeOpacity={0.8} style={styles.changeButton} onPress={() => navigation.push('ChangePassword')}>
+                    <TextLato bold style={{color: 'white'}}>{text.changePassword}</TextLato>
+                </TouchableOpacity>
             </View>
         </ScrollView>
         </SafeAreaView>
@@ -118,18 +119,45 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         paddingHorizontal: width * 0.1,
-        marginTop: height * 0.05
+        marginTop: height * 0.025
+    },
+    separator: {
+        width: width * 0.92,
+        height: height * 0.003,
+        marginTop: height * 0.02,
+        backgroundColor: gStyles.inactive
     },
     buttonView: {
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: height * 0.1
+        marginTop: height * 0.03
     },
     button: {
-        backgroundColor: gStyles.color_0,
-        paddingVertical: height * 0.025,
+        backgroundColor: gStyles.color_2,
+        paddingVertical: height * 0.02,
         paddingHorizontal: width * 0.08,
+        width: width * 0.8,
+        alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: 100
+    },
+    changeButton: {
+        backgroundColor: gStyles.color_0,
+        paddingVertical: height * 0.02,
+        paddingHorizontal: width * 0.08,
+        width: width * 0.8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 100,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
     }
 })
 

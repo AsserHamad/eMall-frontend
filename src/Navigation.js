@@ -64,6 +64,8 @@ import ViewAllProducts from '../screens/ViewAllProducts';
 import ViewAllStores from '../screens/ViewAllStores';
 import { Image } from 'react-native';
 import SearchPage from '../screens/Search/SearchPage';
+import ChangePhoneNumber from '../screens/Client/ChangePhoneNumber';
+import ChangePassword from '../screens/Client/ChangePassword';
 
 
 const Drawers = createDrawerNavigator();
@@ -99,6 +101,8 @@ const HomeStackScreen = () => (
     <HomeStack.Screen name="Addresses" component={MyAddresses} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="Orders" component={MyOrders} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="MyProfile" component={MyProfile} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="ChangePhone" component={ChangePhoneNumber} options={({ route }) => ({ headerShown: false })} />
+    <HomeStack.Screen name="ChangePassword" component={ChangePassword} options={({ route }) => ({ headerShown: false })} />
     <HomeStack.Screen name="MyPayments" component={MyPayments} options={({ route }) => ({ headerShown: false })} />
   </HomeStack.Navigator>
 )

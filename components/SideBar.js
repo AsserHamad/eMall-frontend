@@ -1,7 +1,7 @@
 import React from 'react';
 import { DrawerContentScrollView , DrawerItemList } from '@react-navigation/drawer';
 import Constants from 'expo-constants';
-import { Dimensions, Image, ImageBackground, StyleSheet, View, ScrollView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { Dimensions, Image, ImageBackground, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
 import { gStyles } from '../global.style';
 import { connect } from 'react-redux';
 import { logout } from '../src/actions/auth';
@@ -28,12 +28,12 @@ function SideBar(props) {
     return (
         <View style={{...styles.container}}>
             {props.loggedIn ? (
-            <TouchableWithoutFeedback onPress={() => props.navigation.navigate('Profile')}>
+            <TouchableOpacity activeOpacity={0.8} onPress={() => props.navigation.navigate('Profile')}>
                 <ImageBackground source={{uri: 'https://image.freepik.com/free-vector/red-geometrical-halftone-curved-star-pattern-background_1164-1624.jpg'}} style={styles.topView} imageStyle={{opacity: 0.6}}>
                     <Image style={styles.topDots} source={{uri: 'https://imgur.com/RwdRLaD.png'}} />
                     <TextLato bold style={styles.name}>{props.account.firstName} {props.account.lastName}</TextLato>
                 </ImageBackground>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
             ) : (
                 <ImageBackground source={{uri: 'https://image.freepik.com/free-vector/red-geometrical-halftone-curved-star-pattern-background_1164-1624.jpg'}} style={styles.topViewU} imageStyle={{opacity: 0.6}}>
                     <TextLato bold style={styles.topTitle}>{language === 'en' ? 'Welcome to eMall': 'مرحبا بكم في eMall' }</TextLato>

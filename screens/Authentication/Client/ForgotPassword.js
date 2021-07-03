@@ -59,7 +59,7 @@ const EnterPassword = ({phone, en, setStep, otp, setOtp, route}) => {
     const submit = () => {
         if(otp === '') return;
         HTTP.post(`/${route}/forgot-password/check-otp`, {phone, otp})
-            .then(({data}) => {
+            .then(data => {
                 if(data.confirmed){
                     setStep(2);
                 }
@@ -99,7 +99,7 @@ const EnterNewPassword = ({phone, otp, en, setStep, route}) => {
     return (
         <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}}>
             <Header details={{title: en ? 'Enter OTP' : 'أدخل OTP'}} />
-            <Image source={{uri: 'https://i.imgur.com/0Nvrm82.png'}} style={styles.image} />
+            <Image source={{uri: 'https://imgur.com/YsLRCPW.png'}} style={styles.image} />
             <TextLato bold style={{marginTop: height * 0.1, marginBottom: height * 0.05, fontSize: RFPercentage(3)}}>Enter your new password</TextLato>
             <TextInput
                 placeholder={en ? 'Enter New Password' : 'أدخل كلمة مرور جديدة'}
@@ -129,7 +129,7 @@ const ConfirmPasswordChange = ({en}) => {
     return (
         <View style={{alignItems: 'center'}}>
             <Header details={{title: en ? 'Enter OTP' : 'أدخل OTP'}} />
-            <Image source={{uri: 'https://i.imgur.com/OniWek9.png'}} style={styles.image} />
+            <Image source={{uri: 'https://imgur.com/OX5hd7G.png'}} style={styles.image} />
             <TextLato bold style={{marginTop: height * 0.1, marginBottom: height * 0.1, fontSize: RFPercentage(3)}}>Password Changed Successfully!</TextLato>
             <Button title={'Go Back Home'} onPress={() => navigation.goBack()} />
         </View>
