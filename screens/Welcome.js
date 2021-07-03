@@ -82,29 +82,31 @@ export default ({navigation, route}) => {
                 <TextLato bold style={styles.welcome}>{en ? 'Welcome to E-Mall' : 'اهلا بكم في ايمول'}</TextLato>
             </Animated.View>
             <Animated.View style={{opacity: textOpacity, height: height * 0.3}}>
-                {state === 0 ? [
-                    <TouchableOpacity key={Math.random()} onPress={() => navigation.push('ClientRegister')} style={styles.touchableContainer}>
+                {state === 0 ? (
+                <>
+                    <TouchableOpacity onPress={() => navigation.push('ClientRegister')} style={styles.touchableContainer}>
                         <TextLato style={styles.touchableText}>{en ? 'New Customer?' : 'زبون جديد'}</TextLato>
-                    </TouchableOpacity>,
+                    </TouchableOpacity>
 
-                    <TextLato key={Math.random()} style={{textAlign: 'center', color: 'white', marginVertical: height * 0.03, fontSize: RFPercentage(2)}}>{en ? 'OR' : 'ام'}</TextLato>,
+                    <TextLato style={{textAlign: 'center', color: 'white', marginVertical: height * 0.03, fontSize: RFPercentage(2)}}>{en ? 'OR' : 'ام'}</TextLato>,
                     
-                    <TouchableOpacity key={Math.random()} onPress={() => navigation.push('ClientLogin')} style={styles.touchableContainer}>
+                    <TouchableOpacity onPress={() => navigation.push('ClientLogin')} style={styles.touchableContainer}>
                         <TextLato style={styles.touchableText}>{en ? 'Returning Customer' : 'زبون عائد'}</TextLato>
                     </TouchableOpacity>
-                    ]
+                    </>
+                )
                 : (
-                    <View>
-                    <TouchableOpacity onPress={() => navigation.push('ClientRegister')} style={styles.touchableContainer}>
-                        <TextLato style={styles.touchableText}>{en ? 'Are you here to shop?' : 'هل انت هنا للتسوق؟'}</TextLato>
-                    </TouchableOpacity>
-                    
-                    <TextLato style={{textAlign: 'center', color: 'white', marginVertical: height * 0.03, fontSize: RFPercentage(2)}}>{en ? 'OR' : 'ام'}</TextLato>
-                    
-                    <TouchableOpacity onPress={() => navigation.push('SellerRegister')} style={styles.touchableContainer}>
-                        <TextLato style={styles.touchableText}>{en ? 'Are you here to sell?' : 'هل انت هنا للبيع؟'}</TextLato>
-                    </TouchableOpacity>
-                    </View>
+                    <>
+                        <TouchableOpacity onPress={() => navigation.push('ClientRegister')} style={styles.touchableContainer}>
+                            <TextLato style={styles.touchableText}>{en ? 'Are you here to shop?' : 'هل انت هنا للتسوق؟'}</TextLato>
+                        </TouchableOpacity>
+                        
+                        <TextLato style={{textAlign: 'center', color: 'white', marginVertical: height * 0.03, fontSize: RFPercentage(2)}}>{en ? 'OR' : 'ام'}</TextLato>
+                        
+                        <TouchableOpacity onPress={() => navigation.push('SellerRegister')} style={styles.touchableContainer}>
+                            <TextLato style={styles.touchableText}>{en ? 'Are you here to sell?' : 'هل انت هنا للبيع؟'}</TextLato>
+                        </TouchableOpacity>
+                    </>
                 )}
                 <TouchableOpacity onPress={changeLanguage}>
                     <TextLato reverse bold style={{textAlign: 'center', color: 'white', marginTop: height * 0.06, fontSize: RFPercentage(2.5)}}>{en ? 'العربية' : 'English'}</TextLato>

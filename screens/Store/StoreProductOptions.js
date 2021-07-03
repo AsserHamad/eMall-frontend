@@ -163,7 +163,7 @@ const Specs = ({id, token}) => {
             <TextLato bold style={{textAlign: 'center', fontSize: RFPercentage(2.5)}}>Specifications</TextLato>
             {specs.map(spec => {
                 return (
-                    <View key={Math.random()} style={{backgroundColor: '#ddd', marginVertical: height * 0.01, flexDirection: 'row', paddingVertical: height * 0.01}}>
+                    <View key={spec._id} style={{backgroundColor: '#ddd', marginVertical: height * 0.01, flexDirection: 'row', paddingVertical: height * 0.01}}>
                         <View style={{width: '90%'}}>
                             <View style={{flexDirection: 'row', marginVertical: height * 0.01}}>
                                 <TextLato style={specStyles.text}>{spec.title.en}</TextLato>
@@ -369,7 +369,7 @@ const Options = ({id, token}) => {
             <TextLato bold style={{textAlign: 'center', fontSize: RFPercentage(2.5)}}>Options</TextLato>
             {options.map(option => {
                 return (
-                    <View key={Math.random()}>
+                    <View key={option._id}>
                         <View style={{backgroundColor: '#ddd', marginVertical: height * 0.01, paddingVertical: height * 0.01}}>
                         <View style={{flexDirection: 'row'}}>
                             <View>
@@ -386,7 +386,7 @@ const Options = ({id, token}) => {
                                     </View>
                                     {option.options.map(innerOption => {
                                         return (
-                                            <TouchableOpacity onPress={() => openUpdateModal(option._id, innerOption)} style={{flexDirection: 'row', marginBottom: height * 0.01}} key={Math.random()}>
+                                            <TouchableOpacity onPress={() => openUpdateModal(option._id, innerOption)} style={{flexDirection: 'row', marginBottom: height * 0.01}} key={innerOption._id}>
                                                 <TextLato style={{width: '25%', fontSize: RFPercentage(1.7), textAlign: 'center'}}>{innerOption.title.en}</TextLato>
                                                 <TextLato style={{width: '25%', fontSize: RFPercentage(1.7), textAlign: 'center'}}>{innerOption.title.ar}</TextLato>
                                                 <TextLato style={{width: '25%', fontSize: RFPercentage(1.7), textAlign: 'center'}}>{innerOption.extraPrice || 0}</TextLato>

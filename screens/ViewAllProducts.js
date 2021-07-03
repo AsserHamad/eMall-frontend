@@ -86,8 +86,8 @@ export default ({route, navigation}) => {
                 onEndReachedThreshold = {0.1}
                 onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
                 showsVerticalScrollIndicator={false}
-                renderItem={(product) => <SellerCardProduct showToast={showToast} product={product.item} key={Math.random()} />}
-                keyExtractor={() => `${Math.random()}`}
+                renderItem={(product) => <SellerCardProduct showToast={showToast} product={product.item} />}
+                keyExtractor={product => product._id}
                 style={{transform: en ? [] : [{scaleX: -1}]}}
                 onEndReached={() => {
                     if (!ref.current.onEndReachedCalledDuringMomentum && newStuff) {

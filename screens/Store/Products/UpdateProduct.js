@@ -280,7 +280,7 @@ const StoreProductsAdd = ({route, navigation}) => {
 
                     {images.map(image => (
                     <ImageContainer
-                        key={Math.random()}
+                        key={image}
                         image={image}
                         style={{...styles.imageContainer}}>
                             <TouchableOpacity onPress={() => removeImage(image.id)} style={styles.trashContainer}>

@@ -176,7 +176,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
                                     <View>
                                             {product.options.map(option => {
                                                 return (
-                                                    <View key={Math.random()}>
+                                                    <View key={option._id}>
                                                         <TextLato bold style={mainStyles.optionsSubtitle}>{option.title[language]}</TextLato>
                                                         <ScrollView horizontal>
                                                             <View style={{flexDirection: 'row', marginBottom: height * 0.02, width: '100%'}}>
@@ -185,7 +185,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
                                                                     
                                                                     const picked = picks.filter(pick => pick.pick === optionPick._id).length ? true : false;
                                                                     return (
-                                                                        <TouchableOpacity key={Math.random()} activeOpacity={0.4} onPress={() => {
+                                                                        <TouchableOpacity key={optionPick._id} activeOpacity={0.4} onPress={() => {
                                                                             changePick(option, optionPick)
                                                                         }}>
                                                                             <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_2 : '#aaa'}}>
@@ -249,7 +249,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
                     <TextLato bold style={styles.title}>{product.title[language]}</TextLato>
                     <TextLato style={styles.description}>{product.description[language].substr(0, 100)}...</TextLato>
                     {(product.discount || (product.dealOfTheDay && product.dealOfTheDay.active)) ? 
-                        <View key={Math.random()} style={{marginTop: height * 0.02}}>
+                        <View style={{marginTop: height * 0.02}}>
                             <TextLato italic style={{fontSize: RFPercentage(1.7), textDecorationLine: 'line-through', color: gStyles.color_3, marginLeft: RFPercentage(0.7)}}>{product.price} {en ? 'EGP' : 'ج.م'}</TextLato>
                             <TextLato bold style={{fontSize: RFPercentage(1.7), marginLeft: RFPercentage(0.7), color: gStyles.color_2}}>{calculatePrice()} {en ? 'EGP' : 'ج.م'}</TextLato>
                         </View>

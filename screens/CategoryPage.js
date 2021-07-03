@@ -32,9 +32,9 @@ const CategoryPage = (props) => {
             <ScrollView>
             <SubcategoriesScroll details={details} />
                 <TextLato style={styles.title} bold>{en ? 'Stores' : 'البائعون'}</TextLato>
-                <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-category`} body={{category: details._id}} title={details.name[language]} />
+                <SellerCardsList showToast={showToast} show url={`/store/find-by-category`} body={{category: details._id}} title={details.name[language]} />
                 <TextLato style={{...styles.title, marginTop: height * 0.05}} bold>{en ? 'Products' : 'المنتجات'}</TextLato>
-                <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/category`} body={{id: details._id}} title={details.name[language]} />
+                <ProductCardsList showToast={showToast} url={`/product/category`} body={{id: details._id}} title={details.name[language]} />
             </ScrollView>
         </View>
     )
@@ -115,8 +115,8 @@ const SubcategoriesScroll = ({details}) => {
     if(!subcategories.length)
         return (
             <View style={{flexDirection: 'row', width, minHeight: height * 0.15, justifyContent: 'center', paddingVertical: height * 0.01, marginTop: height * 0.01}}>
-                {[1,2,3,4, 5].map(() => (
-                    <View key={Math.random()}>
+                {[1,2,3,4,5].map(num => (
+                    <View key={num}>
                         <View style={{...subcategoryStyles.container, backgroundColor: '#aaa'}}>
                             <ActivityIndicator color={'white'} />
                         </View>
@@ -133,7 +133,7 @@ const SubcategoriesScroll = ({details}) => {
             contentContainerStyle={{justifyContent: 'center', minHeight: height * 0.15, paddingVertical: height * 0.01}}
         >
             {subcategories.map(subcategory => (
-                <TouchableOpacity key={Math.random()} style={{...subcategoryStyles.touchableBlock, transform: en ? [] : [{scaleX: -1}]}} activeOpacity={0.8} onPress={() => navigation.push('Subcategory', {...subcategory})}>
+                <TouchableOpacity key={subcategory._id} style={{...subcategoryStyles.touchableBlock, transform: en ? [] : [{scaleX: -1}]}} activeOpacity={0.8} onPress={() => navigation.push('Subcategory', {...subcategory})}>
                     <View key={subcategory._id} style={subcategoryStyles.container}>
                         <Image style={{width: width * 0.10, aspectRatio: 1}} source={{uri: subcategory.image}} />
                     </View>

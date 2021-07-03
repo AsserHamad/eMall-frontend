@@ -55,7 +55,7 @@ const EnterPhoneView = ({setState, showToast, text, account, phone, setPhone}) =
         <View style={styles.phoneFormContainer}>
             <Image style={styles.headerImage} source={{uri: 'https://imgur.com/5s0dGlW.png'}} />
             <TextLato bold style={styles.headerTitle}>{text.enterNumber}</TextLato>
-            {errors.map(err => <TextLato key={Math.random()} bold style={styles.errors}>{err.msg[language]}</TextLato>)}
+            {errors.map(err => <TextLato key={JSON.stringify(err)} bold style={styles.errors}>{err.msg[language]}</TextLato>)}
             <TextInput
                 placeholder={text.placeholder}
                 style={styles.input}

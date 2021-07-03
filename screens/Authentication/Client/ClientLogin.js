@@ -135,7 +135,7 @@ const ClientLogin = (props) => {
                 <TextLato style={{color: gStyles.color_1, fontSize: RFPercentage(1.5), textAlign: 'center'}}>{languageText.pleaseLogin}</TextLato>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={Math.random()}>{err.msg ? err.msg[language] : err[language]}</TextLato>)}
+                {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={JSON.stringify(err)}>{err.msg ? err.msg[language] : err[language]}</TextLato>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 

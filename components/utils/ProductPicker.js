@@ -40,7 +40,7 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
                     products.map(product => {
                         const picked = pick && product._id === pick._id;
                         return (
-                            <TouchableOpacity key={Math.random()} activeOpacity={0.7} onPress={() => {setPick(product);setPickedProduct(product);}} style={{...styles.product, backgroundColor: picked ? gStyles.color_2 : 'white', flexDirection: en ? 'row' : 'row-reverse'}}>
+                        <TouchableOpacity key={product._id} activeOpacity={0.7} onPress={() => {setPick(product);setPickedProduct(product);}} style={{...styles.product, backgroundColor: picked ? gStyles.color_2 : 'white', flexDirection: en ? 'row' : 'row-reverse'}}>
                             <Image style={styles.image} source={{uri: product.images[0]}} />
                             <View style={{width: '50%'}}>
                                 <TextLato style={{color: picked ? 'white' : 'black'}} bold>{product.title[language]}</TextLato>

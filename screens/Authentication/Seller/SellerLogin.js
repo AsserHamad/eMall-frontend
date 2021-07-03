@@ -108,7 +108,7 @@ const SellerLogin = (props) => {
                 <TextLato italic style={{color: 'black', fontSize: RFValue(11)}}>{text.sellerSubtitle}</TextLato>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={Math.random()}>{err.msg ? err.msg : err}</TextLato>)}
+                {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={JSON.stringify(err)}>{err.msg ? err.msg : err}</TextLato>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 

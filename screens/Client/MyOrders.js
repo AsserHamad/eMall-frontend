@@ -1,13 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { Dimensions, Image, SafeAreaView, StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { useSelector } from 'react-redux';
 import Icon from '../../components/utils/Icon';
 import {useLanguage, useLanguageText} from '../../hooks/language';
 import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
-import Constants from 'expo-constants';
-import { ScrollView, TextInput, TouchableNativeFeedback, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Header from '../../components/Header';
 import CustomModal from '../../components/utils/CustomModal';
 import HTTP from '../../src/utils/axios';
@@ -40,17 +38,15 @@ const MyOrders = ({navigation}) => {
     return (
         <SafeAreaView style={styles.container}>
             <Header details={{title: text.myOrders}} />
-            {/* <ComponentWithFocus onFocus={fetchOrders}> */}
-                {loading ? loadingView : orders.length > 0 ? (
-                    <ScrollView contentContainerStyle={{paddingVertical: height * 0.03, paddingBottom: height * 0.05}}>
-                        <View style={styles.orders}>
-                            {orders.map(order => <Order key={Math.random()} order={order} en={en} text={text} />)}
-                        </View>
-                    </ScrollView>
-                ) : (
-                    <Empty uri={'https://imgur.com/RM5iVCD.png'} aspectRatio={14/9} height={'70%'} text={`There's a world of possibility waiting for you! All you have to do is order something`} />
-                )}
-            {/* </ComponentWithFocus> */}
+            {loading ? loadingView : orders.length > 0 ? (
+                <ScrollView contentContainerStyle={{paddingVertical: height * 0.03, paddingBottom: height * 0.05}}>
+                    <View style={styles.orders}>
+                        {orders.map(order => <Order key={order._id} order={order} en={en} text={text} />)}
+                    </View>
+                </ScrollView>
+            ) : (
+                <Empty uri={'https://imgur.com/RM5iVCD.png'} aspectRatio={14/9} height={'70%'} text={`There's a world of possibility waiting for you! All you have to do is order something`} />
+            )}
         </SafeAreaView>
     )
 }
@@ -92,9 +88,6 @@ const styles = StyleSheet.create({
 })
 
 const Order = ({order, en, text}) => {
-    let _date = new Date(order.created_at);
-    let eta_date = new Date(_date.getTime() + 3 * 24 * 60 * 60 * 1000);
-    console.log(eta_date)
     const getStatus = (status) => {
         switch(status){
             case 0: return text.awaitingConfirmation;
@@ -106,9 +99,9 @@ const Order = ({order, en, text}) => {
             default: return 
         }
     }
-    const date = `${_date.getDay()}-${_date.getMonth()}-${_date.getFullYear()}, ${('0' + _date.getUTCHours()).slice(-2)}:${('0' + _date.getUTCMinutes()).slice(-2)}`
-    const etaDate = `${eta_date.getDay()}-${eta_date.getMonth()}-${eta_date.getFullYear()}`
     
+    const [date, setDate] = useState('');
+    const [etaDate, setEtaDate] = useState('');
     const status = getStatus(order.status);
     const language = useLanguage();
     const [cancelled, setCancelled] = useState(order.status === -1);
@@ -118,6 +111,12 @@ const Order = ({order, en, text}) => {
     const [reviewVisible, setReviewVisible] = useState(false);
 
     useEffect(() => {
+        let _date = new Date(order.created_at);
+        let eta_date = new Date(_date.getTime() + 3 * 24 * 60 * 60 * 1000);
+        console.log(_date, eta_date)
+        setDate(`${_date.getDate()}-${_date.getMonth() + 1}-${_date.getFullYear()}, ${('0' + _date.getUTCHours()).slice(-2)}:${('0' + _date.getUTCMinutes()).slice(-2)}`);
+        setEtaDate(`${eta_date.getDate()}-${eta_date.getMonth() + 1}-${eta_date.getFullYear()}`);
+
         HTTP(`/client/order-products/${order.code}`)
         .then(data => {
             setOrders(data)
@@ -131,7 +130,7 @@ const Order = ({order, en, text}) => {
         })
     }
     return (
-        <View key={Math.random()} style={orderStyles.orderContainer}>
+        <View style={orderStyles.orderContainer}>
             <ReviewModal modalVisible={reviewVisible} setModalVisible={setReviewVisible} order={order} text={text} />
             <View style= {{alignItems: en ? 'flex-start' : 'flex-end'}}>
                 <View>
@@ -143,15 +142,15 @@ const Order = ({order, en, text}) => {
             <View style={orderStyles.confirmedCancelled}> 
             {cancelled ? [
                     <Icon type={'AntDesign'} name={'closecircle'} color={gStyles.color_2} size={RFPercentage(2.5)} />,
-                    <TextLato bold style={orderStyles.cancelText}>{text.cancelled}</TextLato>
+                    <TextLato style={orderStyles.cancelText}>{text.cancelled}</TextLato>
                 ] : completed ?
                 [
                     <Icon type={'AntDesign'} name={'checkcircle'} color={gStyles.success} size={RFPercentage(2.5)} />,
-                    <TextLato bold style={orderStyles.statusText}>{status}</TextLato>
-                ] : <TextLato bold style={orderStyles.normalStatusText}>{status}</TextLato>
+                    <TextLato style={orderStyles.statusText}>{status}</TextLato>
+                ] : <TextLato style={orderStyles.normalStatusText}>{status}</TextLato>
              }
              </View>
-            <TextLato bold style={{marginVertical: height * 0.02, fontSize: RFPercentage(3), color: gStyles.color_3}}>
+            <TextLato style={{marginVertical: height * 0.02, fontSize: RFPercentage(3), color: gStyles.color_3}}>
                 {order.total.toFixed(2)}
                 <TextLato style={{fontSize: RFPercentage(2), color: gStyles.color_3}}>  {en ? 'EGP' : 'ج.م'}</TextLato>
             </TextLato>
@@ -181,14 +180,14 @@ const Order = ({order, en, text}) => {
                             return _order.orders.map(order => {
                                 const product = order.product;
                                 return (
-                                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: height * 0.01}} key={Math.random()}>
+                                    <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: height * 0.01}} key={order._id}>
                                         <Image style={{width: width * 0.1, aspectRatio: 1, marginRight: width * 0.05}} source={{uri: product.images[0]}} />
                                         <View style={{width: width * 0.5, marginRight: width * 0.05}}>
                                             <TextLato italic>{product.title[language]} x{order.quantity}</TextLato>
                                             {order.options.map(option => {
                                                 const x = order.product.options.filter(op => op._id === option.option)[0];
                                                 const pick = x.options.filter(op => op._id === option.pick)[0];
-                                                return (<TextLato key={Math.random()} italic style={{color: '#666'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
+                                                return (<TextLato key={option._id} italic style={{color: '#666'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
                                             })}
                                         </View>
                                         {status >= 1 ? 
@@ -411,7 +410,7 @@ const ReviewModal = ({modalVisible, setModalVisible, order, text}) => {
                         const picked = pick === product._id;
                         return (
                             <TouchableOpacity
-                            key={Math.random()}
+                            key={product._id}
                             activeOpacity={0.7}
                             onPress={() => setPick(product._id)}
                             style={{paddingVertical: height * 0.01, paddingHorizontal: width * 0.02, backgroundColor: picked ? gStyles.color_2:gStyles.color_3, borderRadius: 10, marginVertical: height * 0.01, width: '90%', alignItems: 'center'}}>

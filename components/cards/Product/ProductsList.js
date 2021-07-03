@@ -14,14 +14,11 @@ const ProductsList = ({products, showToast}) => {
         <FlatList
             data={products}
             showsVerticalScrollIndicator={false}
-            renderItem={(product) => <SellerCardProduct showToast={showToast} product={product.item} key={Math.random()} />}
-            keyExtractor={() => `${Math.random()}`}
+            renderItem={(product) => <SellerCardProduct showToast={showToast} product={product.item} />}
+            keyExtractor={product => product._id}
             style={{transform: en ? [] : [{scaleX: -1}]}}
             onEndReached={() => {console.log('EEENNNDD')}}
         />
-        // <ScrollView contentContainerStyle={{paddingTop: height * 0.05,}} style={{transform: en ? [] : [{scaleX: -1}]}}>
-        //     {products.map(product => <SellerCardProduct showToast={showToast} product={product} key={Math.random()} />)}
-        // </ScrollView>
     )
 }
 

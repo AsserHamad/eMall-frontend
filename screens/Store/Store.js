@@ -71,7 +71,7 @@ const Store = (props) => {
                     <ImageBackground style={styles.logoContainer} source={{uri: store.logo}} imageStyle={styles.logo} />
                     <View style={styles.categories}>
                         {store.categories.map(category => (
-                            <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={Math.random()}>
+                            <View style={{...styles.categoryContainer, backgroundColor: gStyles.color_3}} key={category._id}>
                                 <Image source={{uri: category.image}} style={styles.icon} />
                             </View>
                         ))}

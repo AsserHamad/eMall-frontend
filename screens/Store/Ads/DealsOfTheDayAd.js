@@ -73,7 +73,7 @@ const DealOfTheDayAd = () => {
                         {products.map(prod => {
                             const product = prod.product;
                             return (
-                                <View style={[styles.productContainer, {flexDirection: en ? 'row' : 'row-reverse'}]} key={Math.random()}>
+                                <View style={[styles.productContainer, {flexDirection: en ? 'row' : 'row-reverse'}]} key={prod._id}>
                                     <Image source={{uri: product.images[0]}} style={styles.productImage} />
                                     <View>
                                         <TextLato bold>{product.title[language]}</TextLato>

@@ -11,7 +11,7 @@ const CategoryListCard = ({category, width = _width * 0.48}) => {
     const en = language === 'en';
     const navigation = useNavigation();
     return (
-        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Category', category)} style={{...styles.card, width, transform: en ? [] : [{scaleX: -1}]}} key={Math.random()}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Category', category)} style={{...styles.card, width, transform: en ? [] : [{scaleX: -1}]}} key={category._id}>
             <Image source={{uri: category.image}} style={{width: _width * 0.15, aspectRatio: 1}} />
             <TextLato bold style={{fontSize: RFPercentage(1.6), textAlign: 'center', width: _width * 0.2, marginTop: height * 0.02}}>{category.name[language]}</TextLato>
         </TouchableOpacity>

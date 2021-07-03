@@ -217,7 +217,7 @@ const ClientDrawer = () => {
           />
         :
           [<Drawers.Screen
-            key={Math.random()}
+            key={'myOrders'}
             headerShown="false"
             options={{
               title: en ? 'My Orders' : 'طلباتي',
@@ -227,7 +227,7 @@ const ClientDrawer = () => {
             component={OrdersStackScreen}
         />,
         <Drawers.Screen 
-            key={Math.random()}
+            key={'wishlist'}
             options={{
               title: en ? 'Wishlist' : 'قائمة الرغبات',
               drawerIcon: ({tintColor}) => <Icon type="Feather" name="heart" size={16} color={tintColor} />,
@@ -238,7 +238,7 @@ const ClientDrawer = () => {
       ]
     }
       <Drawers.Screen
-            key={Math.random()}
+            key={'dealsoftheday'}
             headerShown="false"
             options={{
               title: en ? 'DealsOfTheDay' : 'عروض اليوم',
@@ -248,7 +248,7 @@ const ClientDrawer = () => {
             component={DealsOfTheDayStackScreen}
         />
       <Drawers.Screen
-          key={Math.random()}
+          key={'deals'}
             headerShown="false"
             options={{
               title: en ? 'Deals' : 'العروض',

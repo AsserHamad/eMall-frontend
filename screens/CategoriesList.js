@@ -22,7 +22,7 @@ const CategoriesList = ({navigation}) => {
             <Header details={{title: en ? 'Categories' : 'الاصناف'}} />
             <ScrollView contentContainerStyle={{paddingBottom: height * 0.01, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}} >
                 {categories.map(category => {
-                    return <CategoryListCard key={Math.random()} category={category} language={language} en={en} navigation={navigation} />
+                    return <CategoryListCard key={category._id} category={category} language={language} en={en} navigation={navigation} />
                 })}
             </ScrollView>
         </View>

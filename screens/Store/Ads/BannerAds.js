@@ -87,7 +87,7 @@ const BannerAds = () => {
                             ads.map(ad => {
                                 
                                 // * Active Ads View
-                                return <BannerAd key={Math.random()} text={text} ad={ad} />
+                                return <BannerAd key={ad._id} text={text} ad={ad} />
                             }) : (
 
                                 // ! No Active Ads View
@@ -119,10 +119,10 @@ const BannerAds = () => {
                             <View>
                                 <TextLato bold style={{marginTop: height * 0.03}}>What are you advertising</TextLato>
                                 <View style={{flexDirection: 'row', marginTop: height * 0.02}}>
-                                    <TouchableOpacity activeOpacity={0.8} key={Math.random()} style={{...styles.adButton, backgroundColor: adType === 0 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(0)}>
+                                    <TouchableOpacity activeOpacity={0.8} style={{...styles.adButton, backgroundColor: adType === 0 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(0)}>
                                         <TextLato style={{color: 'white'}}>Product</TextLato>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={0.8} key={Math.random()} style={{...styles.adButton, backgroundColor: adType === 1 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(1)}>
+                                    <TouchableOpacity activeOpacity={0.8} style={{...styles.adButton, backgroundColor: adType === 1 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(1)}>
                                         <TextLato style={{color: 'white'}}>Store</TextLato>
                                     </TouchableOpacity>
                                 </View>

@@ -78,7 +78,7 @@ function Cart(){
             <Header details={{title: text.title}} />
             <ScrollView>
                 {products.map(item => {
-                    return <CartCard setRefresh={setRefresh} key={Math.random()} item={item} />
+                    return <CartCard setRefresh={setRefresh} key={item._id} item={item} />
                 })}
             </ScrollView>
             <View style={styles.bottomContainer}>

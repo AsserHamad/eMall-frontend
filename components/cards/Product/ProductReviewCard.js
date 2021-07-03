@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useSelector } from 'react-redux';
 import { gStyles } from '../../../global.style';
 import Icon from '../../utils/Icon';
-import Reviews from '../../utils/Reviews';
 import TextLato from '../../utils/TextLato';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height ]
 
 const ProductReviewCard = (props) => {
     const review = props.review;
     const loggedIn = useSelector(state => state.authReducer.loggedIn);
-    const account = useSelector(state => state.authReducer.account);
     const stars = [0, 1, 2, 3, 4].map((elem) => {
         const num = review.stars - elem;
         return num > 0.5 ? 
-            <Icon type="FontAwesome" key={Math.random()} name="star" size={RFPercentage(1.5)} color={gStyles.starColor} /> : num > 0 ?
-            <Icon type="FontAwesome" key={Math.random()} name="star-half" size={RFPercentage(1.5)} color={gStyles.starColor} /> :
+            <Icon type="FontAwesome" key={elem} name="star" size={RFPercentage(1.5)} color={gStyles.starColor} /> : num > 0 ?
+            <Icon type="FontAwesome" key={elem} name="star-half" size={RFPercentage(1.5)} color={gStyles.starColor} /> :
             null
     })
     return (

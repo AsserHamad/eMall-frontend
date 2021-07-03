@@ -85,11 +85,11 @@ function Searchbar(){
                         <TextLato style={searchStyles.title}>{languageText.stores}</TextLato>
                         {stores.map(store => {
                             return (
-                            <TouchableOpacity style={searchStyles.linkContainer} key={Math.random()} onPress={() => navigation.push('Store', {store: {_id: store._id}})}>
+                            <TouchableOpacity style={searchStyles.linkContainer} key={store._id} onPress={() => navigation.push('Store', {store: {_id: store._id}})}>
                                 <TextLato bold style={searchStyles.linkStyle}>{store.title}</TextLato>
                             </TouchableOpacity>);
                         })}
-                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `${apiUrl}/store/search`, type: 'Store'})}>
+                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `/store/search`, type: 'Store'})}>
                             <TextLato style={searchStyles.etcText}>{languageText.searchStores}</TextLato>
                         </TouchableOpacity>
                     </View>
@@ -99,11 +99,11 @@ function Searchbar(){
                         <TextLato style={searchStyles.title}>{languageText.products}</TextLato>
                         {products.map(product => {
                             return (
-                            <TouchableOpacity key={Math.random()} style={searchStyles.linkContainer} key={Math.random()} onPress={() => navigation.push('Product', {product})}>
+                            <TouchableOpacity key={product._id} style={searchStyles.linkContainer} onPress={() => navigation.push('Product', {product})}>
                                 <TextLato bold style={searchStyles.linkStyle}>{product.title[language]}</TextLato>
                             </TouchableOpacity>);
                         })}
-                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `${apiUrl}/product/search`, type: 'Product', skipRequest: 30})}>
+                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `/product/search`, type: 'Product', skipRequest: 30})}>
                             <TextLato style={searchStyles.etcText}>{languageText.searchProducts}</TextLato>
                         </TouchableOpacity>
                     </View>
@@ -113,11 +113,11 @@ function Searchbar(){
                         <TextLato style={searchStyles.title}>{languageText.categories}</TextLato>
                         {categories.map(category => {
                             return (
-                            <TouchableOpacity style={searchStyles.linkContainer} key={Math.random()} onPress={() => navigation.push('Category', category)}>
+                            <TouchableOpacity style={searchStyles.linkContainer} key={category._id} onPress={() => navigation.push('Category', category)}>
                                 <TextLato bold style={searchStyles.linkStyle}>{category.name[language]}</TextLato>
                             </TouchableOpacity>);
                         })}
-                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `${apiUrl}/category/search`, type: 'Category', skipRequest: 20})}>
+                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `/category/search`, type: 'Category', skipRequest: 20})}>
                             <TextLato style={searchStyles.etcText}>{languageText.searchCategories}</TextLato>
                         </TouchableOpacity>
                     </View>
@@ -127,11 +127,11 @@ function Searchbar(){
                         <TextLato style={searchStyles.title}>{languageText.subcategories}</TextLato>
                         {subcategories.map(subcategory => {
                             return (
-                            <TouchableOpacity style={searchStyles.linkContainer} key={Math.random()} onPress={() => navigation.push('Subcategory', subcategory)}>
+                            <TouchableOpacity style={searchStyles.linkContainer} key={subcategory._id} onPress={() => navigation.push('Subcategory', subcategory)}>
                                 <TextLato bold style={searchStyles.linkStyle}>{subcategory.name[language]}</TextLato>
                             </TouchableOpacity>);
                         })}
-                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `${apiUrl}/subcategory/search`, type: 'Subcategory', skipRequest: 20})}>
+                        <TouchableOpacity onPress={() => navigation.push('SearchPage', {criteria: text, path: `/subcategory/search`, type: 'Subcategory', skipRequest: 20})}>
                             <TextLato style={searchStyles.etcText}>{languageText.searchSubcategories}</TextLato>
                         </TouchableOpacity>
                     </View>

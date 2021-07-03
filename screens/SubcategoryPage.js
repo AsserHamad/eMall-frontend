@@ -11,7 +11,6 @@ import Constants from 'expo-constants';
 import { useLanguage } from '../hooks/language';
 import TextLato from '../components/utils/TextLato';
 import SellerCardsList from '../components/utils/SellerCardsList';
-import Icon from '../components/utils/Icon';
 import ProductCardsList from '../components/utils/ProductCardsList';
 import Toast from 'react-native-easy-toast';
 
@@ -33,9 +32,9 @@ const SubcategoryPage = (props) => {
             <ScrollView>
                 <FiltersScroll details={details} selected={filter} setSelected={setFilter} language={language} />
                 <TextLato style={styles.title} bold>Stores</TextLato>
-                <SellerCardsList showToast={showToast} show url={`${Constants.manifest.extra.apiUrl}/store/find-by-subcategory`} body={{subcategory: details, filter}} refresh={filter} title={details.name[language]} />
+                <SellerCardsList showToast={showToast} show url={`/store/find-by-subcategory`} body={{subcategory: details, filter}} refresh={filter} title={details.name[language]} />
                 <TextLato style={{...styles.title, marginTop: height * 0.05}} bold>Products</TextLato>
-                <ProductCardsList showToast={showToast} url={`${Constants.manifest.extra.apiUrl}/product/subcategory`} body={{id: details._id, filter}} refresh={filter} title={details.name[language]} />
+                <ProductCardsList showToast={showToast} url={`/product/subcategory`} body={{id: details._id, filter}} refresh={filter} title={details.name[language]} />
             </ScrollView>
         </View>
     )
@@ -121,7 +120,7 @@ const FiltersScroll = ({details, selected, setSelected, language}) => {
         >
             {filters.map(filter => (
                 <TouchableOpacity
-                    key={Math.random()}
+                    key={filter._id}
                     style={{...subcategoryStyles.touchableBlock, transform: en ? [] : [{scaleX: -1}]}} 
                     activeOpacity={0.4} 
                     onPress={() => setSelected(filter._id)}>

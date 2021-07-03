@@ -80,7 +80,7 @@ function DealOfTheDay(){
                 <ScrollView showsHorizontalScrollIndicator={false} horizontal contentContainerStyle={[styles.listContainer]} style={{transform: en ? [] : [{scaleX: -1}]}}>
                 <View style={{flexWrap: 'wrap', marginHorizontal: width * 0.01, height: height * 0.8}}>
                     {products.map(product => {
-                        return <Deal navigation={navigation} key={Math.random()} product={product} language={language} en={en} />
+                        return <Deal navigation={navigation} key={product._id} product={product} language={language} en={en} />
                     })}
                     <View style={styles.productContainer}>
                         <TouchableOpacity onPress={() => navigation.navigate('DealsOfTheDay')} activeOpacity={0.8}>

@@ -36,18 +36,18 @@ const SellerCard = ({ seller, showToast }) => {
                     <View style={{...headerStyles.container, alignItems: en ? 'flex-start' : 'flex-end', paddingHorizontal:width * 0.27}}>
                         <TextLato style={headerStyles.title}>{seller.title}</TextLato>
                         <View style={[styles.categoriesContainer, {justifyContent: en ? 'flex-start' : 'flex-end'}]}>
-                            {seller.categories.slice(1,5).map(details => {
-                                return <Icon type={details.iconType} key={Math.random()} color="white" name={details.icon} style={styles.category} size={RFPercentage(1.7)} />
+                            {seller.categories.slice(0,4).map(details => {
+                                return <View key={details._id} style={styles.categoryContainer}><Image source={{uri: details.image}} style={styles.categoryImage} /></View>
                             })}
-                            <Icon type={'AntDesign'} key={Math.random()} color="white" name={'plus'} style={styles.category} size={RFPercentage(1.7)} />
+                            <Icon type={'AntDesign'} color="white" name={'plus'} style={styles.categoryContainer} size={RFPercentage(1.7)} />
                         </View>
                         <View style={styles.reviewsContainer}>
                             {[0, 1, 2, 3, 4].map((elem) => {
                                 const num = reviews.average - elem;
                                 return num > 0.5 ? 
-                                <Icon type="FontAwesome" key={Math.random()} name="star" size={RFPercentage(1.3)} color="#ffe234" /> : num > 0 ?
-                                <Icon type="FontAwesome" key={Math.random()} name="star-half" size={RFPercentage(1.3)} color="#ffe234" /> :
-                                <Icon type="FontAwesome" key={Math.random()} name="star" size={RFPercentage(1.3)} color="#aaa" />
+                                <Icon type="FontAwesome" key={elem} name="star" size={RFPercentage(1.3)} color="#ffe234" /> : num > 0 ?
+                                <Icon type="FontAwesome" key={elem} name="star-half" size={RFPercentage(1.3)} color="#ffe234" /> :
+                                <Icon type="FontAwesome" key={elem} name="star" size={RFPercentage(1.3)} color="#aaa" />
                             })}
                             <TextLato style={styles.reviewNumber}>({reviews.number})</TextLato>
                         </View>
@@ -56,8 +56,8 @@ const SellerCard = ({ seller, showToast }) => {
                 </View>
                 <FlatList
                     data={seller.products}
-                    renderItem={product => <SellerCardProduct showToast={showToast} style={{marginHorizontal: width * 0.02, marginVertical: height * 0.015}} key={Math.random()} product={product.item} />}
-                    keyExtractor={() => `${Math.random()}`}
+                    renderItem={product => <SellerCardProduct showToast={showToast} style={{marginHorizontal: width * 0.02, marginVertical: height * 0.015}} product={product.item} />}
+                    keyExtractor={product => product._id}
                     style={{transform: en ? [] : [{scaleX: -1}]}}
                     horizontal
                 />
@@ -127,15 +127,22 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         justifyContent: 'flex-end',
     },
-    category: {
-        width: width * 0.07,
+    categoryContainer: {
+        width: width * 0.08,
         height: width * 0.07,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 100,
+        borderRadius: 5,
         backgroundColor: gStyles.color_3,
         marginRight: width * 0.01,
         marginTop: height * 0.005,
+        paddingHorizontal: width * 0.01
+    },
+    categoryImage: {
+        width: '100%',
+        aspectRatio: 1,
+        resizeMode: 'contain',
+        tintColor: 'white'
     },
     moreButton: {
         marginVertical: height * 0.01,

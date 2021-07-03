@@ -64,8 +64,8 @@ const ReviewsComponent = ({ id, en, text }) => {
                     <View style={{flexDirection: 'row', marginBottom: height * 0.05}}>
                         {[1, 2, 3, 4, 5].map(num => {
                             return (
-                                <TouchableOpacity onPress={() => setStars(num)} activeOpacity={0.6} key={Math.random()}>
-                                    <Icon type="AntDesign" key={Math.random()} name={stars >= num ? 'star' : 'staro'} size={RFPercentage(5)} color={gStyles.starColor} />
+                                <TouchableOpacity onPress={() => setStars(num)} activeOpacity={0.6} key={num}>
+                                    <Icon type="AntDesign" name={stars >= num ? 'star' : 'staro'} size={RFPercentage(5)} color={gStyles.starColor} />
                                 </TouchableOpacity>
                             )
                         })}
@@ -78,7 +78,7 @@ const ReviewsComponent = ({ id, en, text }) => {
             </TouchableOpacity>}
             {reviews.length > 0 ? reviews.map(review => {
                 return (
-                    <View style={{...styles.reviewContainer, alignItems: en ? 'flex-start' : 'flex-end'}} key={Math.random()}>
+                    <View style={{...styles.reviewContainer, alignItems: en ? 'flex-start' : 'flex-end'}} key={review._id}>
                         <View style={{...styles.titleContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                             <Image style={styles.profilePic}
                                 source={{

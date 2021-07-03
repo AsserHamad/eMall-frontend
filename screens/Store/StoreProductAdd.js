@@ -239,7 +239,7 @@ const StoreProductsAdd = () => {
 
                     {images.map(image => (
                     <ImageBackground
-                        key={Math.random()}
+                        key={image._id}
                         source={{uri: image.uri}}
                         style={{...styles.imageContainer, aspectRatio: 1}} imageStyle={{resizeMode: 'contain'}}>
                             <TouchableOpacity onPress={() => removeImage(image.id)} style={styles.trashContainer}>

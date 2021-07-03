@@ -25,7 +25,7 @@ const FeaturedProducts = () => {
                 {products.length > 0 ? products.map(prod => {
                     const product = prod.product;
                     return (
-                        <View key={Math.random()} style={styles.product}>
+                        <View key={product._id} style={styles.product}>
                             <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Product', {product: {_id: product._id}})} style={styles.innerProduct}>
                                 <Image source={{uri: product.images[0]}} style={styles.productImage} />
                                 <View style={{width: '100%', marginVertical: height * 0.02, paddingHorizontal: width * 0.03}}>
@@ -38,7 +38,7 @@ const FeaturedProducts = () => {
                     )
                 }) : [1,2,3,4].map(num => {
                     return (
-                        <View key={Math.random()} style={styles.product}>
+                        <View key={num} style={styles.product}>
                             <View style={styles.innerProductWait}>
                                 <ActivityIndicator color={'white'} size={RFPercentage(3.5)} />
                             </View>

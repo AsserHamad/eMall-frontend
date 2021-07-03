@@ -56,15 +56,15 @@ const StoreMembers = ({navigation}) => {
                     <Row data={[<TextLato bold style={styles.tableTitle}>{text.memberName}</TextLato>, ...arr.map(elem => <TextLato bold style={styles.tableTitle}>{text[elem.title]}</TextLato>)]} textStyle={{fontSize: RFPercentage(1.5), textAlign: 'center'}} style={styles.head} />
                     {members.map(member => {
                         const name = member._id === seller._id ? `${member.name} (You)` : member.name;
-                        const included = arr.map(elem => <MemberCheckbox token={token} setRefresh={setRefresh} member={member} authority={elem} seller={seller} containsAuthority={containsAuthority} />);
+                        const included = arr.map(elem => <MemberCheckbox key={elem.num} token={token} setRefresh={setRefresh} member={member} authority={elem} seller={seller} containsAuthority={containsAuthority} />);
                         const nameComponent = (
-                            <View key={Math.random()}>
+                            <View key={member._id}>
                                 <TextLato style={styles.rowText}>{name}</TextLato>
                                 <TextLato italic style={styles.rowSubtitle}>{member.title}</TextLato>
                             </View>
                         );
                         return (
-                            <Row key={Math.random()} data={[nameComponent, ...included]} style={styles.row} textStyle={{fontSize: RFPercentage(1.5), textAlign: 'center'}} />
+                            <Row key={member._id} data={[nameComponent, ...included]} style={styles.row} textStyle={{fontSize: RFPercentage(1.5), textAlign: 'center'}} />
                             )
                         })
                 }
@@ -109,7 +109,7 @@ const MemberCheckbox = ({member, authority, seller, containsAuthority, setRefres
         .catch(err => console.log(err));
     }
     return (
-        <View key={Math.random()} style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <TouchableOpacity
                 activeOpacity={disabled ? 1 : 0.1} 
                 style={

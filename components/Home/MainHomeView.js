@@ -45,7 +45,7 @@ const getMostPopularStores = () => {
         .then(res => res.json())
         .then(res => setStores(res))
     }, [])
-    return stores.map(store => <StoreCard key={Math.random()} store={store} />);
+    return stores.map(store => <StoreCard key={store._id} store={store} />);
 };
 
 export default MainHomeView;

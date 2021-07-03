@@ -41,7 +41,7 @@ const StorePayments = ({navigation}) => {
                     const date = new Date(payment.created_at);
                     const twoWeeks = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 14)
                     return (
-                        <View key={Math.random()} style={styles.paymentContainer}>
+                        <View key={payment._id} style={styles.paymentContainer}>
                             <View style={{width: '30%', alignItems: 'center'}}>
                                 <TextLato bold>{returnDate(date)}</TextLato>
                             </View>

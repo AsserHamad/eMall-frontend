@@ -74,14 +74,14 @@ function StoreSearchbar(){
                 <View style={searchStyles.subContainer}>
                     <TextLato style={searchStyles.title}>Stores</TextLato>
                     {stores.map(store => {
-                        return <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{store.title}</TextLato>
+                        return <TextLato key={store._id} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{store.title}</TextLato>
                     })}
                     <TextLato style={searchStyles.etcText}>Search for more stores...</TextLato>
                 </View>
                 <View style={searchStyles.subContainer}>
                     <TextLato style={searchStyles.title}>Products</TextLato>
                     {products.map(product => {
-                        return  <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Product', {product})}>
+                        return  <TouchableOpacity key={product._id} onPress={() => navigation.push('Product', {product})}>
                                     <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{product.title[language]}</TextLato>
                                 </TouchableOpacity>
                     })}
@@ -90,7 +90,7 @@ function StoreSearchbar(){
                 <View style={searchStyles.subContainer}>
                     <TextLato style={searchStyles.title}>Categories</TextLato>
                     {categories.map(category => {
-                        return <TouchableOpacity key={Math.random()} onPress={() => navigation.push('Category', category)}>
+                        return <TouchableOpacity key={category._id} onPress={() => navigation.push('Category', category)}>
                                     <TextLato style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{category.name[language]}</TextLato>
                                 </TouchableOpacity>
                     })}
@@ -99,7 +99,7 @@ function StoreSearchbar(){
                 <View style={searchStyles.subContainer} onPress={() => navigation.push('Subcategory', subcategory)}>
                     <TextLato style={searchStyles.title}>Subcategories</TextLato>
                     {subcategories.map(subcategory => {
-                        return <TextLato key={Math.random()} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{subcategory.name[language]}</TextLato>
+                        return <TextLato key={subcategory._id} style={{marginVertical: 3, fontSize: RFPercentage(1.5), color: gStyles.color_1}}>{subcategory.name[language]}</TextLato>
                     })}
                     <TextLato style={searchStyles.etcText}>Search for more subcategories...</TextLato>
                 </View>

@@ -195,9 +195,9 @@ const StorePageDashboard = () => {
                 <View style={{marginTop: height * 0.01}}>
                     {ads.map(ad => {
                         switch(ad.adType){
-                            case 0: return <AdType_0 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
-                            case 1: return <AdType_1 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
-                            case 2: return <AdType_2 key={Math.random()} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
+                            case 0: return <AdType_0 key={ad._id} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
+                            case 1: return <AdType_1 key={ad._id} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
+                            case 2: return <AdType_2 key={ad._id} ad={ad} changePosition={changePosition} removeAd={removeAd} text={text} />;
                         }
                     })}
                 </View>

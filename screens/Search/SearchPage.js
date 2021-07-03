@@ -12,6 +12,7 @@ import SellerCardProduct from '../../components/cards/Seller/SellerCardProduct';
 import TextLato from '../../components/utils/TextLato';
 import CategoryListCard from '../../components/cards/CategoryList/CategoryListCard';
 import SubcategoryListCard from '../../components/cards/SubcategoryListCard/SubcategoryListCard';
+import HTTP from '../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
@@ -33,12 +34,7 @@ const SearchPage = ({route}) => {
 
     const fetchData = () => {
         setLoading(true);
-        fetch(path, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({criteria, skip})
-        })
-        .then(res => res.json())
+        HTTP.post(path, {criteria, skip})
         .then(res => {
             setLoading(false);
             if(!res.length)
@@ -49,8 +45,8 @@ const SearchPage = ({route}) => {
         .catch(err => console.log(err))
     }
 
-    const store = (item) => <SellerCard key={Math.random()} showToast={showToast} key={Math.random()} seller={item} />;
-    const product = (item) => <SellerCardProduct showToast={showToast} product={item} key={Math.random()} style={{width: width * 0.95}} />;
+    const store = (item) => <SellerCard showToast={showToast} seller={item} />;
+    const product = (item) => <SellerCardProduct showToast={showToast} product={item} style={{width: width * 0.95}} />;
     const category = (item) => <CategoryListCard category={item} width={width * 0.95} />;
     const subcategory = (item) => <SubcategoryListCard subcategory={item} width={width * 0.95} />;
 
@@ -70,7 +66,7 @@ const SearchPage = ({route}) => {
                 onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
                 showsVerticalScrollIndicator={false}
                 renderItem={({item}) => type === 'Store' ? store(item) :  type === 'Product' ? product(item) : type === 'Category' ? category(item) : subcategory(item)}
-                keyExtractor={() => `${Math.random()}`}
+                keyExtractor={item => item._id}
                 style={{transform: en ? [] : [{scaleX: -1}]}}
                 contentContainerStyle={{alignItems: 'center', paddingTop: 20}}
                 onEndReached={() => {

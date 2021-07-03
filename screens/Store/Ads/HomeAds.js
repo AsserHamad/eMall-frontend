@@ -81,7 +81,7 @@ const HomeAds = () => {
                     {[0, 1, 2, 3, 4].map(pageNo => {
                         const samePage = pageNo === page;
                         return (
-                            <TouchableOpacity key={Math.random()} style={{...styles.button, backgroundColor: samePage ? gStyles.color_1 : gStyles.color_0}} onPress={() => setPage(pageNo)}>
+                            <TouchableOpacity key={pageNo} style={{...styles.button, backgroundColor: samePage ? gStyles.color_1 : gStyles.color_0}} onPress={() => setPage(pageNo)}>
                                 <TextLato style={{color: 'white'}}>{pageNo + 1}</TextLato>
                             </TouchableOpacity>
                         )
@@ -133,10 +133,10 @@ const HomeAds = () => {
                             <View>
                                 <TextLato bold style={{marginTop: height * 0.03}}>{text.type}</TextLato>
                                 <View style={{flexDirection: en ? 'row' : 'row-reverse', marginTop: height * 0.02}}>
-                                    <TouchableOpacity activeOpacity={0.8} key={Math.random()} style={{...styles.adButton, backgroundColor: adType === 0 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(0)}>
+                                    <TouchableOpacity activeOpacity={0.8} style={{...styles.adButton, backgroundColor: adType === 0 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(0)}>
                                         <TextLato style={{color: 'white'}}>{text.product}</TextLato>
                                     </TouchableOpacity>
-                                    <TouchableOpacity activeOpacity={0.8} key={Math.random()} style={{...styles.adButton, backgroundColor: adType === 1 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(1)}>
+                                    <TouchableOpacity activeOpacity={0.8} style={{...styles.adButton, backgroundColor: adType === 1 ? gStyles.color_1 : gStyles.color_0}} onPress={() => setAdType(1)}>
                                         <TextLato style={{color: 'white'}}>{text.store}</TextLato>
                                     </TouchableOpacity>
                                 </View>

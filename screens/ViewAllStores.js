@@ -9,6 +9,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import SellerCard from '../components/cards/Seller/SellerCard';
 import Empty from '../components/utils/Empty';
+import HTTP from '../src/utils/axios';
 
 export default ({route}) => {
     const [sellers, setSellers] = useState([]);
@@ -27,12 +28,8 @@ export default ({route}) => {
 
     const fetchSellers = () => {
         setLoading(true);
-        fetch(route.params.url, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({...route.params.body, skip})
-        })
-        .then(res => res.json())
+        console.log(route.params.url)
+        HTTP.post(route.params.url, {...route.params.body, skip})
         .then(res => {
             const sellerStores = res.filter(seller => seller.products.length);
             setLoading(false);
@@ -60,8 +57,8 @@ export default ({route}) => {
                     onEndReachedThreshold = {0.1}
                     onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
                     showsVerticalScrollIndicator={false}
-                    renderItem={(seller) => <SellerCard key={Math.random()} showToast={showToast} key={Math.random()} seller={seller.item} />}
-                    keyExtractor={() => `${Math.random()}`}
+                    renderItem={(seller) => <SellerCard showToast={showToast} seller={seller.item} />}
+                    keyExtractor={store => store._id}
                     style={{transform: en ? [] : [{scaleX: -1}]}}
                     contentContainerStyle={{alignItems: 'center', paddingTop: 20}}
                     onEndReached={() => {

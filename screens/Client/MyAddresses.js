@@ -69,7 +69,7 @@ const MyAddresses = () => {
             <ScrollView style={{marginTop: height * 0.03}} contentContainerStyle={{alignItems: 'center'}}>
                 {addresses.map(address => {
                     return (
-                        <View key={Math.random()} style={address.active ? styles.activeAddressContainer : styles.addressContainer}>
+                        <View key={address._id} style={address.active ? styles.activeAddressContainer : styles.addressContainer}>
                             <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.governate}</TextLato>
                             <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.city}</TextLato>
                             <TextLato style={{...styles.cardText, textAlign: en ? 'left' : 'right'}} bold>{address.street}</TextLato>
@@ -98,8 +98,8 @@ const MyAddresses = () => {
                     )
                 })}
                 <TouchableOpacity activeOpacity={0.8} onPress={() => setModalVisible(true)} style={styles.addNew}>
-                    <TextLato style={{fontSize: RFPercentage(2), color: 'white', marginBottom: height * 0.01}}>{text.addAddress}</TextLato>
-                    <Icon size={40} type={'AntDesign'} name="plus" color="white" />
+                    <TextLato style={{fontSize: RFPercentage(2), color: 'black', marginBottom: height * 0.01}}>{text.addAddress}</TextLato>
+                    <Icon size={40} type={'AntDesign'} name="plus" color="black" />
                 </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     },
     addNew: {
         width: width * 0.8,
-        backgroundColor: gStyles.color_0,
+        backgroundColor: 'white',
         paddingVertical: height * 0.03,
         shadowColor: gStyles.color_0,
         shadowOffset: {

@@ -27,7 +27,7 @@ const HomeComponent = () => {
             <TextLato italic style={styles.subtitle}>Based on the last 3 months</TextLato>
             {products.map(product => {
                 return (
-                <ImageBackground key={Math.random()} source={{uri: 'https://cdn.pixabay.com/photo/2014/03/22/17/03/the-background-292729_960_720.png'}} style={styles.bigContainer} imageStyle={{borderRadius: 10}}>
+                <ImageBackground key={product._id} source={{uri: 'https://cdn.pixabay.com/photo/2014/03/22/17/03/the-background-292729_960_720.png'}} style={styles.bigContainer} imageStyle={{borderRadius: 10}}>
                     <Image source={{uri: product.images[0]}} style={styles.bigImage} />
                     <View style={{marginHorizontal: width * 0.05}}>
                         <TextLato bold style={{fontSize: RFPercentage(2.5), color: 'white', width: '70%'}}>{product.title[language]}</TextLato>

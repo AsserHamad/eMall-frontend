@@ -173,7 +173,7 @@ const Product = (props) => {
                     containerStyle={styles.swiper}
                 >
                     {product.images.map(image => (
-                        <TouchableOpacity activeOpacity={1} key={Math.random()}  onPress={() => {navigation.push('Gallery', {images: product.images})}}>
+                        <TouchableOpacity activeOpacity={1} key={image}  onPress={() => {navigation.push('Gallery', {images: product.images})}}>
                             <ImageBackground style={styles.swiperImage} source={{uri: image}}>
 
                             </ImageBackground>
@@ -216,7 +216,7 @@ const Product = (props) => {
                             <View>
                                 {/* VARIANTS */}
                                 {product.variants && 
-                                        <View key={Math.random()}>
+                                        <View>
                                             <TextLato bold style={mainStyles.optionsSubtitle}>{product.variants.title[language]}</TextLato>
                                             <ScrollView horizontal>
 
@@ -224,7 +224,7 @@ const Product = (props) => {
                                                 {product.variants.products.map(variant => {
                                                     const picked = variant.product === product._id;
                                                     return (
-                                                        <TouchableOpacity key={Math.random()} activeOpacity={0.4} onPress={() => {
+                                                        <TouchableOpacity key={variant._id} activeOpacity={0.4} onPress={() => {
                                                             if(!picked)fetchProduct(variant.product);
                                                         }}>
                                                             <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_0 : '#aaa'}}>
@@ -238,7 +238,7 @@ const Product = (props) => {
                                         </View>}
                                 {product.options.map(option => {
                                     return (
-                                        <View key={Math.random()}>
+                                        <View key={option._id}>
                                             <TextLato bold style={mainStyles.optionsSubtitle}>{option.title[language]}</TextLato>
                                             <ScrollView style={{transform: en ? [] : [{scaleX: -1}]}} horizontal>
 
@@ -248,7 +248,7 @@ const Product = (props) => {
                                                     
                                                     const picked = picks.filter(pick => pick.pick === optionPick._id).length ? true : false;
                                                     return (
-                                                        <TouchableOpacity key={Math.random()} activeOpacity={0.4} onPress={() => {
+                                                        <TouchableOpacity key={optionPick._id} activeOpacity={0.4} onPress={() => {
                                                             changePick(option, optionPick)
                                                         }}>
                                                             <View style={{...mainStyles.optionOptionsView, borderColor: picked ?  gStyles.color_2 : '#aaa', transform: en ? [] : [{scaleX: -1}]}}>
@@ -344,7 +344,7 @@ const Product = (props) => {
                                 {product.specifications.map(spec => {
                                     const num = product.specifications.indexOf(spec) % 2 === 0;
                                     return (
-                                        <View key={Math.random()} style={{...mainStyles.specificationTile,
+                                        <View key={spec._id} style={{...mainStyles.specificationTile,
                                             flexDirection: en ? 'row' : 'row-reverse', 
                                             backgroundColor: num ? 'white' : 'transparent'}}>
                                             <View style={{width: '50%'}}>
@@ -363,7 +363,7 @@ const Product = (props) => {
                         {reviews.length > 0 && <View style={mainStyles.reviewsContainer}>
                             <TextLato bold style={mainStyles.reviewsTitle}>{text.reviews}</TextLato>
                             <ScrollView horizontal>
-                                {reviews.map(review => <ProductReviewCard key={Math.random()} review={review} />)}
+                                {reviews.map(review => <ProductReviewCard key={review._id} review={review} />)}
                             </ScrollView>
                         </View>}
                     </View>
@@ -371,11 +371,11 @@ const Product = (props) => {
                         {similarProducts.length > 0 && <ScrollCards 
                             style={{width}}
                             title={`${text.moreFrom} ${product.store.title}`}
-                            cards={similarProducts.map(product => <SellerCardProduct showToast={showToast} key={Math.random()} product={product} style={{marginHorizontal: width * 0.02}} />)}
+                            cards={similarProducts.map(product => <SellerCardProduct showToast={showToast} key={product._id} product={product} style={{marginHorizontal: width * 0.02}} />)}
                             />}
 
                         {/* MORE ITEMS */}
-                        {/* <ScrollCards style={{width}} title={text.similarStores} cards={similarStores.map(store => <StoreCard key={Math.random()} store={store} />)} /> */}
+                        {/* <ScrollCards style={{width}} title={text.similarStores} cards={similarStores.map(store => <StoreCard key={store._id} store={store} />)} /> */}
                 </ScrollView>
         </View>
     )

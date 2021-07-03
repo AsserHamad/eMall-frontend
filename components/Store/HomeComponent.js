@@ -15,11 +15,11 @@ const HomeComponent = ({ homeAds, showToast, en = true }) => {
             {homeAds.map(ad => {
                 switch(ad.adType){
                     case 0:
-                        return <HomeAdType_0 key={Math.random()} ad={ad} />
+                        return <HomeAdType_0 key={ad._id} ad={ad} />
                     case 1:
-                        return <HomeAdType_1 showToast={showToast} key={Math.random()} ad={ad} en={en} />
+                        return <HomeAdType_1 showToast={showToast} key={ad._id} ad={ad} en={en} />
                     case 2:
-                        return <HomeAdType_2 key={Math.random()} ad={ad} />
+                        return <HomeAdType_2 key={ad._id} ad={ad} />
                     default:
                          return null;
                 }

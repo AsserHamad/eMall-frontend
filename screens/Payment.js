@@ -89,7 +89,7 @@ const Payment = () => {
                 <View style={styles.addressContainer}>
                     {cart.map(item => {
                         return (
-                            <View key={Math.random()} style={{width: '100%', flexDirection: en ? 'row' : 'row-reverse', paddingVertical: 20, marginVertical: 5, borderBottomColor: '#eee', borderBottomWidth: 1}}>
+                            <View key={item._id} style={{width: '100%', flexDirection: en ? 'row' : 'row-reverse', paddingVertical: 20, marginVertical: 5, borderBottomColor: '#eee', borderBottomWidth: 1}}>
                                 <Image style={{width: '25%', aspectRatio: 1, borderRadius: 4, marginHorizontal: width * 0.03}} source={{uri: item.product.images[0]}} />
                             <View>
                                 <TextLato bold>{item.product.title[language]}</TextLato>

@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Dimensions, Image, ImageBackground, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
@@ -21,11 +21,11 @@ function StoreCard({store}){
             <TextLato style={styles.title}>{store.title}</TextLato>
             <View style={styles.categories}>
                 {store.categories.slice(0, 3).map(category => (
-                    <View style={styles.categoryContainer} key={Math.random()}>
+                    <View style={styles.categoryContainer} key={category._id}>
                         <Icon type={category.iconType} color="white" name={category.icon} size={12} style={styles.icon} />
                     </View>
                 ))}
-                <View style={styles.categoryContainer} key={Math.random()}>
+                <View style={styles.categoryContainer}>
                         <Icon type={'AntDesign'} color="white" name="plus" size={12} style={styles.icon} />
                     </View>
             </View>

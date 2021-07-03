@@ -126,7 +126,7 @@ function CartCard({item, setRefresh}){
                 {item.options.map(option => {
                     const x = item.product.options.filter(op => op._id === option.option)[0];
                     const pick = x.options.filter(op => op._id === option.pick)[0];
-                    return (<TextLato key={Math.random()} italic style={{color: '#aaa'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
+                    return (<TextLato key={option._id} italic style={{color: '#aaa'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
                 })}
 
                 {/* Seller */}

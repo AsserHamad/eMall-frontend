@@ -87,7 +87,7 @@ const StoreOrders = () => {
                 return (
                     <TouchableOpacity
                         activeOpacity={0.5}
-                        key={Math.random()}
+                        key={stat.status}
                         onPress={() => setStatus(stat.status)} 
                         style={{...styles.statusButton, backgroundColor: stat.status === status ? gStyles.color_2: gStyles.color_0, transform: en ? [] : [{scaleX: -1}]}}>
                         <TextLato style={{color: 'white'}}>{stat[language]}</TextLato>
@@ -103,7 +103,7 @@ const StoreOrders = () => {
                             source={{uri: 'https://imgur.com/6w3sn3U.png'}}
                             style={{width, aspectRatio: 1, marginTop: height * 0.01}} />
                     </View>
-                ) : displayedOrders.map(order => <Order order={order} changeOrderStatus={changeOrderStatus} key={Math.random()} text={text} />)}
+                ) : displayedOrders.map(order => <Order order={order} changeOrderStatus={changeOrderStatus} key={order._id} text={text} />)}
             </ScrollView>
         </View>
     )
@@ -160,14 +160,14 @@ const Order = ({order, changeOrderStatus, text}) => {
             </TextLato>
             <TextLato bold style={{color: '#888', marginVertical: height * 0.01}}>{order.orders.length} {text.items}</TextLato>
             {order.orders.map(order => (
-            <View key={Math.random()} style={{marginBottom: height * 0.02}}>
+            <View key={order._id} style={{marginBottom: height * 0.02}}>
                 <TextLato italic>
                     {order.product.title[language]}  x{order.quantity} (stock: {order.product.stock})
                 </TextLato>
                 {order.options.map(option => {
                     const x = order.product.options.filter(op => op._id === option.option)[0];
                     const pick = x.options.filter(op => op._id === option.pick)[0];
-                    return (<TextLato key={Math.random()} italic style={{color: '#aaa'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
+                    return (<TextLato key={option._id} italic style={{color: '#aaa'}}>{x.title[language]}: {pick.title[language]}</TextLato>)
                 })}
                 {order.text && 
                     <View style={{marginTop: height * 0.01}}>
@@ -188,7 +188,7 @@ const Order = ({order, changeOrderStatus, text}) => {
                 }
             </View>))}
 
-            <View key={Math.random()} style={orderStyles.expandedView}>
+            <View style={orderStyles.expandedView}>
                 <TextLato bold style={{marginBottom: height * 0.005}}>{text.address}</TextLato>
                 <TextLato>
                     {order.address.governate}, {order.address.city}, {order.address.street}, {order.address.building}, {order.address.apartment}, {order.address.extra} 

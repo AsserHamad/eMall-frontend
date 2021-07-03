@@ -24,8 +24,8 @@ function Categories(){
     if(!categories.length)
         return (
             <View style={{...styles.categoriesContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
-                {[0,1,2,3,4,5].map(() => (
-                    <View key={Math.random()} style={{borderWidth: 0, width: width * 0.32, alignItems: 'center'}}>
+                {[0,1,2,3,4,5].map(num => (
+                    <View key={num} style={{borderWidth: 0, width: width * 0.32, alignItems: 'center'}}>
                         <View style={{...styles.cardContainer, backgroundColor: '#aaa'}}>
                             <ActivityIndicator color={'white'} size={RFPercentage(3)} />
                         </View>
@@ -36,7 +36,7 @@ function Categories(){
     return(
             <View style={{...styles.categoriesContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                 {categories.map(category => (
-                    <CategoryCard key={Math.random()} details={category} />
+                    <CategoryCard key={category._id} details={category} />
                 ))}
                 <TouchableOpacity onPress={() => navigation.push('Categories')} activeOpacity={0.8} style={{borderWidth: 0, width: width * 0.32, alignItems: 'center'}}>
                     <View style={styles.cardContainer}>
