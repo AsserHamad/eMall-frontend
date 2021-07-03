@@ -36,7 +36,6 @@ const ClientLogin = (props) => {
         setLoading(true);
         HTTP.post(`/client/login`, {phone, password})
         .then(data => {
-            console.log(data)
             setLoading(false);
             setErrors([]);
             if(data.client.verified){
@@ -44,7 +43,7 @@ const ClientLogin = (props) => {
                 AsyncStorage.setItem('@refreshToken', data.refreshToken);
                 HTTP.interceptors.request.use(
                     function (config) {
-                    config.headers.authorization = data.token;
+                    config.headers.authorization = data.accessToken;
                     return config;
                     },
                     function (error) {

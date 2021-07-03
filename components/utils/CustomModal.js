@@ -8,13 +8,13 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const CustomModal = ({children, modalVisible, setModalVisible, confirm = () => {}, close = () => {setModalVisible(false)}}) => {
 
     return (
-        <View>
         <Modal
           animationType="fade"
           transparent={true}
           hideModalContentWhileAnimati
           onRequestClose={() => setModalVisible(false)}
           visible={modalVisible}
+          style={{flex: 1}}
           >
             <View style={modalStyles.modalView}>
               <View style={modalStyles.modalContainer}>
@@ -35,7 +35,6 @@ const CustomModal = ({children, modalVisible, setModalVisible, confirm = () => {
               </View>
             </View>
         </Modal>
-      </View>
     );
 }
   
@@ -61,7 +60,7 @@ const modalStyles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    maxHeight: height * 0.85
+    maxHeight: height * 0.85,
   },
   openButton: {
     backgroundColor: '#F194FF',

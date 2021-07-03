@@ -2,9 +2,10 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import HTTP from './src/utils/axios';
 
 exports.funcs = {
-    uploadImage: async (uri, title, token) => {
+    uploadImage: async (uri, title) => {
         const uriParts = uri.split('.');
         const fileType = uriParts[uriParts.length - 1];
         let formData = new FormData();
@@ -14,18 +15,15 @@ exports.funcs = {
           type: `image/${fileType}`,
         });
         const options = {
-            method: 'POST',
-            body: formData,
             headers: {
-              Accept: 'application/json',
-              token,
+              'Accept': 'application/json',
               'Content-Type': 'multipart/form-data',
             },
           };
-        return await (await fetch(`${Constants.manifest.extra.apiUrl}/upload`, options)).json();
+        return await (await HTTP.post(`${Constants.manifest.extra.apiUrl}/upload`, formData, options));
     },
     
-    uploadMultipleImages: async (uris, title, token) => {
+    uploadMultipleImages: async (uris, title) => {
       let formData = new FormData();
       const arr = [];
       uris.forEach(uri => {
@@ -36,15 +34,12 @@ exports.funcs = {
         formData.append('photos[]', info);
       })
       const options = {
-          method: 'POST',
-          body: formData,
           headers: {
             Accept: 'application/json',
-            token,
             'Content-Type': 'multipart/form-data',
           },
         };
-      return await (await fetch(`${Constants.manifest.extra.apiUrl}/upload-multiple`, options)).json();
+      return await (await HTTP.post(`/upload-multiple`, formData, options));
   },
 
   chooseImage: async (func, aspect) => {

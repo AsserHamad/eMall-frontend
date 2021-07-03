@@ -3,7 +3,6 @@ import { View, Image, StyleSheet, Dimensions } from 'react-native';
 import TextLato from '../../components/utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-navigation';
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar';
 import { useLanguageText } from '../../hooks/language';
 

@@ -12,6 +12,7 @@ import ProductPicker from '../../components/utils/ProductPicker';
 import CustomModal from '../../components/utils/CustomModal';
 import { funcs } from '../../global.funcs';
 import { useLanguage, useLanguageText } from '../../hooks/language';
+import HTTP from '../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -31,7 +32,7 @@ const StorePageDashboard = () => {
     const store = useSelector(state => state.authReducer.store);
     const token = useSelector(state => state.authReducer.token);
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalStep, setModalStep] = useState(-1);
+    const [modalStep, setModalStep] = useState(0);
     const [aspectRatio, setAspectRatio] = useState(1);
     const [pickedProduct, setPickedProduct] = useState(undefined);
 
@@ -116,12 +117,7 @@ const StorePageDashboard = () => {
     }
 
     const updatePage = (newAds, coverImage) => {
-            fetch(`${Constants.manifest.extra.apiUrl}/store/page`, {
-                method: 'put',
-                headers: {token, 'Content-Type': 'application/json'},
-                body: JSON.stringify({coverImage, homeAds: newAds})
-            })
-            .then(res => res.json())
+        HTTP.put(`/store/page`, {coverImage, homeAds: newAds})
             .then(res => {
                 setUploading(false);
                 setCoverImage(res.coverImage);
@@ -134,12 +130,12 @@ const StorePageDashboard = () => {
         funcs.uploadImage(uri, store.title, token)
         .then(({location}) => {
             updatePage(ads, location)
-        });
+        })
+        .catch(err => console.log(err));
     };
 
     const ModalContent = (
         <CustomModal confirm={confirm} modalVisible={modalVisible} setModalVisible={setModalVisible}>
-            <ScrollView>
                 <View style={{alignItems: 'center'}}>
                     <TextLato bold>{text.pick}</TextLato>
                     <View style={{flexDirection: 'row', marginVertical: height * 0.02}}>
@@ -166,7 +162,6 @@ const StorePageDashboard = () => {
                         <ActivityIndicator color={gStyles.color_2} size={RFPercentage(4)} />
                     </View>}
                 </View>
-            </ScrollView>
         </CustomModal>
     )
     

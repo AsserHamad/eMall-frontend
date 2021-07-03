@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useLanguage } from '../../../hooks/language';
-import { Constants } from 'react-native-unimodules';
+import HTTP from '../../../src/utils/axios';
 
 const SellerCard = ({ seller, showToast }) => {
     const navigation = useNavigation();
@@ -20,11 +20,8 @@ const SellerCard = ({ seller, showToast }) => {
     const [aspectRatio, setAspectRatio] = useState(0);
     useEffect(() => {
         Image.getSize(seller.logo, (width, height) => setAspectRatio(width/height))
-        fetch(`${Constants.manifest.extra.apiUrl}/store/reviews/overview/${seller._id}`)
-        .then(res => res.json())
-        .then(res => {
-            setReviews(res);
-        })
+        HTTP(`/store/reviews/overview/${seller._id}`)
+        .then(res => setReviews(res));
     }, []);
     return (
             <View style={styles.container}>

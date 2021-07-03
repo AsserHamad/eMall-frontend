@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Constants } from 'react-native-unimodules';
 import { setCart } from '../../../src/actions/cart';
 import { setWishlist } from '../../../src/actions/wishlist';
+import HTTP from '../../../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 
@@ -62,12 +63,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
         if(product.extraImage){
             funcs.uploadImage(extraImage, product._id + '_')
             .then(res => {
-                fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
-                    method: 'post',
-                    headers: {token, 'Content-Type': 'application/json'},
-                    body: JSON.stringify({product: product._id, options, quantity, image: res.location, text: extraText !== '' ? extraText : undefined})
-                })
-                .then(res => res.json())
+                HTTP.post('/client/cart', {product: product._id, options, quantity, image: res.location, text: extraText !== '' ? extraText : undefined})
                 .then(res => {
                     setCartLoading(false);
                     showToast(`Added to Cart Successfully!`);
@@ -76,13 +72,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
                 .catch(err => console.log(err))
             });
         } else {
-            console.log('welp our token is', token)
-            fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
-                method: 'post',
-                headers: {token, 'Content-Type': 'application/json'},
-                body: JSON.stringify({product: product._id, options, quantity, text: extraText !== '' ? extraText : undefined})
-            })
-            .then(res => res.json())
+            HTTP.post('/client/cart', {product: product._id, options, quantity, text: extraText !== '' ? extraText : undefined})
             .then(res => {
                 setCartLoading(false);
                 showToast(`Added to Cart Successfully!`);
