@@ -6,6 +6,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { useLanguage } from '../../hooks/language';
+import HTTP from '../../src/utils/axios';
 import TextLato from '../utils/TextLato';
 
 const FeaturedProducts = () => {
@@ -14,9 +15,8 @@ const FeaturedProducts = () => {
     const en = language === 'en';
     const navigation = useNavigation();
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/advertisement/featured-products`)
-        .then(res => res.json())
-        .then(res => setProducts(res))
+        HTTP('/advertisement/featured-products')
+        .then(res => {console.log(res);setProducts(res)})
     }, []);
     return (
         <View>
@@ -29,14 +29,16 @@ const FeaturedProducts = () => {
                             <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Product', {product: {_id: product._id}})} style={styles.innerProduct}>
                                 <Image source={{uri: product.images[0]}} style={styles.productImage} />
                                 <View style={{width: '100%', marginVertical: height * 0.02, paddingHorizontal: width * 0.03}}>
-                                    <TextLato style={{textAlign: en ? 'left' : 'right'}} bold>{product.title[language]}</TextLato>
-                                    <TextLato italic style={{textAlign: en ? 'left' : 'right', fontSize: RFPercentage(1.5)}}>{product.store.title}</TextLato>
+                                    <View style={{height: height * 0.04}}>
+                                        <TextLato style={{textAlign: en ? 'left' : 'right'}} bold>{product.title[language]}</TextLato>
+                                        <TextLato italic style={{textAlign: en ? 'left' : 'right', fontSize: RFPercentage(1.5)}}>{product.store.title}</TextLato>
+                                    </View>
                                     <TextLato style={{textAlign: en ? 'left' : 'right', marginTop: height * 0.04}}>{product.price} {en ? 'EGP' : 'ج.م'}</TextLato>
                                 </View>
                             </TouchableOpacity>
                         </View>
                     )
-                }) : [1,2,3,4].map(num => {
+                }) : [1,2,3,4,5,6].map(num => {
                     return (
                         <View key={num} style={styles.product}>
                             <View style={styles.innerProductWait}>

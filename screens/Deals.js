@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Header from '../components/Header';
-import Constants from 'expo-constants';
 import { SafeAreaView } from 'react-navigation';
 import ProductsList from '../components/cards/Product/ProductsList';
 import Toast from 'react-native-easy-toast';

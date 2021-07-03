@@ -12,6 +12,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import DealsOfTheDay from '../../screens/DealsOfTheDay';
 import FeaturedProducts from './FeaturedProducts';
+import FeaturedStores from './FeaturedStores';
 
 function MainHomeView(props){
     const language = useLanguageText('mainHomeView');
@@ -27,6 +28,7 @@ function MainHomeView(props){
                 <TopAds />
                 <Categories />
                 {/* <ScrollCards title={language && language.titlePop} cards={getMostPopularStores()} /> */}
+                <FeaturedStores />
                 {ads[0] && <Ad ad={ads[0]} />}
                 <DealsOfTheDay />
                 {ads[1] && <Ad ad={ads[1]} />}
