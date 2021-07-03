@@ -81,14 +81,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         // marginHorizontal: 10,
         borderRadius: 100,
-        backgroundColor: gStyles.background,
+        backgroundColor: 'white',
         
     },
     logo: {
         width: 80,
         aspectRatio: 1,
         resizeMode: 'contain',
-        borderRadius: 500
+        borderRadius: 300
     },
     logoutContainer: {
         paddingVertical: height * 0.02,
