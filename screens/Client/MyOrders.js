@@ -113,7 +113,6 @@ const Order = ({order, en, text}) => {
     useEffect(() => {
         let _date = new Date(order.created_at);
         let eta_date = new Date(_date.getTime() + 3 * 24 * 60 * 60 * 1000);
-        console.log(_date, eta_date)
         setDate(`${_date.getDate()}-${_date.getMonth() + 1}-${_date.getFullYear()}, ${('0' + _date.getUTCHours()).slice(-2)}:${('0' + _date.getUTCMinutes()).slice(-2)}`);
         setEtaDate(`${eta_date.getDate()}-${eta_date.getMonth() + 1}-${eta_date.getFullYear()}`);
 

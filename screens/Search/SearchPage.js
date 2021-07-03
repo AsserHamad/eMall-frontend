@@ -13,6 +13,8 @@ import TextLato from '../../components/utils/TextLato';
 import CategoryListCard from '../../components/cards/CategoryList/CategoryListCard';
 import SubcategoryListCard from '../../components/cards/SubcategoryListCard/SubcategoryListCard';
 import HTTP from '../../src/utils/axios';
+import Loading from '../../components/utils/Loading';
+import Empty from '../../components/utils/Empty';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
@@ -24,9 +26,10 @@ const SearchPage = ({route}) => {
     const toast = useRef();
     const language = useLanguage();
     const en = language === 'en';
-    const [loading, setLoading] = useState(false);
+    const [loadingInitial, setLoadingInitial] = useState(true);
     const ref = useRef();
     const text = useLanguageText('search');
+    const [loading, setLoading] = useState(true);
 
     const showToast = message => {
         toast.current.show(message);
@@ -37,6 +40,7 @@ const SearchPage = ({route}) => {
         HTTP.post(path, {criteria, skip})
         .then(res => {
             setLoading(false);
+            setLoadingInitial(false);
             if(!res.length)
                 return setNewStuff(false);
             setSkip(skip => skip + skipRequest);
@@ -58,28 +62,37 @@ const SearchPage = ({route}) => {
             <Toast ref={_toast => toast.current = _toast} />
             <Header details={{ title: `${text.title} ${text[type]}`}} />
             <TextLato bold style={{marginHorizontal: width * 0.05, marginBottom: height * 0.02}}>{text.searchingFor} {criteria}</TextLato>
-            <FlatList
-                ref={ref}
-                data={data}
-                initialNumToRender = {30}
-                onEndReachedThreshold = {0.1}
-                onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item}) => type === 'Store' ? store(item) :  type === 'Product' ? product(item) : type === 'Category' ? category(item) : subcategory(item)}
-                keyExtractor={item => item._id}
-                style={{transform: en ? [] : [{scaleX: -1}]}}
-                contentContainerStyle={{alignItems: 'center', paddingTop: 20}}
-                onEndReached={() => {
-                    if (!ref.current.onEndReachedCalledDuringMomentum && newStuff) {
-                        fetchData();
-                        ref.current.onEndReachedCalledDuringMomentum = true;
-                    }
-                }}
-            />
-            {loading && (
-                <View style={{backgroundColor: 'black', width: '100%', height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0}}>
-                    <ActivityIndicator color={gStyles.color_2} size={RFPercentage(3)} />
-                </View>
+            {loadingInitial ? (
+                <Loading />
+            ) : (
+                data.length > 0 ? 
+                <>
+                    <FlatList
+                    ref={ref}
+                    data={data}
+                    initialNumToRender = {30}
+                    onEndReachedThreshold = {0.1}
+                    onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({item}) => type === 'Store' ? store(item) :  type === 'Product' ? product(item) : type === 'Category' ? category(item) : subcategory(item)}
+                    keyExtractor={item => item._id}
+                    style={{transform: en ? [] : [{scaleX: -1}]}}
+                    contentContainerStyle={{alignItems: 'center', paddingTop: 20}}
+                    onEndReached={() => {
+                        if (!ref.current.onEndReachedCalledDuringMomentum && newStuff) {
+                            fetchData();
+                            ref.current.onEndReachedCalledDuringMomentum = true;
+                        }
+                    }}
+                    />
+                    {loading && (
+                        <View style={{backgroundColor: 'black', width: '100%', height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0}}>
+                            <ActivityIndicator color={gStyles.color_2} size={RFPercentage(3)} />
+                        </View>
+                    )}
+                </> : <>
+                <Empty />
+                </>
             )}
         </SafeAreaView>
 

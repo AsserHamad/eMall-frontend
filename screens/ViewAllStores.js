@@ -5,16 +5,19 @@ import Toast from 'react-native-easy-toast';
 import { gStyles } from '../global.style';
 import { FlatList } from 'react-native-gesture-handler';
 import { useLanguage } from '../hooks/language';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import SellerCard from '../components/cards/Seller/SellerCard';
 import Empty from '../components/utils/Empty';
+import Loading from '../components/utils/Loading';
 import HTTP from '../src/utils/axios';
+const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 export default ({route}) => {
     const [sellers, setSellers] = useState([]);
     const [skip, setSkip] = useState(0);
     const [newStuff, setNewStuff] = useState(true);
+    const [search, setSearch] = useState('');
     const toast = useRef();
     const language = useLanguage();
     const en = language === 'en';
@@ -29,7 +32,7 @@ export default ({route}) => {
     const fetchSellers = () => {
         setLoading(true);
         console.log(route.params.url)
-        HTTP.post(route.params.url, {...route.params.body, skip})
+        HTTP.post(route.params.url, {...route.params.body, skip, search})
         .then(res => {
             const sellerStores = res.filter(seller => seller.products.length);
             setLoading(false);
@@ -48,7 +51,8 @@ export default ({route}) => {
         <SafeAreaView style={{flex: 1, backgroundColor: gStyles.background}}>
             <Toast ref={_toast => toast.current = _toast} />
             <Header details={{title: route.params.title}} />
-            {sellers.length > 0 ? (
+            
+            {initialLoad ? <Loading /> : sellers.length > 0 ? (
                 <>
                 <FlatList
                     ref={ref}
@@ -78,6 +82,25 @@ export default ({route}) => {
                 <Empty height={'70%'} />
             )}
         </SafeAreaView>
-
     )
 }
+
+const styles = StyleSheet.create({
+    input: {
+        marginHorizontal: width * 0.03,
+        marginVertical: height * 0.02,
+        paddingVertical: height * 0.01,
+        paddingHorizontal: width * 0.03,
+        backgroundColor: 'white',
+        borderRadius: 100,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        width: '93%'
+    },
+})

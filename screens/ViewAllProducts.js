@@ -11,6 +11,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import Icon from '../components/utils/Icon';
 import CustomModal from '../components/utils/CustomModal';
 import TextLato from '../components/utils/TextLato';
+import HTTP from '../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 export default ({route, navigation}) => {
@@ -33,12 +34,7 @@ export default ({route, navigation}) => {
     const fetchProducts = (concat) => {
         setLoading(true);
         if(!concat)setSkip(0);
-        fetch(route.params.url, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({...route.params.body, skip: concat ? skip : 0 , search, sort})
-        })
-        .then(res => res.json())
+        HTTP.post(route.params.url, {...route.params.body, skip: concat ? skip : 0 , search, sort})
         .then(res => {
             setLoading(false);
             if(!res.length && concat)
@@ -74,9 +70,9 @@ export default ({route, navigation}) => {
             </CustomModal>
             <Header details={{title: route.params.title}} />
             <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', justifyContent: 'center'}}>
-                <TouchableOpacity style={styles.sortButton} onPress={() => setModalVisible(true)}>
+                {/* <TouchableOpacity style={styles.sortButton} onPress={() => setModalVisible(true)}>
                     <Icon type={'FontAwesome'} name={'sort-amount-asc'} size={RFPercentage(2.5)} color={'white'} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TextInput placeholder={en ? 'Search products...' : 'البحث عن المنتجات...'} style={{...styles.input, textAlign: en ? 'left' : 'right', fontFamily: 'Cairo'}} value={search} onChangeText={val => setSearch(val)} />
             </View>
             <FlatList
@@ -122,7 +118,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        width: '80%'
+        width: '93%'
     },
     sortButton: {
         width: width * 0.1,
