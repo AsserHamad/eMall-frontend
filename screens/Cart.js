@@ -12,6 +12,7 @@ import TextLato from '../components/utils/TextLato';
 import { gStyles } from '../global.style';
 import { useLanguage, useLanguageText } from '../hooks/language';
 import HTTP from '../src/utils/axios';
+import Loading from '../components/utils/Loading';
 
 
 
@@ -75,8 +76,8 @@ function Cart(){
     return (
         <View style={styles.container}>
             <Header details={{title: text.title}} />
-            <ScrollView>
-                {products.map(item => {
+            <ScrollView contentContainerStyle={{height: '100%'}}>
+                {products.length === 0 ? <Loading  /> : products.map(item => {
                     return <CartCard setRefresh={setRefresh} key={item._id} item={item} />
                 })}
             </ScrollView>

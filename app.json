@@ -35,7 +35,7 @@
       "favicon": "./assets/logoM.png"
     },
     "extra": {
-      "apiUrl": "http://192.168.1.142:5000/api",
+      "apiUrl": "http://192.168.1.147:5000/api",
       "apiUrl_": "http://18.216.71.102:80/api",
       "localhost": "10.0.2.2"
     }

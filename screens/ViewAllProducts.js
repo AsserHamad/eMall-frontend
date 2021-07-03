@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Header from '../components/Header';
 import { SafeAreaView } from 'react-navigation';
-import ProductsList from '../components/cards/Product/ProductsList';
 import Toast from 'react-native-easy-toast';
 import { gStyles } from '../global.style';
 import SellerCardProduct from '../components/cards/Seller/SellerCardProduct';
 import { useLanguage } from '../hooks/language';
 import { ActivityIndicator, Dimensions, StyleSheet, View, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import Icon from '../components/utils/Icon';
 import CustomModal from '../components/utils/CustomModal';
 import TextLato from '../components/utils/TextLato';
 import HTTP from '../src/utils/axios';
@@ -69,12 +67,12 @@ export default ({route, navigation}) => {
                 </View>
             </CustomModal>
             <Header details={{title: route.params.title}} />
-            <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', justifyContent: 'center'}}>
+            {/* <View style={{flexDirection: en ? 'row' : 'row-reverse', alignItems: 'center', justifyContent: 'center'}}> */}
                 {/* <TouchableOpacity style={styles.sortButton} onPress={() => setModalVisible(true)}>
                     <Icon type={'FontAwesome'} name={'sort-amount-asc'} size={RFPercentage(2.5)} color={'white'} />
                 </TouchableOpacity> */}
-                <TextInput placeholder={en ? 'Search products...' : 'البحث عن المنتجات...'} style={{...styles.input, textAlign: en ? 'left' : 'right', fontFamily: 'Cairo'}} value={search} onChangeText={val => setSearch(val)} />
-            </View>
+            <TextInput placeholder={en ? 'Search products...' : 'البحث عن المنتجات...'} style={{...styles.input, textAlign: en ? 'left' : 'right', fontFamily: 'Cairo'}} value={search} onChangeText={val => setSearch(val)} />
+            {/* </View> */}
             <FlatList
                 ref={ref}
                 data={products}

@@ -6,9 +6,12 @@ import ProductsList from '../components/cards/Product/ProductsList';
 import Toast from 'react-native-easy-toast';
 import { gStyles } from '../global.style';
 import { useLanguage } from '../hooks/language';
+import HTTP from '../src/utils/axios';
+import Loading from '../components/utils/Loading';
 
 const Deals = () => {
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const toast = useRef();
     const language = useLanguage();
     const en = language === 'en';
@@ -18,9 +21,9 @@ const Deals = () => {
     }
 
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/product/deals`)
-        .then(res => res.json())
+        HTTP('/product/deals')
         .then(res => {
+            setLoading(false);
             setProducts(res);
         })
     }, []);
@@ -28,7 +31,7 @@ const Deals = () => {
         <SafeAreaView style={{flex: 1, backgroundColor: gStyles.background}}>
             <Toast ref={_toast => toast.current = _toast} />
             <Header details={{title: en ? 'Deals' : 'العروض'}} />
-            <ProductsList products={products} showToast={showToast} />
+            {loading ? <Loading /> : <ProductsList products={products} showToast={showToast} />}
         </SafeAreaView>
 
     )

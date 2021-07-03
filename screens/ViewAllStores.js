@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import { SafeAreaView } from 'react-navigation';
 import Toast from 'react-native-easy-toast';
 import { gStyles } from '../global.style';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TextInput } from 'react-native-gesture-handler';
 import { useLanguage } from '../hooks/language';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
@@ -23,6 +23,7 @@ export default ({route}) => {
     const en = language === 'en';
     const [loading, setLoading] = useState(false);
     const [initialLoad, setInitialLoad] = useState(true);
+    const [firstTime, setFirstTime] = useState(true);
     const ref = useRef();
 
     const showToast = message => {
@@ -34,23 +35,46 @@ export default ({route}) => {
         console.log(route.params.url)
         HTTP.post(route.params.url, {...route.params.body, skip, search})
         .then(res => {
+            console.log
             const sellerStores = res.filter(seller => seller.products.length);
             setLoading(false);
+            setInitialLoad(false);
             if(!res.length)
                 return setNewStuff(false);
             setSkip(skip => skip + 10);
             setSellers(sellers => sellers.concat(sellerStores));
+        })
+    }
+
+    const fetchSearchSellers = () => {
+        setInitialLoad(true);
+        console.log(route.params.url)
+        HTTP.post(route.params.url, {...route.params.body, skip: 0, search})
+        .then(res => {
+            const sellerStores = res.filter(seller => seller.products.length);
+            setLoading(false);
             setInitialLoad(false);
+            setSkip(skip => skip + 10);
+            setSellers(sellerStores);
+            if(!res.length)
+                return setNewStuff(false);
         })
     }
 
     useEffect(() => {
         fetchSellers();
+        setFirstTime(false);
     }, []);
+
+    useEffect(() => {
+        if(!firstTime)
+            fetchSearchSellers();
+    }, [search])
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: gStyles.background}}>
             <Toast ref={_toast => toast.current = _toast} />
             <Header details={{title: route.params.title}} />
+            <TextInput placeholder={en ? 'Search Stores...' : 'البحث عن المتاجر...'} style={{...styles.input, textAlign: en ? 'left' : 'right', fontFamily: 'Cairo'}} value={search} onChangeText={val => setSearch(val)} />
             
             {initialLoad ? <Loading /> : sellers.length > 0 ? (
                 <>

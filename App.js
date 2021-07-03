@@ -44,7 +44,6 @@ export default () => {
   const [variablesLoaded, setVariablesLoaded] = useState(false);
   useEffect(() => {
     // AsyncStorage.removeItem('@firstTime')
-
     const getItems = () => {
       AsyncStorage.getItem('@language')
       .then(value => {
@@ -65,10 +64,10 @@ export default () => {
         const url = accessToken.type === 'client' ? 'client' : 'seller';
 
         // ? We check if the token is still valid
-
+        console.log('getting ', url, accessToken.token)
         HTTP.get(`/${url}/login/token`, {headers: {Authorization: accessToken.token}})
         .then(data => {
-
+          console.log('cool, data is', data)
           // * If the token is valid, we set it in our interceptors to use in our future requests, and then set the store states
           
           HTTP.interceptors.request.use(
