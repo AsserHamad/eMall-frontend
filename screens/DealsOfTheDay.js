@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, ImageBackground, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, ImageBackground, ScrollView, StyleSheet, View, TouchableOpacity} from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
 import TextLato from '../components/utils/TextLato';
 import { gStyles } from '../global.style';
 import { useLanguage } from '../hooks/language';
 import CountDown from 'react-native-countdown-component';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import Icon from '../components/utils/Icon';
 

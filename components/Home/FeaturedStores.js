@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, StyleSheet, View, FlatList, ImageBackground } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View, FlatList, ImageBackground, TouchableNativeFeedback } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { gStyles } from '../../global.style';
@@ -14,7 +14,6 @@ const FeaturedStores = () => {
     const [stores, setStores] = useState([]);
     const language = useLanguage();
     const en = language === 'en';
-    const navigation = useNavigation();
     useEffect(() => {
         HTTP('/advertisement/featured-stores')
         .then(res => {console.log(res);setStores(res)})
@@ -50,22 +49,25 @@ const StoreCard = ({store}) => {
     console.log(store)
     const language = useLanguage();
     const en = language === 'en';
+    const navigation = useNavigation();
     return (
-        <View style={styles.storeContainer}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Store', {store})} style={{...styles.storeContainer, transform: en ? [] : [{scaleX: -1}]}}>
             <Image style={styles.image} source={{uri: store.page?.coverImage || 'https://image.freepik.com/free-vector/red-oriental-chinese-seamless-pattern-illustration_193606-43.jpg'}} />
             <View style={styles.bottomContainer}>
-                <ImageBackground source={{uri: store.logo}} style={styles.logoContainer} imageStyle={styles.logoImage} />
-                <View style={{marginLeft: width * 0.25, paddingTop: height * 0.01}}>
+                <ImageBackground source={{uri: store.logo}} style={{...styles.logoContainer,    
+                    transform: [{translateY: -width * 0.15}, {translateX: en ? width * 0.03 : width * 0.57}],
+                }} imageStyle={styles.logoImage} />
+                <View style={{marginLeft: en ? width * 0.25 : 0, marginRight: en ? 0 : width * 0.25, paddingVertical: height * 0.01}}>
                     <TextLato bold style={styles.storeTitle}>{store.title}</TextLato>
-                        <View style={[styles.categoriesContainer, {justifyContent: en ? 'flex-start' : 'flex-end'}]}>
-                            {store.categories.slice(0,4).map(details => {
-                                return <View key={details._id} style={styles.categoryContainer}><Image source={{uri: details.image}} style={styles.categoryImage} /></View>
-                            })}
-                            <Icon type={'AntDesign'} color="white" name={'plus'} style={styles.categoryContainer} size={RFPercentage(1.7)} />
-                        </View>
+                    <View style={{...styles.categoriesContainer, justifyContent: en ? 'flex-start' : 'flex-end'}}>
+                        {store.categories.slice(0,4).map(details => {
+                            return <View key={details._id} style={styles.categoryContainer}><Image source={{uri: details.image}} style={styles.categoryImage} /></View>
+                        })}
+                        <Icon type={'AntDesign'} color="white" name={'plus'} style={styles.categoryContainer} size={RFPercentage(1.7)} />
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -89,10 +91,10 @@ const styles = StyleSheet.create({
         shadowRadius: 4.65,
         
         elevation: 6,
-        marginHorizontal: width * 0.03,
-        width: width * 0.8,
+        marginHorizontal: width * 0.02,
+        width: width * 0.85,
         borderRadius: 40,
-        height: height * 0.18,
+        height: height * 0.22,
         backgroundColor: 'white'
     },
     image: {
@@ -131,12 +133,13 @@ const styles = StyleSheet.create({
     },
     storeTitle: {
         color: 'black',
-        fontSize: RFPercentage(2),
+        fontSize: RFPercentage(2)
     },
     categoriesContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
+        height: height * 0.05
     },
     categoryContainer: {
         width: width * 0.05,

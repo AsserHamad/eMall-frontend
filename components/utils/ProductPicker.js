@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TouchableOpacity, FlatList } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
@@ -37,35 +37,20 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
                 {loading ? 
                     <View style={styles.loadingContainer}><ActivityIndicator size={RFPercentage(5)} color={'white'} /></View>
                     :
-                    <FlatList
-                        data={products}
-                        showsVerticalScrollIndicator={false}
-                        renderItem={({item}) => <ProductContainer 
-                                                    product={item}
-                                                    pick={pick}
-                                                    setPick={setPick}
-                                                    setPickedProduct={setPickedProduct}
-                                                    language={language}
-                                                    en={en} />}
-                        keyExtractor={product => product._id}
-                        style={{transform: en ? [] : [{scaleX: -1}]}}
-                        onEndReached={() => {console.log('EEENNNDD')}}
-                    />
-                }
+                    products.map(product => {
+                        console.log(product.images[0])
+                        const picked = pick && product._id === pick._id;
+                        return (
+                        <TouchableOpacity key={product._id} activeOpacity={0.7} onPress={() => {setPick(product);setPickedProduct(product);}} style={{...styles.product, backgroundColor: picked ? gStyles.color_2 : 'white', flexDirection: en ? 'row' : 'row-reverse'}}>
+                            <Image style={styles.image} source={{uri: product.images[0]}} />
+                            <View style={{width: '50%'}}>
+                                <TextLato style={{color: picked ? 'white' : 'black'}} bold>{product.title[language]}</TextLato>
+                            </View>
+                        </TouchableOpacity>
+                    )
+                })}
             </ScrollView>
         </View>
-    )
-}
-
-const ProductContainer = ({product, pick, setPick, setPickedProduct, language, en}) => {
-    const picked = pick && product._id === pick._id;
-    return (
-        <TouchableOpacity key={product._id} activeOpacity={0.7} onPress={() => {setPick(product);setPickedProduct(product);}} style={{...styles.product, backgroundColor: picked ? gStyles.color_2 : 'white', flexDirection: en ? 'row' : 'row-reverse'}}>
-            <Image style={styles.image} source={{uri: product.images[0]}} />
-            <View style={{width: '50%'}}>
-                <TextLato style={{color: picked ? 'white' : 'black'}} bold>{product.title[language]}</TextLato>
-            </View>
-        </TouchableOpacity>
     )
 }
 

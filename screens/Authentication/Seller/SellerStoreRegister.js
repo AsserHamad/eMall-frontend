@@ -23,6 +23,12 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 const SellerStoreRegister = (props) => {
     const [errors, setErrors] = useState([]);
     const [title, setTitle] = useState('');
+    const [governate, setGovernate] = useState('');
+    const [city, setCity] = useState('');
+    const [street, setStreet] = useState('');
+    const [building, setBuilding] = useState('');
+    const [apartment, setApartment] = useState('');
+    const [extra, setExtra] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState('https://www.heavydutydirect.ca/wp-content/uploads/2019/02/camera-placeholder-400x284.jpg');
     const headerHeight = useHeaderHeight();
@@ -43,7 +49,6 @@ const SellerStoreRegister = (props) => {
     
     const register = () => {
         if(other && otherCategory === '') return;
-
         funcs.uploadImage(image, title)
         .then(res => {
             const body = {seller: props.route.params.seller, store: {
@@ -51,8 +56,18 @@ const SellerStoreRegister = (props) => {
                 description,
                 categories: selectedCategories,
                 logo: res.location,
-                otherCategory: other ? otherCategory : undefined
+                otherCategory: other ? otherCategory : undefined,
+                addresses: [{
+                    governate,
+                    city,
+                    street,
+                    building,
+                    apartment,
+                    extra,
+                    active: true
+                }]
             }};
+            console.log(body)
             fetch(`${Constants.manifest.extra.apiUrl}/seller/register`, {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},
@@ -118,6 +133,14 @@ const SellerStoreRegister = (props) => {
                 </View>
                 <RegisterInputAndError errors={errors} value={title} type={'storeTitle'} set={setTitle} />
                 <RegisterInputAndError multiline={true} errors={errors} value={description} type={'storeDescription'} set={setDescription} />
+                <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20), marginTop: height * 0.02}}>{text.pickup}</TextLato>
+                <TextLato style={{color: 'black', fontSize: RFValue(11), marginVertical: height * 0.01}}>{text.pickupTitle}</TextLato>
+                <RegisterInputAndError errors={errors} value={governate} type={'governate'} set={setGovernate} />
+                <RegisterInputAndError errors={errors} value={city} type={'city'} set={setCity} />
+                <RegisterInputAndError errors={errors} value={street} type={'street'} set={setStreet} />
+                <RegisterInputAndError errors={errors} value={building} type={'building'} set={setBuilding} />
+                <RegisterInputAndError errors={errors} value={apartment} type={'apartment'} set={setApartment} />
+                <RegisterInputAndError errors={errors} value={extra} type={'extra'} set={setExtra} />
                 <TextLato style={{color: gStyles.color_3, fontSize: RFValue(20)}}>{text.categories}</TextLato>
                 <TextLato style={{color: 'black', fontSize: RFValue(11), marginVertical: height * 0.01}}>{text.categoryTitle}</TextLato>
             <View style={styles.categoryContainer}>

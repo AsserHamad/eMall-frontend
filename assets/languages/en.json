@@ -58,7 +58,9 @@
         "categoryTitle": "Please select the most appropriate categories regarding your store's products",
         "other": "Other",
         "enter": "Please enter the other category name here",
-        "register": "Register"
+        "register": "Register",
+        "pickup": "Pickup Location",
+        "pickupTitle": "Please enter the location where your orders will get picked up"
     },
     "cart": {
         "title": "Cart",

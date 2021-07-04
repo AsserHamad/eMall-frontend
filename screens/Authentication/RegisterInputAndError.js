@@ -109,6 +109,96 @@ const types = {
             }
         }
     },
+    storeDescription: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        multiline: 'true',
+        placeholder: {en: 'Store Description', ar: 'وصف المتجر'},
+        validate: (text) => {
+            const regexp = /^.{10,300}$/;
+            if(!regexp.test(text)){
+                return {en: 'Titles should be between 10 and 300 characters long', ar: 'يجب أن يتراوح طول العناوين بين 10 و 300 حرف'}
+            }
+        }
+    },
+    governate: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        multiline: 'false',
+        placeholder: {en: 'Governate', ar: 'المحافظة'},
+        validate: (text) => {
+            const regexp = /^.{1,300}$/;
+            if(!regexp.test(text)){
+                return {en: 'Too short', ar: 'قصير للغاية'}
+            }
+        }
+
+    },
+    city: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        multiline: 'false',
+        placeholder: {en: 'City', ar: 'المدينة'},
+        validate: (text) => {
+            const regexp = /^.{1,300}$/;
+            if(!regexp.test(text)){
+                return {en: 'Too short', ar: 'قصير للغاية'}
+            }
+        }
+
+    },
+    street: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        multiline: 'false',
+        placeholder: {en: 'Street', ar: 'الشارع'},
+        validate: (text) => {
+            const regexp = /^.{1,300}$/;
+            if(!regexp.test(text)){
+                return {en: 'Too short', ar: 'قصير للغاية'}
+            }
+        }
+
+    },
+    building: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        multiline: 'false',
+        placeholder: {en: 'Building', ar: 'المبنى'},
+        validate: (text) => {
+            const regexp = /^.{1,300}$/;
+            if(!regexp.test(text)){
+                return {en: 'Too short', ar: 'قصير للغاية'}
+            }
+        }
+
+    },
+    apartment: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        multiline: 'false',
+        placeholder: {en: 'Apartment', ar: 'الشقة'},
+        validate: (text) => {
+            const regexp = /^.{1,300}$/;
+            if(!regexp.test(text)){
+                return {en: 'Too short', ar: 'قصير للغاية'}
+            }
+        }
+
+    },
+    extra: {
+        textContextType: 'none',
+        autoCompleteType: 'off',
+        multiline: 'false',
+        placeholder: {en: 'Extra', ar: 'اضافية'},
+        validate: (text) => {
+            const regexp = /^.{1,300}$/;
+            if(!regexp.test(text)){
+                return {en: 'Too short', ar: 'قصير للغاية'}
+            }
+        }
+
+    },
 }
 
 const RegisterInputAndError = (props) => {

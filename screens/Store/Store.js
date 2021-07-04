@@ -86,17 +86,17 @@ const Store = (props) => {
                 {/* MENU */}
                 <View style={{...styles.menuContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                     {store.page.homeAds.length > 0 && <TouchableOpacity onPress={() => setViewState(state => state === 0 ? state : 0)}>
-                        <View style={{...styles.menuItem, backgroundColor: viewState === 0 ? gStyles.color_0 : 'transparent' }}>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 0 ? gStyles.color_1 : 'white' }}>
                             <TextLato style={{color: viewState !== 0 ? gStyles.color_0 : 'white'}}>{text.home}</TextLato>
                         </View>
                     </TouchableOpacity>}
                     <TouchableOpacity onPress={() => setViewState(state => state === 1 ? state : 1)}>
-                        <View style={{...styles.menuItem, backgroundColor: viewState === 1 ? gStyles.color_0 : 'transparent' }}>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 1 ? gStyles.color_1 : 'white' }}>
                             <TextLato style={{color: viewState !== 1 ? gStyles.color_0 : 'white'}}>{text.allProducts}</TextLato>
                         </View>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setViewState(state => state === 2 ? state : 2)}>
-                        <View style={{...styles.menuItem, backgroundColor: viewState === 2 ? gStyles.color_0 : 'transparent' }}>
+                        <View style={{...styles.menuItem, backgroundColor: viewState === 2 ? gStyles.color_1 : 'white' }}>
                             <TextLato style={{color: viewState !== 2 ? gStyles.color_0 : 'white'}}>{text.reviews}</TextLato>
                         </View>
                     </TouchableOpacity>
@@ -190,10 +190,8 @@ const styles = StyleSheet.create({
         marginBottom: height * 0.015
     },
     menuItem: {
-        padding: RFPercentage(1),
+        padding: RFPercentage(2),
         borderRadius: 10,
-        borderWidth: 2,
-        borderColor: gStyles.color_0,
         marginHorizontal: 5
     }
 })

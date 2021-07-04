@@ -20,11 +20,11 @@ import HTTP from '../../../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const SellerRegister = (props) => {
     const [errors, setErrors] = useState([]);
-    const [name, setName] = useState('Amer Hamad');
-    const [email, setEmail] = useState('asserhamad1@gmail.com');
-    const [password, setPassword] = useState('Abcd1234');
-    const [phone, setPhone] = useState('+201140008042');
-    const [title, setTitle] = useState('CEO of Madness');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [phone, setPhone] = useState('');
+    const [title, setTitle] = useState('');
     const [facebookId, setFacebookId] = useState(undefined);
     const text = useLanguageText('sellerRegister');
     
@@ -46,6 +46,7 @@ const SellerRegister = (props) => {
             props.navigation.push('SellerStoreRegister', {seller});
         })
         .catch(err => {
+            console.log(err.response.data.errors);
             setErrors(err.response.data.errors);
         })
     }

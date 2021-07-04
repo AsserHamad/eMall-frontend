@@ -11,13 +11,7 @@ const HTTP = axios.create({
 });
 
 HTTP.interceptors.response.use(
-  res => res.data,
-  error => {
-    const { status } = error.response;
-    if(status === UNAUTHORIZED) { 
-      return Promise.reject(err);
-    } else return Promise.reject(err);
-  }
+  res => res.data
 )
 
 export default HTTP;
