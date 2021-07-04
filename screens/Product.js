@@ -20,6 +20,7 @@ import { useRef } from 'react';
 import Toast from 'react-native-easy-toast';
 import SellerCardProduct from '../components/cards/Seller/SellerCardProduct';
 import HTTP from '../src/utils/axios';
+import StoreCard from '../components/cards/StoreCard';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const image = 'https://imgur.com/qIJjuUY.gif';
@@ -94,6 +95,7 @@ const Product = (props) => {
 
             HTTP.post(`/store/find-similar-stores`, {store: data.store})
             .then(data => {
+                console.log(data)
                 setSimilarStores(data);
             });
 
@@ -368,14 +370,12 @@ const Product = (props) => {
                         </View>}
                     </View>
                         {/* MORE FROM STORE */}
-                        {similarProducts.length > 0 && <ScrollCards 
-                            style={{width}}
-                            title={`${text.moreFrom} ${product.store.title}`}
-                            cards={similarProducts.map(product => <SellerCardProduct showToast={showToast} key={product._id} product={product} style={{marginHorizontal: width * 0.02}} />)}
-                            />}
+                        {similarProducts.length > 0 && 
+                        <ScrollCards data={similarProducts} style={{width}} title={`${text.moreFrom} ${product.store.title}`} renderItem={({item}) => <SellerCardProduct showToast={showToast} key={item._id} product={item} />} />
+                        }
 
                         {/* MORE ITEMS */}
-                        {/* <ScrollCards style={{width}} title={text.similarStores} cards={similarStores.map(store => <StoreCard key={store._id} store={store} />)} /> */}
+                        <ScrollCards data={similarStores} style={{width}} title={text.similarStores} renderItem={({item}) => <StoreCard key={item._id} store={item} />} />
                 </ScrollView>
         </View>
     )

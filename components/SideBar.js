@@ -3,10 +3,10 @@ import { DrawerContentScrollView , DrawerItemList } from '@react-navigation/draw
 import Constants from 'expo-constants';
 import { Dimensions, Image, ImageBackground, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
 import { gStyles } from '../global.style';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { logout } from '../src/actions/auth';
 import { setCart } from '../src/actions/cart';
-import { changeLanguage } from '../src/actions/general';
+import { changeLanguage, changeFirstTime } from '../src/actions/general';
 import { useLanguageText, useLanguage } from '../hooks/language';
 import TextLato from './utils/TextLato';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,6 +18,7 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 function SideBar(props) {
     const language = useLanguage();
     const languageText = useLanguageText('sidebar');
+    const dispatch = useDispatch();
     const changeLanguage = () => {
         const newLang = `${language === 'en' ? 1 : 0}`;
         AsyncStorage.setItem('@language', newLang)
@@ -45,7 +46,7 @@ function SideBar(props) {
                     <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold reverse>{languageText && languageText.changeLanguage}</TextLato>
                 </TouchableOpacity>
                 {props.loggedIn && 
-                    <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});AsyncStorage.removeItem('@access_token');props.logout()}}>
+                    <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});AsyncStorage.removeItem('@accessToken');AsyncStorage.removeItem('@refreshToken');AsyncStorage.removeItem('@firstTime');dispatch(changeFirstTime(false));props.logout()}}>
                         <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold>{languageText.logout}</TextLato>
                     </TouchableOpacity>
                 }

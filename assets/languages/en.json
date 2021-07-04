@@ -381,5 +381,34 @@
         "totalAfterDiscount": "Total After Discount",
         "confirm": "Confirm Order",
         "cancel": "Cancel Order"
+    },
+    "storeProducts": {
+        "title": "Products",
+        "add": "Add Product",
+        "options": "Product Options",
+        "update": "Update Product",
+        "remove": "Remove Project",
+        "mostPopular": "Your Most Popular Products",
+        "mostPopularSubtitle": "Based on the last three months",
+        "quantity": "Quantity Sold"
+    },
+    "storeProductsUpdate": {
+        "title": "Update Product",
+        "newTitle": "Updating",
+        "header": "Update Product",
+        "headerSubtitle": "Fields mrked with an asterisk (*) are required",
+        "enTitle": "English Title",
+        "arTitle": "Arabic Title",
+        "enDescr": "English Description",
+        "arDescr": "Arabic Description",
+        "stock": "Stock*",
+        "price": "Price (EGP)*",
+        "images": "Images",
+        "pickCategory": "Pick a Category",
+        "pickSubcategory": "Pick a Subcategory",
+        "pickFilter": "Pick a Filter",
+        "requireUser": "Does this product require some client data?",
+        "requireImage": "Does this product require an image from the client?",
+        "discount": "Discount"
     }
 }

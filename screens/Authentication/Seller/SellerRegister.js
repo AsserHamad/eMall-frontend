@@ -23,7 +23,7 @@ const SellerRegister = (props) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [phone, setPhone] = useState('');
+    const [phone, setPhone] = useState('+2');
     const [title, setTitle] = useState('');
     const [facebookId, setFacebookId] = useState(undefined);
     const text = useLanguageText('sellerRegister');

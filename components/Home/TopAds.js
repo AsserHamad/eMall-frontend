@@ -33,7 +33,7 @@ function TopAds(){
             {ads.length ? ads.map(ad => (
                 <TouchableOpacity 
                     activeOpacity={0.8} 
-                    onPress={() => ad.adType === 0 ? navigation.push('Product', {product: {_id: ad.store}}) : navigation.push('Store', {store: {_id: ad.store}})}
+                    onPress={() => ad.adType === 0 ? navigation.push('Product', {product: {_id: ad.product}}) : navigation.push('Store', {store: {_id: ad.store}})}
                     key={ad}
                 >
                     <Image style={styles.swiperImage} source={{uri: ad.image}} />

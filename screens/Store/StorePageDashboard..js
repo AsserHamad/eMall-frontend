@@ -127,7 +127,8 @@ const StorePageDashboard = () => {
     }
 
     const changeBanner = (uri) => {
-        funcs.uploadImage(uri, store.title, token)
+        console.log(uri, store.title)
+        funcs.uploadImage(uri, store.title)
         .then(({location}) => {
             updatePage(ads, location)
         })
@@ -135,8 +136,8 @@ const StorePageDashboard = () => {
     };
 
     const ModalContent = (
-        <CustomModal confirm={confirm} modalVisible={modalVisible} setModalVisible={setModalVisible}>
-                <View style={{alignItems: 'center'}}>
+        <CustomModal confirm={confirm} modalVisible={modalVisible} setModalVisible={setModalVisible} >
+                <View>
                     <TextLato bold>{text.pick}</TextLato>
                     <View style={{flexDirection: 'row', marginVertical: height * 0.02}}>
                         <TouchableOpacity style={{...modalStyles.button, backgroundColor: modalStep === 0 ? gStyles.color_2 : 'black'}} onPress={() => setModalStep(0)}>
@@ -155,7 +156,7 @@ const StorePageDashboard = () => {
                         </TouchableOpacity>
                     )}
                     {(modalStep === 1 || modalStep === 2) && (
-                        <ProductPicker style={{height: height * 0.4, width: width * 0.65, marginTop: height * 0.02}} pickedProduct={pickedProduct} setPickedProduct={setPickedProduct}  />
+                        <ProductPicker style={{height: height * 0.4, maxHeight: '60%', width: width * 0.65, marginTop: height * 0.02}} pickedProduct={pickedProduct} setPickedProduct={setPickedProduct}  />
                         )}
                     {uploading && <View style={{height: height * 0.1, justifyContent: 'center', alignItems: 'center'}}>
                         <TextLato>Uploading...</TextLato>
@@ -168,8 +169,8 @@ const StorePageDashboard = () => {
     return (
         <View style={styles.container}>
             <StoreNavbar title={text.title} />
+            {ModalContent}
             <ScrollView contentContainerStyle={{padding: width * 0.05}}>
-                {ModalContent}
                 <TextLato bold style={{fontSize: RFPercentage(2.5)}}>{text.storeBanner}</TextLato>
                 <View style={styles.coverImageContainer}>
                     {coverImage !== '' && <Image source={{uri: coverImage}} style={styles.coverImage} />}

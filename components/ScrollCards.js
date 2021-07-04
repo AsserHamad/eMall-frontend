@@ -1,16 +1,15 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View, Dimensions, ActivityIndicator } from 'react-native';
+import { ScrollView, StyleSheet, View, Dimensions, ActivityIndicator, FlatList } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useLanguage } from '../hooks/language';
 import TextLato from './utils/TextLato';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-function ScrollCards(props){
-    const title = props.title;
+function ScrollCards({title, data, style, renderItem}){
     const language = useLanguage();
     const en = language === 'en';
-    if(!props.cards.length) return (
-        <View style={{...styles.container, ...props.style}}>
+    if(!data.length) return (
+        <View style={{...styles.container, ...style}}>
             <TextLato bold style={styles.title}>{title}</TextLato>
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size={RFPercentage(4)} color={'white'} />
@@ -18,11 +17,17 @@ function ScrollCards(props){
         </View>
     );
     return (
-        <View style={{...styles.container, ...props.style}}>
+        <View style={{...styles.container, ...style}}>
             <TextLato bold style={styles.title}>{title}</TextLato>
-            <ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={styles.containerContent} style={{transform: en ? [] : [{scaleX: -1}]}} horizontal>
-                {props.cards}
-            </ScrollView>
+            
+            <FlatList
+                data={data}
+                horizontal
+                renderItem={renderItem}
+                keyExtractor={item => item._id}
+                style={{transform: en ? [] : [{scaleX: -1}]}}
+                contentContainerStyle={{paddingVertical: height * 0.01, alignItems: 'center'}}
+            />
         </View>
     )
 }

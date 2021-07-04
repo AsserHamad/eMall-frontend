@@ -64,6 +64,7 @@ const BannerAds = () => {
             .then(() => {
                 fetchBanners();
             })
+            .catch(err => console.log(err))
         })
     }
 

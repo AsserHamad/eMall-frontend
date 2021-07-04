@@ -6,13 +6,14 @@ import { useSelector } from 'react-redux';
 import TextLato from '../utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { gStyles } from '../../global.style';
-import { useLanguage } from '../../hooks/language';
+import { useLanguage, useLanguageText } from '../../hooks/language';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 const HomeComponent = () => {
     const token = useSelector(state => state.authReducer.token);
     const [products, setProducts] = useState([]);
     const language = useLanguage();
+    const text = useLanguageText('storeProducts');
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/popular-products`, {headers: {token}})
         .then(res => res.json())
@@ -23,15 +24,15 @@ const HomeComponent = () => {
     }, [])
     return (
         <View style={styles.container}>
-            <TextLato bold style={styles.title}>Your Most Popular Products</TextLato>
-            <TextLato italic style={styles.subtitle}>Based on the last 3 months</TextLato>
+            <TextLato bold style={styles.title}>{text.mostPopular}</TextLato>
+            <TextLato italic style={styles.subtitle}>{text.mostPopularSubtitle}</TextLato>
             {products.map(product => {
                 return (
                 <ImageBackground key={product._id} source={{uri: 'https://cdn.pixabay.com/photo/2014/03/22/17/03/the-background-292729_960_720.png'}} style={styles.bigContainer} imageStyle={{borderRadius: 10}}>
                     <Image source={{uri: product.images[0]}} style={styles.bigImage} />
-                    <View style={{marginHorizontal: width * 0.05}}>
+                    <View style={{paddingHorizontal: width * 0.1, width: '100%'}}>
                         <TextLato bold style={{fontSize: RFPercentage(2.5), color: 'white', width: '70%'}}>{product.title[language]}</TextLato>
-                        <TextLato italic style={{fontSize: RFPercentage(2), color: 'white', width: '70%', marginTop: height * 0.06}}>Quantity Sold: {product.quantity}</TextLato>
+                        <TextLato italic style={{fontSize: RFPercentage(2), color: 'white', width: '70%', marginTop: height * 0.06}}>{text.quantity}: {product.quantity}</TextLato>
                     </View>
                 </ImageBackground>
                 )

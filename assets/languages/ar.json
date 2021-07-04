@@ -386,5 +386,34 @@
         "totalAfterDiscount": "المجموع بعد الخصم",
         "confirm": "أكد الطلب",
         "cancel": "الغاء الطلب"
+    },
+    "storeProducts": {
+        "title": "المنتجات",
+        "add": "أضف منتج",
+        "options": "خيارات المنتج",
+        "update": "تحديث المنتج",
+        "remove": "إزالة المنتج",
+        "mostPopular": "منتجاتك الأكثر شهرة",
+        "mostPopularSubtitle": "بناءً على الأشهر الثلاثة الماضية",
+        "quantity": "الكمية المباعة"
+    },
+    "storeProductsUpdate": {
+        "title": "Update Product",
+        "newTitle": "Updating",
+        "header": "Update Product",
+        "headerSubtitle": "Fields mrked with an asterisk (*) are required",
+        "enTitle": "English Title",
+        "arTitle": "Arabic Title",
+        "enDescr": "English Description",
+        "arDescr": "Arabic Description",
+        "stock": "Stock*",
+        "price": "Price (EGP)*",
+        "images": "Images",
+        "pickCategory": "Pick a Category",
+        "pickSubcategory": "Pick a Subcategory",
+        "pickFilter": "Pick a Filter",
+        "requireUser": "Does this product require some client data?",
+        "requireImage": "Does this product require an image from the client?",
+        "discount": "Discount"
     }
 }

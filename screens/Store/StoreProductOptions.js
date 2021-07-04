@@ -12,12 +12,15 @@ import { useEffect, useState } from 'react';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import { Constants } from 'react-native-unimodules';
 import { useSelector } from 'react-redux';
+import { useLanguageText } from '../../hooks/language';
+import HTTP from '../../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const StoreProductOptions = ({navigation}) => {
     const [pickedProduct, setPickedProduct] = useState({});
     const [type, setType] = useState(0);
     const token = useSelector(state => state.authReducer.token);
+    const text = useLanguageText('storeProductsUpdate')
     const options = [
         <Variants token={token} id={pickedProduct._id} />,
         <Options token={token} id={pickedProduct._id} />,
@@ -25,11 +28,10 @@ const StoreProductOptions = ({navigation}) => {
     ];
     return (
         <View style={{flex: 1, backgroundColor: gStyles.background}}>
-            <Header details={{title: ''}} />
+            <Header details={{title: text.title}} />
             <ScrollView style={styles.container}>
 
                 {!Object.keys(pickedProduct).length ? [
-                    <TextLato bold style={{fontSize: RFPercentage(2.5), marginVertical: height * 0.02, textAlign: 'center'}}>Pick a Product</TextLato>,
                     <ProductPicker pickedProduct={pickedProduct} setPickedProduct={setPickedProduct} />
                 ] : [
                     <View style={styles.buttonsContainer}>
@@ -115,8 +117,7 @@ const Specs = ({id, token}) => {
 
     const fetchSpecs = () => {
         setLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/product/${id}`)
-        .then(res => res.json())
+        HTTP(`/product/${id}`)
         .then(res => {
             setSpecs(res.specifications);
             setLoading(false);
@@ -125,20 +126,18 @@ const Specs = ({id, token}) => {
 
     const addSpec = () => {
         if(enTitle === '' || enDescription === '' || arDescription === '' || arDescription === '') return;
-        fetch(`${Constants.manifest.extra.apiUrl}/product/options`, {
-            method: 'put',
-            headers: {'Content-Type': "application/json", token},
-            body: JSON.stringify({product: {_id: id, $push: {
-                specifications: {
-                    title: {en: enTitle, ar: arTitle},
-                    details: {en: enDescription, ar: arDescription}
+        const body = {
+            product: {
+                _id: id,
+                $push: {
+                    specifications: {
+                        title: {en: enTitle, ar: arTitle},
+                        details: {en: enDescription, ar: arDescription}
+                    }
                 }
-            }}})
-        })
-        .then(res => res.json())
-        .then(res => {
-            fetchSpecs();
-        })
+            }
+        };
+        HTTP.put(`/product/options`, body).then(res => fetchSpecs())
     }
 
     const removeSpec = (_id) => {

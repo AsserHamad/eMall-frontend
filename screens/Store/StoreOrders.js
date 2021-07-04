@@ -10,6 +10,8 @@ import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
 import { useLanguage, useLanguageText } from '../../hooks/language';
 import * as WebBrowser from 'expo-web-browser';
+import HTTP from '../../src/utils/axios';
+import Loading from '../../components/utils/Loading';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 const statuses = [{
@@ -38,38 +40,27 @@ const StoreOrders = () => {
     const [orders, setOrders] = useState([]);
     const [displayedOrders, setDisplayedOrders] = useState([]);
     const [status, setStatus] = useState(0);
-    const token = useSelector(state => state.authReducer.token);
+    const [loading, setLoading] = useState(true);
     const language = useLanguage();
     const en = language === 'en';
     const text = useLanguageText('sellerOrders');
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/store/orders`, {
-            headers: {token}
-        })
-        .then(res => res.json())
+        console.log('getting orders')
+        HTTP('/store/orders')
         .then(res => {
+            setLoading(false);
             setOrders(res);
             setDisplayedOrders(res);
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(err.response));
     }, []);
 
     const changeOrderStatus = (newStatus, id) => {
-        fetch(`${Constants.manifest.extra.apiUrl}/store/order/status`, {
-            method: 'put',
-            headers: {
-                'Content-Type': 'application/json',
-                token,
-            },
-            body: JSON.stringify({order: id, status: newStatus})
-        })
+        setLoading(true);
+        HTTP.put('/store/order/status', {order: id, status: newStatus})
         .then(res => {
-            if(res.status === 200)
-                return res.json()
-            else throw new Error();
-        })
-        .then(res => {
-            setOrders(res)
+            setOrders(res);
+            setLoading(false);
         })
         .catch(err => console.log(err));
     }
@@ -96,7 +87,7 @@ const StoreOrders = () => {
             })}
             </ScrollView>
             <ScrollView style={{height: '100%'}} contentContainerStyle={{paddingBottom: height * 0.03}}>
-                {displayedOrders.length === 0 ? (
+                {loading ? <Loading /> : displayedOrders.length === 0 ? (
                     <View style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'white', height}}>
                         <TextLato italic style={{fontSize: RFPercentage(2)}}>{text.nothing}</TextLato>
                         <Image 
@@ -127,7 +118,6 @@ const styles = StyleSheet.create({
 const Order = ({order, changeOrderStatus, text}) => {
     const language = useLanguage();
     const en = language === 'en';
-    const [expanded, setExpanded] = useState(false);
     const [revenue, setRevenue] = useState('Calculating...');
     const [discount, setDiscount] = useState(0);
     const date = new Date(order.created_at);

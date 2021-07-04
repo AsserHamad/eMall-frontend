@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { Constants } from 'react-native-unimodules';
@@ -25,6 +25,7 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/own-products/${search}`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
+            console.log(res);
             setLoading(false);
             setProducts(res)
         })
@@ -32,31 +33,38 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
     }
     return (
         <View style={{...styles.container, ...style}}>
-            <ScrollView contentContainerStyle={{alignItems: 'center', justifyContent: 'center', width: '100%'}} nestedScrollEnabled={true}>
-                <TextInput placeholder={en ? 'Search products...' : 'البحث عن المنتجات...'} style={{...styles.input, textAlign: en ? 'left' : 'right', fontFamily: 'Cairo'}} value={search} onChangeText={val => setSearch(val)} />
-                {loading ? 
-                    <View style={styles.loadingContainer}><ActivityIndicator size={RFPercentage(5)} color={'white'} /></View>
-                    :
-                    products.map(product => {
-                        console.log(product.images[0])
-                        const picked = pick && product._id === pick._id;
+            <TextInput 
+                placeholder={en ? 'Search products...' : 'البحث عن المنتجات...'} 
+                style={{...styles.input, textAlign: en ? 'left' : 'right', fontFamily: 'Cairo'}} 
+                value={search} 
+                onChangeText={val => setSearch(val)}
+                />
+            {loading ? 
+                <View style={styles.loadingContainer}><ActivityIndicator size={RFPercentage(5)} color={'white'} /></View>
+                :
+                <FlatList
+                    data={products}
+                    keyExtractor={product => product._id}
+                    renderItem={({item}) => {
+                        const picked = pick && item._id === pick._id;
                         return (
-                        <TouchableOpacity key={product._id} activeOpacity={0.7} onPress={() => {setPick(product);setPickedProduct(product);}} style={{...styles.product, backgroundColor: picked ? gStyles.color_2 : 'white', flexDirection: en ? 'row' : 'row-reverse'}}>
-                            <Image style={styles.image} source={{uri: product.images[0]}} />
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => {setPick(item);setPickedProduct(item);}} style={{...styles.product, backgroundColor: picked ? gStyles.color_2 : 'white', flexDirection: en ? 'row' : 'row-reverse'}}>
+                            <Image style={styles.image} source={{uri: item.images[0]}} />
                             <View style={{width: '50%'}}>
-                                <TextLato style={{color: picked ? 'white' : 'black'}} bold>{product.title[language]}</TextLato>
+                                <TextLato style={{color: picked ? 'white' : 'black'}} bold>{item.title[language]}</TextLato>
                             </View>
                         </TouchableOpacity>
-                    )
-                })}
-            </ScrollView>
+                        )}}
+                    
+                />
+            }
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     input: {
-        marginHorizontal: width * 0.05,
+        // marginHorizontal: width * 0.05,
         marginVertical: height * 0.02,
         paddingVertical: height * 0.01,
         paddingHorizontal: width * 0.03,
@@ -70,7 +78,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        width: '95%'
+        width: '95%',
+        justifyContent: 'center'
     },
     loadingContainer: {
         height: height * 0.3,
@@ -78,7 +87,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     container: {
-        flex: 1,
+        // flex: 1,
         borderRadius: 20,
         shadowColor: "#000",
         shadowOffset: {
@@ -98,7 +107,7 @@ const styles = StyleSheet.create({
         paddingVertical: height * 0.01,
     },
     product: {
-        paddingVertical: height * 0.03,
+        paddingVertical: height * 0.012,
         flexDirection: 'row',
         alignItems: 'center',
         marginVertical: height * 0.005,
@@ -118,7 +127,8 @@ const styles = StyleSheet.create({
         width: width * 0.15,
         aspectRatio: 1,
         marginHorizontal: width * 0.04,
-        resizeMode: 'contain'
+        resizeMode: 'contain',
+        
     }
 })
 

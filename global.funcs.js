@@ -1,4 +1,3 @@
-import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
@@ -20,7 +19,7 @@ exports.funcs = {
               'Content-Type': 'multipart/form-data',
             },
           };
-        return await (await HTTP.post(`${Constants.manifest.extra.apiUrl}/upload`, formData, options));
+        return await HTTP.post(`/upload`, formData, options);
     },
     
     uploadMultipleImages: async (uris, title) => {

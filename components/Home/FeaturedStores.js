@@ -1,14 +1,12 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, Image, StyleSheet, View, FlatList, ImageBackground, TouchableNativeFeedback } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { gStyles } from '../../global.style';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { useLanguage } from '../../hooks/language';
 import HTTP from '../../src/utils/axios';
-import Icon from '../utils/Icon';
 import TextLato from '../utils/TextLato';
+import StoreCard from '../cards/StoreCard';
 
 const FeaturedStores = () => {
     const [stores, setStores] = useState([]);
@@ -16,7 +14,7 @@ const FeaturedStores = () => {
     const en = language === 'en';
     useEffect(() => {
         HTTP('/advertisement/featured-stores')
-        .then(res => {console.log(res);setStores(res)})
+        .then(res => {setStores(res.map(res => res.store))})
     }, []);
     return (
         <View>
@@ -31,43 +29,14 @@ const FeaturedStores = () => {
                         style={{transform: en ? [] : [{scaleX: -1}]}}
                         contentContainerStyle={{paddingVertical: height * 0.01, alignItems: 'center'}}
                     />
-                ): [1,2,3,4,5,6].map(num => {
-                    return (
-                        <View key={num} style={styles.product}>
-                            <View style={styles.innerProductWait}>
+                ):(
+                        <View style={styles.product}>
                                 <ActivityIndicator color={'white'} size={RFPercentage(3.5)} />
-                            </View>
                         </View>
                     )
-                })}
+                }
             </View>
         </View>
-    )
-}
-
-const StoreCard = ({store}) => {
-    console.log(store)
-    const language = useLanguage();
-    const en = language === 'en';
-    const navigation = useNavigation();
-    return (
-        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Store', {store})} style={{...styles.storeContainer, transform: en ? [] : [{scaleX: -1}]}}>
-            <Image style={styles.image} source={{uri: store.page?.coverImage || 'https://image.freepik.com/free-vector/red-oriental-chinese-seamless-pattern-illustration_193606-43.jpg'}} />
-            <View style={styles.bottomContainer}>
-                <ImageBackground source={{uri: store.logo}} style={{...styles.logoContainer,    
-                    transform: [{translateY: -width * 0.15}, {translateX: en ? width * 0.03 : width * 0.57}],
-                }} imageStyle={styles.logoImage} />
-                <View style={{marginLeft: en ? width * 0.25 : 0, marginRight: en ? 0 : width * 0.25, paddingVertical: height * 0.01}}>
-                    <TextLato bold style={styles.storeTitle}>{store.title}</TextLato>
-                    <View style={{...styles.categoriesContainer, justifyContent: en ? 'flex-start' : 'flex-end'}}>
-                        {store.categories.slice(0,4).map(details => {
-                            return <View key={details._id} style={styles.categoryContainer}><Image source={{uri: details.image}} style={styles.categoryImage} /></View>
-                        })}
-                        <Icon type={'AntDesign'} color="white" name={'plus'} style={styles.categoryContainer} size={RFPercentage(1.7)} />
-                    </View>
-                </View>
-            </View>
-        </TouchableOpacity>
     )
 }
 

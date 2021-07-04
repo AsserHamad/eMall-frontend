@@ -47,7 +47,7 @@ export default ({navigation, route}) => {
                 toValue: 1,
                 useNativeDriver: true
               }).start();
-        }, 1200);
+        }, 300);
         return () => {clearTimeout(t);clearTimeout(t1)}
     }, []);
 
@@ -83,16 +83,18 @@ export default ({navigation, route}) => {
             </Animated.View>
             <Animated.View style={{opacity: textOpacity, height: height * 0.3}}>
                 {state === 0 ? (
-                <>
-                    <TouchableOpacity onPress={() => navigation.push('ClientRegister')} style={styles.touchableContainer}>
-                        <TextLato style={styles.touchableText}>{en ? 'New Customer?' : 'زبون جديد'}</TextLato>
-                    </TouchableOpacity>
+                    <>
+                        <TouchableOpacity onPress={() => navigation.push('ClientRegister')} style={styles.touchableContainer}>
+                            <TextLato style={styles.touchableText}>{en ? 'New Customer?' : 'زبون جديد'}</TextLato>
+                        </TouchableOpacity>
 
-                    <TextLato style={{textAlign: 'center', color: 'white', marginVertical: height * 0.03, fontSize: RFPercentage(2)}}>{en ? 'OR' : 'ام'}</TextLato>,
-                    
-                    <TouchableOpacity onPress={() => navigation.push('ClientLogin')} style={styles.touchableContainer}>
-                        <TextLato style={styles.touchableText}>{en ? 'Returning Customer' : 'زبون عائد'}</TextLato>
-                    </TouchableOpacity>
+                        <TextLato style={{textAlign: 'center', color: 'white', marginVertical: height * 0.03, fontSize: RFPercentage(2)}}>
+                            {en ? 'OR' : 'ام'}
+                        </TextLato>
+                        
+                        <TouchableOpacity onPress={() => navigation.push('ClientLogin')} style={styles.touchableContainer}>
+                            <TextLato style={styles.touchableText}>{en ? 'Returning Customer' : 'زبون عائد'}</TextLato>
+                        </TouchableOpacity>
                     </>
                 )
                 : (
