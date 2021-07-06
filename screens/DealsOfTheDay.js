@@ -59,7 +59,7 @@ function DealOfTheDay(){
 
                 <Image source={{uri: 'https://imgur.com/qIJjuUY.gif'}} style={{...styles.topImage, alignSelf: en ? 'auto' : 'flex-end'}} />
                 
-                <View style={{backgroundColor: 'white', borderTopRightRadius: 10, borderTopLeftRadius: 20, padding: 15, transform: [{translateX: width * 0.25}]}}>
+                <View style={{backgroundColor: gStyles.color_1, borderRadius: 10, padding: 15, transform: [{translateX: width * 0.25}]}}>
                     <CountDown
                         until={calculateMilliseconds()}
                         onFinish={() => {
@@ -69,51 +69,23 @@ function DealOfTheDay(){
                         size={20}
                         timeToShow={['H', 'M', 'S']}
                         timeLabels={{h: en ? 'HOURS' : 'ساعات', m: en ? 'MINUTES' : 'دقائق', s: en ? 'SECONDS' : 'ثواني'}}
-                        digitStyle={{backgroundColor: '#181818'}}
-                        digitTxtStyle={{color: '#F6E71D'}}
-                        timeLabelStyle={{fontFamily: language === 'en' ? 'Lato' : 'Cairo', color: gStyles.color_1, fontSize: RFPercentage(1.2)}}
-                        
+                        digitStyle={{backgroundColor: gStyles.color_3}}
+                        digitTxtStyle={{color: 'white'}}
+                        timeLabelStyle={{fontFamily: language === 'en' ? 'Lato' : 'Cairo', color: 'white', fontSize: RFPercentage(1)}}
                     />
                 </View>
             </View>
-                <ScrollView showsHorizontalScrollIndicator={false} horizontal contentContainerStyle={[styles.listContainer]} style={{transform: en ? [] : [{scaleX: -1}]}}>
-                <View style={{flexWrap: 'wrap', marginHorizontal: width * 0.01, height: height * 0.8}}>
-                    {products.map(product => {
-                        return <Deal navigation={navigation} key={product._id} product={product} language={language} en={en} />
-                    })}
-                    <View style={styles.productContainer}>
+            <ScrollView horizontal contentContainerStyle={styles.listContainer} style={{transform: en ? [] : [{scaleX: -1}]}}>
+                    {products.map(product => <Deal navigation={navigation} key={product._id} product={product} language={language} en={en} />)}
+                    <View style={dealStyles.productContainer}>
                         <TouchableOpacity onPress={() => navigation.navigate('DealsOfTheDay')} activeOpacity={0.8}>
-                            <View style={{...styles.innerContainer, width: '100%', backgroundColor: 'white', justifyContent: 'center', alignItems: 'center'}}>
-                                <TextLato style={{color: 'black', fontSize: RFPercentage(2.5), textAlign: 'center'}}>View All Deals</TextLato>
-                                <Icon type="AntDesign" name="plus" color="black" size={RFPercentage(4)} style={{marginTop: height * 0.01}} />
+                            <View style={{...dealStyles.innerContainer, justifyContent: 'center', flexDirection: 'row', paddingHorizontal: width * 0.1, alignItems: 'center'}}>
+                                <TextLato style={{color: 'black', fontSize: RFPercentage(2), textAlign: 'center'}}>View All Deals</TextLato>
+                                <Icon type="AntDesign" name="plus" color="black" size={RFPercentage(2)} style={{marginTop: height * 0.01}} />
                             </View>
                         </TouchableOpacity>
                     </View>
-                </View>
             </ScrollView>
-        </View>
-    )
-}
-
-const Deal = ({product, navigation, language, en}) => {
-    return (
-        <View style={[styles.productContainer, {transform: en ? [] : [{scaleX: -1}]}]}>
-            <View style={styles.innerContainer}>
-                <TouchableOpacity onPress={() => navigation.push('Product', {product: product.product})}>
-                    <Image source={{uri: product.product.images[0]}} style={{height: height * 0.1, aspectRatio: 16/9}} />
-                    <TextLato bold style={{fontSize: RFPercentage(1.8), textAlign: en ? 'left' : 'right', marginTop: height * 0.01}}>{product.product.title[language]}</TextLato>
-                    <View style={{borderBottomColor: gStyles.color_2, borderBottomWidth: 2, width: '30%', marginVertical: height * 0.006}} />
-                    <TextLato italic style={{fontSize: RFPercentage(1.3), textAlign: en ? 'left' : 'right', marginTop: height * 0.004}}>{en ? 'By' : 'من'}: {product.store.title}</TextLato>
-                    <View style={{marginTop: height * 0.04, alignItems: en ? 'baseline' : 'flex-end'}}>
-                        <TextLato style={{textDecorationLine: 'line-through', fontSize: RFPercentage(1.5), color: gStyles.color_0}}>{product.product.price.toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato> 
-                        <TextLato style={{fontSize: RFPercentage(1.8), color: gStyles.color_1}}>{(product.product.price * (1 - product.discount/100)).toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato>
-                    </View>
-                </TouchableOpacity>
-                <ImageBackground source={{uri: bubbles[getColors(product.discount)]}} style={{...styles.innerDiscountBubble, left: en ? null : 0, transform: [{translateY: height * 0.015}, {translateX:  en ? width * 0.02 : width * -0.02}]}}>
-                    <TextLato style={{fontSize: RFPercentage(3), textAlign: 'center', color: 'white'}}>{product.discount}<TextLato style={{fontSize: RFPercentage(2)}}>%</TextLato></TextLato>
-                    <TextLato style={{fontSize: en ? RFPercentage(1) : RFPercentage(1.2), textAlign: 'center', color: 'white'}}>{en ? 'D I S C O U N T' : 'تخفيض'}</TextLato>
-                </ImageBackground>
-            </View>
         </View>
     )
 }
@@ -125,13 +97,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     listContainer: {
-        flexDirection: 'row',
-        paddingHorizontal: width * 0.02,
-        paddingTop: height * 0.014,
-        paddingBottom: height * 0.05,
-        paddingLeft: width * 0.04,
-        backgroundColor: 'white',
-        width
+        paddingVertical: height * 0.01,
+        // backgroundColor: 'white',
+        height: height * 0.4
     },
     discountBubble: {
         position: 'absolute',
@@ -141,19 +109,6 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         marginHorizontal: 'auto',
         transform: [{translateY: height * 0.03}, {translateX: width * 0.05}],
-        zIndex: 5,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    innerDiscountBubble: {
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-        width: width * 0.2,
-        aspectRatio: 394/386,
-        borderRadius: 100,
-        marginHorizontal: 'auto',
-        // transform: [{translateY: height * 0.01}, {translateX: width * 0.02}],
         zIndex: 5,
         justifyContent: 'center',
         alignItems: 'center'
@@ -188,15 +143,42 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         resizeMode: 'contain',
         marginBottom: height * 0.03,
-    },
+    }
+})
+
+const Deal = ({product, navigation, language, en}) => {
+    return (
+        <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.push('Product', {product: product.product})}>
+        <View style={[dealStyles.productContainer, {transform: en ? [] : [{scaleX: -1}]}]}>
+            <View style={dealStyles.innerContainer}>
+                    <Image source={{uri: product.product.images[0]}} style={dealStyles.image} />
+                    <TextLato bold style={dealStyles.title}>{product.product.title[language]}</TextLato>
+                    <View style={dealStyles.line} />
+                    <TextLato italic style={dealStyles.storeTitle}>{en ? 'By' : 'من'}: {product.store.title}</TextLato>
+                    <View style={{marginTop: height * 0.02, alignItems: en ? 'baseline' : 'flex-end'}}>
+                        <TextLato style={{textDecorationLine: 'line-through', fontSize: RFPercentage(1.5), color: gStyles.color_0}}>{product.product.price.toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato> 
+                        <TextLato style={{fontSize: RFPercentage(1.8), color: gStyles.color_1}}>{(product.product.price * (1 - product.discount/100)).toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato>
+                    </View>
+                <ImageBackground source={{uri: bubbles[getColors(product.discount)]}} style={{...dealStyles.innerDiscountBubble, left: en ? null : 0, transform: [{translateY: height * 0.015}, {translateX:  en ? width * 0.02 : width * -0.02}]}}>
+                    <TextLato style={{fontSize: RFPercentage(3), textAlign: 'center', color: 'white'}}>{product.discount}<TextLato style={{fontSize: RFPercentage(2)}}>%</TextLato></TextLato>
+                    <TextLato style={{fontSize: en ? RFPercentage(1) : RFPercentage(1.2), textAlign: 'center', color: 'white'}}>{en ? 'D I S C O U N T' : 'تخفيض'}</TextLato>
+                </ImageBackground>
+            </View>
+        </View>
+        </TouchableOpacity>
+    )
+}
+
+const dealStyles = StyleSheet.create({
     productContainer: {
-        height: '50%',
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: width * 0.01,
         paddingVertical: height * 0.01,
         width: width * 0.4,
-        marginRight: width * 0.05
+        // marginRight: width * 0.05,
+        marginHorizontal: width * 0.05,
     },
     innerContainer: {
         backgroundColor: 'white',
@@ -204,16 +186,138 @@ const styles = StyleSheet.create({
         paddingVertical: height * 0.02,
         borderRadius: 10,
         shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 10,
+        shadowOffset:{
+        width: 0,
+        height: 2,
         },
-        shadowOpacity: 0.53,
-        shadowRadius: 13.97,
-        elevation: 21,
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
         borderRadius: 10,
         height: '100%'
+    },
+    innerDiscountBubble: {
+        position: 'absolute',
+        right: 0,
+        bottom: 0,
+        width: width * 0.2,
+        aspectRatio: 394/386,
+        borderRadius: 100,
+        marginHorizontal: 'auto',
+        // transform: [{translateY: height * 0.01}, {translateX: width * 0.02}],
+        zIndex: 5,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    image: {
+        height: height * 0.1,
+        aspectRatio: 16/9
+    },
+    title: {
+        fontSize: RFPercentage(1.8),
+        marginTop: height * 0.01
+    },
+    line: {
+        borderBottomColor: gStyles.color_2, 
+        borderBottomWidth: 2, 
+        width: '30%', 
+        marginVertical: height * 0.006
+    },
+    storeTitle: {
+        fontSize: RFPercentage(1.3), 
+        marginTop: height * 0.004
     }
 })
+
+// const Deal = ({product, navigation, language, en}) => {
+//     return (
+//         <View style={[dealStyles.productContainer, {transform: en ? [] : [{scaleX: -1}]}]}>
+//             <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.push('Product', {product: product.product})}>
+//             <ImageBackground source={{uri: product.product.images[0]}} style={dealStyles.innerContainer} imageStyle={{resizeMode: 'cover', borderRadius: 10}}>
+//                     {/* <Image source={{uri: product.product.images[0]}} style={dealStyles.image} /> */}
+//                     <TextLato bold style={dealStyles.title}>{product.product.title[language]}</TextLato>
+//                     {/* <View style={dealStyles.line} /> */}
+//                     <TextLato italic style={dealStyles.storeTitle}>{en ? 'By' : 'من'}: {product.store.title}</TextLato>
+//                     <View style={{marginTop: height * 0.02, alignItems: en ? 'baseline' : 'flex-end', backgroundColor: 'rgba(0,0,0,0.2)'}}>
+//                         <TextLato style={{textDecorationLine: 'line-through', fontSize: RFPercentage(1.5), color: 'white'}}>{product.product.price.toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato> 
+//                         <TextLato style={{fontSize: RFPercentage(1.8), color: 'white'}}>{(product.product.price * (1 - product.discount/100)).toFixed(2)} {en ? 'EGP' : 'ج.م'}</TextLato>
+//                     </View>
+//                 <ImageBackground source={{uri: bubbles[getColors(product.discount)]}} style={{...dealStyles.innerDiscountBubble, left: en ? null : 0, transform: [{translateY: height * 0.015}, {translateX:  en ? width * 0.02 : width * -0.02}]}}>
+//                     <TextLato style={{fontSize: RFPercentage(3), textAlign: 'center', color: 'white'}}>{product.discount}<TextLato style={{fontSize: RFPercentage(2)}}>%</TextLato></TextLato>
+//                     <TextLato style={{fontSize: en ? RFPercentage(1) : RFPercentage(1.2), textAlign: 'center', color: 'white'}}>{en ? 'D I S C O U N T' : 'تخفيض'}</TextLato>
+//                 </ImageBackground>
+//             </ImageBackground>
+//         </TouchableOpacity>
+//         </View>
+//     )
+// }
+
+// const dealStyles = StyleSheet.create({
+//     productContainer: {
+//         height: '100%',
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         paddingHorizontal: width * 0.01,
+//         paddingVertical: height * 0.01,
+//         // width: width * 0.4,
+//         // marginRight: width * 0.05,
+//         marginHorizontal: width * 0.01,
+//     },
+//     innerContainer: {
+//         backgroundColor: 'white',
+//         width: width * 0.4,
+//         paddingHorizontal: width * 0.04,
+//         // paddingVertical: height * 0.02,
+//         borderRadius: 10,
+//         shadowColor: "#000",
+//         shadowOffset:{
+//         width: 0,
+//         height: 2,
+//         },
+//         shadowOpacity: 0.23,
+//         shadowRadius: 2.62,
+//         elevation: 4,
+//         borderRadius: 10,
+//         height: '100%',
+//         borderRadius: 20
+//     },
+//     innerDiscountBubble: {
+//         position: 'absolute',
+//         right: 0,
+//         bottom: 0,
+//         width: width * 0.2,
+//         aspectRatio: 394/386,
+//         borderRadius: 100,
+//         marginHorizontal: 'auto',
+//         // transform: [{translateY: height * 0.01}, {translateX: width * 0.02}],
+//         zIndex: 5,
+//         justifyContent: 'center',
+//         alignItems: 'center'
+//     },
+//     image: {
+//         height: height * 0.08,
+//         aspectRatio: 16/9
+//     },
+//     title: {
+//         fontSize: RFPercentage(1.8),
+//         marginTop: height * 0.01,
+//         backgroundColor: 'rgba(0,0,0,0.3)',
+//         paddingVertical: 5,
+//         paddingHorizontal: 10,
+//         textAlign: 'center',
+//         borderRadius: 5,
+//         color: 'white'
+//     },
+//     line: {
+//         borderBottomColor: gStyles.color_2, 
+//         borderBottomWidth: 2, 
+//         width: '30%', 
+//         marginVertical: height * 0.006
+//     },
+//     storeTitle: {
+//         fontSize: RFPercentage(1.3), 
+//         marginTop: height * 0.004
+//     }
+// })
 
 export default DealOfTheDay;

@@ -8,6 +8,7 @@ import Icon from '../utils/Icon';
 import TextLato from '../utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { useNavigation } from '@react-navigation/native';
+import HTTP from '../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -17,8 +18,7 @@ function Categories(){
     const language = useLanguage();
     const en = language === 'en';
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/category`)
-        .then(res => res.json())
+        HTTP('/category')
         .then(res => setCategories(res.slice(0, 5)))
     }, []);
     if(!categories.length)

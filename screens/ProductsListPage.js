@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Dimensions } from 'react-native';
 import Header from '../components/Header';
-import Constants from 'expo-constants';
 import TextLato from '../components/utils/TextLato';
 import { SafeAreaView } from 'react-navigation';
 import ProductsList from '../components/cards/Product/ProductsList';
 import Toast from 'react-native-easy-toast';
+import HTTP from '../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const ProductsListPage = ({route}) => {
@@ -18,15 +18,7 @@ const ProductsListPage = ({route}) => {
     }
 
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/product/find`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({criteria})
-        })
-        .then(res => res.json())
-        .then(res => {
-            setProducts(res);
-        })
+        HTTP.post('/product/find', {criteria}).then(res => setProducts(res))
     }, []);
     return (
         <SafeAreaView style={{flex: 1}}>

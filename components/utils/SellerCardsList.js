@@ -29,7 +29,7 @@ const SellerCardsList = ({url, body, refresh, showToast, title}) => {
 
     if(loading) return <View style={{justifyContent: 'center', alignItems: 'center', width, backgroundColor: 'white', paddingTop: height * 0.04}}>
         {[1,2,3].map(num => (
-            <View key={num} style={{marginVertical: height * 0.01, height: height * 0.25, width: width * 0.9, backgroundColor: '#ccc', justifyContent: 'center', alignItems: 'center', borderRadius: 20}}>
+            <View key={num} style={{marginVertical: height * 0.01, height: height * 0.35, width: width * 0.9, backgroundColor: '#ccc', justifyContent: 'center', alignItems: 'center', borderRadius: 20}}>
                 <ActivityIndicator size={RFPercentage(5)} color={'white'} />
             </View>
         ))}

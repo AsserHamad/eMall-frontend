@@ -1,13 +1,11 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-const UNAUTHORIZED = 401;
+const LOCALHOST = 'http://localhost:5000/';
+const SERVER = 'http://18.216.71.102:80/'
 
 const HTTP = axios.create({
-  baseURL: `http://192.168.1.147:5000/api`,
-  headers: {
-    "Content-Type": "application/json"
-  },
+  baseURL: `${SERVER}/api`,
+  headers: {"Content-Type": "application/json"},
 });
 
 HTTP.interceptors.response.use(

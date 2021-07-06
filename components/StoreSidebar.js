@@ -5,7 +5,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../global.style';
 import { connect } from 'react-redux';
 import { logout } from '../src/actions/auth';
-import { changeLanguage } from '../src/actions/general';
+import { changeLanguage, changeFirstTime } from '../src/actions/general';
 import { useLanguageText, useLanguage } from '../hooks/language';
 import TextLato from './utils/TextLato';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,6 +24,16 @@ function StoreSideBar(props) {
             Updates.reloadAsync()
         })
     }
+
+    const logoutHandler = () => {
+        props.navigation.closeDrawer();
+        AsyncStorage.removeItem('@accessToken');
+        AsyncStorage.removeItem('@refreshToken');
+        AsyncStorage.removeItem('@firstTime');
+        props.changeFirstTime(false);
+        props.logout();
+    };
+    
     return (
         <View style={{...styles.container}}>
             {/* <View style={styles.topView}> */}
@@ -40,7 +50,7 @@ function StoreSideBar(props) {
                         <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold reverse>{languageText && languageText.changeLanguage}</TextLato>
                     </TouchableOpacity>
                     {props.loggedIn && 
-                        <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={() => {props.navigation.closeDrawer();AsyncStorage.removeItem('@accessToken');AsyncStorage.removeItem('@refreshToken');props.logout();}}>
+                        <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={logoutHandler}>
                             <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold>{languageText.logout}</TextLato>
                         </TouchableOpacity>
                     }
@@ -114,14 +124,15 @@ const mapStateToProps = (state) => {
     return {
         loggedIn: state.authReducer.loggedIn,
         account: state.authReducer.account,
-        store: state.authReducer.store
+        store: state.authReducer.store,
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         logout: (account) => dispatch(logout(account)),
-        changeLanguage: (language) => dispatch(changeLanguage(language))
+        changeLanguage: language => dispatch(changeLanguage(language)),
+        changeFirstTime: firstTime => dispatch(changeFirstTime(firstTime))
     }
 }
 

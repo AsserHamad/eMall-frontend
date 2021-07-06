@@ -27,17 +27,15 @@ export default ({navigation, route}) => {
     const welcomeOpacity = useRef(new Value(0)).current;
     const textOpacity = useRef(new Value(0)).current;
     useEffect(() => {
-        const t1 = setTimeout(() => {
-            timing(logoOpacity, {
-                duration: 700,
-                toValue: 1,
-                useNativeDriver: true
-            }).start();
-        }, 500);
+        timing(logoOpacity, {
+            duration: 1200,
+            toValue: 1,
+            useNativeDriver: true
+        }).start();
         const t = setTimeout(() => {
               
             timing(welcomeOpacity, {
-                duration: 1000,
+                duration: 500,
                 toValue: 1,
                 useNativeDriver: true
             }).start();
@@ -47,8 +45,8 @@ export default ({navigation, route}) => {
                 toValue: 1,
                 useNativeDriver: true
               }).start();
-        }, 300);
-        return () => {clearTimeout(t);clearTimeout(t1)}
+        }, 10);
+        return () => {clearTimeout(t)}
     }, []);
 
     const fadeTextToBlackThenBack = () => {

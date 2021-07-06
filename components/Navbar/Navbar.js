@@ -9,7 +9,7 @@ import { useLanguageText, useLanguage } from '../../hooks/language';
 import { useNavigation } from '@react-navigation/native';
 import TextLato from '../utils/TextLato';
 
-const width = Dimensions.get('window').width;
+const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 function Navbar(props){
     const [disabled, setDisabled] = useState(false);
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     topContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        height: 45
+        // height: 45
     },
     topContainer_ar: {
         flexDirection: 'row-reverse',
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     },
     burgerContainer: {
         width: width * 0.15,
+        aspectRatio: 1,
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',

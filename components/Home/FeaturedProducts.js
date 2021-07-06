@@ -29,11 +29,11 @@ const FeaturedProducts = () => {
                             <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Product', {product: {_id: product._id}})} style={styles.innerProduct}>
                                 <Image source={{uri: product.images[0]}} style={styles.productImage} />
                                 <View style={{width: '100%', marginVertical: height * 0.02, paddingHorizontal: width * 0.03}}>
-                                    <View style={{height: height * 0.04}}>
+                                    <View style={{height: height * 0.02}}>
                                         <TextLato style={{textAlign: en ? 'left' : 'right'}} bold>{product.title[language]}</TextLato>
                                         <TextLato italic style={{textAlign: en ? 'left' : 'right', fontSize: RFPercentage(1.5)}}>{product.store.title}</TextLato>
                                     </View>
-                                    <TextLato style={{textAlign: en ? 'left' : 'right', marginTop: height * 0.04}}>{product.price} {en ? 'EGP' : 'ج.م'}</TextLato>
+                                    <TextLato bold style={{textAlign: en ? 'left' : 'right', marginTop: height * 0.04}}>{product.price} {en ? 'EGP' : 'ج.م'}</TextLato>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.20,
         shadowRadius: 1.41,
         elevation: 3,
-        borderRadius: 10
+        borderRadius: 4
     },
     innerProductWait: {
         backgroundColor: 'white',

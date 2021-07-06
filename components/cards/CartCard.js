@@ -68,12 +68,13 @@ function CartCard({item, setRefresh}){
 
     const removeFromCartHelper = () => {
         setDeleteLoading(true);
-        HTTP.delete('/client/cart', {product: item})
+        HTTP.delete(`/client/cart/${item.code}`)
         .then(res => {
+            console.log('cart delete iis', res)
             dispatch(setCart(res));
             setRefresh(refresh => !refresh);
         })
-        .catch(err => console.log(err))
+        .catch(err => console.log(err.response))
     }
 
     const calculatePricePreDiscount = () => {

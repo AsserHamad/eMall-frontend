@@ -26,6 +26,16 @@ function SideBar(props) {
             Updates.reloadAsync()
         })
     }
+
+    const logoutHandler = () => {
+        props.navigation.closeDrawer();
+        props.setCart({products: []});
+        AsyncStorage.removeItem('@accessToken');
+        AsyncStorage.removeItem('@refreshToken');
+        AsyncStorage.removeItem('@firstTime');
+        dispatch(changeFirstTime(false));
+        props.logout();
+    };
     return (
         <View style={{...styles.container}}>
             {props.loggedIn ? (
@@ -46,7 +56,7 @@ function SideBar(props) {
                     <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold reverse>{languageText && languageText.changeLanguage}</TextLato>
                 </TouchableOpacity>
                 {props.loggedIn && 
-                    <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={() => { props.navigation.closeDrawer();props.setCart({products: []});AsyncStorage.removeItem('@accessToken');AsyncStorage.removeItem('@refreshToken');AsyncStorage.removeItem('@firstTime');dispatch(changeFirstTime(false));props.logout()}}>
+                    <TouchableOpacity style={{...styles.logoutButton, backgroundColor: gStyles.color_3}} onPress={logoutHandler}>
                         <TextLato style={{fontSize: RFPercentage(1.6), color: 'white'}} bold>{languageText.logout}</TextLato>
                     </TouchableOpacity>
                 }
