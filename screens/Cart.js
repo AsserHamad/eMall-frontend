@@ -76,7 +76,7 @@ function Cart(){
     return (
         <View style={styles.container}>
             <Header details={{title: text.title}} />
-            <ScrollView contentContainerStyle={{height: '100%'}}>
+            <ScrollView>
                 {products.length === 0 ? <Loading  /> : products.map(item => {
                     return <CartCard setRefresh={setRefresh} key={item._id} item={item} />
                 })}

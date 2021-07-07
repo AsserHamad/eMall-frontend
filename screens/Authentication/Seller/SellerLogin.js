@@ -12,12 +12,11 @@ import { connect } from 'react-redux';
 import { loginSeller } from '../../../src/actions/auth';
 import DisabledButton from '../DisabledButton';
 import TextLato from '../../../components/utils/TextLato';
-import Icon from '../../../components/utils/Icon';
 import { changeFirstTime } from '../../../src/actions/general';
 import { useLanguage, useLanguageText } from '../../../hooks/language';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../../../components/Header';
 import LoadingPage from '../../../components/utils/LoadingPage';
+import HTTP from '../../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const SellerLogin = (props) => {
@@ -30,24 +29,15 @@ const SellerLogin = (props) => {
     const en = language === 'en';
     const login = () => {
         setLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/seller/login`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email, password})
-        })
-        .then(res => res.json())
+        HTTP.post('/seller/login', {email, password})
         .then(res => {
+            console.log(res);
             setLoading(false);
             if(res && !res.status){
                 setErrors([]);
                 if(res.store.approved){
-                    console.log(res);
-                    AsyncStorage.setItem('@accessToken', JSON.stringify({type: 'store', token: res.accessToken}));
-                    AsyncStorage.setItem('@refreshToken', res.refreshToken);
-                    AsyncStorage.setItem('@firstTime', 'true');
-                    props.changeFirstTime(true);
                     props.loginSeller(res); 
-                } else props.navigation.replace('SellerLoginSuccess', {store: res.store, seller: res.seller})
+                } else props.navigation.push('SellerLoginSuccess', {store: res.store, seller: res.seller})
             }
             else {
                 setErrors(res.message ? [res.message] : res.errors)

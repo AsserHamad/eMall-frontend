@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Dimensions, Image, SafeAreaView, StatusBar, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react';
+import { Dimensions, Image, StatusBar, StyleSheet, View } from 'react-native';
 import { ScrollView, TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../../global.style';
 import Constants from 'expo-constants';
@@ -36,21 +36,10 @@ const ClientLogin = (props) => {
         setLoading(true);
         HTTP.post(`/client/login`, {phone, password})
         .then(data => {
+            console.log('data', data)
             setLoading(false);
             setErrors([]);
             if(data.client.verified){
-                AsyncStorage.setItem('@accessToken', JSON.stringify({type: 'client', token: data.accessToken}));
-                AsyncStorage.setItem('@refreshToken', data.refreshToken);
-                HTTP.interceptors.request.use(
-                    function (config) {
-                    config.headers.authorization = data.accessToken;
-                    return config;
-                    },
-                    function (error) {
-                    return Promise.reject(error);
-                    }
-                );
-                AsyncStorage.setItem('@firstTime', 'true');
                 props.setCart(data.client.cart);
                 props.setWishlist(data.client.wishlist);
                 props.changeFirstTime(true);

@@ -6,8 +6,7 @@ import Navigation from './src/Navigation';
 import { useFonts } from 'expo-font';
 import { AppLoading } from 'expo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { changeLanguage, changeFirstTime } from './src/actions/general';
-import { Constants } from 'react-native-unimodules';
+import { changeLanguage } from './src/actions/general';
 import { setCart } from './src/actions/cart';
 import { changeVariables } from './src/actions/general';
 import { setWishlist } from './src/actions/wishlist';
@@ -40,10 +39,8 @@ export default () => {
   });
   const [languageLoaded, setLanguageLoaded] = useState(false);
   const [accountLoaded, setAccountLoaded] = useState(false);
-  const [firstTimeLoaded, setFirstTimeLoaded] = useState(false);
   const [variablesLoaded, setVariablesLoaded] = useState(false);
   useEffect(() => {
-    // AsyncStorage.removeItem('@firstTime')
     const getItems = () => {
       AsyncStorage.getItem('@language')
       .then(value => {
@@ -64,21 +61,9 @@ export default () => {
         const url = accessToken.type === 'client' ? 'client' : 'seller';
 
         // ? We check if the token is still valid
-        console.log('getting ', url, accessToken.token)
-        HTTP.get(`/${url}/login/token`, {headers: {Authorization: accessToken.token}})
+        HTTP.get(`/${url}/login/token`, {headers: {authorization: accessToken.token}})
         .then(data => {
-          console.log('cool, data is', data)
           // * If the token is valid, we set it in our interceptors to use in our future requests, and then set the store states
-          
-          HTTP.interceptors.request.use(
-            function (config) {
-              config.headers.authorization = accessToken.token;
-              return config;
-            },
-            function (error) {
-              return Promise.reject(error);
-            }
-          );
           data.accessToken = accessToken.token;
           if(accessToken.type === 'client'){
             store.dispatch(setCart(data.client.cart));
@@ -95,24 +80,10 @@ export default () => {
           
           AsyncStorage.getItem('@refreshToken')
           .then(refreshToken => {
-            console.log('aight cool refresh bro, lets see if its valid', refreshToken)
-            HTTP.get(`/${url}/login/token/refresh`, {headers: {Authorization: refreshToken}})
+            HTTP.get(`/${url}/login/token/refresh`, {headers: {authorization: refreshToken}})
             .then(data => {
 
               // * If the refresh token was valid, we set the result as the new access token
-              
-              console.log('AWESOME, new access token!', data);
-              AsyncStorage.setItem('@accessToken', JSON.stringify(data));
-              HTTP.interceptors.request.use(
-                function (config) {
-                  config.headers.authorization = data.token;
-                  return config;
-                },
-                function (error) {
-                  return Promise.reject(error);
-                }
-              );
-
               data.accessToken = data.token;
               if(accessToken.type === 'client'){
                 store.dispatch(setCart(data.client.cart));
@@ -128,7 +99,6 @@ export default () => {
 
               // ! Otherwise we just remove the local storage for those items
             
-              console.log('true trash, get this shit out of here', err)
               AsyncStorage.removeItem(`@accessToken`);
               AsyncStorage.removeItem(`@refreshToken`);
               setAccountLoaded(true);
@@ -142,22 +112,18 @@ export default () => {
         setAccountLoaded(true);
       });
 
-      AsyncStorage.getItem('@firstTime')
-      .then(firstTime => {
-        store.dispatch(changeFirstTime(firstTime? true : false));
-        setFirstTimeLoaded(true)
-      })
-
       HTTP(`/variables`)
       .then(res => {
         store.dispatch(changeVariables(res));
+        setVariablesLoaded(true);
       })
       .catch(err => console.log(err));
     }
     const init = async () => {
       const update = await Updates.checkForUpdateAsync();
       if (update.isAvailable) {
-        Updates.fetchUpdateAsync().then(() => setTimeout(Updates.reloadAsync, 5000));
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync();
       } else {
         getItems();
       }
@@ -167,7 +133,7 @@ export default () => {
     else init();
   }, []);
 
-  if(!(fontsLoaded && languageLoaded && accountLoaded && firstTimeLoaded))
+  if(!(fontsLoaded && languageLoaded && accountLoaded && variablesLoaded))
     return <AppLoading autoHideSplash />;
   else
     return (

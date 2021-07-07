@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import { login } from '../../../src/actions/auth';
 import { changeFirstTime } from '../../../src/actions/general';
 import TextLato from '../../../components/utils/TextLato';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import HTTP from '../../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
@@ -26,11 +25,7 @@ function ClientLoginSuccess(props) {
         HTTP.post(`/client/login/otp`, {...props.route.params.account, otp: `${input0}${input1}${input2}${input3}${input4}`})
         .then(data => {
             props.login(data);
-            AsyncStorage.setItem('@firstTime', 'true');
-            AsyncStorage.setItem('@accessToken', JSON.stringify({type: 'client', token: data.accessToken}));
-            AsyncStorage.setItem('@refreshToken', data.refreshToken);
             props.changeFirstTime(true);
-            // props.navigation.navigate('Home');
         })
         .catch(err => Alert.alert(
             "Problem with Verification",

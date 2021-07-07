@@ -41,25 +41,36 @@ const StoreOrders = () => {
     const [displayedOrders, setDisplayedOrders] = useState([]);
     const [status, setStatus] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [refresh, setRefresh] = useState(true);
     const language = useLanguage();
     const en = language === 'en';
     const text = useLanguageText('sellerOrders');
     useEffect(() => {
-        console.log('getting orders')
-        HTTP('/store/orders')
+        setLoading(true);
+        HTTP(`/store/order/${status}`)
         .then(res => {
             setLoading(false);
             setOrders(res);
             setDisplayedOrders(res);
         })
         .catch(err => console.log(err.response));
-    }, []);
+    }, [status, refresh]);
 
     const changeOrderStatus = (newStatus, id) => {
         setLoading(true);
         HTTP.put('/store/order/status', {order: id, status: newStatus})
-        .then(res => {
-            setOrders(res);
+        .then(() => {
+            setRefresh(refresh => !refresh);
+            setLoading(false);
+        })
+        .catch(err => console.log(err));
+    }
+
+    const cancelOrder = (id) => {
+        setLoading(true);
+        HTTP.put('/store/order/cancel', {order: id})
+        .then(() => {
+            setRefresh(refresh => !refresh);
             setLoading(false);
         })
         .catch(err => console.log(err));
@@ -94,7 +105,7 @@ const StoreOrders = () => {
                             source={{uri: 'https://imgur.com/6w3sn3U.png'}}
                             style={{width, aspectRatio: 1, marginTop: height * 0.01}} />
                     </View>
-                ) : displayedOrders.map(order => <Order order={order} changeOrderStatus={changeOrderStatus} key={order._id} text={text} />)}
+                ) : displayedOrders.map(order => <Order order={order} changeOrderStatus={changeOrderStatus} cancelOrder={cancelOrder} key={order._id} text={text} />)}
             </ScrollView>
         </View>
     )
@@ -115,7 +126,7 @@ const styles = StyleSheet.create({
 
 
 // ? ORDER CONTAINERS
-const Order = ({order, changeOrderStatus, text}) => {
+const Order = ({order, changeOrderStatus, cancelOrder, text}) => {
     const language = useLanguage();
     const en = language === 'en';
     const [revenue, setRevenue] = useState('Calculating...');
@@ -202,7 +213,7 @@ const Order = ({order, changeOrderStatus, text}) => {
                 {order.status === 0 && <TouchableOpacity onPress={() => changeOrderStatus(1, order._id)} style={orderStyles.confirmButton}>
                     <TextLato style={{color: 'white'}}>{text.confirm}</TextLato>
                 </TouchableOpacity>}
-                {(order.status === 0 || order.status === 1) && <TouchableOpacity onPress={() => changeOrderStatus(-1, order._id)} style={orderStyles.cancelButton}>
+                {(order.status === 0 || order.status === 1) && <TouchableOpacity onPress={() => cancelOrder(order._id)} style={orderStyles.cancelButton}>
                     <TextLato style={{color: 'white'}}>{text.cancel}</TextLato>
                 </TouchableOpacity>}
             </View> 

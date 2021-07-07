@@ -12,6 +12,7 @@ import TextLato from './utils/TextLato';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Updates from 'expo-updates';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import HTTP from '../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height, ]
 
@@ -21,9 +22,12 @@ function SideBar(props) {
     const dispatch = useDispatch();
     const changeLanguage = () => {
         const newLang = `${language === 'en' ? 1 : 0}`;
-        AsyncStorage.setItem('@language', newLang)
+        HTTP.put('/client/', {languagePref: newLang})
         .then(() => {
-            Updates.reloadAsync()
+            AsyncStorage.setItem('@language', newLang)
+            .then(() => {
+                Updates.reloadAsync()
+            })
         })
     }
 

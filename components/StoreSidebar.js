@@ -27,9 +27,6 @@ function StoreSideBar(props) {
 
     const logoutHandler = () => {
         props.navigation.closeDrawer();
-        AsyncStorage.removeItem('@accessToken');
-        AsyncStorage.removeItem('@refreshToken');
-        AsyncStorage.removeItem('@firstTime');
         props.changeFirstTime(false);
         props.logout();
     };

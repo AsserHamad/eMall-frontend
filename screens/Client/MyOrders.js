@@ -140,19 +140,19 @@ const Order = ({order, en, text}) => {
 
             <View style={orderStyles.confirmedCancelled}> 
             {cancelled ? [
-                    <Icon type={'AntDesign'} name={'closecircle'} color={gStyles.color_2} size={RFPercentage(2.5)} />,
-                    <TextLato style={orderStyles.cancelText}>{text.cancelled}</TextLato>
+                    <Icon key="close" type={'AntDesign'} name={'closecircle'} color={gStyles.color_2} size={RFPercentage(2.5)} />,
+                    <TextLato key="cancelled" style={orderStyles.cancelText}>{text.cancelled}</TextLato>
                 ] : completed ?
                 [
-                    <Icon type={'AntDesign'} name={'checkcircle'} color={gStyles.success} size={RFPercentage(2.5)} />,
-                    <TextLato style={orderStyles.statusText}>{status}</TextLato>
-                ] : <TextLato style={orderStyles.normalStatusText}>{status}</TextLato>
+                    <Icon key="check" type={'AntDesign'} name={'checkcircle'} color={gStyles.success} size={RFPercentage(2.5)} />,
+                    <TextLato key="status" style={orderStyles.statusText}>{status}</TextLato>
+                ] : <TextLato key="status" style={orderStyles.normalStatusText}>{status}</TextLato>
              }
              </View>
-            <TextLato style={{marginVertical: height * 0.02, fontSize: RFPercentage(3), color: gStyles.color_3}}>
+            {!cancelled && <TextLato style={{marginVertical: height * 0.02, fontSize: RFPercentage(3), color: gStyles.color_3}}>
                 {order.total.toFixed(2)}
                 <TextLato style={{fontSize: RFPercentage(2), color: gStyles.color_3}}>  {en ? 'EGP' : 'ج.م'}</TextLato>
-            </TextLato>
+            </TextLato>}
             </View>
                     
             {completed && (
@@ -190,8 +190,10 @@ const Order = ({order, en, text}) => {
                                             })}
                                         </View>
                                         {status >= 1 ? 
-                                        <Icon color={gStyles.color_2} type={'AntDesign'} name={'checkcircle'} size={RFPercentage(3)} />:
-                                        <Icon color={gStyles.color_3} type={'FontAwesome'} name={'circle-o'} size={RFPercentage(3)} />}
+                                        <Icon color={gStyles.color_2} type={'AntDesign'} name={'checkcircle'} size={RFPercentage(3)} />: status === 0 ?
+                                        <Icon color={gStyles.color_3} type={'FontAwesome'} name={'circle-o'} size={RFPercentage(3)} />:
+                                        <Icon color={gStyles.color_2} type={'Entypo'} name={'circle-with-cross'} size={RFPercentage(3)} />
+                                        }
                                     </View>
                                 )
                             })

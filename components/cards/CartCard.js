@@ -1,17 +1,14 @@
 import React from 'react';
-import { ActivityIndicator, Dimensions, Image, StyleSheet, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { gStyles } from '../../global.style';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setCart } from '../../src/actions/cart';
 import Icon from '../utils/Icon';
 import { useLanguage, useLanguageText } from '../../hooks/language';
 import TextLato from '../utils/TextLato';
-import { Constants } from 'react-native-unimodules';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { useEffect } from 'react';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import HTTP from '../../src/utils/axios';
 
@@ -32,20 +29,17 @@ function CartCard({item, setRefresh}){
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [quantityLoading, setQuantityLoading] = useState(false);
     const product = item.product;
-    const [quantity, setQuantity] = useState(item.quantity);
     const language = useLanguage();
     const en = language === 'en';
     const text = useLanguageText('cart');
     const dispatch = useDispatch();
-    const token = useSelector(state => state.authReducer.token);
     const navigation = useNavigation();
 
     const increaseQuantity = () => {
         setQuantityLoading(true);
-        HTTP.put('/client/cart', {product: item.product, options: item.options, quantity: quantity + 1})
+        HTTP.put('/client/cart', {product: item.product, options: item.options, quantity: item.quantity + 1})
         .then(res => {
             setQuantityLoading(false);
-            setQuantity(quantity + 1);
             dispatch(setCart(res));
             setRefresh(refresh => !refresh);
         })
@@ -53,13 +47,12 @@ function CartCard({item, setRefresh}){
     }
 
     const decreaseQuantity = () => {
-        if(quantity <= 1) 
+        if(item.quantity <= 1) 
             return;
         setQuantityLoading(true);
-        HTTP.put('/client/cart', {product: item.product, options: item.options, quantity: quantity - 1})
+        HTTP.put('/client/cart', {product: item.product, options: item.options, quantity: item.quantity - 1})
         .then(res => {
             setQuantityLoading(false);
-            setQuantity(quantity - 1);
             dispatch(setCart(res));
             setRefresh(refresh => !refresh);
         })
@@ -70,7 +63,6 @@ function CartCard({item, setRefresh}){
         setDeleteLoading(true);
         HTTP.delete(`/client/cart/${item.code}`)
         .then(res => {
-            console.log('cart delete iis', res)
             dispatch(setCart(res));
             setRefresh(refresh => !refresh);
         })
@@ -147,7 +139,7 @@ function CartCard({item, setRefresh}){
                     {quantityLoading ?
                         <ActivityIndicator color={gStyles.color_1} size={15} />
                     :
-                        <TextLato style={{fontWeight: 'bold', color: gStyles.color_1, fontSize: 20}}>{quantity}</TextLato>
+                        <TextLato style={{fontWeight: 'bold', color: gStyles.color_1, fontSize: 20}}>{item.quantity}</TextLato>
                     }
                     <TouchableOpacity onPress={() => increaseQuantity()}>
                         <Icon type="AntDesign" color={gStyles.color_0} style={{marginHorizontal: 5}} size={15} name="pluscircle" />
