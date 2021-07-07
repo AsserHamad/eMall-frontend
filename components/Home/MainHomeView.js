@@ -27,9 +27,9 @@ function MainHomeView(props){
             <ScrollView>
                 <TopAds />
                 <Categories />
-                <FeaturedStores />
-                {ads[0] && <Ad ad={ads[0]} />}
                 <DealsOfTheDay />
+                {ads[0] && <Ad ad={ads[0]} />}
+                <FeaturedStores />
                 {ads[1] && <Ad ad={ads[1]} />}
                 <FeaturedProducts />
                 {ads[2] && <Ad ad={ads[2]} />}

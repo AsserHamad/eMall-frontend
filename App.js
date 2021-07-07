@@ -12,8 +12,8 @@ import { changeVariables } from './src/actions/general';
 import { setWishlist } from './src/actions/wishlist';
 import { login, loginSeller } from './src/actions/auth';
 import * as Updates from 'expo-updates';
-import * as firebase from 'firebase';
 import HTTP from './src/utils/axios';
+import Updating from './screens/Updating';
 
 const store = configureStore();
 var firebaseConfig = {
@@ -122,22 +122,21 @@ export default () => {
     const init = async () => {
       const update = await Updates.checkForUpdateAsync();
       if (update.isAvailable) {
-        await Updates.fetchUpdateAsync();
-        await Updates.reloadAsync();
       } else {
         getItems();
       }
     };
 
-    if(__DEV__) getItems();
-    else init();
+    // if(__DEV__) 
+    getItems();
+    // else init();
   }, []);
 
   if(!(fontsLoaded && languageLoaded && accountLoaded && variablesLoaded))
     return <AppLoading autoHideSplash />;
-  else
-    return (
+  else return (
       <Provider store={store}>
         <Navigation />
       </Provider>
-)};
+  )
+};

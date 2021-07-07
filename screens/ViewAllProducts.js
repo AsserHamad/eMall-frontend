@@ -10,9 +10,11 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 import CustomModal from '../components/utils/CustomModal';
 import TextLato from '../components/utils/TextLato';
 import HTTP from '../src/utils/axios';
-const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
+import Loading from '../components/utils/Loading';
+import Empty from '../components/utils/Empty';
+const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-export default ({route, navigation}) => {
+export default ({route}) => {
     const [products, setProducts] = useState([]);
     const [sort, setSort] = useState(0);
     const [search, setSearch] = useState('');
@@ -22,6 +24,7 @@ export default ({route, navigation}) => {
     const language = useLanguage();
     const en = language === 'en';
     const [loading, setLoading] = useState(false);
+    const [initialLoading, setInitialLoading] = useState(true);
     const ref = useRef();
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -31,13 +34,13 @@ export default ({route, navigation}) => {
 
     const fetchProducts = (concat) => {
         setLoading(true);
-        if(!concat)setSkip(0);
-        HTTP.post(route.params.url, {...route.params.body, skip: concat ? skip : 0 , search, sort})
+        HTTP.post(route.params.url, {...route.params.body, skip, search, sort})
         .then(res => {
             setLoading(false);
+            setInitialLoading(false);
             if(!res.length && concat)
                 return setNewStuff(false);
-            setSkip(skip => skip + 10);
+            setSkip(skip => skip + 20);
             setProducts(prods => {
                 if(concat)
                     return prods.concat(res)
@@ -72,29 +75,34 @@ export default ({route, navigation}) => {
                     <Icon type={'FontAwesome'} name={'sort-amount-asc'} size={RFPercentage(2.5)} color={'white'} />
                 </TouchableOpacity> */}
             <TextInput placeholder={en ? 'Search products...' : 'البحث عن المنتجات...'} style={{...styles.input, textAlign: en ? 'left' : 'right', fontFamily: 'Cairo'}} value={search} onChangeText={val => setSearch(val)} />
+                {initialLoading ? <Loading /> : products.length > 0 ? (
+                    <>            
+                        <FlatList
+                        ref={ref}
+                        data={products}
+                        initialNumToRender = {20}
+                        onEndReachedThreshold = {0.1}
+                        onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
+                        showsVerticalScrollIndicator={false}
+                        renderItem={(product) => <SellerCardProduct showToast={showToast} product={product.item} />}
+                        keyExtractor={product => product._id}
+                        style={{transform: en ? [] : [{scaleX: -1}]}}
+                        onEndReached={() => {
+                            if (!ref.current.onEndReachedCalledDuringMomentum && newStuff) {
+                                fetchProducts(true);
+                                ref.current.onEndReachedCalledDuringMomentum = true;
+                            }
+                        }}
+                    />
+                    {loading && (
+                        <View style={{backgroundColor: 'black', width: '100%', height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0}}>
+                            <ActivityIndicator color={gStyles.color_2} size={RFPercentage(3)} />
+                        </View>
+                    )}
+                    </>
+                ) : <Empty height={'70%'} />}
             {/* </View> */}
-            <FlatList
-                ref={ref}
-                data={products}
-                initialNumToRender = {10}
-                onEndReachedThreshold = {0.1}
-                onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
-                showsVerticalScrollIndicator={false}
-                renderItem={(product) => <SellerCardProduct showToast={showToast} product={product.item} />}
-                keyExtractor={product => product._id}
-                style={{transform: en ? [] : [{scaleX: -1}]}}
-                onEndReached={() => {
-                    if (!ref.current.onEndReachedCalledDuringMomentum && newStuff) {
-                        fetchProducts(true);
-                        ref.current.onEndReachedCalledDuringMomentum = true;
-                    }
-                }}
-            />
-            {loading && (
-                <View style={{backgroundColor: 'black', width: '100%', height: 40, alignItems: 'center', justifyContent: 'center', position: 'absolute', bottom: 0}}>
-                    <ActivityIndicator color={gStyles.color_2} size={RFPercentage(3)} />
-                </View>
-            )}
+
         </SafeAreaView>
 
     )

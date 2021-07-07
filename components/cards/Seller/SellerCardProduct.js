@@ -86,16 +86,8 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
     const removeFromCartHelper = (product) => {
         if(!loggedIn || type !== 'client') return;
         setCartLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/client/cart`, {
-            method: 'delete',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product})
-        })
-        .then(res => res.json())
-        .then(res => {
-            setCartLoading(false);
-            dispatch(setCart(res))
-        })
+        HTTP.delete('/client/cart', {product})
+        .then(res => {setCartLoading(false);dispatch(setCart(res))})
         .catch(err => console.log(err))
     }
 

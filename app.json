@@ -23,7 +23,7 @@
     "android": {
       "package": "com.emall.eg.official",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logoM.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFF"
       },
       "permissions": [
@@ -32,10 +32,10 @@
       "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/logoM.png"
+      "favicon": "./assets/icon.png"
     },
     "extra": {
-      "apiUrl": "http://192.168.1.147:5000/api",
+      "apiUrl": "http://18.216.71.102:80/api",
       "apiUrl_": "http://18.216.71.102:80/api",
       "localhost": "10.0.2.2"
     }

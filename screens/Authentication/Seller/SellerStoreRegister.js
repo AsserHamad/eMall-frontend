@@ -3,7 +3,6 @@ import { Dimensions, Image, KeyboardAvoidingView, Platform, StyleSheet, View } f
 import { gStyles } from '../../../global.style';
 import { funcs } from '../../../global.funcs';
 import Constants from 'expo-constants';
-import { AntDesign, Ionicons, FontAwesome5, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 import { useHeaderHeight } from '@react-navigation/stack';
 import AwesomeAlert from 'react-native-awesome-alerts';

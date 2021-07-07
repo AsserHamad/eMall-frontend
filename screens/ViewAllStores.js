@@ -23,19 +23,18 @@ export default ({route}) => {
     const en = language === 'en';
     const [loading, setLoading] = useState(false);
     const [initialLoad, setInitialLoad] = useState(true);
-    const [firstTime, setFirstTime] = useState(true);
     const ref = useRef();
 
     const showToast = message => {
         toast.current.show(message);
     }
 
+    const renderItem = (seller) => <SellerCard showToast={showToast} seller={seller.item} />;
+
     const fetchSellers = () => {
         setLoading(true);
-        console.log(route.params.url)
         HTTP.post(route.params.url, {...route.params.body, skip, search})
         .then(res => {
-            console.log
             const sellerStores = res.filter(seller => seller.products.length);
             setLoading(false);
             setInitialLoad(false);
@@ -46,30 +45,10 @@ export default ({route}) => {
         })
     }
 
-    const fetchSearchSellers = () => {
+    useEffect(() => {
         setInitialLoad(true);
-        console.log(route.params.url)
-        HTTP.post(route.params.url, {...route.params.body, skip: 0, search})
-        .then(res => {
-            const sellerStores = res.filter(seller => seller.products.length);
-            setLoading(false);
-            setInitialLoad(false);
-            setSkip(skip => skip + 10);
-            setSellers(sellerStores);
-            if(!res.length)
-                return setNewStuff(false);
-        })
-    }
-
-    useEffect(() => {
         fetchSellers();
-        setFirstTime(false);
     }, []);
-
-    useEffect(() => {
-        if(!firstTime)
-            fetchSearchSellers();
-    }, [search])
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: gStyles.background}}>
             <Toast ref={_toast => toast.current = _toast} />
@@ -83,9 +62,10 @@ export default ({route}) => {
                     data={sellers}
                     initialNumToRender = {10}
                     onEndReachedThreshold = {0.1}
+                    removeClippedSubviews
                     onMomentumScrollBegin = {() => {ref.current.onEndReachedCalledDuringMomentum = false;}}
                     showsVerticalScrollIndicator={false}
-                    renderItem={(seller) => <SellerCard showToast={showToast} seller={seller.item} />}
+                    renderItem={renderItem}
                     keyExtractor={store => store._id}
                     style={{transform: en ? [] : [{scaleX: -1}]}}
                     contentContainerStyle={{alignItems: 'center', paddingTop: 20}}

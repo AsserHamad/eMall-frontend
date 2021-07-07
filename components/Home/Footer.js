@@ -26,9 +26,9 @@ const Footer = () => {
                 </TouchableNativeFeedback>
             </View>
             <View style={{...styles.secondaryContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
-                <TouchableNativeFeedback onPress={() => {navigation.navigate('Register/Login', {screen: 'SellerRegister'})}} style={{width: width * 0.45}}>
+                {/* <TouchableNativeFeedback onPress={() => {navigation.navigate('Register/Login', {screen: 'SellerRegister'})}} style={{width: width * 0.45}}>
                     <TextLato style={styles.footerText}>{text.openStore}</TextLato>
-                </TouchableNativeFeedback>
+                </TouchableNativeFeedback> */}
                 
                 <TouchableNativeFeedback onPress={() => navigation.push('FAQs')} style={{width: width * 0.45}}>
                     <TextLato style={styles.footerText}>{text.faq}</TextLato>
