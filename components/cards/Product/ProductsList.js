@@ -17,7 +17,6 @@ const ProductsList = ({products, showToast}) => {
             renderItem={(product) => <SellerCardProduct showToast={showToast} product={product.item} />}
             keyExtractor={product => product._id}
             style={{transform: en ? [] : [{scaleX: -1}]}}
-            onEndReached={() => {console.log('EEENNNDD')}}
         />
     )
 }

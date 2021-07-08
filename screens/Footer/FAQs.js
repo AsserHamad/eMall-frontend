@@ -1,34 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Header from '../../components/Header';
-import Icon from '../../components/utils/Icon';
 import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
 import { useLanguage, useLanguageText } from '../../hooks/language';
+import HTTP from '../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
-const FAQs = (props) => {
+const FAQs = () => {
 
     const language = useLanguage();
-    const en = language === 'en';
     const text = useLanguageText('faqs');
+    const [faqs, setFaqs] = useState([]);
+    useEffect(() => {
+        HTTP.get('/general/faqs')
+        .then(res => setFaqs(res));
+    }, []);
 
     return (
         <View style={styles.container}>
             <Header details={{details: 'FAQ'}} />
             <TextLato bold style={styles.title}>{text.faqs}</TextLato>
             <ScrollView>
-                <View style={styles.question}>
-                    <TextLato style={styles.questionQ} bold>Q: Is it possible to Lorem Ipsum?</TextLato>
-                    <TextLato style={styles.questionA} italic>A: Yes, it is possible to lorem Ipsum?</TextLato>
-                </View>
-                <View style={styles.question}>
-                    <TextLato style={styles.questionQ} bold>Q: Is it possible to Lorem Ipsum?</TextLato>
-                    <TextLato style={styles.questionA} italic>A: Yes, it is possible to lorem Ipsum?</TextLato>
-                </View>
+                {faqs.map(faq => {
+                    return (
+                        <View key={faq._id} style={styles.question}>
+                            <TextLato style={styles.questionQ} bold>{faq.question[language]}</TextLato>
+                            <TextLato style={styles.questionA} italic>{faq.answer[language]}</TextLato>
+                        </View>
+                    )
+                })}
             </ScrollView>
 
         </View>

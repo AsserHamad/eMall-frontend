@@ -53,8 +53,7 @@ const EnterNewPassword = ({setStep, text, showToast}) => {
         HTTP.post(`/client/change-password-direct`, {password: currPassword, newPassword: password})
         .then(() => {setStep(3)})
         .catch(err => {
-            showToast(err.response.data.message[language])
-            console.log(err.response)
+            showToast(err.data.message[language])
         })
     }
     return (

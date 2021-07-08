@@ -1,13 +1,12 @@
 import React from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import { TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 import { AntDesign } from '@expo/vector-icons';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { connect } from 'react-redux';
 import { addToWishlist, removeFromWishlist } from '../../src/actions/wishlist';
-import Icon from '../utils/Icon';
 import { useLanguage, useLanguageText } from '../../hooks/language';
 import TextLato from '../utils/TextLato';
 import { addToCart, removeFromCart } from '../../src/actions/cart';
@@ -21,16 +20,13 @@ function WishlistCard(props){
     const en = language === 'en';
     const navigation = useNavigation();
     return (
-        <View style={{...styles.itemContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.push('Product', {product: {_id: item._id}})} style={{...styles.itemContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
             <Image style={styles.itemImage} source={{uri: item.images[0]}} />
             <View style={styles.itemDetails}>
-                <TouchableOpacity onPress={() => navigation.push('Product', {product: {_id: item._id}})}>
-                    <TextLato bold style={styles.itemTitle} >{item.title[language]}</TextLato>
-                </TouchableOpacity>
+                <TextLato bold style={styles.itemTitle} >{item.title[language]}</TextLato>
                 <View style={{flexDirection: en ? 'row' : 'row-reverse'}}>
-                        <TextLato style={{fontSize: RFPercentage(1.5)}}>{text.seller}</TextLato>
+                    <TextLato style={{fontSize: RFPercentage(1.5)}}>{text.seller}</TextLato>
                     <TextLato bold style={{marginHorizontal: 5, color: gStyles.secondary, fontSize: RFPercentage(1.5)}}>{item.store && item.store.title}</TextLato>
-                    {/* <Image style={{width: 50, height: 20}} source={{uri: item.seller.logo}} /> */}
                 </View>
                 <View style={{marginTop: 40, flexDirection: en ? 'row' : 'row-reverse'}}>
                     {item.discount ?
@@ -48,13 +44,13 @@ function WishlistCard(props){
                             </TouchableOpacity> */}
                         
                         {/* Delete Item */}
-                        <TouchableOpacity onPress={() => setShowAlert(true)}>
+                        <TouchableOpacity>
                             <AntDesign name="delete" size={RFPercentage(3)} style={styles.button} color={'white'} />
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 
 }

@@ -49,7 +49,7 @@ const EnterPhoneView = ({setState, showToast, text, account, phone, setPhone}) =
         if(disabled) showToast(text.toast);
         HTTP.post(`/client/check-new-phone`, {phone})
         .then(() => setState(1))
-        .catch(err => setErrors(err.response.data.errors))
+        .catch(err => setErrors(err.data.errors))
     }
     return (
         <View style={styles.phoneFormContainer}>

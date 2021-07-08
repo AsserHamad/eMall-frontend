@@ -20,9 +20,9 @@ import HTTP from '../../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const SellerLogin = (props) => {
-    const [email, setEmail] = useState('inyourshoe@gmail.com');
+    const [email, setEmail] = useState('');
     const [errors, setErrors] = useState([]);
-    const [password, setPassword] = useState('emall.321!');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const language = useLanguage();
     const text = useLanguageText('sellerLogin');
@@ -31,17 +31,15 @@ const SellerLogin = (props) => {
         setLoading(true);
         HTTP.post('/seller/login', {email, password})
         .then(res => {
-            console.log(res);
             setLoading(false);
-            if(res && !res.status){
-                setErrors([]);
-                if(res.store.approved){
-                    props.loginSeller(res); 
-                } else props.navigation.push('SellerLoginSuccess', {store: res.store, seller: res.seller})
-            }
-            else {
-                setErrors(res.message ? [res.message] : res.errors)
-            }
+            setErrors([]);
+            if(res.store.approved){
+                props.loginSeller(res); 
+            } else props.navigation.push('SellerLoginSuccess', {store: res.store, seller: res.seller})
+        })
+        .catch(({data}) => {
+            setLoading(false);
+            setErrors(data.errors);
         });
     }
 
@@ -98,7 +96,7 @@ const SellerLogin = (props) => {
                 <TextLato italic style={{color: 'black', fontSize: RFValue(11)}}>{text.sellerSubtitle}</TextLato>
             </View>
             <View style={styles.errorContainer}>
-                {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={JSON.stringify(err)}>{err.msg ? err.msg : err}</TextLato>)}
+                {errors.map(err => <TextLato style={{color: gStyles.color_0}} key={JSON.stringify(err)}>{err.msg[language]}</TextLato>)}
             </View>
             <View style={styles.formContainer}>
                 <TextInput 
@@ -170,7 +168,9 @@ const styles = StyleSheet.create({
     errorContainer: {
         width: width * 0.9,
         height: height * 0.04,
-        textAlign: 'left'
+        textAlign: 'left',
+        justifyContent: 'center',
+        marginVertical: 5
     },
     formContainer: {
         width: width * 0.9

@@ -31,7 +31,6 @@ const SellerRegister = (props) => {
     function registerSeller() {
         HTTP.post(`/seller/verify`, {name, email, password, phone})
         .then(data => {
-            console.log(data);
             setErrors([]);
             const seller = {
                 name,
@@ -42,12 +41,10 @@ const SellerRegister = (props) => {
             }
             if(facebookId)
                 seller.facebookId = facebookId;
-            console.log('uuh hello?')
             props.navigation.push('SellerStoreRegister', {seller});
         })
         .catch(err => {
-            console.log(err.response.data.errors);
-            setErrors(err.response.data.errors);
+            setErrors(err.data.errors);
         })
     }
 

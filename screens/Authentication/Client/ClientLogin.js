@@ -17,14 +17,13 @@ import DisabledButton from '../DisabledButton';
 import Icon from '../../../components/utils/Icon';
 import { setWishlist } from '../../../src/actions/wishlist';
 import TextLato from '../../../components/utils/TextLato';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingPage from '../../../components/utils/LoadingPage';
 import HTTP from '../../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 const ClientLogin = (props) => {
-    const [phone, setPhone] = useState('01140008042');
-    const [password, setPassword] = useState('Abcd1234');
+    const [phone, setPhone] = useState('');
+    const [password, setPassword] = useState('');
     const [errors, setErrors] = useState([]);
     const [loading, setLoading] = useState(false);
     const language = useLanguage();
@@ -36,7 +35,6 @@ const ClientLogin = (props) => {
         setLoading(true);
         HTTP.post(`/client/login`, {phone, password})
         .then(data => {
-            console.log('data', data)
             setLoading(false);
             setErrors([]);
             if(data.client.verified){
@@ -47,9 +45,8 @@ const ClientLogin = (props) => {
                 }
                 else props.navigation.replace('ClientLoginSuccess', {account: data.client})
         })
-        .catch(err => {
-            console.log(err.response.data);
-            setErrors(err.response.data.errors)
+        .catch(({data}) => {
+            setErrors(data.errors)
             setLoading(false);
         })
     }

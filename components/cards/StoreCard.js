@@ -15,7 +15,6 @@ const StoreCard = ({store}) => {
     const language = useLanguage();
     const en = language === 'en';
     const navigation = useNavigation();
-    console.log(store)
     useEffect(() => {
         HTTP(`/store/${store._id}`).then(res => setPage(res.page));
     }, []);

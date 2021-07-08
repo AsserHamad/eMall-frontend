@@ -29,6 +29,12 @@ function SideBar(props) {
                 Updates.reloadAsync()
             })
         })
+        .catch(err => {
+            AsyncStorage.setItem('@language', newLang)
+            .then(() => {
+                Updates.reloadAsync()
+            })
+        })
     }
 
     const logoutHandler = () => {

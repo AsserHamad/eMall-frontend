@@ -67,7 +67,6 @@ function Searchbar(){
     }
 
     const handleChange = (text) => {
-        console.log('getting ', text)
         setText(text);
         searchInput(text);
     }

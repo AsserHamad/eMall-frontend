@@ -31,7 +31,6 @@ const ClientRegister = (props) => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log('register shiet', res)
             if(!res.status){
                 setErrors([]);
                 props.navigation.replace('ClientLoginSuccess', {account: res})

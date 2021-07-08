@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import TextLato from '../../components/utils/TextLato';
 import StoreNavbar from '../../components/StoreNavbar/StoreNavbar';
 import { RFPercentage } from 'react-native-responsive-fontsize';
@@ -12,7 +12,6 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 const StoreProducts = ({navigation}) => {
     const text = useLanguageText('storeProducts');
-    console.log(text)
     return (
         <View style={styles.container}>
             <StoreNavbar title={text.title} />

@@ -66,7 +66,6 @@ const SellerStoreRegister = (props) => {
                     active: true
                 }]
             }};
-            console.log(body)
             fetch(`${Constants.manifest.extra.apiUrl}/seller/register`, {
                 method: 'post',
                 headers: {'Content-Type': 'application/json'},

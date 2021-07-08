@@ -25,7 +25,6 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
         fetch(`${Constants.manifest.extra.apiUrl}/store/own-products/${search}`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             setLoading(false);
             setProducts(res)
         })

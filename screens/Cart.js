@@ -45,11 +45,10 @@ function Cart(){
     useEffect(() => {
         HTTP('/client/cart')
         .then(data => {
-            console.log('cart data', data);
             setLoading(false);
             setProducts(data.products);
         })
-        .catch(err => console.log(err.response));
+        .catch(err => console.log(err));
         
         fetchSubtotal();
     }, [refresh]);

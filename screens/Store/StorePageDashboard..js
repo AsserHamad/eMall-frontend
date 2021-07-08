@@ -95,7 +95,6 @@ const StorePageDashboard = () => {
         if(modalStep === 0 || modalStep === 2){
             funcs.uploadImage(image, store.title, token)
             .then(res => {
-                console.log(res);
                 let adverts = ads.map(ad => ({...ad, position: ad.position + 1}))
                 const newAds = adverts.concat({
                     position: 0,
@@ -127,7 +126,6 @@ const StorePageDashboard = () => {
     }
 
     const changeBanner = (uri) => {
-        console.log(uri, store.title)
         funcs.uploadImage(uri, store.title)
         .then(({location}) => {
             updatePage(ads, location)

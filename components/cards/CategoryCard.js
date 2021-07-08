@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { gStyles } from '../../global.style';
 import TextLato from '../utils/TextLato';
 import { useLanguage } from '../../hooks/language';
@@ -14,12 +14,12 @@ export default function CategoryCard(props){
     const language = useLanguage();
     const navigation = useNavigation();
     return(
-        <TouchableNativeFeedback onPress={() => navigation.push('Category', details)} style={{borderWidth: 0, width: width * 0.32, alignItems: 'center'}}>
+        <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.push('Category', details)} style={{borderWidth: 0, width: width * 0.32, alignItems: 'center'}}>
             <View style={styles.container}>
                 <Image source={{uri: details.image}} style={{height: '40%', aspectRatio: 1}} />
                 <TextLato style={styles.title}>{details.name[language]}</TextLato>
             </View>
-        </TouchableNativeFeedback>
+        </TouchableOpacity>
     )
 };
 
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'center',
         borderRadius: 10,
-        marginTop: height * 0.01
+        marginTop: height * 0.01,
     },
     icon: {
     },

@@ -95,13 +95,11 @@ const Product = (props) => {
 
             HTTP.post(`/store/find-similar-stores`, {store: data.store})
             .then(data => {
-                console.log(data)
                 setSimilarStores(data);
             });
 
             HTTP.post(`/product/more-from-seller`, data)
             .then(data => {
-                console.log(data)
                 setSimilarProducts(data);
             })
         });

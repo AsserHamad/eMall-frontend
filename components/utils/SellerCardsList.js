@@ -21,7 +21,6 @@ const SellerCardsList = ({url, body, refresh, showToast, title}) => {
         setLoading(true);
         HTTP.post(url, body)
         .then(res => {
-            console.log(res)
             setSellers(res.filter(store => store.products.length > 0));
             setLoading(false);
         })

@@ -53,7 +53,7 @@ const StoreOrders = () => {
             setOrders(res);
             setDisplayedOrders(res);
         })
-        .catch(err => console.log(err.response));
+        .catch(err => console.log(err));
     }, [status, refresh]);
 
     const changeOrderStatus = (newStatus, id) => {

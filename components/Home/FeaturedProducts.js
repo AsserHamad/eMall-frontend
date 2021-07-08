@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, Image, StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { Constants } from 'react-native-unimodules';
+import { Constans } from 'react-native-unimodules';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 import { useLanguage } from '../../hooks/language';
 import HTTP from '../../src/utils/axios';
@@ -16,7 +16,7 @@ const FeaturedProducts = () => {
     const navigation = useNavigation();
     useEffect(() => {
         HTTP('/advertisement/featured-products')
-        .then(res => {console.log(res);setProducts(res)})
+        .then(res => setProducts(res))
     }, []);
     return (
         <View>

@@ -66,7 +66,7 @@ function CartCard({item, setRefresh}){
             dispatch(setCart(res));
             setRefresh(refresh => !refresh);
         })
-        .catch(err => console.log(err.response))
+        .catch(err => console.log(err))
     }
 
     const calculatePricePreDiscount = () => {
