@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { gStyles } from '../../global.style';
 import CustomModal from '../utils/CustomModal';
 import Icon from '../utils/Icon';
+import HTTP from '../../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 const ReviewsComponent = ({ id, en, text }) => {
@@ -22,8 +23,7 @@ const ReviewsComponent = ({ id, en, text }) => {
     
     const fetchReviews = () => {
         setLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/store/reviews/${id}`)
-        .then(res => res.json())
+        HTTP(`/store/reviews/${id}`)
         .then(res => {
             setReviews(res);
             setLoading(false);
@@ -36,14 +36,10 @@ const ReviewsComponent = ({ id, en, text }) => {
 
 
     const submit = () => {
-        fetch(`${Constants.manifest.extra.apiUrl}/client/store-review`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json', token},
-            body: JSON.stringify({
-                store: id,
-                stars,
-                review
-            })
+        HTTP.post(`/client/store-review`, {
+            store: id,
+            stars,
+            review
         })
         .then(res => {
             fetchReviews();

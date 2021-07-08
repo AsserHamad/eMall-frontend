@@ -16,12 +16,13 @@ export default ({ details, cart }) => {
     const cartProducts = useSelector(state => state.cartReducer.cart.products);
     const language = useLanguage();
     const navigation = useNavigation();
+    const pad = navigation.canGoBack();
     
     const en = language === 'en';
     
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{...styles.topContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
+            <View style={{...styles.topContainer, flexDirection: en ? 'row' : 'row-reverse', paddingTop: !pad ? 0 : Constants.statusBarHeight + 5}}>
                 <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
                     <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(4)} color="black" />
                 </TouchableOpacity>
@@ -43,7 +44,7 @@ export default ({ details, cart }) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: Constants.statusBarHeight + 5,
+        paddingTop: Constants.statusBarHeight,
         zIndex: 1,
         width
     },
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
         // height: height * 0.06,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: height * 0.02
+        paddingVertical: height * 0.03
         // paddingHorizontal: width * 0.02
     },
     backContainer: {

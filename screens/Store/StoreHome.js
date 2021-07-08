@@ -14,7 +14,7 @@ import { useLanguage, useLanguageText } from '../../hooks/language';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
-const StoreHome = () => {
+const StoreHome = ({navigation}) => {
     const seller = useSelector(state => state.authReducer.account);
     const store = useSelector(state => state.authReducer.store);
     const language = useLanguage();

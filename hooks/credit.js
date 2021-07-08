@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Constants } from 'react-native-unimodules';
-import { useSelector } from 'react-redux';
+import HTTP from '../src/utils/axios';
 
 const useCredit = (refresh) => {
-    const token = useSelector(state => state.authReducer.token);
     const [credit, setCredit] = useState(0);
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/store/credit`, {headers: {token}})
-        .then(res => res.json())
+        HTTP('/store/credit')
         .then(res => setCredit(res.credit));
     }, [refresh]);
     return credit;

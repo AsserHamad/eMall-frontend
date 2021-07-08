@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { gStyles } from '../../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import HTTP from '../../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 const HomeComponent = ({ homeAds, showToast, en = true }) => {
@@ -51,8 +52,7 @@ const HomeAdType_0 = ({ad}) => {
 const HomeAdType_1 = ({ad, showToast, en}) => {
     const [product, setProduct] = useState(null);
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/product/${ad.product}`)
-        .then(res => res.json())
+        HTTP(`/product/${ad.product}`)
         .then(prdct => {setProduct(prdct)})
         .catch(err => console.log(err));
     }, []);

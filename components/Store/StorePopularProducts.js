@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, Dimensions, ImageBackground } from 'react-native';
-import Constants from 'expo-constants';
 
 import { useSelector } from 'react-redux';
 import TextLato from '../utils/TextLato';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import { gStyles } from '../../global.style';
 import { useLanguage, useLanguageText } from '../../hooks/language';
+import HTTP from '../../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
 const HomeComponent = () => {
@@ -15,8 +15,7 @@ const HomeComponent = () => {
     const language = useLanguage();
     const text = useLanguageText('storeProducts');
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/store/popular-products`, {headers: {token}})
-        .then(res => res.json())
+        HTTP('/store/popular-products')
         .then(res => {
             const arr = res.sort((a, b) => b.quantity - a.quantity);
             setProducts(arr);

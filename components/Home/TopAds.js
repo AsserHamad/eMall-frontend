@@ -1,19 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, ActivityIndicator, ImageBackground, Text } from 'react-native';
+import { StyleSheet, View, Image, ActivityIndicator, ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Swiper from 'react-native-swiper/src';
-import { Constants } from 'react-native-unimodules';
 import { gStyles } from '../../global.style';
+import HTTP from '../../src/utils/axios';
 
 function TopAds(){
     const [ads, setAds] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/advertisement/home`)
-        .then(res => res.json())
+        HTTP('/advertisement/home')
         .then(res => {
             setLoading(false);
             setAds(res)

@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import { ActivityIndicator, View, Dimensions, FlatList } from 'react-native';
-import Constants from 'expo-constants';
 import SellerCardProduct from '../cards/Seller/SellerCardProduct';
 import { gStyles } from '../../global.style';
 import { RFPercentage } from 'react-native-responsive-fontsize';
+import HTTP from '../../src/utils/axios';
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const BrowseComponent = ({id, showToast, en}) => {
     const [products, setProducts] = useState([]);
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/product/store/${id}`)
-        .then(res => res.json())
+        HTTP(`/product/store/${id}`)
         .then(res => setProducts(res.slice(0, 32)))
         .catch(err => console.log(err));
     }, [])

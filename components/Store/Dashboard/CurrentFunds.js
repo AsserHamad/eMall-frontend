@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TextLato from '../../utils/TextLato';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import useCredit from '../../../hooks/credit';
+import useFocus from '../../../hooks/focus';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useLanguageText } from '../../../hooks/language';
@@ -11,9 +12,12 @@ const [width, height] = [Dimensions.get('window').width, Dimensions.get('window'
 
 
 const CurrentFunds = () => {
-    const credit = useCredit();
+    const credit = useCredit(refresh);
     const navigation = useNavigation();
     const text = useLanguageText('sellerDashboard');
+    
+    const [refresh, setRefresh] = useState(true);
+    useFocus(() => setRefresh(refresh => !refresh), navigation);
     return (
         <View style={styles.container}>
         <TextLato bold style={styles.salesTitle}>{text.storeCredit}</TextLato>

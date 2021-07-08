@@ -2,21 +2,18 @@ import React, {useState, useEffect} from 'react';
 import TextLato from '../../utils/TextLato';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
-import { useSelector } from 'react-redux';
-import { Constants } from 'react-native-unimodules';
 import { useLanguageText } from '../../../hooks/language';
+import HTTP from '../../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 
 const PendingFunds = () => {
-    const token = useSelector(state => state.authReducer.token);
     const [funds, setFunds] = useState('-');
     const text = useLanguageText('sellerDashboard');
 
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/store/pending-funds`, {headers: {token}})
-        .then(res => res.json())
+        HTTP(`/store/pending-funds`)
         .then(payments => {
             setFunds(payments.result)
         })

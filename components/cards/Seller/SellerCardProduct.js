@@ -94,12 +94,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
     const addToWishlistHelper = () => {
         if(!loggedIn || type !== 'client') return;
         setWishlistLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/client/wishlist`, {
-            method: 'post',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product: product._id})
-        })
-        .then(res => res.json())
+        HTTP.post('/client/wishlist', {product: product._id})
         .then(res => {
             setWishlistLoading(false);
             dispatch(setWishlist(res))
@@ -110,12 +105,7 @@ const SellerCardProduct = ({product, style, seller, showToast}) => {
     const removeFromWishlistHelper = () => {
         if(!loggedIn || type !== 'client') return;
         setWishlistLoading(true);
-        fetch(`${Constants.manifest.extra.apiUrl}/client/wishlist`, {
-            method: 'delete',
-            headers: {token, 'Content-Type': 'application/json'},
-            body: JSON.stringify({product: product._id})
-        })
-        .then(res => res.json())
+        HTTP.delete('/client/wishlist', {product: product._id})
         .then(res => {
             setWishlistLoading(false);
             dispatch(setWishlist(res))

@@ -14,6 +14,7 @@ import { funcs } from '../../../global.funcs';
 import Header from '../../../components/Header';
 import { useRef } from 'react';
 import { useLanguage } from '../../../hooks/language';
+import HTTP from '../../../src/utils/axios';
 
 const isEmpty = (obj) => Object.keys(obj).length === 0;
 
@@ -70,8 +71,7 @@ const StoreProductsAdd = ({route, navigation}) => {
     const scroll = useRef();
 
     useEffect(() => {
-        fetch(`${Constants.manifest.extra.apiUrl}/product/${prodId}`)
-        .then(res => res.json())
+        HTTP(`/product/${prodId}`)
         .then(res => {
             setLoading(false);
             setEnTitle(res.title.en);
@@ -86,8 +86,7 @@ const StoreProductsAdd = ({route, navigation}) => {
             setPickedFilter(res.filter);
             setExtraImage(res.extraImage || false);
             setExtraText(res.extraText || false);
-            fetch(`${Constants.manifest.extra.apiUrl}/category`)
-            .then(res => res.json())
+            HTTP('/category')
             .then(res => setCategories(res))
             .catch(err => console.log(err))
         })
@@ -96,8 +95,7 @@ const StoreProductsAdd = ({route, navigation}) => {
     
     useEffect(() => {
         if(!isEmpty(pickedCategory)){
-            fetch(`${Constants.manifest.extra.apiUrl}/subcategory/find-by-category/${pickedCategory}`)
-            .then(res => res.json())
+            HTTP(`/subcategory/find-by-category/${pickedCategory}`)
             .then(res => {setSubcategories(res)})
             .catch(err => console.log(err))
         }
@@ -105,8 +103,7 @@ const StoreProductsAdd = ({route, navigation}) => {
     
     useEffect(() => {
         if(!isEmpty(pickedSubcategory)){
-            fetch(`${Constants.manifest.extra.apiUrl}/subcategory/filters/${pickedSubcategory}`)
-            .then(res => res.json())
+            HTTP(`/subcategory/filters/${pickedSubcategory}`)
             .then(res => {setFilters(res)})
             .catch(err => console.log(err))
         }

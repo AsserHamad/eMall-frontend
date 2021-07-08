@@ -29,22 +29,13 @@ function StoreNavbar({searchbar, title}){
                     <FontAwesome5 name="bars" color={gStyles.color_3} size={ 27 }/>
                 </TouchableOpacity>
 
-                {/* Logo */}
+                {/* Tittle */}
                 <View style={styles.logoContainer}>
                     <TextLato bold style={{fontSize: RFPercentage(2.5)}}>{title}</TextLato>
                 </View>
                 
-                {/* Cart */}
-                <TouchableOpacity 
-                    disabled={disabled}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                        setDisabled(true);
-                        navigation.push('Cart')}
-                    }
-                    style={styles.burgerContainer}
-                >
-                </TouchableOpacity>
+                {/* Padding */}
+                <View style={styles.burgerContainer} /> 
             </View>
             {/* Search Bar */}
             {searchbar && <StoreSearchbar />}
@@ -58,8 +49,7 @@ const getLanguageStyle = (lang, style) => lang === 'ar' ? styles[`${style}_ar`] 
 const styles = StyleSheet.create({
     container: {
         width,
-        paddingVertical: 10,
-        marginTop: Constants.statusBarHeight,
+        paddingVertical: 20,
         alignItems: 'center'
     },
     topContainer: {
@@ -73,7 +63,7 @@ const styles = StyleSheet.create({
         height: 45
     },
     logoContainer: {
-        width: width * 0.7,
+        width: width * 0.6,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row'
@@ -95,7 +85,8 @@ const styles = StyleSheet.create({
         position: "absolute"
     },
     burgerContainer: {
-        width: width * 0.15,
+        width: width * 0.2,
+        aspectRatio: 1,
         justifyContent: 'center',
         alignItems: 'center',
         textAlign: 'center',

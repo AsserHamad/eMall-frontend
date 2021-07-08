@@ -7,6 +7,7 @@ import Header from '../Header';
 import { gStyles } from '../../global.style';
 import { useSelector } from 'react-redux';
 import { useLanguage, useLanguageText } from '../../hooks/language';
+import HTTP from '../../src/utils/axios';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height]
 
@@ -18,7 +19,6 @@ const AddMembers = ({route, navigation}) => {
     const [phone, setPhone] = useState('+20');
     const [title, setTitle] = useState('');
     const [disabled, setDisabled] = useState(false);
-    const token = useSelector(state => state.authReducer.token);
     const text = useLanguageText('sellerMembers');
     useEffect(() => {
         setDisabled([name,email, password, phone, title].filter(element => element === '').length > 0)
@@ -26,18 +26,14 @@ const AddMembers = ({route, navigation}) => {
 
     const createMember = () => {
         if(disabled) return;
-        fetch(`${Constants.manifest.extra.apiUrl}/seller/create-member`, {
-            method: 'post',
-            headers: {'Content-Type': 'application/json', token},
-            body: JSON.stringify({
-                member: {
-                    name,
-                    email,
-                    password,
-                    phone,
-                    title,
-                }
-            })
+        HTTP.post('/seller/create-member', {
+            member: {
+                name,
+                email,
+                password,
+                phone,
+                title,
+            }
         })
         .then(() => {
             refresh();
