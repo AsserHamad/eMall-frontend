@@ -61,7 +61,7 @@ const DealOfTheDayAd = () => {
     return (
         <View style={styles.container}>
             <Header details={{title: text.title}} />
-            <ScrollView ref={scroll} contentContainerStyle={{paddingBottom: height * 0.05}}>
+            <ScrollView ref={scroll} contentContainerStyle={{paddingBottom: height * 0.05}} nestedScrollEnabled>
                 <View style={{marginHorizontal: width * 0.05, marginTop: height * 0.02, alignItems: 'center'}}>
                     <TextLato style={{fontSize: RFPercentage(2.5)}} bold>{text.active}</TextLato>
                     <TextLato style={{fontSize: RFPercentage(1.8)}} italic>{text.activeDescription}</TextLato>

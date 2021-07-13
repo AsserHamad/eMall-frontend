@@ -396,7 +396,7 @@
         "title": "Update Product",
         "newTitle": "Updating",
         "header": "Update Product",
-        "headerSubtitle": "Fields mrked with an asterisk (*) are required",
+        "headerSubtitle": "Fields marked with an asterisk (*) are required",
         "enTitle": "English Title",
         "arTitle": "Arabic Title",
         "enDescr": "English Description",

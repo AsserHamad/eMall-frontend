@@ -150,7 +150,7 @@ const subcategoryStyles = StyleSheet.create({
         // paddingVertical: height * 0.05
     },
     container: {
-        width: width * 0.19,
+        width: width * 0.2,
         aspectRatio: 1,
         backgroundColor: gStyles.color_2,
         borderRadius: 10,

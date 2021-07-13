@@ -22,7 +22,7 @@ export default ({ details, cart }) => {
     
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{...styles.topContainer, flexDirection: en ? 'row' : 'row-reverse', paddingTop: !pad ? 0 : Constants.statusBarHeight + 5}}>
+            <View style={{...styles.topContainer, flexDirection: en ? 'row' : 'row-reverse'}}>
                 <TouchableOpacity style={styles.backContainer} onPress={() => navigation.goBack()}>
                     <Icon type="Feather" name={`arrow-${en ? 'left' : 'right'}`} size={RFPercentage(4)} color="black" />
                 </TouchableOpacity>
@@ -44,7 +44,7 @@ export default ({ details, cart }) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight + 5,
         zIndex: 1,
         width
     },

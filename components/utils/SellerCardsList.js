@@ -34,7 +34,8 @@ const SellerCardsList = ({url, body, refresh, showToast, title}) => {
         ))}
     </View>;
 
-    return (<View style={{width, backgroundColor: 'white', alignItems: 'center', paddingTop: height * 0.04}}>
+    return (
+    <View style={{width, backgroundColor: 'white', alignItems: 'center', paddingTop: height * 0.04}}>
         {sellers.map(seller => <SellerCard key={seller._id} showToast={showToast} seller={seller} />)}
         <TouchableOpacity onPress={() => navigation.push('ViewAllStores', {url: `${url}/full`, body, title: title})} style={{paddingVertical: height * 0.02, alignItems: 'center', borderRadius: 10, backgroundColor: gStyles.color_2, width: width * 0.95, marginBottom: height * 0.02}}>
             <TextLato bold style={{color: 'white'}}>{en ? 'View All Stores' : 'عرض جميع المتاجر'}</TextLato>

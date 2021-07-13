@@ -8,20 +8,29 @@ import TextLato from '../../components/utils/TextLato';
 import { gStyles } from '../../global.style';
 import { useLanguageText } from '../../hooks/language';
 import Header from '../../components/Header';
+import Loading from '../../components/utils/Loading';
+import Empty from '../../components/utils/Empty';
 
 const [width, height] = [Dimensions.get('window').width, Dimensions.get('window').height];
 
 const MyPayments = () => {
     const text = useLanguageText('myPayments');
+    const [loading, setLoading] = useState(true);
     const [payments, setPayments] = useState([]);
     const token = useSelector(state => state.authReducer.token);
     useEffect(() => {
         fetch(`${Constants.manifest.extra.apiUrl}/client/payments`, {headers: {token}})
         .then(res => res.json())
         .then(res => {
+            setLoading(false);
             setPayments(res);
         })
+        .catch(err => console.log(err));
     }, []);
+    if(loading)
+        return <Loading size={25} />
+    if(payments.length === 0)
+        return <Empty />
     return (
         <View style={styles.container}>
             <Header details={{title: text.payments}} />

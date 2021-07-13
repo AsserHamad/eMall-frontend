@@ -30,6 +30,7 @@ const ProductCardsList = ({url, body, refresh, title}) => {
         <View style={{alignItems: 'center'}}>
             <FlatList
                 data={products}
+                contentContainerStyle={{transform: en ? [] : [{scaleX: -1}]}}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => <SellerCardProduct style={{width: width * 0.95}} product={item} />}
                 keyExtractor={product => product._id}

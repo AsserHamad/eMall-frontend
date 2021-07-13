@@ -21,7 +21,7 @@
       "bundleIdentifier": "com.emall.eg.official"
     },
     "android": {
-      "package": "com.emall.eg.official",
+      "package": "com.emall.eg",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFF"
@@ -29,13 +29,13 @@
       "permissions": [
         "CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"
       ],
-      "versionCode": 1
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/icon.png"
     },
     "extra": {
-      "apiUrl": "http://192.168.1.147:5000/api",
+      "apiUrl": "http://18.216.71.102:80/api",
       "localhost": "http://192.168.1.147:5000/api",
       "apiUrl_": "http://18.216.71.102:80/api"
     }

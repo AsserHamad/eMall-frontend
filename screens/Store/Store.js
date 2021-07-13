@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     },
     cover: {
         width: '100%',
-        height: height * 0.15
+        height: height * 0.22
     },
     header: {
         flexDirection: 'row',

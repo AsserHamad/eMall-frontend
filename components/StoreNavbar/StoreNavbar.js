@@ -49,6 +49,7 @@ const getLanguageStyle = (lang, style) => lang === 'ar' ? styles[`${style}_ar`] 
 const styles = StyleSheet.create({
     container: {
         width,
+        marginTop: Constants.statusBarHeight,
         paddingVertical: 20,
         alignItems: 'center'
     },

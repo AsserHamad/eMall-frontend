@@ -44,6 +44,7 @@ const ProductPicker = ({style, pickedProduct, setPickedProduct}) => {
                 <FlatList
                     data={products}
                     keyExtractor={product => product._id}
+                    nestedScrollEnabled
                     renderItem={({item}) => {
                         const picked = pick && item._id === pick._id;
                         return (

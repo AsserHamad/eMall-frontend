@@ -19,7 +19,7 @@
         "Subcategory": "الفئات الفرعية"
     },
     "sellerLogin": {
-        "sellerDashboard": "لوحة تحكم البائع",
+        "sellerDashboard": "لوحة تحكم المتجر",
         "sellerSubtitle": "الرجاء تسجيل الدخول للوصول إلى لوحة القيادة الخاصة بك",
         "forgotPassword": "هل نسيت كلمة السر",
         "loginWithFacebook": "الدخول باستخدام الفيسبوك",
@@ -34,8 +34,8 @@
         "meantime": "في غضون ذلك ، يمكنك التحقق من مجموعة المتاجر لدينا وتصفح التطبيق للوصول إلى المحتوى الخاص بك"
     },
     "sellerRegister": {
-        "sellerRegister": "تسجيل البائع",
-        "sellerData": "بيانات البائع",
+        "sellerRegister": "تسجيل المتجر",
+        "sellerData": "بيانات المتجر",
         "fillForm": "املأ هذا النموذج بمعلوماتك الشخصية",
         "next": "التالي",
         "fetchFB": "إحضار البيانات من Facebook",
@@ -81,16 +81,16 @@
     "confirmPayment":{
         "title": "تم الطلب",
         "orderPlaced":"تم الطلب",
-        "subtitle": "اجلس واسترخي. سنتواصل معك في أي وقت من الأوقات!",
+        "subtitle": "اجلس واسترخي. سنتواصل معك في أقرب وقت!",
         "order": "طلب #:",
-        "home": "اذهب للمنزل"
+        "home": "الذهاب للرئيسية"
     },
     "cart": {
         "title": "السلة",
         "nothing": "يبدو أنك فقدت ، قم بتسجيل الدخول للمتابعة ...",
         "login": "تسجيل الدخول للوصول إلى عربة التسوق الخاصة بك",
         "empty": "لا تزال فارغة ...",
-        "seller": "البائع:",
+        "seller": "المتجر:",
         "quantity": "كمية",
         "text": "نص مقدم",
         "image": "الصورة المقدمة",
@@ -108,10 +108,10 @@
     "wishlist": {
         "myWishlist": "قائمة امنياتي",
         "wishlistDescription": "سيتم إخطارك عندما يتم طرح عنصر في قائمة أمنياتك للبيع!",
-        "seller": "البائع:"
+        "seller": "المتجر:"
     },
     "product": {
-        "soldBy": "البائع",
+        "soldBy": "المتجر",
         "options": "الخيارات",
         "addToCart": "أضف إلى السلة",
         "overview": "ملخص",
@@ -188,7 +188,7 @@
         "orderPlaced": "تم الطلب",
         "orderPlacedDescription": "لقد قمت بوضع هذا الطلب في",
         "orderConfirmed": "تاكيد الطلب",
-        "orderConfirmedDescription": "تم تأكيد طلبك من قبل البائعين",
+        "orderConfirmedDescription": "تم تأكيد طلبك من قبل المتاجر",
         "orderProcessing": "مراجعة الطلب",
         "orderProcessingDescription": "نقوم حاليا بمعالجة طلبك",
         "orderReadyToShip": "جاهز للشحن",
@@ -398,22 +398,22 @@
         "quantity": "الكمية المباعة"
     },
     "storeProductsUpdate": {
-        "title": "Update Product",
-        "newTitle": "Updating",
-        "header": "Update Product",
-        "headerSubtitle": "Fields mrked with an asterisk (*) are required",
-        "enTitle": "English Title",
-        "arTitle": "Arabic Title",
-        "enDescr": "English Description",
-        "arDescr": "Arabic Description",
-        "stock": "Stock*",
-        "price": "Price (EGP)*",
-        "images": "Images",
-        "pickCategory": "Pick a Category",
-        "pickSubcategory": "Pick a Subcategory",
-        "pickFilter": "Pick a Filter",
-        "requireUser": "Does this product require some client data?",
-        "requireImage": "Does this product require an image from the client?",
-        "discount": "Discount"
+        "title": "تحديث المنتج",
+        "newTitle": "تحديث",
+        "header": "حدث منتج",
+        "headerSubtitle": "الحقول التي عليها علامة النجمة (*) مطلوبة",
+        "enTitle": "العنوان الانجليزي",
+        "arTitle": "العنوان العربي",
+        "enDescr": "الوصف الانجليزي",
+        "arDescr": "الوصف العربي",
+        "stock": "المخزون*",
+        "price": "السعر (جم)*",
+        "images": "الصور",
+        "pickCategory": "اختر فئة",
+        "pickSubcategory": "اختر فئة فرعية",
+        "pickFilter": "اختر عامل تصفية",
+        "requireUser": "هل هذا المنتج يتطلب بعض البيانات من العميل؟",
+        "requireImage": "هل هذا المنتج يتطلب صورة من العميل؟",
+        "discount": "خصم"
     }
 }
